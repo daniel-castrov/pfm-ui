@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { LibraryService } from '../../services/library.service';
+import { FileUploadService } from 'src/app/pfm-secure-filedownload/services/file-upload.service';
+import { FileMetaData } from 'src/app/pfm-common-models/FileMetaData';
 
 declare const $: any;
 
@@ -11,7 +12,7 @@ declare const $: any;
 
 export class FileUploadComponent implements OnInit {
 
-  @Output() fileUploadEvent: EventEmitter<FileResponse> = new EventEmitter();
+  @Output() fileUploadEvent: EventEmitter<FileMetaData> = new EventEmitter();
   @Output() uploading: EventEmitter<boolean> = new EventEmitter();
   @Input() area: string;
   @Input() disabled: boolean;
@@ -23,7 +24,7 @@ export class FileUploadComponent implements OnInit {
   fileName: string;
 
   constructor(
-    private libraryService: LibraryService
+    private fileUploadService: FileUploadService
   ) { }
 
   ngOnInit() {
@@ -34,24 +35,11 @@ export class FileUploadComponent implements OnInit {
   }
 
   onFileChange(event) {
-    const reader = new FileReader();
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        this.fileName = file.name;
-        this.processing = true;
-        this.uploadSuccess = false;
-        this.uploading.emit(this.processing);
-        this.libraryService.uploadFile(file, this.area).subscribe(response => {
-          this.processing = false;
-          this.uploading.emit(this.processing);
-          if (response.result) {
-            this.uploadSuccess = true;
-            this.fileUploadEvent.emit(response.result);
-          }
-        });
-      };
+      this.fileUploadService.uploadSecureResource(file).then(resp => {
+        this.fileUploadEvent.emit((resp.result) as FileMetaData);
+      });
     }
   }
 }

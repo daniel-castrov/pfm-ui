@@ -1,5 +1,5 @@
-import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
-import {FileDownloadService} from '../services/file-download-service';
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { FileDownloadService } from '../services/file-download-service';
 import { FileMetaData } from '../../pfm-common-models/FileMetaData';
 
 @Component({
@@ -8,21 +8,23 @@ import { FileMetaData } from '../../pfm-common-models/FileMetaData';
   styleUrls: ['./secure-download.component.css']
 })
 export class SecureDownloadComponent {
-	@ViewChild('downloadLink', {static: false}) private downloadLink: ElementRef;
+  @ViewChild('downloadLink', { static: false }) private downloadLink: ElementRef;
 
-	linkeURL:string;
+  linkeURL: string;
 
-	constructor(private fileDownloadService:FileDownloadService) { }
+  constructor(
+    private fileDownloadService: FileDownloadService
+  ) { }
 
-	public async downloadFile(item:FileMetaData): Promise<void> {
-		const blob = await this.fileDownloadService.downloadSecureResource(item.id)
-		const url = window.URL.createObjectURL(blob);
+  async downloadFile(item: FileMetaData): Promise<void> {
+    const blob = await this.fileDownloadService.downloadSecureResource(item.id);
+    const url = window.URL.createObjectURL(blob);
 
-		const link = this.downloadLink.nativeElement;
-		link.href = url;
-		link.download = item.name;
-		link.click();
-		window.URL.revokeObjectURL(url);
-	}
+    const link = this.downloadLink.nativeElement;
+    link.href = url;
+    link.download = item.name;
+    link.click();
+    window.URL.revokeObjectURL(url);
+  }
 
 }
