@@ -1,11 +1,12 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Program } from '../../../models/Program';
 import { FormGroup, FormControl, ValidatorFn, ValidationErrors, Validators } from '@angular/forms';
-import { ProgrammingModel } from '../../../../programming-feature/models/ProgrammingModel';
 import { OrganizationService } from '../../../../services/organization-service';
 import { Organization } from '../../../../pfm-common-models/Organization';
 import { PlanningService } from 'src/app/planning-feature/services/planning-service';
 import { switchMap } from 'rxjs/operators';
+import { FileMetaData } from 'src/app/pfm-common-models/FileMetaData';
+import { FileDownloadService } from 'src/app/pfm-secure-filedownload/services/file-download-service';
 
 @Component({
   selector: 'pfm-requests-details-form',
@@ -17,6 +18,7 @@ export class RequestsDetailsFormComponent implements OnInit {
   @Input() pomYear: number;
   @Input() program: Program;
 
+  readonly fileArea = 'pr';
   form: FormGroup;
   addMode = false;
   organizations: Organization[];
@@ -26,10 +28,12 @@ export class RequestsDetailsFormComponent implements OnInit {
   directoratePriorities: string[];
   fileid: string;
   isUploading: boolean;
+  imagePath: string;
 
   constructor(
     private organizationService: OrganizationService,
-    private planningService: PlanningService
+    private planningService: PlanningService,
+    private fileDownloadService: FileDownloadService
   ) { }
 
   async ngOnInit() {
@@ -87,8 +91,17 @@ export class RequestsDetailsFormComponent implements OnInit {
     this.isUploading = event;
   }
 
-  onFileUploaded(event) {
-    this.fileid = event.id;
+  onFileUploaded(fileResponse: FileMetaData) {
+    this.program.imageName = fileResponse.id;
+    this.program.imageArea = this.fileArea;
+    this.fileDownloadService.downloadSecureResource(this.program.imageName).then(blob => {
+      const reader = new FileReader();
+      reader.readAsDataURL(blob);
+      reader.onloadend = () => {
+        const base64data = reader.result;
+        this.imagePath = base64data.toString();
+      };
+    });
   }
 
   formValidator: ValidatorFn = (control: FormGroup): ValidationErrors | null => {
