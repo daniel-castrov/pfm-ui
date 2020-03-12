@@ -419,6 +419,11 @@ export class LatestNewsPodComponent implements OnInit {
         errorMsg = 'The Title is empty. ';
         isError = true;
       }
+
+      if (row.text.length === 0) {
+        errorMsg = 'The Text is empty. ';
+        isError = true;
+      }
       if (row.title.length > 200) {
         errorMsg = errorMsg + 'The Title is longer than the max of 200 characters.';
         isError = true;
