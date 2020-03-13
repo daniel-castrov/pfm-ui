@@ -425,11 +425,11 @@ export class LatestNewsPodComponent implements OnInit {
       }
 
       if (row.text.length === 0) {
-        errorMsg = 'The Text is empty. ';
+        errorMsg = 'The News Item Text field cannot be empty.';
         isError = true;
       }
       if (row.title.length > 200) {
-        errorMsg = errorMsg + 'The Title is longer than the max of 200 characters.';
+        errorMsg = errorMsg + 'The title cannot exceed 200 characters.';
         isError = true;
       }
 
