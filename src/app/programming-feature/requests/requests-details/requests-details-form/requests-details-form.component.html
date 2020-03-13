@@ -26,7 +26,6 @@
             <label class="col-2">Organization</label>
             <div *ngIf="!addMode">
               <span class="col-10"><input type="text" formControlName="organizationId" /></span>
-              <!--              <label class="col-10 label-length">{{form.controls['organizationId'].value}}</label>-->
             </div>
             <div *ngIf="addMode">
               <span class="col-10">
@@ -42,7 +41,7 @@
             <span class="col-10">
               <select class="form-control-sm" formControlName="division">
                 <option value="" disabled>Select...</option>
-                <option *ngFor="let div of divisions" [value]="div">{{ div }}</option>
+                <option *ngFor="let option of divisions" [value]="option">{{ option.name }}</option>
               </select>
             </span>
           </div>
@@ -88,19 +87,28 @@
           <div class="row">
             <label class="col-2 my-auto mx-0">SecDef LOE</label>
             <span class="col-10">
-              <input type="text" formControlName="secDefLOE" />
+              <select class="form-control-sm" formControlName="secDefLOE">
+                <option value="" disabled>Select...</option>
+                <option *ngFor="let option of secDefLOE" [value]="option">{{ option.name }}</option>
+              </select>
             </span>
           </div>
           <div class="row">
             <label class="col-2 my-auto mx-0">Strategic Imperative</label>
             <span class="col-10">
-              <input type="text" formControlName="strategicImperative" />
+              <select class="form-control-sm" formControlName="strategicImperatives">
+                <option value="" disabled>Select...</option>
+                <option *ngFor="let option of strategicImperatives" [value]="option">{{ option.name }}</option>
+              </select>
             </span>
           </div>
           <div class="row">
             <label class="col-2 my-auto mx-0">Agency Objective</label>
             <span class="col-10">
-              <input type="text" formControlName="agencyObjective" />
+              <select class="form-control-sm" formControlName="agencyObjectives">
+                <option value="" disabled>Select...</option>
+                <option *ngFor="let option of agencyObjectives" [value]="option">{{ option.name }}</option>
+              </select>
             </span>
           </div>
         </fieldset>
