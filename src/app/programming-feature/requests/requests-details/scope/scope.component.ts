@@ -88,11 +88,33 @@ export class ScopeComponent implements OnInit {
     this.setupProcessPriorizationGrid();
   }
 
-  loadEvaluationMeasure() {
-    this.evaluationMeasureService.getByProgram(this.program.id).subscribe(resp=> {
+  loadEvaluationMeasures() {
+    this.evaluationMeasureService.getByProgram(this.program.id).subscribe(resp => {
       const result = (resp as any).result;
       this.evaluationMeasureRows = result;
-      this.evaluationMeasureGridApi.setRowData(this.evaluationMeasureRows);
+      for (let i = 0; i < result.length; i++) {
+        this.viewEvaluationMeasureMode(i);
+      }
+    });
+  }
+
+  loadTeamLeads() {
+    this.teamLeadService.getByProgram(this.program.id).subscribe(resp => {
+      const result = (resp as any).result;
+      this.teamLeadRows = result;
+      for (let i = 0; i < result.length; i++) {
+        this.viewTeamLeadMode(i);
+      }
+    });
+  }
+
+  loadProcessPrioritizations() {
+    this.processPrioritizationService.getByProgram(this.program.id).subscribe(resp => {
+      const result = (resp as any).result;
+      this.processPriorizationRows = result;
+      for (let i = 0; i < result.length; i++) {
+        this.viewProcessPriorizationMode(i);
+      }
     });
   }
 
@@ -474,6 +496,37 @@ export class ScopeComponent implements OnInit {
     const row: any = this.teamLeadRows[rowIndex];
     const canSave = this.validateTeamLeadRowData(row);
     if (canSave) {
+      if (!row.id) {
+        row.programId = this.program.id;
+        this.teamLeadService.createTeamLead(row).subscribe(
+          resp => {
+            this.busy = false;
+
+            // Update view
+            this.viewTeamLeadMode(rowIndex);
+
+          },
+          error => {
+            this.busy = false;
+            this.dialogService.displayDebug(error);
+            this.editTeamLeadRow(rowIndex);
+
+          });
+      } else {
+        // Ensure creation information is preserved
+        this.teamLeadService.updateTeamLead(row).subscribe(
+          resp => {
+            this.busy = false;
+            // Update view
+            this.viewTeamLeadMode(rowIndex);
+
+          },
+          error => {
+            this.busy = false;
+            this.dialogService.displayDebug(error);
+            this.editTeamLeadRow(rowIndex);
+          });
+      }
       this.viewTeamLeadMode(rowIndex);
     } else {
       this.editTeamLeadRow(rowIndex);
@@ -595,6 +648,37 @@ export class ScopeComponent implements OnInit {
     const row: any = this.processPriorizationRows[rowIndex];
     const canSave = this.validateProcessPriorizationRowData(row);
     if (canSave) {
+      if (!row.id) {
+        row.programId = this.program.id;
+        this.processPrioritizationService.createProcessPrioritization(row).subscribe(
+          resp => {
+            this.busy = false;
+
+            // Update view
+            this.viewProcessPriorizationMode(rowIndex);
+
+          },
+          error => {
+            this.busy = false;
+            this.dialogService.displayDebug(error);
+            this.editProcessPriorizationRow(rowIndex);
+
+          });
+      } else {
+        // Ensure creation information is preserved
+        this.processPrioritizationService.updateProcessPrioritization(row).subscribe(
+          resp => {
+            this.busy = false;
+            // Update view
+            this.viewProcessPriorizationMode(rowIndex);
+
+          },
+          error => {
+            this.busy = false;
+            this.dialogService.displayDebug(error);
+            this.editProcessPriorizationRow(rowIndex);
+          });
+      }
       this.viewProcessPriorizationMode(rowIndex);
     } else {
       this.editProcessPriorizationRow(rowIndex);
@@ -813,17 +897,19 @@ export class ScopeComponent implements OnInit {
   onEvaluationMeasureGridIsReady(gridApi: GridApi) {
     this.evaluationMeasureGridApi = gridApi;
     this.evaluationMeasureGridApi.setRowData([]);
-    this.loadEvaluationMeasure();
+    this.loadEvaluationMeasures();
   }
 
   onTeamLeadGridIsReady(gridApi: GridApi) {
     this.teamLeadGridApi = gridApi;
     this.teamLeadGridApi.setRowData([]);
+    this.loadTeamLeads();
   }
 
   onProcessPriorizationGridIsReady(gridApi: GridApi) {
     this.processPriorizationGridApi = gridApi;
     this.processPriorizationGridApi.setRowData([]);
+    this.loadProcessPrioritizations();
   }
 
   handleNewAttachments(newFile: FileMetaData) {
