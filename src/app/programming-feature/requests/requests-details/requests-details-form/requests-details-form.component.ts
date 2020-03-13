@@ -7,6 +7,8 @@ import { PlanningService } from 'src/app/planning-feature/services/planning-serv
 import { switchMap } from 'rxjs/operators';
 import { FileMetaData } from 'src/app/pfm-common-models/FileMetaData';
 import { FileDownloadService } from 'src/app/pfm-secure-filedownload/services/file-download-service';
+import { TagService } from 'src/app/programming-feature/services/tag.service';
+import { Tag } from 'src/app/programming-feature/models/Tag';
 
 @Component({
   selector: 'pfm-requests-details-form',
@@ -19,21 +21,31 @@ export class RequestsDetailsFormComponent implements OnInit {
   @Input() program: Program;
 
   readonly fileArea = 'pr';
+
+  readonly DIVISIONS = 'Divisions';
+  readonly SEC_DEF_LOE = 'SecDef LOE';
+  readonly STRATEGIC_IMPERATIVES = 'Strategic Imperatives';
+  readonly AGENCY_OBJECTIVES = 'Agency Objectives';
+
   form: FormGroup;
   addMode = false;
   organizations: Organization[];
-  divisions: string[];
+  divisions = [];
   missionPriorities: string[];
   agencyPriorities: string[];
   directoratePriorities: string[];
   fileid: string;
   isUploading: boolean;
   imagePath: string;
+  secDefLOE = [];
+  strategicImperatives = [];
+  agencyObjectives = [];
 
   constructor(
     private organizationService: OrganizationService,
     private planningService: PlanningService,
-    private fileDownloadService: FileDownloadService
+    private fileDownloadService: FileDownloadService,
+    private tagService: TagService
   ) { }
 
   async ngOnInit() {
@@ -59,9 +71,9 @@ export class RequestsDetailsFormComponent implements OnInit {
       missionPriority: new FormControl('', [Validators.required]),
       agencyPriority: new FormControl(''),
       directoratePriority: new FormControl(''),
-      secDefLOE: new FormControl(this.program.secDefLOE),
-      strategicImperative: new FormControl(this.program.strategicImperative),
-      agencyObjective: new FormControl(this.program.agencyObjective),
+      secDefLOE: new FormControl(''),
+      strategicImperatives: new FormControl(''),
+      agencyObjectives: new FormControl(''),
     }, { validators: this.formValidator });
 
     this.disableInputsInEditMode();
@@ -74,9 +86,25 @@ export class RequestsDetailsFormComponent implements OnInit {
       .subscribe(missionPriorities => {
         this.missionPriorities = missionPriorities.result.map(mission => mission.title);
       });
-    this.divisions = ['ABC', 'DEF'];
+    this.tagService.getByType(this.DIVISIONS)
+      .subscribe(resp => {
+        this.divisions = resp.result as Tag[];
+      });
     this.agencyPriorities = [].constructor(20);
     this.directoratePriorities = [].constructor(20);
+    this.tagService.getByType(this.SEC_DEF_LOE)
+      .subscribe(resp => {
+        this.secDefLOE = resp.result as Tag[];
+      });
+    this.tagService.getByType(this.STRATEGIC_IMPERATIVES)
+      .subscribe(resp => {
+        console.log(resp);
+        this.strategicImperatives = resp.result as Tag[];
+      });
+    this.tagService.getByType(this.AGENCY_OBJECTIVES)
+      .subscribe(resp => {
+        this.agencyObjectives = resp.result as Tag[];
+      });
   }
 
   disableInputsInEditMode() {

@@ -50,6 +50,8 @@ import { ScopeComponent } from './requests/requests-details/scope/scope.componen
 import { AssetsComponent } from './requests/requests-details/assets/assets.component';
 import { PlanningService } from '../planning-feature/services/planning-service';
 import { PlanningServicesImpl } from '../planning-feature/services/planning-services-impl.service';
+import { TagService } from './services/tag.service';
+import { TagServiceImpl } from './services/tag-service-impl.service';
 
 @NgModule({
   declarations: [
@@ -98,6 +100,7 @@ import { PlanningServicesImpl } from '../planning-feature/services/planning-serv
   { provide: MrdbService, useClass: MrdbServiceImpl },
   { provide: VisibilityService, useClass: VisibilityServiceImpl },
   { provide: PlanningService, useClass: PlanningServicesImpl },
+  { provide: TagService, useClass: TagServiceImpl },
     ProgrammingModel,
     RequestSummaryNavigationHistoryService]
 })
