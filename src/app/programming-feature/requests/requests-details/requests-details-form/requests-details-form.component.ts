@@ -98,7 +98,6 @@ export class RequestsDetailsFormComponent implements OnInit {
       });
     this.tagService.getByType(this.STRATEGIC_IMPERATIVES)
       .subscribe(resp => {
-        console.log(resp);
         this.strategicImperatives = resp.result as Tag[];
       });
     this.tagService.getByType(this.AGENCY_OBJECTIVES)
