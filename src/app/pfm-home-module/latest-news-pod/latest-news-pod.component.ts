@@ -384,7 +384,7 @@ export class LatestNewsPodComponent implements OnInit {
     const row: NewsItem = this.newsItems[rowId];
 
     // Check columns not empty
-    if (row.text.length > 0 && row.title.length <= 200 && row.begin != null) {
+    if (row.text.length > 0 && row.title.length > 0 && row.title.length <= 200 && row.begin != null) {
       // Convert to server mp
       const serverNI: NewsItem = this.convertToServerNI(row);
       this.busy = true;
