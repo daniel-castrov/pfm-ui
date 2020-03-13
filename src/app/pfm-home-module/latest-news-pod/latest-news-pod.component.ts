@@ -425,7 +425,7 @@ export class LatestNewsPodComponent implements OnInit {
       }
 
       if (row.text.length === 0) {
-        errorMsg = 'The Text is empty. ';
+        errorMsg = 'The News Item text cannot be empty.';
         isError = true;
       }
       if (row.title.length > 200) {
