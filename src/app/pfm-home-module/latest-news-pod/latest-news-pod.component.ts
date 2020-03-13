@@ -12,6 +12,7 @@ import { PfmHomeService } from '../services/pfm-home-service';
 import { formatDate } from '@angular/common';
 import { DeleteDialogInterface } from 'src/app/programming-feature/requests/requests-details/requests-funding-line-grid/requests-funding-line-grid.component';
 import { DomSanitizer } from '@angular/platform-browser';
+import { debug } from 'ng-packagr/lib/util/log';
 
 @Component({
   selector: 'pfm-latest-news-pod',
@@ -420,7 +421,7 @@ export class LatestNewsPodComponent implements OnInit {
       }
     } else {
       if (row.title.length === 0) {
-        errorMsg = 'The Title is empty. ';
+        errorMsg = 'The Title cannot be empty. ';
         isError = true;
       }
 
@@ -434,7 +435,7 @@ export class LatestNewsPodComponent implements OnInit {
       }
 
       if (!row.begin) {
-        errorMsg = errorMsg + 'The Start Date is empty.';
+        errorMsg = errorMsg + 'The Start Date cannot be empty.';
         isError = true;
       }
       if (isError) {

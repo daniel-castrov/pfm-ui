@@ -20,7 +20,9 @@ export class PfmHomeServicesImpl extends PfmHomeService {
 
   createNewsItem(data: any): Observable<object> {
     data = this.convertDateFromClient(data);
-    return this.post('newsItem', data);
+    return this.post('newsItem', data)
+      .pipe(map((res) => this.convertDateFromServer(res)));
+    ;
   }
 
   updateNewsItem(data: any): Observable<object> {
@@ -39,7 +41,7 @@ export class PfmHomeServicesImpl extends PfmHomeService {
   protected convertDateFromClient(newsItem: NewsItem): NewsItem {
     const copy: NewsItem = Object.assign({}, newsItem, {
       begin: newsItem.begin != null ? newsItem.begin : null,
-      end: newsItem.end != null ? newsItem.end : null,
+      end: newsItem.end != null ? newsItem.end : null
     });
     return copy;
   }
@@ -55,10 +57,14 @@ export class PfmHomeServicesImpl extends PfmHomeService {
 
     return res;
   }
+
   protected convertDateFromServer(res) {
     if (res.result) {
-      res.result.begin = res.body.begin != null ? new Date(res.result.begin) : null;
-      res.result.end = res.body.end != null ? new Date(res.result.end) : null;
+      const newsItem = res.result;
+      newsItem.begin = newsItem.begin != null ?
+        new Date(newsItem.begin) : null;
+      newsItem.end = newsItem.end != null ?
+        new Date(newsItem.end) : null;
     }
     return res;
   }
