@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ColDef, GridApi } from '@ag-grid-community/all-modules';
 import { ActionCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/action-cell-renderer/action-cell-renderer.component';
 import { DatePickerCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/date-picker-cell-renderer/date-picker-cell-renderer.component';
@@ -7,6 +7,12 @@ import { DataGridMessage } from 'src/app/pfm-coreui/models/DataGridMessage';
 import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
 import { FileMetaData } from 'src/app/pfm-common-models/FileMetaData';
 import { Attachment } from 'src/app/pfm-common-models/Attachment';
+import { Program } from '../../../models/Program';
+import { EvaluationMeasureServiceImpl } from '../../../services/evaluation-measure-impl.service';
+import { EvaluationMeasureService } from '../../../services/evaluation-measure.service';
+import { ProcessPrioritizationService } from '../../../services/process-prioritization.service';
+import { TeamLeadService } from '../../../services/team-lead.service';
+import { Action } from '../../../../pfm-common-models/Action';
 
 @Component({
   selector: 'pfm-scope',
@@ -14,6 +20,8 @@ import { Attachment } from 'src/app/pfm-common-models/Attachment';
   styleUrls: ['./scope.component.scss']
 })
 export class ScopeComponent implements OnInit {
+
+  @Input() program: Program;
 
   actionState = {
     VIEW: {
@@ -39,6 +47,8 @@ export class ScopeComponent implements OnInit {
     'Low'
   ];
 
+  busy: boolean;
+
   budget: number;
   schedule: string;
 
@@ -63,7 +73,11 @@ export class ScopeComponent implements OnInit {
   attachmentsUploaded: string[] = [];
   deleteDialog: DeleteDialogInterface = { title: 'Delete' };
 
-  constructor(private dialogService: DialogService) { }
+  constructor(private evaluationMeasureService: EvaluationMeasureService,
+              private processPrioritizationService: ProcessPrioritizationService,
+              private teamLeadService: TeamLeadService,
+              private dialogService: DialogService) {
+  }
 
   ngOnInit() {
     this.budget = 210000000;
@@ -72,6 +86,14 @@ export class ScopeComponent implements OnInit {
     this.setupEvaluationMeasureGrid();
     this.setupTeamLeadsGrid();
     this.setupProcessPriorizationGrid();
+  }
+
+  loadEvaluationMeasure() {
+    this.evaluationMeasureService.getByProgram(this.program.id).subscribe(resp=> {
+      const result = (resp as any).result;
+      this.evaluationMeasureRows = result;
+      this.evaluationMeasureGridApi.setRowData(this.evaluationMeasureRows);
+    });
   }
 
   setupEvaluationMeasureGrid() {
@@ -293,6 +315,37 @@ export class ScopeComponent implements OnInit {
     const row: any = this.evaluationMeasureRows[rowIndex];
     const canSave = this.validateEvaluationMeasureRowData(row);
     if (canSave) {
+      if (!row.id) {
+        row.programId = this.program.id;
+        this.evaluationMeasureService.createEvaluationMeasure(row).subscribe(
+          resp => {
+            this.busy = false;
+
+            // Update view
+            this.viewEvaluationMeasureMode(rowIndex);
+
+          },
+          error => {
+            this.busy = false;
+            this.dialogService.displayDebug(error);
+            this.editEvaluationMeasureRow(rowIndex);
+
+          });
+      } else {
+        // Ensure creation information is preserved
+        this.evaluationMeasureService.updateEvaluationMeasure(row).subscribe(
+          resp => {
+            this.busy = false;
+            // Update view
+            this.viewEvaluationMeasureMode(rowIndex);
+
+          },
+          error => {
+            this.busy = false;
+            this.dialogService.displayDebug(error);
+            this.editEvaluationMeasureRow(rowIndex);
+          });
+      }
       this.viewEvaluationMeasureMode(rowIndex);
     } else {
       this.editEvaluationMeasureRow(rowIndex);
@@ -760,6 +813,7 @@ export class ScopeComponent implements OnInit {
   onEvaluationMeasureGridIsReady(gridApi: GridApi) {
     this.evaluationMeasureGridApi = gridApi;
     this.evaluationMeasureGridApi.setRowData([]);
+    this.loadEvaluationMeasure();
   }
 
   onTeamLeadGridIsReady(gridApi: GridApi) {

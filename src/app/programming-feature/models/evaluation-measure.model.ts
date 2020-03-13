@@ -1,6 +1,7 @@
 
 export class EvaluationMeasure {
   id: string;
+  programId: string;
   description: string;
   dataSource: string;
   targetPerformance: string;

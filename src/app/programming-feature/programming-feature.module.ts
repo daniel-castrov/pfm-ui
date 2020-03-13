@@ -52,6 +52,13 @@ import { PlanningService } from '../planning-feature/services/planning-service';
 import { PlanningServicesImpl } from '../planning-feature/services/planning-services-impl.service';
 import { TagService } from './services/tag.service';
 import { TagServiceImpl } from './services/tag-service-impl.service';
+import { TeamLeadService } from './services/team-lead.service';
+import { TeamLeadServiceImpl } from './services/team-lead-impl.service';
+import { EvaluationMeasureService } from './services/evaluation-measure.service';
+import { EvaluationMeasureServiceImpl } from './services/evaluation-measure-impl.service';
+import { ProcessPrioritization } from './models/process-prioritization.model';
+import { ProcessPrioritizationServiceImpl } from './services/process-prioritization-impl.service';
+import { ProcessPrioritizationService } from './services/process-prioritization.service';
 
 @NgModule({
   declarations: [
@@ -101,6 +108,9 @@ import { TagServiceImpl } from './services/tag-service-impl.service';
   { provide: VisibilityService, useClass: VisibilityServiceImpl },
   { provide: PlanningService, useClass: PlanningServicesImpl },
   { provide: TagService, useClass: TagServiceImpl },
+  { provide: TeamLeadService, useClass: TeamLeadServiceImpl },
+  { provide: EvaluationMeasureService, useClass: EvaluationMeasureServiceImpl },
+  { provide: ProcessPrioritizationService, useClass: ProcessPrioritizationServiceImpl },
     ProgrammingModel,
     RequestSummaryNavigationHistoryService]
 })
