@@ -122,7 +122,7 @@ export class ScopeComponent implements OnInit {
     this.evaluationMeasureColumnDefinitions = [
       {
         headerName: 'Measure ID',
-        field: 'id',
+        field: 'measureId',
         editable: true,
         suppressMovable: true,
         filter: false,
@@ -431,17 +431,17 @@ export class ScopeComponent implements OnInit {
     this.evaluationMeasureGridApi.setRowData(this.evaluationMeasureRows);
     this.evaluationMeasureGridApi.startEditingCell({
       rowIndex,
-      colKey: 'id'
+      colKey: 'measureId'
     });
   }
 
   private validateEvaluationMeasureRowData(row: any) {
     let errorMessage = '';
-    if (!row.id.length) {
+    if (!row.measureId.length) {
       errorMessage = 'Measure ID cannot be empty.';
     } else if (!row.description.length) {
       errorMessage = 'Description cannot be empty.';
-    } else if (row.id.length > 45) {
+    } else if (row.measureId.length > 45) {
       errorMessage = 'Measure ID cannot have more than 45 characters.';
     } else if (row.description.length > 45) {
       errorMessage = 'Description cannot have more than 45 characters.';
@@ -844,7 +844,7 @@ export class ScopeComponent implements OnInit {
     }
     this.evaluationMeasureRows.push(
       {
-        id: '',
+        measureId: '',
         description: '',
         dataSource: '',
         targetPerformance: '',
