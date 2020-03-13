@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, HostListener } from '@angular/core';
+import { Component, Input, OnInit, HostListener, Sanitizer, SecurityContext } from '@angular/core';
 import { NewsItem } from '../models/NewsItem';
 import { Router } from '@angular/router';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
@@ -11,6 +11,7 @@ import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
 import { PfmHomeService } from '../services/pfm-home-service';
 import { formatDate } from '@angular/common';
 import { DeleteDialogInterface } from 'src/app/programming-feature/requests/requests-details/requests-funding-line-grid/requests-funding-line-grid.component';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'pfm-latest-news-pod',
@@ -24,6 +25,9 @@ export class LatestNewsPodComponent implements OnInit {
   showDeleteRowDialog: boolean;
   showNewsItemDlg: boolean;
   Editor = ClassicEditor;
+  config = {
+    removePlugins: ['ImageUpload', 'MediaEmbed']
+  };
 
   latestNewsGridActionState = {
     VIEW: {
@@ -73,7 +77,7 @@ export class LatestNewsPodComponent implements OnInit {
   deleteDialog: DeleteDialogInterface = { title: 'Delete' };
 
   constructor(
-
+    private sanitizer: DomSanitizer,
     private appModel: AppModel,
     private homeService: PfmHomeService,
     private dialogService: DialogService,
@@ -81,7 +85,7 @@ export class LatestNewsPodComponent implements OnInit {
 
   ngOnInit() {
     this.loadLastNews();
-
+    console.log(this.Editor.builtinPlugins.map(x => x.pluginName));
     this.columns = [
       {
         headerName: 'Order',
@@ -380,7 +384,7 @@ export class LatestNewsPodComponent implements OnInit {
     const row: NewsItem = this.newsItems[rowId];
 
     // Check columns not empty
-    if (row.text.length > 0 && row.title.length <= 200 && row.begin != null) {
+    if (row.text.length > 0 && row.title.length > 0 && row.title.length <= 200 && row.begin != null) {
       // Convert to server mp
       const serverNI: NewsItem = this.convertToServerNI(row);
       this.busy = true;
@@ -421,7 +425,7 @@ export class LatestNewsPodComponent implements OnInit {
       }
 
       if (row.text.length === 0) {
-        errorMsg = 'The Text is empty. ';
+        errorMsg = 'The News Item text cannot be empty.';
         isError = true;
       }
       if (row.title.length > 200) {
@@ -575,6 +579,11 @@ export class LatestNewsPodComponent implements OnInit {
       show = show && now <= newsItem.end;
     }
     return show;
+  }
+
+  contentSanitize(text) {
+    return this.sanitizer.bypassSecurityTrustHtml(text);
+
   }
 }
 
