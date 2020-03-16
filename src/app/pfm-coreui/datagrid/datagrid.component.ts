@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, HostListener } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, HostListener, TemplateRef } from '@angular/core';
 import { ColumnApi, GridApi, Module, SuppressKeyboardEventParams } from '@ag-grid-community/all-modules';
 
 import { DatagridMbService } from '../services/datagrid-mb.service';
@@ -27,6 +27,8 @@ export class DatagridComponent implements OnInit {
   @Input() excelMessage = 'UNCLASSIFIED / FOUO';
   @Input() suppressKeyboardEvent = true;
   @Input() rowDragManaged = true;
+
+  @Input() extras: TemplateRef<any>;
 
   @Output() cellAction: EventEmitter<DataGridMessage> = new EventEmitter<DataGridMessage>();
   @Output() addCtaEvent: EventEmitter<any> = new EventEmitter<any>();

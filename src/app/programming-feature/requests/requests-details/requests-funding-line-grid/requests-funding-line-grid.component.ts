@@ -4,6 +4,7 @@ import { DataGridMessage } from '../../../../pfm-coreui/models/DataGridMessage';
 import { ActionCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/action-cell-renderer/action-cell-renderer.component';
 import { NumericCellEditor } from 'src/app/ag-grid/cell-editors/NumericCellEditor';
 import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
+import { trigger } from '@angular/animations';
 
 @Component({
   selector: 'pfm-requests-funding-line-grid',
@@ -49,6 +50,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
   currentNonSummaryRowDataState: RowDataStateInterface = {};
   currentSummaryRowDataState: RowDataStateInterface = {};
   deleteDialog: DeleteDialogInterface = { title: 'Delete' };
+  expanded: boolean;
 
   constructor(
     private dialogService: DialogService
@@ -62,6 +64,9 @@ export class RequestsFundingLineGridComponent implements OnInit {
 
   onToggleValueChanged(value) {
     this.showSubtotals = value;
+    if (!this.showSubtotals) {
+      this.collapse();
+    }
   }
 
   private setupSummaryFundingLineGrid() {
@@ -393,7 +398,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
                 'MILCON',
                 'JIDF'
               ]
-            },
+            }
           },
           {
             colId: 1,
@@ -425,7 +430,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
                 'BA5',
                 'BA6'
               ]
-            },
+            }
           },
           {
             colId: 2,
@@ -450,7 +455,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
                 'y',
                 'z'
               ]
-            },
+            }
           },
           {
             colId: 3,
@@ -476,7 +481,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
                 'JACW',
                 'zzzz'
               ]
-            },
+            }
           },
           {
             colId: 4,
@@ -502,9 +507,9 @@ export class RequestsFundingLineGridComponent implements OnInit {
                 '111.1',
                 '222.2'
               ]
-            },
-          },
-        ],
+            }
+          }
+        ]
       },
       ...columnGroups,
       {
@@ -852,6 +857,15 @@ export class RequestsFundingLineGridComponent implements OnInit {
     this.deleteDialog.display = false;
   }
 
+  collapse() {
+    this.expanded = false;
+    this.summaryFundingLineGridApi.collapseAll();
+  }
+
+  expand() {
+    this.expanded = true;
+    this.summaryFundingLineGridApi.expandAll();
+  }
 }
 
 export interface RowDataStateInterface {
