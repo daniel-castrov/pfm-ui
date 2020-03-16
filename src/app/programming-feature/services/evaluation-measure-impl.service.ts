@@ -4,6 +4,10 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { NewsItem } from '../../pfm-home-module/models/NewsItem';
 import { EvaluationMeasureService } from './evaluation-measure.service';
+import { EvaluationMeasure } from '../models/evaluation-measure.model';
+import { DATE_FORMAT } from '../../util/constants/input.constants';
+import * as moment from 'moment';
+
 
 @Injectable({
   providedIn: 'root'
@@ -15,19 +19,49 @@ export class EvaluationMeasureServiceImpl extends EvaluationMeasureService {
   }
 
   getByProgram(programId: string): Observable<object> {
-    return this.get('evaluationMeasure/programId/' + programId);
+    return this.get('evaluationMeasure/programId/' + programId)
+      .pipe(map((res: RestResponse) => this.convertDateArrayFromServer(res)));
   }
 
   createEvaluationMeasure(data: any): Observable<object> {
-    return this.post('evaluationMeasure', data);
+    const copy = this.convertDateFromClient(data);
+    return this.post('evaluationMeasure', copy)
+      .pipe(map((res: RestResponse) => this.convertDateFromServer(res)));
   }
 
   updateEvaluationMeasure(data: any): Observable<object> {
-    return this.put('evaluationMeasure', data);
+    const copy = this.convertDateFromClient(data);
+    return this.put('evaluationMeasure', copy);
   }
 
   deleteEvaluationMeasure(id: any): Observable<object> {
     return this.delete('evaluationMeasure/' + id);
   }
 
+  protected convertDateFromClient(evaluationMeasure: EvaluationMeasure): EvaluationMeasure {
+    const copy: EvaluationMeasure = Object.assign({}, evaluationMeasure, {
+      currentPerformanceDate: evaluationMeasure.currentPerformanceDate != null
+      && evaluationMeasure.currentPerformanceDate.isValid()
+        ? evaluationMeasure.currentPerformanceDate.format(DATE_FORMAT) : null
+    });
+    return copy;
+  }
+
+  protected convertDateFromServer(res: RestResponse): RestResponse {
+    if (res.result) {
+      res.result.currentPerformanceDate = res.result.currentPerformanceDate != null ?
+        moment(res.result.currentPerformanceDate) : null;
+    }
+    return res;
+  }
+
+  protected convertDateArrayFromServer(res: RestResponse): RestResponse {
+    if (res.result) {
+      res.result.forEach((evaluationMeasure: EvaluationMeasure) => {
+        evaluationMeasure.currentPerformanceDate = evaluationMeasure.currentPerformanceDate != null ?
+          moment(evaluationMeasure.currentPerformanceDate) : null;
+      });
+    }
+    return res;
+  }
 }

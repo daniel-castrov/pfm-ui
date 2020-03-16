@@ -1,3 +1,4 @@
+import { Moment } from 'moment';
 
 export class EvaluationMeasure {
   id: string;
@@ -7,7 +8,7 @@ export class EvaluationMeasure {
   dataSource: string;
   targetPerformance: string;
   currentPerformance: string;
-  currentPerformanceDate: Date;
+  currentPerformanceDate: Moment;
 
   // Client side only
   action: any;
