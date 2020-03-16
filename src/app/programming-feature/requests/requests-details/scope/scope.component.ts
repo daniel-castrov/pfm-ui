@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ColDef, GridApi } from '@ag-grid-community/all-modules';
 import { ActionCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/action-cell-renderer/action-cell-renderer.component';
 import { DatePickerCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/date-picker-cell-renderer/date-picker-cell-renderer.component';
@@ -7,6 +7,15 @@ import { DataGridMessage } from 'src/app/pfm-coreui/models/DataGridMessage';
 import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
 import { FileMetaData } from 'src/app/pfm-common-models/FileMetaData';
 import { Attachment } from 'src/app/pfm-common-models/Attachment';
+import { Program } from '../../../models/Program';
+import { EvaluationMeasureServiceImpl } from '../../../services/evaluation-measure-impl.service';
+import { EvaluationMeasureService } from '../../../services/evaluation-measure.service';
+import { ProcessPrioritizationService } from '../../../services/process-prioritization.service';
+import { TeamLeadService } from '../../../services/team-lead.service';
+import { Action } from '../../../../pfm-common-models/Action';
+import { objectKeys } from 'codelyzer/util/objectKeys';
+import { Moment } from 'moment';
+import * as moment from 'moment';
 
 @Component({
   selector: 'pfm-scope',
@@ -14,6 +23,8 @@ import { Attachment } from 'src/app/pfm-common-models/Attachment';
   styleUrls: ['./scope.component.scss']
 })
 export class ScopeComponent implements OnInit {
+
+  @Input() program: Program;
 
   actionState = {
     VIEW: {
@@ -39,6 +50,8 @@ export class ScopeComponent implements OnInit {
     'Low'
   ];
 
+  busy: boolean;
+
   budget: number;
   schedule: string;
 
@@ -63,7 +76,11 @@ export class ScopeComponent implements OnInit {
   attachmentsUploaded: string[] = [];
   deleteDialog: DeleteDialogInterface = { title: 'Delete' };
 
-  constructor(private dialogService: DialogService) { }
+  constructor(private evaluationMeasureService: EvaluationMeasureService,
+              private processPrioritizationService: ProcessPrioritizationService,
+              private teamLeadService: TeamLeadService,
+              private dialogService: DialogService) {
+  }
 
   ngOnInit() {
     this.budget = 210000000;
@@ -74,11 +91,49 @@ export class ScopeComponent implements OnInit {
     this.setupProcessPriorizationGrid();
   }
 
+  loadEvaluationMeasures() {
+    this.evaluationMeasureService.getByProgram(this.program.id).subscribe(resp => {
+      const result = (resp as any).result;
+      this.evaluationMeasureRows = result;
+      for (let i = 0; i < result.length; i++) {
+        const obj = result[i];
+        if (obj.currentPerformanceDate) {
+          obj.currentPerformanceDate = obj.currentPerformanceDate.format('MM/DD/YYYY');
+        }
+        this.viewEvaluationMeasureMode(i);
+      }
+    });
+  }
+
+  loadTeamLeads() {
+    this.teamLeadService.getByProgram(this.program.id).subscribe(resp => {
+      const result = (resp as any).result;
+      this.teamLeadRows = result;
+      for (let i = 0; i < result.length; i++) {
+        this.viewTeamLeadMode(i);
+      }
+    });
+  }
+
+  loadProcessPrioritizations() {
+    this.processPrioritizationService.getByProgram(this.program.id).subscribe(resp => {
+      const result = (resp as any).result;
+      this.processPriorizationRows = result;
+      for (let i = 0; i < result.length; i++) {
+        const obj = result[i];
+        if (obj.estimatedCompletionDate) {
+          obj.estimatedCompletionDate = obj.estimatedCompletionDate.format('MM/DD/YYYY');
+        }
+        this.viewProcessPriorizationMode(i);
+      }
+    });
+  }
+
   setupEvaluationMeasureGrid() {
     this.evaluationMeasureColumnDefinitions = [
       {
         headerName: 'Measure ID',
-        field: 'id',
+        field: 'measureId',
         editable: true,
         suppressMovable: true,
         filter: false,
@@ -293,6 +348,45 @@ export class ScopeComponent implements OnInit {
     const row: any = this.evaluationMeasureRows[rowIndex];
     const canSave = this.validateEvaluationMeasureRowData(row);
     if (canSave) {
+      if (row.currentPerformanceDate) {
+        row.currentPerformanceDate = moment(row.currentPerformanceDate, 'MM/DD/YYYY');
+      }
+      if (!row.id) {
+        row.programId = this.program.id;
+        this.evaluationMeasureService.createEvaluationMeasure(row).subscribe(
+          resp => {
+            this.busy = false;
+            if (row.currentPerformanceDate) {
+              row.currentPerformanceDate = row.currentPerformanceDate.format('MM/DD/YYYY');
+            }
+            // Update view
+            this.viewEvaluationMeasureMode(rowIndex);
+
+          },
+          error => {
+            this.busy = false;
+            this.dialogService.displayDebug(error);
+            this.editEvaluationMeasureRow(rowIndex);
+
+          });
+      } else {
+        // Ensure creation information is preserved
+        this.evaluationMeasureService.updateEvaluationMeasure(row).subscribe(
+          resp => {
+            this.busy = false;
+            if (row.currentPerformanceDate) {
+              row.currentPerformanceDate = row.currentPerformanceDate.format('MM/DD/YYYY');
+            }
+            // Update view
+            this.viewEvaluationMeasureMode(rowIndex);
+
+          },
+          error => {
+            this.busy = false;
+            this.dialogService.displayDebug(error);
+            this.editEvaluationMeasureRow(rowIndex);
+          });
+      }
       this.viewEvaluationMeasureMode(rowIndex);
     } else {
       this.editEvaluationMeasureRow(rowIndex);
@@ -312,6 +406,12 @@ export class ScopeComponent implements OnInit {
   }
 
   private deleteEvaluationMeasureRow(rowIndex: number) {
+    const rowObj = this.evaluationMeasureRows[rowIndex];
+    if (rowObj.id) {
+      this.evaluationMeasureService.deleteEvaluationMeasure(rowObj.id).subscribe(x => {
+        this.busy = false;
+      });
+    }
     this.evaluationMeasureRows.splice(rowIndex, 1);
     this.evaluationMeasureRows.forEach(row => {
       row.order--;
@@ -356,17 +456,17 @@ export class ScopeComponent implements OnInit {
     this.evaluationMeasureGridApi.setRowData(this.evaluationMeasureRows);
     this.evaluationMeasureGridApi.startEditingCell({
       rowIndex,
-      colKey: 'id'
+      colKey: 'measureId'
     });
   }
 
   private validateEvaluationMeasureRowData(row: any) {
     let errorMessage = '';
-    if (!row.id.length) {
+    if (!row.measureId.length) {
       errorMessage = 'Measure ID cannot be empty.';
     } else if (!row.description.length) {
       errorMessage = 'Description cannot be empty.';
-    } else if (row.id.length > 45) {
+    } else if (row.measureId.length > 45) {
       errorMessage = 'Measure ID cannot have more than 45 characters.';
     } else if (row.description.length > 45) {
       errorMessage = 'Description cannot have more than 45 characters.';
@@ -421,6 +521,37 @@ export class ScopeComponent implements OnInit {
     const row: any = this.teamLeadRows[rowIndex];
     const canSave = this.validateTeamLeadRowData(row);
     if (canSave) {
+      if (!row.id) {
+        row.programId = this.program.id;
+        this.teamLeadService.createTeamLead(row).subscribe(
+          resp => {
+            this.busy = false;
+
+            // Update view
+            this.viewTeamLeadMode(rowIndex);
+
+          },
+          error => {
+            this.busy = false;
+            this.dialogService.displayDebug(error);
+            this.editTeamLeadRow(rowIndex);
+
+          });
+      } else {
+        // Ensure creation information is preserved
+        this.teamLeadService.updateTeamLead(row).subscribe(
+          resp => {
+            this.busy = false;
+            // Update view
+            this.viewTeamLeadMode(rowIndex);
+
+          },
+          error => {
+            this.busy = false;
+            this.dialogService.displayDebug(error);
+            this.editTeamLeadRow(rowIndex);
+          });
+      }
       this.viewTeamLeadMode(rowIndex);
     } else {
       this.editTeamLeadRow(rowIndex);
@@ -440,6 +571,12 @@ export class ScopeComponent implements OnInit {
   }
 
   private deleteTeamLeadRow(rowIndex: number) {
+    const rowObj = this.teamLeadRows[rowIndex];
+    if (rowObj.id) {
+      this.teamLeadService.deleteTeamLead(rowObj.id).subscribe(x => {
+        this.busy = false;
+      });
+    }
     this.teamLeadRows.splice(rowIndex, 1);
     this.teamLeadRows.forEach(row => {
       row.order--;
@@ -542,6 +679,47 @@ export class ScopeComponent implements OnInit {
     const row: any = this.processPriorizationRows[rowIndex];
     const canSave = this.validateProcessPriorizationRowData(row);
     if (canSave) {
+      if (row.estimatedCompletionDate) {
+        row.estimatedCompletionDate = moment(row.estimatedCompletionDate, 'MM/DD/YYYY');
+      }
+      if (!row.id) {
+        row.programId = this.program.id;
+        this.processPrioritizationService.createProcessPrioritization(row).subscribe(
+          resp => {
+            this.busy = false;
+
+            if (row.estimatedCompletionDate) {
+              row.estimatedCompletionDate = row.estimatedCompletionDate.format('MM/DD/YYYY');
+            }
+            // Update view
+            this.viewProcessPriorizationMode(rowIndex);
+
+          },
+          error => {
+            this.busy = false;
+            this.dialogService.displayDebug(error);
+            this.editProcessPriorizationRow(rowIndex);
+
+          });
+      } else {
+        // Ensure creation information is preserved
+        this.processPrioritizationService.updateProcessPrioritization(row).subscribe(
+          resp => {
+            this.busy = false;
+
+            if (row.estimatedCompletionDate) {
+              row.estimatedCompletionDate = row.estimatedCompletionDate.format('MM/DD/YYYY');
+            }
+            // Update view
+            this.viewProcessPriorizationMode(rowIndex);
+
+          },
+          error => {
+            this.busy = false;
+            this.dialogService.displayDebug(error);
+            this.editProcessPriorizationRow(rowIndex);
+          });
+      }
       this.viewProcessPriorizationMode(rowIndex);
     } else {
       this.editProcessPriorizationRow(rowIndex);
@@ -561,6 +739,12 @@ export class ScopeComponent implements OnInit {
   }
 
   private deleteProcessPriorizationRow(rowIndex: number) {
+    const rowObj = this.processPriorizationRows[rowIndex];
+    if (rowObj.id) {
+      this.processPrioritizationService.deleteProcessPrioritization(rowObj.id).subscribe(x => {
+        this.busy = false;
+      });
+    }
     this.processPriorizationRows.splice(rowIndex, 1);
     this.processPriorizationRows.forEach(row => {
       row.order--;
@@ -707,7 +891,7 @@ export class ScopeComponent implements OnInit {
     }
     this.evaluationMeasureRows.push(
       {
-        id: '',
+        measureId: '',
         description: '',
         dataSource: '',
         targetPerformance: '',
@@ -760,16 +944,19 @@ export class ScopeComponent implements OnInit {
   onEvaluationMeasureGridIsReady(gridApi: GridApi) {
     this.evaluationMeasureGridApi = gridApi;
     this.evaluationMeasureGridApi.setRowData([]);
+    this.loadEvaluationMeasures();
   }
 
   onTeamLeadGridIsReady(gridApi: GridApi) {
     this.teamLeadGridApi = gridApi;
     this.teamLeadGridApi.setRowData([]);
+    this.loadTeamLeads();
   }
 
   onProcessPriorizationGridIsReady(gridApi: GridApi) {
     this.processPriorizationGridApi = gridApi;
     this.processPriorizationGridApi.setRowData([]);
+    this.loadProcessPrioritizations();
   }
 
   handleNewAttachments(newFile: FileMetaData) {
