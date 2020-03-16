@@ -2,21 +2,24 @@
   <pfm-toggle-input [checked]="showSubtotals" [label]="'Show Subtotals'" (valueChanged)="onToggleValueChanged($event)">
   </pfm-toggle-input>
   <div class="grid-container" *ngIf="showSubtotals">
-    <pfm-datagrid (gridIsReady)="onSummaryGridReady($event)" [columns]="summaryFundingLineColumnsDefinition"
-      [rows]="summaryFundingLineRows" (cellAction)="onSummaryCellAction($event)" [showPagination]="false"
-      (mousedown)="onSummaryMouseDown($event)" [showGrandTotal]="true">
+    <pfm-datagrid [extras]="expandCollapse" (gridIsReady)="onSummaryGridReady($event)"
+                  [columns]="summaryFundingLineColumnsDefinition"
+                  [rows]="summaryFundingLineRows" (cellAction)="onSummaryCellAction($event)" [showPagination]="false"
+                  (mousedown)="onSummaryMouseDown($event)" [showGrandTotal]="true">
     </pfm-datagrid>
   </div>
   <div class="grid-container" *ngIf="!showSubtotals">
     <pfm-datagrid (gridIsReady)="onNonSummaryGridIsReady($event)" (cellAction)="onNonSummaryCellAction($event)"
-      [columns]="nonSummaryFundingLineColumnsDefinition" [rows]="nonSummaryFundingLineRows" [showAddSingleRow]="true"
-      [showPagination]="false" (addCtaEvent)="onNonSummaryRowAdd($event)" (mousedown)="onNonSummaryMouseDown($event)">
+                  [columns]="nonSummaryFundingLineColumnsDefinition" [rows]="nonSummaryFundingLineRows"
+                  [showAddSingleRow]="true"
+                  [showPagination]="false" (addCtaEvent)="onNonSummaryRowAdd($event)"
+                  (mousedown)="onNonSummaryMouseDown($event)">
     </pfm-datagrid>
   </div>
 </div>
 <ng-container *ngIf="deleteDialog.display">
   <pfm-custom-dialog [title]="deleteDialog.title" [body]="deleteBody" [actions]="deleteActions"
-    (onCancelDialog)="onCancelDeleteDialog()"></pfm-custom-dialog>
+                     (onCancelDialog)="onCancelDeleteDialog()"></pfm-custom-dialog>
 
   <ng-template #deleteBody>
     <span>{{ deleteDialog.bodyText }}</span>
@@ -32,3 +35,10 @@
     </div>
   </ng-template>
 </ng-container>
+
+<ng-template #expandCollapse>
+  <div>
+    <fa name="angle-double-down" title="Expand al Rows" *ngIf="!expanded" (click)="expand()"></fa>
+    <fa name="angle-double-up" title="Collapse al Rows" *ngIf="expanded" (click)="collapse()"></fa>
+  </div>
+</ng-template>
