@@ -13,6 +13,9 @@ import { EvaluationMeasureService } from '../../../services/evaluation-measure.s
 import { ProcessPrioritizationService } from '../../../services/process-prioritization.service';
 import { TeamLeadService } from '../../../services/team-lead.service';
 import { Action } from '../../../../pfm-common-models/Action';
+import { objectKeys } from 'codelyzer/util/objectKeys';
+import { Moment } from 'moment';
+import * as moment from 'moment';
 
 @Component({
   selector: 'pfm-scope',
@@ -93,6 +96,10 @@ export class ScopeComponent implements OnInit {
       const result = (resp as any).result;
       this.evaluationMeasureRows = result;
       for (let i = 0; i < result.length; i++) {
+        const obj = result[i];
+        if (obj.currentPerformanceDate) {
+          obj.currentPerformanceDate = obj.currentPerformanceDate.format('MM/DD/YYYY');
+        }
         this.viewEvaluationMeasureMode(i);
       }
     });
@@ -113,6 +120,10 @@ export class ScopeComponent implements OnInit {
       const result = (resp as any).result;
       this.processPriorizationRows = result;
       for (let i = 0; i < result.length; i++) {
+        const obj = result[i];
+        if (obj.estimatedCompletionDate) {
+          obj.estimatedCompletionDate = obj.estimatedCompletionDate.format('MM/DD/YYYY');
+        }
         this.viewProcessPriorizationMode(i);
       }
     });
@@ -337,12 +348,17 @@ export class ScopeComponent implements OnInit {
     const row: any = this.evaluationMeasureRows[rowIndex];
     const canSave = this.validateEvaluationMeasureRowData(row);
     if (canSave) {
+      if (row.currentPerformanceDate) {
+        row.currentPerformanceDate = moment(row.currentPerformanceDate, 'MM/DD/YYYY');
+      }
       if (!row.id) {
         row.programId = this.program.id;
         this.evaluationMeasureService.createEvaluationMeasure(row).subscribe(
           resp => {
             this.busy = false;
-
+            if (row.currentPerformanceDate) {
+              row.currentPerformanceDate = row.currentPerformanceDate.format('MM/DD/YYYY');
+            }
             // Update view
             this.viewEvaluationMeasureMode(rowIndex);
 
@@ -358,6 +374,9 @@ export class ScopeComponent implements OnInit {
         this.evaluationMeasureService.updateEvaluationMeasure(row).subscribe(
           resp => {
             this.busy = false;
+            if (row.currentPerformanceDate) {
+              row.currentPerformanceDate = row.currentPerformanceDate.format('MM/DD/YYYY');
+            }
             // Update view
             this.viewEvaluationMeasureMode(rowIndex);
 
@@ -387,6 +406,12 @@ export class ScopeComponent implements OnInit {
   }
 
   private deleteEvaluationMeasureRow(rowIndex: number) {
+    const rowObj = this.evaluationMeasureRows[rowIndex];
+    if (rowObj.id) {
+      this.evaluationMeasureService.deleteEvaluationMeasure(rowObj.id).subscribe(x => {
+        this.busy = false;
+      });
+    }
     this.evaluationMeasureRows.splice(rowIndex, 1);
     this.evaluationMeasureRows.forEach(row => {
       row.order--;
@@ -546,6 +571,12 @@ export class ScopeComponent implements OnInit {
   }
 
   private deleteTeamLeadRow(rowIndex: number) {
+    const rowObj = this.teamLeadRows[rowIndex];
+    if (rowObj.id) {
+      this.teamLeadService.deleteTeamLead(rowObj.id).subscribe(x => {
+        this.busy = false;
+      });
+    }
     this.teamLeadRows.splice(rowIndex, 1);
     this.teamLeadRows.forEach(row => {
       row.order--;
@@ -648,12 +679,18 @@ export class ScopeComponent implements OnInit {
     const row: any = this.processPriorizationRows[rowIndex];
     const canSave = this.validateProcessPriorizationRowData(row);
     if (canSave) {
+      if (row.estimatedCompletionDate) {
+        row.estimatedCompletionDate = moment(row.estimatedCompletionDate, 'MM/DD/YYYY');
+      }
       if (!row.id) {
         row.programId = this.program.id;
         this.processPrioritizationService.createProcessPrioritization(row).subscribe(
           resp => {
             this.busy = false;
 
+            if (row.estimatedCompletionDate) {
+              row.estimatedCompletionDate = row.estimatedCompletionDate.format('MM/DD/YYYY');
+            }
             // Update view
             this.viewProcessPriorizationMode(rowIndex);
 
@@ -669,6 +706,10 @@ export class ScopeComponent implements OnInit {
         this.processPrioritizationService.updateProcessPrioritization(row).subscribe(
           resp => {
             this.busy = false;
+
+            if (row.estimatedCompletionDate) {
+              row.estimatedCompletionDate = row.estimatedCompletionDate.format('MM/DD/YYYY');
+            }
             // Update view
             this.viewProcessPriorizationMode(rowIndex);
 
@@ -698,6 +739,12 @@ export class ScopeComponent implements OnInit {
   }
 
   private deleteProcessPriorizationRow(rowIndex: number) {
+    const rowObj = this.processPriorizationRows[rowIndex];
+    if (rowObj.id) {
+      this.processPrioritizationService.deleteProcessPrioritization(rowObj.id).subscribe(x => {
+        this.busy = false;
+      });
+    }
     this.processPriorizationRows.splice(rowIndex, 1);
     this.processPriorizationRows.forEach(row => {
       row.order--;
