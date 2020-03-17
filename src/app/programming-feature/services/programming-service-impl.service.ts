@@ -39,4 +39,7 @@ export class ProgrammingServiceImpl extends ProgrammingService {
     return this.get('program/' + id);
   }
 
+  updateProgram(data: any): Observable<object> {
+    return this.put('program', data);
+  }
 }

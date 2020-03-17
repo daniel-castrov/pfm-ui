@@ -87,27 +87,27 @@
           <div class="row">
             <label class="col-2 my-auto mx-0">SecDef LOE</label>
             <span class="col-10">
-              <select class="form-control-sm" formControlName="secDefLOE">
+              <select class="form-control-sm" formControlName="secDefLOEId">
                 <option value="" disabled>Select...</option>
-                <option *ngFor="let option of secDefLOE" [value]="option">{{ option.name }}</option>
+                <option *ngFor="let option of secDefLOE" [value]="option.id">{{ option.name }}</option>
               </select>
             </span>
           </div>
           <div class="row">
             <label class="col-2 my-auto mx-0">Strategic Imperative</label>
             <span class="col-10">
-              <select class="form-control-sm" formControlName="strategicImperatives">
+              <select class="form-control-sm" formControlName="strategicImperativeId">
                 <option value="" disabled>Select...</option>
-                <option *ngFor="let option of strategicImperatives" [value]="option">{{ option.name }}</option>
+                <option *ngFor="let option of strategicImperatives" [value]="option.id">{{ option.name }}</option>
               </select>
             </span>
           </div>
           <div class="row">
             <label class="col-2 my-auto mx-0">Agency Objective</label>
             <span class="col-10">
-              <select class="form-control-sm" formControlName="agencyObjectives">
+              <select class="form-control-sm" formControlName="agencyObjectiveId">
                 <option value="" disabled>Select...</option>
-                <option *ngFor="let option of agencyObjectives" [value]="option">{{ option.name }}</option>
+                <option *ngFor="let option of agencyObjectives" [value]="option.id">{{ option.name }}</option>
               </select>
             </span>
           </div>

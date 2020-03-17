@@ -19,4 +19,5 @@ export abstract class ProgrammingService extends BaseRestService {
   abstract getPermittedOrganizations(): Observable<object>;
   abstract getPRForYearAndShortName(year: number, shortName: string): Observable<any>;
   abstract getProgramById(id: string): Observable<any>;
+  abstract updateProgram(program: any): Observable<any>;
 }

@@ -71,9 +71,9 @@ export class RequestsDetailsFormComponent implements OnInit {
       missionPriority: new FormControl('', [Validators.required]),
       agencyPriority: new FormControl(''),
       directoratePriority: new FormControl(''),
-      secDefLOE: new FormControl(''),
-      strategicImperatives: new FormControl(''),
-      agencyObjectives: new FormControl(''),
+      secDefLOEId: new FormControl(''),
+      strategicImperativeId: new FormControl(''),
+      agencyObjectiveId: new FormControl(''),
     }, { validators: this.formValidator });
 
     this.disableInputsInEditMode();

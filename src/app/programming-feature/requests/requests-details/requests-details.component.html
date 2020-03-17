@@ -38,7 +38,7 @@
 <tabset class="program-tab-style" destroyOnHide="true">
   <tab heading="Program" style="width:100%;height:100%" (selectTab)="onSelectTab($event)">
     <div class="section-tab">
-      <pfm-requests-details-form [pomYear]="pomYear" [program]="program"></pfm-requests-details-form>
+      <pfm-requests-details-form #detailsForm [pomYear]="pomYear" [program]="program"></pfm-requests-details-form>
     </div>
   </tab>
   <tab heading="Funds" active="true" style="width:100%;height:100%" (selectTab)="onSelectTab($event)">

@@ -1,5 +1,6 @@
 import { FundingLine } from './FundingLine';
 import { Milestone } from './Milestone';
+import { ProgramStatus } from './enumerations/program-status.model';
 
 export class Program {
   created: any;
@@ -11,7 +12,7 @@ export class Program {
 
   id: string;
   organizationId: string;
-  programStatus: string;
+  programStatus: ProgramStatus;
   bulkOrigin: boolean;
   type: string;
   containerId: string;
@@ -39,9 +40,9 @@ export class Program {
   manager: string;
   acquisitionType?: string;
   responsibleRoleId: string;
-  secDefLOE: string;
-  strategicImperative: string;
-  agencyObjective: string;
+  secDefLOEId: string;
+  strategicImperativeId: string;
+  agencyObjectiveId: string;
 
   constructor() { }
 }

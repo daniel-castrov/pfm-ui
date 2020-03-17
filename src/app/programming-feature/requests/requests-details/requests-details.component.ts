@@ -6,6 +6,8 @@ import { ScheduleComponent } from './schedule/schedule.component';
 import { TabDirective } from 'ngx-bootstrap';
 import { ProgrammingService } from '../../services/programming-service';
 import { Program } from '../../models/Program';
+import { RequestsDetailsFormComponent } from './requests-details-form/requests-details-form.component';
+import { ProgramStatus } from '../../models/enumerations/program-status.model';
 
 @Component({
   selector: 'pfm-requests-details',
@@ -17,9 +19,12 @@ export class RequestsDetailsComponent implements OnInit {
 
   @ViewChild('pfmSchedule', { static: false })
   pfmSchedule: ScheduleComponent;
+  @ViewChild('detailsForm', { static: false }) requestDetailsFormComponent: RequestsDetailsFormComponent;
+
   currentSelectedTab = 1;
   pomYear: number;
   program: Program;
+  busy: boolean;
 
   constructor(
     public programmingModel: ProgrammingModel,
@@ -27,7 +32,8 @@ export class RequestsDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private requestSummaryNavigationHistoryService: RequestSummaryNavigationHistoryService
-  ) { }
+  ) {
+  }
 
   goBack(): void {
     this.requestSummaryNavigationHistoryService.prepareNavigationHistory();
@@ -48,15 +54,20 @@ export class RequestsDetailsComponent implements OnInit {
   }
 
   onSave(): void {
-    console.log('Approve Organization');
+    this.busy = true;
+    const pro = this.getFromDetailsForm();
+    pro.programStatus = ProgramStatus.SAVED;
+    this.programmingService.updateProgram(pro).subscribe(resp => {
+      this.busy = false;
+    });
   }
 
   onReject(): void {
-    console.log('Approve Organization');
+    console.log('Reject Organization');
   }
 
   onValidate(): void {
-    console.log('Approve Organization');
+    console.log('Validate Organization');
   }
 
   onSelectTab(event: TabDirective) {
@@ -80,5 +91,14 @@ export class RequestsDetailsComponent implements OnInit {
         this.currentSelectedTab = 5;
         break;
     }
+  }
+
+  private getFromDetailsForm(): Program {
+    return {
+      ...this.program,
+      secDefLOEId: this.requestDetailsFormComponent.form.get(['secDefLOEId']).value,
+      strategicImperativeId: this.requestDetailsFormComponent.form.get(['strategicImperativeId']).value,
+      agencyObjectiveId: this.requestDetailsFormComponent.form.get(['agencyObjectiveId']).value
+    };
   }
 }
