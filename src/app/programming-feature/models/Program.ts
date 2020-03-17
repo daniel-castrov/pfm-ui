@@ -40,9 +40,19 @@ export class Program {
   manager: string;
   acquisitionType?: string;
   responsibleRoleId: string;
+  divisionId: string;
+  missionPriorityId: string;
+  agencyPriority: number;
+  directoratePriority: number;
   secDefLOEId: string;
   strategicImperativeId: string;
   agencyObjectiveId: string;
 
-  constructor() { }
+  aim: string;
+  goal: string;
+  quality: string;
+  other: string;
+
+  constructor() {
+  }
 }

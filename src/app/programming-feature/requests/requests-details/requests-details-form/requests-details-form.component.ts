@@ -31,9 +31,9 @@ export class RequestsDetailsFormComponent implements OnInit {
   addMode = false;
   organizations: Organization[];
   divisions = [];
-  missionPriorities: string[];
-  agencyPriorities: string[];
-  directoratePriorities: string[];
+  missionPriorities: any[];
+  agencyPriorities: number[];
+  directoratePriorities: number[];
   fileid: string;
   isUploading: boolean;
   imagePath: string;
@@ -46,7 +46,8 @@ export class RequestsDetailsFormComponent implements OnInit {
     private planningService: PlanningService,
     private fileDownloadService: FileDownloadService,
     private tagService: TagService
-  ) { }
+  ) {
+  }
 
   async ngOnInit() {
     await this.populateDropDowns();
@@ -55,6 +56,7 @@ export class RequestsDetailsFormComponent implements OnInit {
       this.program = new Program();
     }
     this.loadForm();
+    this.updateForm(this.program);
   }
 
   loadForm() {
@@ -67,16 +69,28 @@ export class RequestsDetailsFormComponent implements OnInit {
           org => org.id === this.program.organizationId
         ).abbreviation : undefined, [Validators.required]
       ),
-      division: new FormControl(''),
-      missionPriority: new FormControl('', [Validators.required]),
+      divisionId: new FormControl(''),
+      missionPriorityId: new FormControl('', [Validators.required]),
       agencyPriority: new FormControl(''),
       directoratePriority: new FormControl(''),
       secDefLOEId: new FormControl(''),
       strategicImperativeId: new FormControl(''),
-      agencyObjectiveId: new FormControl(''),
+      agencyObjectiveId: new FormControl('')
     }, { validators: this.formValidator });
 
     this.disableInputsInEditMode();
+  }
+
+  updateForm(program: Program) {
+    this.form.patchValue({
+      divisionId: program.divisionId,
+      missionPriorityId: program.missionPriorityId,
+      agencyPriority: program.agencyPriority,
+      directoratePriority: program.directoratePriority,
+      secDefLOEId: program.secDefLOEId,
+      strategicImperativeId: program.strategicImperativeId,
+      agencyObjectiveId: program.agencyObjectiveId
+    });
   }
 
   async populateDropDowns() {
@@ -84,14 +98,14 @@ export class RequestsDetailsFormComponent implements OnInit {
     this.planningService.getPlanningByYear(this.pomYear)
       .pipe(switchMap(planning => this.planningService.getMissionPriorities(planning.result.id)))
       .subscribe(missionPriorities => {
-        this.missionPriorities = missionPriorities.result.map(mission => mission.title);
+        this.missionPriorities = missionPriorities.result;
       });
     this.tagService.getByType(this.DIVISIONS)
       .subscribe(resp => {
         this.divisions = resp.result as Tag[];
       });
-    this.agencyPriorities = [].constructor(20);
-    this.directoratePriorities = [].constructor(20);
+    this.agencyPriorities = Array.from({length: 20}, (x,i) => i+1);
+    this.directoratePriorities = Array.from({length: 20}, (x,i) => i+1);
     this.tagService.getByType(this.SEC_DEF_LOE)
       .subscribe(resp => {
         this.secDefLOE = resp.result as Tag[];
@@ -141,5 +155,9 @@ export class RequestsDetailsFormComponent implements OnInit {
     }
 
     return invalidFields;
+  };
+
+  trackById(index: number, item: any) {
+    return item.id;
   }
 }
