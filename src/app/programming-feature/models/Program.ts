@@ -1,4 +1,4 @@
-import { FundingLine } from './FundingLine';
+import { FundingLine } from './funding-line.model';
 import { Milestone } from './Milestone';
 
 export class Program {
