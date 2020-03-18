@@ -5,9 +5,9 @@
     <h3 *ngIf="program">
       POM{{ pomYear % 100 }} Program Request Details:
       {{
-        program.shortName === 'undefined'
-          ? ''
-          : program.shortName
+      program.shortName === 'undefined'
+        ? ''
+        : program.shortName
       }}
     </h3>
   </div>
@@ -64,7 +64,7 @@
   </tab>
   <tab heading="Justification" style="width:100%;height:100%" (selectTab)="onSelectTab($event)">
     <div class="section-tab">
-      <pfm-justification [pomYear]="pomYear" [program]="program" *ngIf="currentSelectedTab === 5">
+      <pfm-justification #justification [pomYear]="pomYear" [program]="program" *ngIf="program">
       </pfm-justification>
     </div>
   </tab>

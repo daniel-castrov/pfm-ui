@@ -3,6 +3,7 @@ import { GoogleChartComponent } from 'ng2-google-charts';
 import { GoogleChartInterface } from 'ng2-google-charts/google-charts-interfaces';
 import { ProgrammingService } from 'src/app/programming-feature/services/programming-service';
 import { Program } from 'src/app/programming-feature/models/Program';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'pfm-justification',
@@ -18,6 +19,8 @@ export class JustificationComponent implements OnInit {
 
   @Input() pomYear: number;
   @Input() program: Program;
+
+  form: FormGroup;
 
   chartData: GoogleChartInterface = {
     chartType: 'ColumnChart',
@@ -44,13 +47,13 @@ export class JustificationComponent implements OnInit {
         format: '$#,###',
         gridlines: {
           count: 10
-        },
+        }
       },
       animation: {
         duration: 500,
         easing: 'out',
         startup: true
-      },
+      }
     }
   };
 
@@ -62,11 +65,31 @@ export class JustificationComponent implements OnInit {
 
   constructor(
     private programmingService: ProgrammingService
-  ) { }
+  ) {
+  }
 
   async ngOnInit() {
+    this.loadForm();
     await this.loadPom();
     this.drawLineChart(true);
+
+    this.updateForm(this.program);
+
+  }
+
+  loadForm() {
+    this.form = new FormGroup({
+      justification: new FormControl(''),
+      impactN: new FormControl('')
+    });
+
+  }
+
+  updateForm(program: Program) {
+    this.form.patchValue({
+      justification: program.justification,
+      impactN: program.impactN
+    });
   }
 
   @HostListener('window:resize', ['$event'])
