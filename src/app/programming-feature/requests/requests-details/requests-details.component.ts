@@ -6,6 +6,9 @@ import { ScheduleComponent } from './schedule/schedule.component';
 import { TabDirective } from 'ngx-bootstrap';
 import { ProgrammingService } from '../../services/programming-service';
 import { Program } from '../../models/Program';
+import { RequestsDetailsFormComponent } from './requests-details-form/requests-details-form.component';
+import { ProgramStatus } from '../../models/enumerations/program-status.model';
+import { ScopeComponent } from './scope/scope.component';
 
 @Component({
   selector: 'pfm-requests-details',
@@ -17,9 +20,15 @@ export class RequestsDetailsComponent implements OnInit {
 
   @ViewChild('pfmSchedule', { static: false })
   pfmSchedule: ScheduleComponent;
+  @ViewChild('detailsForm', { static: false })
+  requestDetailsFormComponent: RequestsDetailsFormComponent;
+  @ViewChild('scope', { static: false })
+  scopeComponent: ScopeComponent;
+
   currentSelectedTab = 1;
   pomYear: number;
   program: Program;
+  busy: boolean;
 
   constructor(
     public programmingModel: ProgrammingModel,
@@ -27,7 +36,8 @@ export class RequestsDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private requestSummaryNavigationHistoryService: RequestSummaryNavigationHistoryService
-  ) { }
+  ) {
+  }
 
   goBack(): void {
     this.requestSummaryNavigationHistoryService.prepareNavigationHistory();
@@ -49,15 +59,21 @@ export class RequestsDetailsComponent implements OnInit {
   }
 
   onSave(): void {
-    console.log('Approve Organization');
+    this.busy = true;
+    let pro = this.getFromDetailsForm(this.program);
+    pro = this.getFromScopesForm(pro);
+    pro.programStatus = ProgramStatus.SAVED;
+    this.programmingService.updateProgram(pro).subscribe(resp => {
+      this.busy = false;
+    });
   }
 
   onReject(): void {
-    console.log('Approve Organization');
+    console.log('Reject Organization');
   }
 
   onValidate(): void {
-    console.log('Approve Organization');
+    console.log('Validate Organization');
   }
 
   onSelectTab(event: TabDirective) {
@@ -81,5 +97,29 @@ export class RequestsDetailsComponent implements OnInit {
         this.currentSelectedTab = 5;
         break;
     }
+  }
+
+  private getFromDetailsForm(program: Program): Program {
+    return {
+      ...program,
+      longName: this.requestDetailsFormComponent.form.get(['longName']).value,
+      divisionId: this.requestDetailsFormComponent.form.get(['divisionId']).value,
+      missionPriorityId: this.requestDetailsFormComponent.form.get(['missionPriorityId']).value,
+      agencyPriority: this.requestDetailsFormComponent.form.get(['agencyPriority']).value,
+      directoratePriority: this.requestDetailsFormComponent.form.get(['directoratePriority']).value,
+      secDefLOEId: this.requestDetailsFormComponent.form.get(['secDefLOEId']).value,
+      strategicImperativeId: this.requestDetailsFormComponent.form.get(['strategicImperativeId']).value,
+      agencyObjectiveId: this.requestDetailsFormComponent.form.get(['agencyObjectiveId']).value
+    };
+  }
+
+  private getFromScopesForm(program: Program): Program {
+    return {
+      ...program,
+      aim: this.scopeComponent.form.get(['aim']).value,
+      goal: this.scopeComponent.form.get(['goal']).value,
+      quality: this.scopeComponent.form.get(['quality']).value,
+      other: this.scopeComponent.form.get(['other']).value
+    };
   }
 }

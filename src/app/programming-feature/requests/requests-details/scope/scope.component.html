@@ -1,14 +1,16 @@
 <div class="pl-5 pr-5">
+  <form [formGroup]="form">
+
   <fieldset>
     <legend>Program Goals</legend>
     <div class="form-group row">
       <div class="row col-12 mt-3">
         <p class="col-1 ml-4">Program Aim</p>
-        <textarea class="form-control col-10"></textarea>
+        <textarea class="form-control col-10" formControlName="aim"></textarea>
       </div>
       <div class="row col-12 mt-3">
         <p class="col-1 ml-4">Program Goal</p>
-        <textarea class="form-control col-10"></textarea>
+        <textarea class="form-control col-10" formControlName="goal"></textarea>
       </div>
     </div>
   </fieldset>
@@ -25,11 +27,11 @@
       </div>
       <div class="row col-12 mt-3">
         <p class="col-1 ml-4">Quality</p>
-        <textarea class="form-control col-10"></textarea>
+        <textarea class="form-control col-10" formControlName="quality"></textarea>
       </div>
       <div class="row col-12 mt-3">
         <p class="col-1 ml-4">Other</p>
-        <textarea class="form-control col-10"></textarea>
+        <textarea class="form-control col-10" formControlName="other"></textarea>
       </div>
       <div class="row col-12 mt-3 attachment-container">
         <p class="col-1 ml-4">Attachment</p>
@@ -40,6 +42,8 @@
       </div>
     </div>
   </fieldset>
+  </form>
+
   <fieldset>
     <legend>Program Evaluation Measure</legend>
     <pfm-datagrid (gridIsReady)="onEvaluationMeasureGridIsReady($event)"

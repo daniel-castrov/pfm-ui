@@ -16,6 +16,7 @@ import { Action } from '../../../../pfm-common-models/Action';
 import { objectKeys } from 'codelyzer/util/objectKeys';
 import { Moment } from 'moment';
 import * as moment from 'moment';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'pfm-scope',
@@ -25,6 +26,8 @@ import * as moment from 'moment';
 export class ScopeComponent implements OnInit {
 
   @Input() program: Program;
+
+  form: FormGroup;
 
   actionState = {
     VIEW: {
@@ -82,13 +85,37 @@ export class ScopeComponent implements OnInit {
               private dialogService: DialogService) {
   }
 
+
   ngOnInit() {
     this.budget = 210000000;
     this.schedule = 'Oct. 1, 2020 - Nov. 30, 2022';
 
+    this.loadForm();
+    this.updateForm(this.program);
+
     this.setupEvaluationMeasureGrid();
     this.setupTeamLeadsGrid();
     this.setupProcessPriorizationGrid();
+  }
+
+  loadForm() {
+    this.form = new FormGroup({
+      aim: new FormControl(''),
+      goal: new FormControl(''),
+      quality: new FormControl(''),
+      other: new FormControl('')
+    });
+
+  }
+
+  updateForm(program: Program) {
+    debugger;
+    this.form.patchValue({
+      aim: program.aim,
+      goal: program.goal,
+      quality: program.quality,
+      other: program.other
+    });
   }
 
   loadEvaluationMeasures() {
