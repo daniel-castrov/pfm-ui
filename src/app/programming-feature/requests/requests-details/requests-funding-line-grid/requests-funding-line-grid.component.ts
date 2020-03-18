@@ -773,7 +773,6 @@ export class RequestsFundingLineGridComponent implements OnInit {
           () => {
             this.performNonSummaryDelete(rowIndex);
             this.updateTotalFields();
-            this.nonSummaryFundingLineGridApi.setRowData(this.nonSummaryFundingLineRows);
           },
           error => {
             this.dialogService.displayDebug(error);
@@ -792,6 +791,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
     this.nonSummaryFundingLineRows.forEach(row => {
       row.isDisabled = false;
     });
+    this.nonSummaryFundingLineGridApi.setRowData(this.nonSummaryFundingLineRows);
   }
 
   private viewNonSummaryMode(rowIndex: number) {
