@@ -4,7 +4,13 @@ import { DataGridMessage } from '../../../../pfm-coreui/models/DataGridMessage';
 import { ActionCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/action-cell-renderer/action-cell-renderer.component';
 import { NumericCellEditor } from 'src/app/ag-grid/cell-editors/NumericCellEditor';
 import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
-import { trigger } from '@angular/animations';
+import { Program } from 'src/app/programming-feature/models/Program';
+import { ProgrammingService } from 'src/app/programming-feature/services/programming-service';
+import { FundingLineService } from 'src/app/programming-feature/services/funding-line.service';
+import { FundingData } from 'src/app/programming-feature/models/funding-data.model';
+import { map } from 'rxjs/operators';
+import { FundingLine } from 'src/app/programming-feature/models/funding-line.model';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'pfm-requests-funding-line-grid',
@@ -14,6 +20,7 @@ import { trigger } from '@angular/animations';
 export class RequestsFundingLineGridComponent implements OnInit {
 
   @Input() pomYear: number;
+  @Input() program: Program;
 
   actionState = {
     VIEW: {
@@ -44,7 +51,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
   busy: boolean;
 
   nonSummaryFundingLineGridApi: GridApi;
-  nonSummaryFundingLineRows: any[] = [];
+  nonSummaryFundingLineRows: FundingData[] = [];
   nonSummaryFundingLineColumnsDefinition: ColGroupDef[];
 
   currentNonSummaryRowDataState: RowDataStateInterface = {};
@@ -52,14 +59,40 @@ export class RequestsFundingLineGridComponent implements OnInit {
   deleteDialog: DeleteDialogInterface = { title: 'Delete' };
   expanded: boolean;
 
+  appnOptions = [];
+  baOptions = [];
+  sagOptions = [];
+  wucdOptions = [];
+  expTypeOptions = [];
+
   constructor(
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private fundingLineService: FundingLineService
   ) {
   }
 
   ngOnInit() {
+    this.loadDropDownValues();
     this.setupSummaryFundingLineGrid();
     this.setupNonSummaryFundingLineGrid();
+  }
+
+  onNonSummaryGridIsReady(api: GridApi) {
+    this.nonSummaryFundingLineGridApi = api;
+    this.nonSummaryFundingLineRows = [];
+    this.resetTotalFunding();
+    this.nonSummaryFundingLineRows.splice(1, 0, ...this.summaryFundingLineRows);
+    this.updateTotalFields();
+    if (this.nonSummaryFundingLineRows.length === 1) {
+      this.loadDataFromProgram();
+    }
+  }
+
+  onSummaryGridReady(api: GridApi) {
+    this.summaryFundingLineGridApi = api;
+    this.summaryFundingLineRows = [...this.nonSummaryFundingLineRows.filter((x, index) => index > 0)];
+    this.updateSummaryTotalFields();
+    this.summaryFundingLineGridApi.setRowData(this.summaryFundingLineRows);
   }
 
   onToggleValueChanged(value) {
@@ -67,6 +100,64 @@ export class RequestsFundingLineGridComponent implements OnInit {
     if (!this.showSubtotals) {
       this.collapse();
     }
+  }
+
+  private loadDropDownValues() {
+    this.appnOptions = [...new Set(this.program.fundingLines.map(fund => fund.appropriation).filter(fund => fund))];
+    this.baOptions = [...new Set(this.program.fundingLines.map(fund => fund.baOrBlin).filter(fund => fund))];
+    this.sagOptions = [...new Set(this.program.fundingLines.map(fund => fund.opAgency).filter(fund => fund))];
+    this.wucdOptions = [...new Set(this.program.fundingLines.map(fund => fund.item).filter(fund => fund))];
+    this.expTypeOptions = [...new Set(this.program.fundingLines.map(fund => fund.programElement).filter(fund => fund))];
+  }
+
+  private loadDataFromProgram() {
+    this.fundingLineService.obtainFundingLinesByProgramId(this.program.id)
+      .pipe(map(resp => this.convertFundsToFiscalYear(resp)))
+      .subscribe(resp => {
+        const fundingLine = resp as FundingData[];
+        this.resetTotalFunding();
+        this.nonSummaryFundingLineRows.push(...fundingLine);
+        this.updateTotalFields();
+        this.nonSummaryFundingLineGridApi.setRowData(this.nonSummaryFundingLineRows);
+      });
+  }
+
+  private convertFundsToFiscalYear(response: any) {
+    const ret: FundingData[] = [];
+    if (response.result) {
+      response.result.forEach(fundingLine => {
+        ret.push(this.fundingLineToFundingData(fundingLine));
+      });
+    }
+    return ret;
+  }
+
+  private fundingLineToFundingData(fundingLine: FundingLine) {
+    const funds = fundingLine.funds;
+    const fundingData = { ...fundingLine } as FundingData;
+    for (let i = this.pomYear - 2, x = 0; i < this.pomYear + 6; i++, x++) {
+      const headerName = (i < this.pomYear ?
+        'PY' + (this.pomYear - i === 1 ? '' : (this.pomYear - i - 1)) :
+        i > this.pomYear ? 'BY' + (i === this.pomYear + 1 ? '' : (i - this.pomYear - 1)) :
+          'CY').toLowerCase();
+      fundingData[headerName] = funds[i] ? funds[i] : 0;
+    }
+    fundingData.action = fundingLine.userCreated ? this.actionState.VIEW : null;
+    return fundingData;
+  }
+
+  private convertFiscalYearToFunds(fundingLine: FundingData) {
+    const fundingLineToSave: FundingLine = { ...fundingLine };
+    fundingLineToSave.funds = {};
+    for (let i = this.pomYear - 2, x = 0; i < this.pomYear + 6; i++, x++) {
+      const headerName = (i < this.pomYear ?
+        'PY' + (this.pomYear - i === 1 ? '' : (this.pomYear - i - 1)) :
+        i > this.pomYear ? 'BY' + (i === this.pomYear + 1 ? '' : (i - this.pomYear - 1)) :
+          'CY').toLowerCase();
+      fundingLineToSave.funds[i] = Number(fundingLine[headerName]);
+    }
+    fundingLineToSave.ctc = Number(fundingLine.ctc);
+    return fundingLineToSave;
   }
 
   private setupSummaryFundingLineGrid() {
@@ -106,7 +197,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
       {
         colId: 0,
         headerName: 'APPN',
-        showRowGroup: 'appn',
+        showRowGroup: 'appropriation',
         cellRenderer: GroupCellRenderer,
         cellRendererParams: {
           footerValueGetter: '"Total Funding"'
@@ -124,7 +215,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
       {
         colId: 1,
         headerName: 'BA/BLIN',
-        showRowGroup: 'ba',
+        showRowGroup: 'baOrBlin',
         cellRenderer: GroupCellRenderer,
         cellRendererParams: {
           footerValueGetter: '""'
@@ -178,7 +269,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
       {
         colId: 4,
         headerName: 'Exp Type',
-        field: 'expType',
+        field: 'expenditureType',
         cellRendererParams: {
           footerValueGetter: '""'
         },
@@ -193,12 +284,12 @@ export class RequestsFundingLineGridComponent implements OnInit {
         minWidth: 110
       },
       {
-        field: 'appn',
+        field: 'appropriation',
         rowGroup: true,
         hide: true
       },
       {
-        field: 'ba',
+        field: 'baOrBlin',
         rowGroup: true,
         hide: true
       },
@@ -292,7 +383,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
       const rowIndex = Number(row.id);
       switch (cellAction.message) {
         case 'save':
-          this.saveSummaryRow(rowIndex);
+          this.saveSummaryRow(rowIndex, cellAction.rowIndex);
           break;
         case 'edit':
           if (!this.currentSummaryRowDataState.isEditMode) {
@@ -316,23 +407,8 @@ export class RequestsFundingLineGridComponent implements OnInit {
     }
   }
 
-  onSummaryGridReady(api: GridApi) {
-    this.summaryFundingLineGridApi = api;
-    this.summaryFundingLineRows = [...this.nonSummaryFundingLineRows.filter((x, index) => index > 0)];
-    this.updateSummaryTotalFields();
-    this.summaryFundingLineGridApi.setRowData(this.summaryFundingLineRows);
-  }
-
   onColumnIsReady(columnApi: ColumnApi) {
     this.columnApi = columnApi;
-  }
-
-  onNonSummaryGridIsReady(api: GridApi) {
-    this.nonSummaryFundingLineGridApi = api;
-    this.nonSummaryFundingLineRows = [];
-    this.resetTotalFunding();
-    this.nonSummaryFundingLineRows.splice(1, 0, ...this.summaryFundingLineRows);
-    this.updateTotalFields();
   }
 
   private setupNonSummaryFundingLineGrid() {
@@ -379,7 +455,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
           {
             colId: 0,
             headerName: 'APPN',
-            field: 'appn',
+            field: 'appropriation',
             editable: true,
             suppressMovable: true,
             filter: false,
@@ -394,16 +470,14 @@ export class RequestsFundingLineGridComponent implements OnInit {
               cellHeight: 100,
               values: [
                 'Select',
-                'O&M',
-                'MILCON',
-                'JIDF'
+                ...this.appnOptions
               ]
             }
           },
           {
             colId: 1,
             headerName: 'BA/BLIN',
-            field: 'ba',
+            field: 'baOrBlin',
             editable: true,
             suppressMovable: true,
             filter: false,
@@ -423,12 +497,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
               cellHeight: 100,
               values: [
                 'Select',
-                'BA1',
-                'BA2',
-                'BA3',
-                'BA4',
-                'BA5',
-                'BA6'
+                ...this.baOptions
               ]
             }
           },
@@ -450,10 +519,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
               cellHeight: 100,
               values: [
                 'Select',
-                'AA',
-                'x',
-                'y',
-                'z'
+                ...this.sagOptions
               ]
             }
           },
@@ -475,18 +541,14 @@ export class RequestsFundingLineGridComponent implements OnInit {
               cellHeight: 100,
               values: [
                 'Select',
-                'COMSC',
-                'ALTRL',
-                'xxxx',
-                'JACW',
-                'zzzz'
+                ...this.wucdOptions
               ]
             }
           },
           {
             colId: 4,
             headerName: 'EXP Type',
-            field: 'expType',
+            field: 'expenditureType',
             editable: true,
             suppressMovable: true,
             filter: false,
@@ -501,11 +563,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
               cellHeight: 100,
               values: [
                 'Select',
-                '252.3',
-                '21.5',
-                'xxx',
-                '111.1',
-                '222.2'
+                ...this.expTypeOptions
               ]
             }
           }
@@ -557,7 +615,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
 
   private resetTotalFunding() {
     this.nonSummaryFundingLineRows[0] = {
-      appn: 'Total Funding',
+      appropriation: 'Total Funding',
 
       py1: 0,
       py: 0,
@@ -567,7 +625,6 @@ export class RequestsFundingLineGridComponent implements OnInit {
       by2: 0,
       by3: 0,
       by4: 0,
-      by5: 0,
 
       fyTotal: 0,
       ctc: 0,
@@ -586,11 +643,11 @@ export class RequestsFundingLineGridComponent implements OnInit {
     }
     this.nonSummaryFundingLineRows.push(
       {
-        appn: 0,
-        ba: 0,
-        sag: 0,
-        wucd: 0,
-        expType: 0,
+        appropriation: '0',
+        baOrBlin: '0',
+        sag: '0',
+        wucd: '0',
+        expenditureType: '0',
 
         py1: 0,
         py: 0,
@@ -600,7 +657,6 @@ export class RequestsFundingLineGridComponent implements OnInit {
         by2: 0,
         by3: 0,
         by4: 0,
-        by5: 0,
 
         fyTotal: 0,
         ctc: 0,
@@ -617,11 +673,44 @@ export class RequestsFundingLineGridComponent implements OnInit {
     const row = this.nonSummaryFundingLineRows[rowIndex];
     const canSave = this.validateNonSummaryRowData(row);
     if (canSave) {
-      this.updateTotalFields();
-      this.viewNonSummaryMode(rowIndex);
+      const fundingLine = this.convertFiscalYearToFunds(row);
+      fundingLine.programId = this.program.id;
+      if (this.currentNonSummaryRowDataState.isAddMode) {
+        this.performNonSummarySave(
+          this.fundingLineService.createFundingLine.bind(this.fundingLineService),
+          fundingLine,
+          rowIndex
+        );
+      } else {
+        this.performNonSummarySave(
+          this.fundingLineService.updateFundingLine.bind(this.fundingLineService),
+          fundingLine,
+          rowIndex
+        );
+      }
     } else {
       this.editRow(rowIndex);
     }
+  }
+
+  private performNonSummarySave(
+    saveOrUpdate: (fundingLine: FundingLine) => Observable<any>,
+    fundingLine: FundingLine,
+    rowIndex: number
+  ) {
+    saveOrUpdate(fundingLine)
+      .pipe(map(resp => this.fundingLineToFundingData(resp.result)))
+      .subscribe(
+        fundingData => {
+          this.nonSummaryFundingLineRows[rowIndex] = fundingData;
+          this.updateTotalFields();
+          this.viewNonSummaryMode(rowIndex);
+        },
+        error => {
+          this.dialogService.displayDebug(error);
+          this.editRow(rowIndex);
+        }
+      );
   }
 
   private updateTotalFields() {
@@ -629,7 +718,8 @@ export class RequestsFundingLineGridComponent implements OnInit {
     this.nonSummaryFundingLineRows.filter((row, index) => index > 0)
       .forEach(row => {
         let total = 0;
-        for (let i = this.pomYear + 1; i < this.pomYear + 6; i++) {
+        row.ctc = row.ctc ? row.ctc : 0;
+        for (let i = this.pomYear - 2; i < this.pomYear + 6; i++) {
           const field = i < this.pomYear ?
             'py' + (this.pomYear - i === 1 ? '' : this.pomYear - i - 1) :
             i > this.pomYear ? 'by' + (i === this.pomYear + 1 ? '' : i - this.pomYear - 1) :
@@ -647,15 +737,15 @@ export class RequestsFundingLineGridComponent implements OnInit {
 
   private validateNonSummaryRowData(row: any) {
     let errorMessage = '';
-    if (!row.appn.length || row.appn.toLowerCase() === 'select') {
+    if (!row.appropriation.length || row.appropriation.toLowerCase() === 'select') {
       errorMessage = 'Please, select an APPN.';
-    } else if (!row.ba.length || row.ba.toLowerCase() === 'select') {
+    } else if (!row.baOrBlin.length || row.baOrBlin.toLowerCase() === 'select') {
       errorMessage = 'Please, select a BA/BLIN.';
     } else if (!row.sag.length || row.sag.toLowerCase() === 'select') {
       errorMessage = 'Please, select a SAG.';
     } else if (!row.wucd.length || row.wucd.toLowerCase() === 'select') {
       errorMessage = 'Please, select a WUCD.';
-    } else if (!row.expType.length || row.expType.toLowerCase() === 'select') {
+    } else if (!row.expenditureType.length || row.expenditureType.toLowerCase() === 'select') {
       errorMessage = 'Please, select a Exp Type.';
     }
     if (errorMessage.length) {
@@ -677,10 +767,24 @@ export class RequestsFundingLineGridComponent implements OnInit {
   }
 
   private deleteRow(rowIndex: number) {
+    if (this.nonSummaryFundingLineRows[rowIndex].id) {
+      this.fundingLineService.removeFundingLineById(this.nonSummaryFundingLineRows[rowIndex].id)
+        .subscribe(
+          () => {
+            this.performNonSummaryDelete(rowIndex);
+            this.updateTotalFields();
+            this.nonSummaryFundingLineGridApi.setRowData(this.nonSummaryFundingLineRows);
+          },
+          error => {
+            this.dialogService.displayDebug(error);
+          });
+    } else {
+      this.performNonSummaryDelete(rowIndex);
+    }
+  }
+
+  private performNonSummaryDelete(rowIndex: number) {
     this.nonSummaryFundingLineRows.splice(rowIndex, 1);
-    this.nonSummaryFundingLineRows.forEach(row => {
-      row.order--;
-    });
     this.currentNonSummaryRowDataState.currentEditingRowIndex = 0;
     this.currentNonSummaryRowDataState.isEditMode = false;
     this.currentNonSummaryRowDataState.isAddMode = false;
@@ -688,8 +792,6 @@ export class RequestsFundingLineGridComponent implements OnInit {
     this.nonSummaryFundingLineRows.forEach(row => {
       row.isDisabled = false;
     });
-    this.updateTotalFields();
-    this.nonSummaryFundingLineGridApi.setRowData(this.nonSummaryFundingLineRows);
   }
 
   private viewNonSummaryMode(rowIndex: number) {
@@ -720,10 +822,25 @@ export class RequestsFundingLineGridComponent implements OnInit {
     });
   }
 
-  private saveSummaryRow(rowIndex: number) {
+  private saveSummaryRow(rowIndex: number, gridApiRowIndex: number) {
     this.summaryFundingLineGridApi.stopEditing();
-    this.updateSummaryTotalFields();
-    this.viewSummaryMode(rowIndex);
+    const row = this.summaryFundingLineRows[rowIndex];
+    const fundingLine = this.convertFiscalYearToFunds(row);
+    if (this.currentSummaryRowDataState.isEditMode) {
+      this.fundingLineService.updateFundingLine(fundingLine)
+        .pipe(map(resp => this.fundingLineToFundingData(resp.result)))
+        .subscribe(
+          fundingData => {
+            this.summaryFundingLineRows[rowIndex] = fundingData;
+            this.updateSummaryTotalFields();
+            this.viewSummaryMode(rowIndex);
+          },
+          error => {
+            this.dialogService.displayDebug(error);
+            this.editSummaryRow(rowIndex, gridApiRowIndex);
+          }
+        );
+    }
   }
 
   private updateSummaryTotalFields() {
@@ -758,20 +875,19 @@ export class RequestsFundingLineGridComponent implements OnInit {
   }
 
   private deleteSummaryRow(rowIndex: number) {
-    this.summaryFundingLineRows.splice(rowIndex, 1);
-    this.summaryFundingLineRows.forEach(row => {
-      row.order--;
-    });
-    this.currentSummaryRowDataState.currentEditingRowIndex = 0;
-    this.currentSummaryRowDataState.isEditMode = false;
-    this.currentSummaryRowDataState.isAddMode = false;
-    this.summaryFundingLineGridApi.stopEditing();
-    this.summaryFundingLineRows.forEach(row => {
-      row.isDisabled = false;
-    });
-    this.updateSummaryTotalFields();
-    this.summaryFundingLineGridApi.setRowData(this.summaryFundingLineRows);
-    this.summaryFundingLineGridApi.refreshClientSideRowModel('aggregate');
+    if (this.summaryFundingLineRows[rowIndex].id) {
+      this.fundingLineService.removeFundingLineById(this.summaryFundingLineRows[rowIndex].id)
+        .subscribe(
+          () => {
+            this.summaryFundingLineRows.splice(rowIndex, 1);
+            this.updateSummaryTotalFields();
+            this.summaryFundingLineGridApi.setRowData(this.summaryFundingLineRows);
+            this.summaryFundingLineGridApi.refreshClientSideRowModel('aggregate');
+          },
+          error => {
+            this.dialogService.displayDebug(error);
+          });
+    }
   }
 
   private viewSummaryMode(rowIndex: number) {

@@ -59,6 +59,8 @@ import { EvaluationMeasureServiceImpl } from './services/evaluation-measure-impl
 import { ProcessPrioritization } from './models/process-prioritization.model';
 import { ProcessPrioritizationServiceImpl } from './services/process-prioritization-impl.service';
 import { ProcessPrioritizationService } from './services/process-prioritization.service';
+import { FundingLineService } from './services/funding-line.service';
+import { FundingLineServiceImpl } from './services/funding-line-impl.service';
 
 @NgModule({
   declarations: [
@@ -111,6 +113,7 @@ import { ProcessPrioritizationService } from './services/process-prioritization.
   { provide: TeamLeadService, useClass: TeamLeadServiceImpl },
   { provide: EvaluationMeasureService, useClass: EvaluationMeasureServiceImpl },
   { provide: ProcessPrioritizationService, useClass: ProcessPrioritizationServiceImpl },
+  { provide: FundingLineService, useClass: FundingLineServiceImpl },
     ProgrammingModel,
     RequestSummaryNavigationHistoryService]
 })
