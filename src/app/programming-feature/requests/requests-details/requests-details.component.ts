@@ -9,6 +9,7 @@ import { Program } from '../../models/Program';
 import { RequestsDetailsFormComponent } from './requests-details-form/requests-details-form.component';
 import { ProgramStatus } from '../../models/enumerations/program-status.model';
 import { ScopeComponent } from './scope/scope.component';
+import { JustificationComponent } from './justification/justification.component';
 
 @Component({
   selector: 'pfm-requests-details',
@@ -24,6 +25,8 @@ export class RequestsDetailsComponent implements OnInit {
   requestDetailsFormComponent: RequestsDetailsFormComponent;
   @ViewChild('scope', { static: false })
   scopeComponent: ScopeComponent;
+  @ViewChild('justification', { static: false })
+  justificationComponent: JustificationComponent;
 
   currentSelectedTab = 1;
   pomYear: number;
@@ -60,8 +63,9 @@ export class RequestsDetailsComponent implements OnInit {
 
   onSave(): void {
     this.busy = true;
-    let pro = this.getFromDetailsForm(this.program);
-    pro = this.getFromScopesForm(pro);
+    let pro = this.getFromDetailForm(this.program);
+    pro = this.getFromScopeForm(pro);
+    pro = this.getFromJustificationForm(pro);
     pro.programStatus = ProgramStatus.SAVED;
     this.programmingService.updateProgram(pro).subscribe(resp => {
       this.busy = false;
@@ -94,12 +98,13 @@ export class RequestsDetailsComponent implements OnInit {
         this.currentSelectedTab = 4;
         break;
       case 'justification':
+        this.justificationComponent.drawLineChart(true);
         this.currentSelectedTab = 5;
         break;
     }
   }
 
-  private getFromDetailsForm(program: Program): Program {
+  private getFromDetailForm(program: Program): Program {
     return {
       ...program,
       longName: this.requestDetailsFormComponent.form.get(['longName']).value,
@@ -113,13 +118,20 @@ export class RequestsDetailsComponent implements OnInit {
     };
   }
 
-  private getFromScopesForm(program: Program): Program {
+  private getFromScopeForm(program: Program): Program {
     return {
       ...program,
       aim: this.scopeComponent.form.get(['aim']).value,
       goal: this.scopeComponent.form.get(['goal']).value,
       quality: this.scopeComponent.form.get(['quality']).value,
       other: this.scopeComponent.form.get(['other']).value
+    };
+  }
+  private getFromJustificationForm(program: Program): Program {
+    return {
+      ...program,
+      justification: this.justificationComponent.form.get(['justification']).value,
+      impactN: this.justificationComponent.form.get(['impactN']).value
     };
   }
 }

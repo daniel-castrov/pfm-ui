@@ -109,7 +109,6 @@ export class ScopeComponent implements OnInit {
   }
 
   updateForm(program: Program) {
-    debugger;
     this.form.patchValue({
       aim: program.aim,
       goal: program.goal,

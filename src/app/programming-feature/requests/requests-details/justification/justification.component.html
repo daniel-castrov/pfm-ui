@@ -5,14 +5,16 @@
       <google-chart #googleChart [data]="chartData" (chartReady)="onChartReady($event)"></google-chart>
     </div>
   </div>
-  <div class="form-group row">
-    <div class="description-container row col-12 mt-5">
-      <p class="col-2">Description of Change</p>
-      <textarea class="form-control col-10"></textarea>
+  <form [formGroup]="form">
+    <div class="form-group row">
+      <div class="description-container row col-12 mt-5">
+        <p class="col-2">Description of Change</p>
+        <textarea class="form-control col-10" formControlName="justification"></textarea>
+      </div>
+      <div class="impact-container row col-12 mt-5">
+        <p class="col-2">Impact if not funded</p>
+        <textarea class="form-control col-10" formControlName="impactN"></textarea>
+      </div>
     </div>
-    <div class="impact-container row col-12 mt-5">
-      <p class="col-2">Impact if not funded</p>
-      <textarea class="form-control col-10"></textarea>
-    </div>
-  </div>
+  </form>
 </div>
