@@ -30,6 +30,13 @@ export class RequestsFundingLineGridComponent implements OnInit {
       canUpload: false,
       isSingleDelete: true
     },
+    VIEW_NO_DELETE: {
+      canSave: false,
+      canEdit: true,
+      canDelete: false,
+      canUpload: false,
+      isSingleDelete: true
+    },
     EDIT: {
       canEdit: false,
       canSave: true,
@@ -142,7 +149,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
           'CY').toLowerCase();
       fundingData[headerName] = funds[i] ? funds[i] : 0;
     }
-    fundingData.action = fundingLine.userCreated ? this.actionState.VIEW : null;
+    fundingData.action = fundingLine.userCreated ? this.actionState.VIEW : this.actionState.VIEW_NO_DELETE;
     return fundingData;
   }
 
@@ -895,7 +902,8 @@ export class RequestsFundingLineGridComponent implements OnInit {
     this.currentSummaryRowDataState.isEditMode = false;
     this.currentSummaryRowDataState.isAddMode = false;
     this.summaryFundingLineGridApi.stopEditing();
-    this.summaryFundingLineRows[rowIndex].action = this.actionState.VIEW;
+    this.summaryFundingLineRows[rowIndex].action =
+      this.summaryFundingLineRows[rowIndex].userCreated ? this.actionState.VIEW : this.actionState.VIEW_NO_DELETE;
     this.summaryFundingLineRows.forEach(row => {
       row.isDisabled = false;
     });
