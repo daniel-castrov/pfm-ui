@@ -35,7 +35,7 @@
   </div>
 </div>
 
-<tabset class="program-tab-style" destroyOnHide="true">
+<tabset class="program-tab-style" *ngIf="program" destroyOnHide="true">
   <tab heading="Program" style="width:100%;height:100%" (selectTab)="onSelectTab($event)">
     <div class="section-tab">
       <pfm-requests-details-form #detailsForm [pomYear]="pomYear" [program]="program"></pfm-requests-details-form>
@@ -43,7 +43,8 @@
   </tab>
   <tab heading="Funds" active="true" style="width:100%;height:100%" (selectTab)="onSelectTab($event)">
     <div class="section-tab">
-      <pfm-requests-funding-line-grid [pomYear]="pomYear"></pfm-requests-funding-line-grid>
+      <pfm-requests-funding-line-grid [pomYear]="pomYear" [program]="program">
+      </pfm-requests-funding-line-grid>
     </div>
   </tab>
   <tab heading="Schedule" style="width:100%;height:100%" (selectTab)="onSelectTab($event)">

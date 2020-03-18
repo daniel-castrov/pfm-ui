@@ -44,10 +44,11 @@ export class RequestsDetailsComponent implements OnInit {
     this.router.navigate(['/programming/requests']);
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.programmingModel.selectedProgramId = this.route.snapshot.paramMap.get('id');
-    this.programmingService.getProgramById(this.programmingModel.selectedProgramId)
-      .subscribe(resp => {
+    await this.programmingService.getProgramById(this.programmingModel.selectedProgramId)
+      .toPromise()
+      .then(resp => {
         this.program = (resp.result) as Program;
       });
     this.pomYear = Number(this.route.snapshot.paramMap.get('pomYear'));

@@ -1,4 +1,4 @@
-import { FundingLine } from './FundingLine';
+import { FundingLine } from './funding-line.model';
 import { Milestone } from './Milestone';
 import { ProgramStatus } from './enumerations/program-status.model';
 

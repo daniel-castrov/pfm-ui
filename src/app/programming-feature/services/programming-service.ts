@@ -1,6 +1,7 @@
 import { Observable } from 'rxjs';
 import { BaseRestService } from '../../services/base-rest.service';
 import { HttpClient } from '@angular/common/http';
+import { Program } from '../models/Program';
 
 export abstract class ProgrammingService extends BaseRestService {
 
@@ -19,5 +20,5 @@ export abstract class ProgrammingService extends BaseRestService {
   abstract getPermittedOrganizations(): Observable<object>;
   abstract getPRForYearAndShortName(year: number, shortName: string): Observable<any>;
   abstract getProgramById(id: string): Observable<any>;
-  abstract updateProgram(program: any): Observable<any>;
+  abstract updateProgram(program: Program): Observable<any>;
 }

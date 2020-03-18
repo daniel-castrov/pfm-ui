@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ProgrammingService } from './programming-service';
+import { Program } from '../models/Program';
 
 @Injectable({
   providedIn: 'root'
@@ -39,7 +40,8 @@ export class ProgrammingServiceImpl extends ProgrammingService {
     return this.get('program/' + id);
   }
 
-  updateProgram(data: any): Observable<object> {
-    return this.put('program', data);
+  updateProgram(program: Program) {
+    return this.put('program/', program);
   }
+
 }
