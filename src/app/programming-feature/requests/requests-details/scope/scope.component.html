@@ -36,7 +36,7 @@
       <div class="row col-12 mt-3 attachment-container">
         <p class="col-1 ml-4">Attachment</p>
         <select class="form-control col-5">
-          <option *ngFor="let attachment of attachmentsUploaded">{{ attachment }}</option>
+          <option *ngFor="let attachment of attachmentsUploaded">{{ attachment.file.name }}</option>
         </select>
         <i class="fa fa-upload col-1 text-center" (click)="onFileUploadClick()"></i>
       </div>

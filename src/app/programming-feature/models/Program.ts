@@ -1,6 +1,7 @@
 import { FundingLine } from './funding-line.model';
 import { Milestone } from './Milestone';
 import { ProgramStatus } from './enumerations/program-status.model';
+import { Attachment } from '../../pfm-common-models/Attachment';
 
 export class Program {
   created: any;
@@ -52,6 +53,8 @@ export class Program {
   goal: string;
   quality: string;
   other: string;
+
+  attachments: Attachment[];
 
   constructor() {
   }

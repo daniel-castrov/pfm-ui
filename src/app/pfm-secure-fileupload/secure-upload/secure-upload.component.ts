@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild 
 import { FileItem, FileUploader, ParsedResponseHeaders } from 'ng2-file-upload';
 import { AppModel } from '../../pfm-common-models/AppModel';
 import { FileMetaData } from '../../pfm-common-models/FileMetaData';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'pfm-secure-upload',
@@ -10,7 +11,7 @@ import { FileMetaData } from '../../pfm-common-models/FileMetaData';
 })
 export class SecureUploadComponent implements OnInit {
   @ViewChild('secureUploadTemplate', { static: false }) private secureUploadTemplate: TemplateRef<any>;
-  @Input() uploadTypeDisplay: string = "Files";
+  @Input() uploadTypeDisplay = 'Files';
   @Output() onFilesUploaded: EventEmitter<FileMetaData> = new EventEmitter<FileMetaData>();
 
   uploadInprogressFlag: boolean;
@@ -21,19 +22,21 @@ export class SecureUploadComponent implements OnInit {
   response: string;
 
   constructor(private appModel: AppModel) {
-    this.url = "https://pfmdev1.pxalphaproject.com/pfm-server/library/uploadFile?area=pr";
+    this.url = environment.apiUrl + '/library/uploadFile?area=pr';
   }
 
-  public fileOverBase(e: any): void {
+  fileOverBase(e: any): void {
     this.hasBaseDropZoneOver = e;
   }
 
-  public cancel(): void {
+  cancel(): void {
     this.onFilesUploaded.emit(null);
-    setTimeout(() => { this.init() });
+    setTimeout(() => {
+      this.init();
+    });
   }
 
-  public isFileSelected(): boolean {
+  isFileSelected(): boolean {
     return this.uploader && this.uploader.queue && this.uploader.queue.length > 0;
   }
 
@@ -56,13 +59,15 @@ export class SecureUploadComponent implements OnInit {
     this.response = '';
     this.uploader.response.subscribe(res => this.response = res);
     this.uploader.onSuccessItem = (item, response, status, headers) => {
-      let data = JSON.parse(response); //success server response
+      const data = JSON.parse(response); // success server response
       this.fileMetaData = new FileMetaData();
       this.fileMetaData = data.result;
     },
       this.uploader.onCompleteAll = () => {
         this.onFilesUploaded.emit(this.fileMetaData);
-        setTimeout(() => { this.init() });
+        setTimeout(() => {
+          this.init();
+        });
       };
   }
 
@@ -74,4 +79,3 @@ export class SecureUploadComponent implements OnInit {
   }
 
 }
-

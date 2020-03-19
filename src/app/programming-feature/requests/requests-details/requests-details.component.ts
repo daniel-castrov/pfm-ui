@@ -124,9 +124,11 @@ export class RequestsDetailsComponent implements OnInit {
       aim: this.scopeComponent.form.get(['aim']).value,
       goal: this.scopeComponent.form.get(['goal']).value,
       quality: this.scopeComponent.form.get(['quality']).value,
-      other: this.scopeComponent.form.get(['other']).value
+      other: this.scopeComponent.form.get(['other']).value,
+      attachments: [...this.scopeComponent.attachmentsUploaded]
     };
   }
+
   private getFromJustificationForm(program: Program): Program {
     return {
       ...program,
