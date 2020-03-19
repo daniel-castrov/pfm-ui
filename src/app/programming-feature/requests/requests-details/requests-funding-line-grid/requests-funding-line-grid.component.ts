@@ -5,7 +5,6 @@ import { ActionCellRendererComponent } from 'src/app/pfm-coreui/datagrid/rendere
 import { NumericCellEditor } from 'src/app/ag-grid/cell-editors/NumericCellEditor';
 import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
 import { Program } from 'src/app/programming-feature/models/Program';
-import { ProgrammingService } from 'src/app/programming-feature/services/programming-service';
 import { FundingLineService } from 'src/app/programming-feature/services/funding-line.service';
 import { FundingData } from 'src/app/programming-feature/models/funding-data.model';
 import { map } from 'rxjs/operators';
@@ -104,7 +103,17 @@ export class RequestsFundingLineGridComponent implements OnInit {
 
   onToggleValueChanged(value) {
     this.showSubtotals = value;
-    if (!this.showSubtotals) {
+    if (this.showSubtotals) {
+      if (this.nonSummaryFundingLineGridApi.getEditingCells().length) {
+        this.performNonSummaryCancel(this.nonSummaryFundingLineGridApi.getEditingCells()[0].rowIndex);
+      }
+    } else {
+      if (this.summaryFundingLineGridApi.getEditingCells().length) {
+        const gridApiRowIndex = this.summaryFundingLineGridApi.getEditingCells()[0].rowIndex;
+        if (gridApiRowIndex) {
+          this.performSummaryCancel(gridApiRowIndex);
+        }
+      }
       this.collapse();
     }
   }
@@ -375,12 +384,16 @@ export class RequestsFundingLineGridComponent implements OnInit {
         }
         break;
       case 'cancel':
-        if (this.currentNonSummaryRowDataState.isEditMode && !this.currentNonSummaryRowDataState.isAddMode) {
-          this.cancelRow(cellAction.rowIndex);
-        } else {
-          this.deleteRow(cellAction.rowIndex);
-        }
+        this.performNonSummaryCancel(cellAction.rowIndex);
         break;
+    }
+  }
+
+  private performNonSummaryCancel(rowIndex: number) {
+    if (this.currentNonSummaryRowDataState.isEditMode && !this.currentNonSummaryRowDataState.isAddMode) {
+      this.cancelRow(rowIndex);
+    } else {
+      this.deleteRow(rowIndex);
     }
   }
 
@@ -406,11 +419,17 @@ export class RequestsFundingLineGridComponent implements OnInit {
           }
           break;
         case 'cancel':
-          if (this.currentSummaryRowDataState.isEditMode && !this.currentSummaryRowDataState.isAddMode) {
-            this.cancelSummaryRow(rowIndex);
-          }
+          this.performSummaryCancel(cellAction.rowIndex);
           break;
       }
+    }
+  }
+
+  performSummaryCancel(gridApiRowIndex: number) {
+    const dataId = this.summaryFundingLineGridApi.getDisplayedRowAtIndex(gridApiRowIndex).data.id;
+    const rowIndex = this.summaryFundingLineRows.findIndex(row => row.id === dataId);
+    if (this.currentSummaryRowDataState.isEditMode && !this.currentSummaryRowDataState.isAddMode) {
+      this.cancelSummaryRow(rowIndex);
     }
   }
 
@@ -463,7 +482,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
             colId: 0,
             headerName: 'APPN',
             field: 'appropriation',
-            editable: true,
+            editable: params => params.data.userCreated,
             suppressMovable: true,
             filter: false,
             sortable: false,
@@ -485,7 +504,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
             colId: 1,
             headerName: 'BA/BLIN',
             field: 'baOrBlin',
-            editable: true,
+            editable: params => params.data.userCreated,
             suppressMovable: true,
             filter: false,
             sortable: false,
@@ -512,7 +531,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
             colId: 2,
             headerName: 'SAG',
             field: 'sag',
-            editable: true,
+            editable: params => params.data.userCreated,
             suppressMovable: true,
             filter: false,
             sortable: false,
@@ -534,7 +553,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
             colId: 3,
             headerName: 'WUCD',
             field: 'wucd',
-            editable: true,
+            editable: params => params.data.userCreated,
             suppressMovable: true,
             filter: false,
             sortable: false,
@@ -556,7 +575,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
             colId: 4,
             headerName: 'EXP Type',
             field: 'expenditureType',
-            editable: true,
+            editable: params => params.data.userCreated,
             suppressMovable: true,
             filter: false,
             sortable: false,
@@ -655,6 +674,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
         sag: '0',
         wucd: '0',
         expenditureType: '0',
+        userCreated: true,
 
         py1: 0,
         py: 0,
@@ -744,15 +764,15 @@ export class RequestsFundingLineGridComponent implements OnInit {
 
   private validateNonSummaryRowData(row: any) {
     let errorMessage = '';
-    if (!row.appropriation.length || row.appropriation.toLowerCase() === 'select') {
+    if (row.appropriation && (!row.appropriation.length || row.appropriation.toLowerCase() === 'select')) {
       errorMessage = 'Please, select an APPN.';
-    } else if (!row.baOrBlin.length || row.baOrBlin.toLowerCase() === 'select') {
+    } else if (row.baOrBlin && (!row.baOrBlin.length || row.baOrBlin.toLowerCase() === 'select')) {
       errorMessage = 'Please, select a BA/BLIN.';
-    } else if (!row.sag.length || row.sag.toLowerCase() === 'select') {
+    } else if (row.sag && (!row.sag.length || row.sag.toLowerCase() === 'select')) {
       errorMessage = 'Please, select a SAG.';
-    } else if (!row.wucd.length || row.wucd.toLowerCase() === 'select') {
+    } else if (row.wucd && (!row.wucd.length || row.wucd.toLowerCase() === 'select')) {
       errorMessage = 'Please, select a WUCD.';
-    } else if (!row.expenditureType.length || row.expenditureType.toLowerCase() === 'select') {
+    } else if (row.expenditureType && (!row.expenditureType.length || row.expenditureType.toLowerCase() === 'select')) {
       errorMessage = 'Please, select a Exp Type.';
     }
     if (errorMessage.length) {
@@ -806,7 +826,8 @@ export class RequestsFundingLineGridComponent implements OnInit {
     this.currentNonSummaryRowDataState.isEditMode = false;
     this.currentNonSummaryRowDataState.isAddMode = false;
     this.nonSummaryFundingLineGridApi.stopEditing();
-    this.nonSummaryFundingLineRows[rowIndex].action = this.actionState.VIEW;
+    this.nonSummaryFundingLineRows[rowIndex].action =
+      this.nonSummaryFundingLineRows[rowIndex].userCreated ? this.actionState.VIEW : this.actionState.VIEW_NO_DELETE;
     this.nonSummaryFundingLineRows.forEach(row => {
       row.isDisabled = false;
     });
@@ -859,10 +880,10 @@ export class RequestsFundingLineGridComponent implements OnInit {
             'py' + (this.pomYear - i === 1 ? '' : this.pomYear - i - 1) :
             i > this.pomYear ? 'by' + (i === this.pomYear + 1 ? '' : i - this.pomYear - 1) :
               'cy';
+          row[field] = Number(row[field]);
           if (i > this.pomYear) {
-            row[field] = Number(row[field]);
+            total += Number(row[field]);
           }
-          total += Number(row[field]);
         }
         row.ctc = Number(row.ctc);
         row.fyTotal = total;
