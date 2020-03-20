@@ -18,7 +18,21 @@ module.exports = {
     moduleNameMapper: mapTypescriptAliasToJestAlias(),
     reporters: [
         'default',
-        [ 'jest-junit', { outputDirectory: './build/test-results/', outputName: 'TESTS-results-jest.xml' } ]
+        // [ 'jest-junit', { outputDirectory: './build/test-results/', outputName: 'TESTS-results-jest.xml' } ]
+      [
+        "jest-stare",
+        {
+          "reportTitle": "PFM UI TESTS",
+          "reportHeadline": "PFM UI TESTS",
+          "resultDir": "results/jest-stare",
+          "additionalResultsProcessors": [
+            "jest-html-reporter"
+          ],
+          "coverageLink": "../../build/test-results/lcov-report/index.html",
+          "jestStareConfigJson": "jest-stare.json",
+          "jestGlobalConfigJson": "globalStuff.json"
+        }
+      ]
     ],
     testResultsProcessor: 'jest-sonar-reporter',
     transformIgnorePatterns: ['node_modules/'],
