@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { TextInputComponent } from './text-input.component';
 
-import { TextInputComponent } from './input-wrapper.component';
 
 describe('TextInputComponent', () => {
   let component: TextInputComponent;

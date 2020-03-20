@@ -1,52 +1,25 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "target": "es5",
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
-    "declaration": false,
     "module": "esnext",
     "moduleResolution": "node",
+    "noImplicitAny": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "suppressImplicitAnyIndexErrors": true,
     "importHelpers": true,
-    "target": "es5",
     "downlevelIteration": true,
+    "allowJs": true,
     "typeRoots": [
       "node_modules/@types"
     ],
     "lib": [
       "es2018",
       "dom"
-    ],
-    "paths": {
-      "shared": [
-        "dist/shared"
-      ],
-      "shared/*": [
-        "dist/shared/*"
-      ],
-      "rxjs": [
-        "./node_modules/rxjs"
-      ],
-      "budget-core": [
-        "dist/budget-core"
-      ],
-      "budget-core/*": [
-        "dist/budget-core/*"
-      ],
-      "planning-core": [
-        "dist/planning-core"
-      ],
-      "planning-core/*": [
-        "dist/planning-core/*"
-      ],
-      "programming-core": [
-        "dist/programming-core"
-      ],
-      "programming-core/*": [
-        "dist/programming-core/*"
-      ]
-    }
+    ]
   }
 }

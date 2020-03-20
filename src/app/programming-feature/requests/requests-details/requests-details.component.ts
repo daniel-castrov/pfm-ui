@@ -63,9 +63,16 @@ export class RequestsDetailsComponent implements OnInit {
 
   onSave(): void {
     this.busy = true;
-    let pro = this.getFromDetailForm(this.program);
-    pro = this.getFromScopeForm(pro);
-    pro = this.getFromJustificationForm(pro);
+    let pro = this.program;
+    if (this.requestDetailsFormComponent) {
+      pro = this.getFromDetailForm(pro);
+    }
+    if (this.scopeComponent) {
+      pro = this.getFromScopeForm(pro);
+    }
+    if (this.justificationComponent) {
+      pro = this.getFromJustificationForm(pro);
+    }
     pro.programStatus = ProgramStatus.SAVED;
     this.programmingService.updateProgram(pro).subscribe(resp => {
       this.busy = false;
