@@ -1,12 +1,12 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { RequestsDetailsComponent } from 'app/programming-feature/requests/requests-details/requests-details.component';
 import { PfmTestModule } from '../../../../test.module';
-import { ProgrammingService } from 'app/programming-feature/services/programming-service';
 import { of } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';
-import { ProgrammingServiceImpl } from 'app/programming-feature/services/programming-service-impl.service';
-import { Program } from 'app/programming-feature/models/Program';
-import { ProgramStatus } from 'app/programming-feature/models/enumerations/program-status.model';
+import { ProgrammingServiceImpl } from '../../../../../../app/programming-feature/services/programming-service-impl.service';
+import { RequestsDetailsComponent } from '../../../../../../app/programming-feature/requests/requests-details/requests-details.component';
+import { ProgrammingService } from '../../../../../../app/programming-feature/services/programming-service';
+import { Program } from '../../../../../../app/programming-feature/models/Program';
+import { ProgramStatus } from '../../../../../../app/programming-feature/models/enumerations/program-status.model';
 
 describe('Component Tests', () => {
   describe('Requests Details Management Component', () => {

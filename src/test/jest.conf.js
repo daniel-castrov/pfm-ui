@@ -1,8 +1,8 @@
-const tsconfig = require('../../../tsconfig.json');
+const tsconfig = require('../../tsconfig.json');
 
 module.exports = {
     preset: 'jest-preset-angular',
-    setupFilesAfterEnv: ['<rootDir>/src/test/javascript/jest.ts'],
+    setupFilesAfterEnv: ['<rootDir>/src/test/jest.ts'],
     cacheDirectory: '<rootDir>/build/jest-cache',
     coverageDirectory: '<rootDir>/build/test-results/',
     globals: {
@@ -13,7 +13,7 @@ module.exports = {
         }
     },
     coveragePathIgnorePatterns: [
-        '<rootDir>/src/test/javascript'
+        '<rootDir>/src/test'
     ],
     moduleNameMapper: mapTypescriptAliasToJestAlias(),
     reporters: [
@@ -22,8 +22,8 @@ module.exports = {
     ],
     testResultsProcessor: 'jest-sonar-reporter',
     transformIgnorePatterns: ['node_modules/'],
-    testMatch: ['<rootDir>/src/test/javascript/spec/**/@(*.)@(spec.ts)'],
-    rootDir: '../../../',
+    testMatch: ['<rootDir>/src/test/spec/**/@(*.)@(spec.ts)'],
+    rootDir: '../../',
     testURL: 'http://localhost/'
 };
 

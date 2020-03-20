@@ -4,11 +4,11 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TabDirective, TabsetComponent } from 'ngx-bootstrap';
 import { GoogleChartComponent } from 'ng2-google-charts';
 import { AngularFontAwesomeComponent } from 'angular-font-awesome';
-import { ProgrammingService } from 'app/programming-feature/services/programming-service';
-import { ProgrammingServiceImpl } from 'app/programming-feature/services/programming-service-impl.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MockActivatedRoute, MockRouter } from './helpers/mock-route.service';
-import { RequestSummaryNavigationHistoryService } from 'app/programming-feature/requests/requests-summary/requests-summary-navigation-history.service';
+import { ProgrammingService } from '../../app/programming-feature/services/programming-service';
+import { ProgrammingServiceImpl } from '../../app/programming-feature/services/programming-service-impl.service';
+import { RequestSummaryNavigationHistoryService } from '../../app/programming-feature/requests/requests-summary/requests-summary-navigation-history.service';
 
 @NgModule({
   providers: [

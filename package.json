@@ -6,7 +6,7 @@
     "start": "ng serve -o",
     "local": "ng serve -o -c local",
     "build": "ng build",
-    "test": "jest --coverage --logHeapUsage -w=2 --config src/test/javascript/jest.conf.js",
+    "test": "jest --coverage --logHeapUsage -w=2 --config src/test/jest.conf.js",
     "lint": "ng lint",
     "postinstall": "tsc -p builders/tsconfig.builders.json",
     "compile:server": "webpack --config webpack.server.config.js --progress --colors",

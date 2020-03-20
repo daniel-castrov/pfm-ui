@@ -7,9 +7,6 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
-import { PluginLoaderService } from './services/plugin-loader/plugin-loader.service';
-import { ClientPluginLoaderService } from './services/plugin-loader/client-plugin-loader.service';
-import { PluginsConfigProvider } from './services/plugins-config.provider';
 import { TransferStateService } from './services/transfer-state.service';
 import { AppRoutingModule } from './app-routing.module';
 import { PfmCoreuiModule } from './pfm-coreui/pfm-coreui.module';
@@ -31,18 +28,6 @@ import { AuthGuard } from './pfm-auth-module/services/auth-guard';
     BrowserAnimationsModule
   ],
   providers: [
-    { provide: PluginLoaderService, useClass: ClientPluginLoaderService },
-    PluginsConfigProvider,
-    {
-      provide: APP_INITIALIZER,
-      useFactory: (provider: PluginsConfigProvider) => () =>
-        provider
-          .loadConfig()
-          .toPromise()
-          .then(config => (provider.config = config)),
-      multi: true,
-      deps: [PluginsConfigProvider]
-    },
     AppModel,
     DialogService,
     AuthorizationService,
