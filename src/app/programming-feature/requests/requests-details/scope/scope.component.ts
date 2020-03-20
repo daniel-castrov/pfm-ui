@@ -76,7 +76,7 @@ export class ScopeComponent implements OnInit {
   currentTeamLeadRowDataState: RowDataStateInterface = {};
   currentProcessPriorizationRowDataState: RowDataStateInterface = {};
 
-  attachmentsUploaded: string[] = [];
+  attachmentsUploaded: Attachment[] = [];
   deleteDialog: DeleteDialogInterface = { title: 'Delete' };
 
   constructor(private evaluationMeasureService: EvaluationMeasureService,
@@ -84,7 +84,6 @@ export class ScopeComponent implements OnInit {
               private teamLeadService: TeamLeadService,
               private dialogService: DialogService) {
   }
-
 
   ngOnInit() {
     this.budget = 210000000;
@@ -109,6 +108,7 @@ export class ScopeComponent implements OnInit {
   }
 
   updateForm(program: Program) {
+    this.attachmentsUploaded = [...program.attachments];
     this.form.patchValue({
       aim: program.aim,
       goal: program.goal,
@@ -990,8 +990,7 @@ export class ScopeComponent implements OnInit {
     if (newFile) {
       const attachment = new Attachment();
       attachment.file = newFile;
-      attachment.mpId = '1';
-      this.attachmentsUploaded.push(attachment.file.name);
+      this.attachmentsUploaded.push(attachment);
     }
   }
 
