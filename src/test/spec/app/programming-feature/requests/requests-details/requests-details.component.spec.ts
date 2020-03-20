@@ -28,7 +28,7 @@ describe('Component Tests', () => {
       service = fixture.debugElement.injector.get(ProgrammingService);
     });
 
-    it('Should call load all on init', fakeAsync(() => {
+    it('Should load Program on init', fakeAsync(() => {
       // GIVEN
       spyOn(service, 'getProgramById').and.returnValue(
         of(
@@ -48,7 +48,7 @@ describe('Component Tests', () => {
     }));
 
     describe('save', () => {
-      it('Should call update service on save for existing entity', fakeAsync(() => {
+      it('Should call update service on save for existing Program', fakeAsync(() => {
         // GIVEN
         const entity = new Program();
         entity.id = '123';
