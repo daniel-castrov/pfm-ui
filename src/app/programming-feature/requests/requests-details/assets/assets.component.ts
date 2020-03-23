@@ -14,6 +14,8 @@ import { Asset } from 'src/app/programming-feature/models/asset.model';
 import { AssetDetail } from 'src/app/programming-feature/models/asset-detail.model';
 import { AssetService } from 'src/app/programming-feature/services/asset.service';
 import { Observable } from 'rxjs';
+import { TagService } from 'src/app/programming-feature/services/tag.service';
+import { Tag } from 'src/app/programming-feature/models/Tag';
 
 @Component({
   selector: 'pfm-assets',
@@ -24,6 +26,9 @@ export class AssetsComponent implements OnInit {
 
   @Input() pomYear: number;
   @Input() program: Program;
+
+  readonly CONTRACTOR_OR_MANUFACTURER = 'Contractor or Manufacturer';
+  readonly TO_BE_USED_BY = 'To be Used By';
 
   actionState = {
     VIEW: {
@@ -44,8 +49,8 @@ export class AssetsComponent implements OnInit {
 
   form: FormGroup;
   showAssetGrid: boolean;
-  toBeUsedByOptions: string[];
-  contractorOrManufacturerOptions: string[];
+  toBeUsedByOptions: Tag[] = [];
+  contractorOrManufacturerOptions: Tag[] = [];
 
   fundingLineOptions: any[] = [];
   selectedFundingLine: string;
@@ -63,6 +68,7 @@ export class AssetsComponent implements OnInit {
     private dialogService: DialogService,
     private fundingLineService: FundingLineService,
     private assetService: AssetService,
+    private tagService: TagService,
     private appModel: AppModel
   ) { }
 
@@ -71,8 +77,12 @@ export class AssetsComponent implements OnInit {
       return;
     }
     this.loadForm();
-    this.loadToBeUsedBy();
-    this.loadcontractorOrManufacturer();
+    this.setupGrid();
+  }
+
+  private async setupGrid() {
+    await this.loadToBeUsedBy();
+    await this.loadcontractorOrManufacturer();
     this.setupAssetGrid();
   }
 
@@ -85,41 +95,44 @@ export class AssetsComponent implements OnInit {
     this.form.controls.fundingLineSelect.patchValue(0);
   }
 
-  private loadToBeUsedBy() {
-    this.toBeUsedByOptions = [
-      'Select',
-      'USA',
-      'USN',
-      'USAF',
-      'USMC',
-      'USNG',
-      this.appModel.userDetails.currentCommunity.abbreviation
-    ];
+  private async loadToBeUsedBy() {
+    await this.tagService.getByType(this.TO_BE_USED_BY)
+      .toPromise()
+      .then(resp => {
+        this.toBeUsedByOptions.push({
+          id: null,
+          abbr: 'NONE',
+          name: 'Select',
+          type: 'NONE'
+        });
+        this.toBeUsedByOptions.push(...resp.result as Tag[]);
+        this.toBeUsedByOptions.push({
+          id: null,
+          abbr: 'NONE',
+          name: this.appModel.userDetails.currentCommunity.abbreviation,
+          type: 'NONE'
+        });
+      });
   }
 
-  private loadcontractorOrManufacturer() {
-    this.contractorOrManufacturerOptions = [
-      'Select',
-      '20th Support Command, Aberdeen Proving Ground, MD',
-      '28th Test and Evaluation Squadron, Eglin AFB, FL',
-      '3M Canada, Brockville Ontario, CN',
-      '908 Devices, Boston, MA',
-      'AMEDD Center and School, Ft. Sam Houston, TX',
-      'ANP Technologies, Inc., Newark, DE',
-      'AOAC International, Gaithersburg, MD',
-      'ATI Solutions, Inc., Tysons Corner, VA',
-      'AVI BioPharma, Inc., Corvallis, OR',
-      'AVON Protection System Inc., Cadillac, MI',
-      'AVOX System Inc., Lancaster, NY',
-      'Aberdeen Test Center (ATC), Aberdeen Proving Ground, MD',
-      'Advanced Technologies International, Summerville, SC',
-      'Aeroclave, LLC, Maitland, FL',
-      'Agentase, LLC, Elkridge, MD',
-      'Agentase, LLC, Pittsburgh, PA',
-      'Air Force Research Laboratory (AFRL), Wright Patterson AFB, OH',
-      'AirBoss Defense, Acton Vale Quebec, CN',
-      'Allied, Kansas City, KS'
-    ];
+  private async loadcontractorOrManufacturer() {
+    await this.tagService.getByType(this.CONTRACTOR_OR_MANUFACTURER)
+      .toPromise()
+      .then(resp => {
+        this.contractorOrManufacturerOptions.push({
+          id: null,
+          abbr: 'NONE',
+          name: 'Select',
+          type: 'NONE'
+        });
+        this.contractorOrManufacturerOptions.push(...resp.result as Tag[]);
+        this.contractorOrManufacturerOptions.push({
+          id: null,
+          abbr: 'NONE',
+          name: this.appModel.userDetails.currentCommunity.abbreviation,
+          type: 'NONE'
+        });
+      });
   }
 
   onChangeSuit(event: any) {
@@ -498,7 +511,7 @@ export class AssetsComponent implements OnInit {
             cellEditor: 'select',
             cellEditorParams: {
               cellHeight: 100,
-              values: this.contractorOrManufacturerOptions
+              values: this.contractorOrManufacturerOptions.map(tag => tag.name)
             },
           },
           {
@@ -518,7 +531,7 @@ export class AssetsComponent implements OnInit {
             cellEditor: 'select',
             cellEditorParams: {
               cellHeight: 100,
-              values: this.toBeUsedByOptions
+              values: this.toBeUsedByOptions.map(tag => tag.name)
             },
           },
         ],
