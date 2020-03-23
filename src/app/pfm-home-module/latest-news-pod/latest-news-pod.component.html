@@ -10,7 +10,7 @@
       </span>
     </div>
     <div class="row no-gutters content">
-      <div class="col-6" [class.d-none]="!canShow(newsItem)" *ngFor="let newsItem of newsItems">
+      <div class="col-6 pr-5" [class.d-none]="!canShow(newsItem)" *ngFor="let newsItem of newsItems">
         <div class="single-row align-self-center">
           <i aria-hidden="true" class="mr-3 fa fa-star black"></i>
           <div class="align-self-center" [innerHtml]="contentSanitize(newsItem.text)"></div>
