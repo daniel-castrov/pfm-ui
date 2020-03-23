@@ -126,12 +126,6 @@ export class AssetsComponent implements OnInit {
           type: 'NONE'
         });
         this.contractorOrManufacturerOptions.push(...resp.result as Tag[]);
-        this.contractorOrManufacturerOptions.push({
-          id: null,
-          abbr: 'NONE',
-          name: this.appModel.userDetails.currentCommunity.abbreviation,
-          type: 'NONE'
-        });
       });
   }
 
