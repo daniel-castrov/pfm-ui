@@ -1,12 +1,21 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { GridApi, ColGroupDef, ColumnApi, CellPosition } from '@ag-grid-community/all-modules';
 import { ActionCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/action-cell-renderer/action-cell-renderer.component';
-import { of } from 'rxjs';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { DataGridMessage } from 'src/app/pfm-coreui/models/DataGridMessage';
 import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
 import { NumericCellEditor } from 'src/app/ag-grid/cell-editors/NumericCellEditor';
 import { AppModel } from 'src/app/pfm-common-models/AppModel';
+import { Program } from 'src/app/programming-feature/models/Program';
+import { FundingLineService } from 'src/app/programming-feature/services/funding-line.service';
+import { map } from 'rxjs/operators';
+import { FundingLine } from 'src/app/programming-feature/models/funding-line.model';
+import { Asset } from 'src/app/programming-feature/models/asset.model';
+import { AssetDetail } from 'src/app/programming-feature/models/asset-detail.model';
+import { AssetService } from 'src/app/programming-feature/services/asset.service';
+import { Observable } from 'rxjs';
+import { TagService } from 'src/app/programming-feature/services/tag.service';
+import { Tag } from 'src/app/programming-feature/models/Tag';
 
 @Component({
   selector: 'pfm-assets',
@@ -16,6 +25,10 @@ import { AppModel } from 'src/app/pfm-common-models/AppModel';
 export class AssetsComponent implements OnInit {
 
   @Input() pomYear: number;
+  @Input() program: Program;
+
+  readonly CONTRACTOR_OR_MANUFACTURER = 'Contractor or Manufacturer';
+  readonly TO_BE_USED_BY = 'To be Used By';
 
   actionState = {
     VIEW: {
@@ -35,16 +48,17 @@ export class AssetsComponent implements OnInit {
   };
 
   form: FormGroup;
-  showFundingLineGrid: boolean;
-  toBeUsedByOptions: string[];
-  contractorManufacturerOptions: string[];
+  showAssetGrid: boolean;
+  toBeUsedByOptions: Tag[] = [];
+  contractorOrManufacturerOptions: Tag[] = [];
 
   fundingLineOptions: any[] = [];
+  selectedFundingLine: string;
 
-  fundingLineGridApi: GridApi;
-  fundingLineColumnApi: ColumnApi;
-  fundingLineColumnsDefinition: ColGroupDef[];
-  fundingLineRows: any[] = [];
+  assetGridApi: GridApi;
+  assetColumnApi: ColumnApi;
+  assetColumnsDefinition: ColGroupDef[];
+  assetRows: Asset[] = [];
 
   currentRowDataState: RowDataStateInterface = {};
   deleteDialog: DeleteDialogInterface = { title: 'Delete' };
@@ -52,6 +66,9 @@ export class AssetsComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private dialogService: DialogService,
+    private fundingLineService: FundingLineService,
+    private assetService: AssetService,
+    private tagService: TagService,
     private appModel: AppModel
   ) { }
 
@@ -59,129 +76,151 @@ export class AssetsComponent implements OnInit {
     if (!this.pomYear) {
       return;
     }
-    this.loadFundingLines();
-    this.loadToBeUsedBy();
-    this.loadContractorManufacturer();
-    this.setupFundingLineGrid();
+    this.loadForm();
+    this.setupGrid();
   }
 
-  loadFundingLines() {
+  private async setupGrid() {
+    await this.loadToBeUsedBy();
+    await this.loadcontractorOrManufacturer();
+    this.setupAssetGrid();
+  }
+
+  private loadForm() {
     this.form = this.formBuilder.group({
-      fundingLineSelect: ['']
+      fundingLineSelect: [''],
+      remarks: new FormControl('')
     });
-
-    of(this.getFundingLineOptions()).subscribe(fundingLine => {
-      this.fundingLineOptions = fundingLine;
-      this.form.controls.fundingLineSelect.patchValue(0);
-    });
+    this.getFundingLineOptions();
+    this.form.controls.fundingLineSelect.patchValue(0);
   }
 
-  loadToBeUsedBy() {
-    this.toBeUsedByOptions = [
-      'Select',
-      'USA',
-      'USN',
-      'USAF',
-      'USMC',
-      'USNG',
-      this.appModel.userDetails.currentCommunity.abbreviation
-    ];
+  private async loadToBeUsedBy() {
+    await this.tagService.getByType(this.TO_BE_USED_BY)
+      .toPromise()
+      .then(resp => {
+        this.toBeUsedByOptions.push({
+          id: null,
+          abbr: 'NONE',
+          name: 'Select',
+          type: 'NONE'
+        });
+        this.toBeUsedByOptions.push(...resp.result as Tag[]);
+        this.toBeUsedByOptions.push({
+          id: null,
+          abbr: 'NONE',
+          name: this.appModel.userDetails.currentCommunity.abbreviation,
+          type: 'NONE'
+        });
+      });
   }
 
-  loadContractorManufacturer() {
-    this.contractorManufacturerOptions = [
-      'Select',
-      '20th Support Command, Aberdeen Proving Ground, MD',
-      '28th Test and Evaluation Squadron, Eglin AFB, FL',
-      '3M Canada, Brockville Ontario, CN',
-      '908 Devices, Boston, MA',
-      'AMEDD Center and School, Ft. Sam Houston, TX',
-      'ANP Technologies, Inc., Newark, DE',
-      'AOAC International, Gaithersburg, MD',
-      'ATI Solutions, Inc., Tysons Corner, VA',
-      'AVI BioPharma, Inc., Corvallis, OR',
-      'AVON Protection System Inc., Cadillac, MI',
-      'AVOX System Inc., Lancaster, NY',
-      'Aberdeen Test Center (ATC), Aberdeen Proving Ground, MD',
-      'Advanced Technologies International, Summerville, SC',
-      'Aeroclave, LLC, Maitland, FL',
-      'Agentase, LLC, Elkridge, MD',
-      'Agentase, LLC, Pittsburgh, PA',
-      'Air Force Research Laboratory (AFRL), Wright Patterson AFB, OH',
-      'AirBoss Defense, Acton Vale Quebec, CN',
-      'Allied, Kansas City, KS'
-    ];
+  private async loadcontractorOrManufacturer() {
+    await this.tagService.getByType(this.CONTRACTOR_OR_MANUFACTURER)
+      .toPromise()
+      .then(resp => {
+        this.contractorOrManufacturerOptions.push({
+          id: null,
+          abbr: 'NONE',
+          name: 'Select',
+          type: 'NONE'
+        });
+        this.contractorOrManufacturerOptions.push(...resp.result as Tag[]);
+        this.contractorOrManufacturerOptions.push({
+          id: null,
+          abbr: 'NONE',
+          name: this.appModel.userDetails.currentCommunity.abbreviation,
+          type: 'NONE'
+        });
+      });
   }
 
   onChangeSuit(event: any) {
     this.form.get('fundingLineSelect').setValue(event.target.value, {
       onlySelf: true
     });
-    this.showFundingLineGrid = this.form.get('fundingLineSelect').value[1];
+    this.selectedFundingLine = this.form.get('fundingLineSelect').value;
+    if (this.selectedFundingLine.toLowerCase() !== '0') {
+      this.assetService.obtainAssetsByFundingLineId(this.selectedFundingLine)
+        .pipe(map(resp => resp.result as Asset[]))
+        .subscribe(
+          resp => {
+            this.assetRows = resp.map(asset => ({ ...asset, action: this.actionState.VIEW }));
+            this.showAssetGrid = true;
+          },
+          error => {
+            this.dialogService.displayDebug(error);
+          }
+        );
+    } else {
+      this.showAssetGrid = false;
+    }
   }
 
-  getFundingLineOptions() {
-    // Server Call
-    return [
-      'O&M/BA4/x/COMSC/252.3',
-      'O&M/BA6/x/ALTRL/21/5',
-      'O&M/BA5/y/XXXX/XXX',
-      'MILCON/BA4/AA/JACW/111.1',
-      'JIDF/BA1/z/zzzz/222.2'
-    ];
+  private async getFundingLineOptions() {
+    await this.fundingLineService.obtainFundingLinesByProgramId(this.program.id)
+      .pipe(map(resp => {
+        const fundingLines = resp.result as FundingLine[];
+        return fundingLines.map(fundingLine => {
+          const appn = fundingLine.appropriation ? fundingLine.appropriation : '';
+          const baOrBlin = fundingLine.baOrBlin ? fundingLine.baOrBlin : '';
+          const sag = fundingLine.sag ? fundingLine.sag : '';
+          const wucd = fundingLine.wucd ? fundingLine.wucd : '';
+          const expType = fundingLine.expenditureType ? fundingLine.expenditureType : '';
+          return {
+            id: fundingLine.id, value: [appn, baOrBlin, sag, wucd, expType].join('/')
+          };
+        });
+      }))
+      .toPromise()
+      .then(
+        resp => {
+          this.fundingLineOptions = resp;
+        },
+        error => {
+          this.dialogService.displayDebug(error);
+        }
+      );
   }
 
-  onGridIsReady(fundingLineGridApi: GridApi) {
-    this.fundingLineGridApi = fundingLineGridApi;
-    this.fundingLineGridApi.setHeaderHeight(50);
-    this.fundingLineGridApi.setGroupHeaderHeight(25);
+  onGridIsReady(assetGridApi: GridApi) {
+    this.assetGridApi = assetGridApi;
+    this.assetGridApi.setHeaderHeight(50);
+    this.assetGridApi.setGroupHeaderHeight(25);
+    this.assetGridApi.setRowData(this.assetRows);
   }
 
   onColumnIsReady(columnApi: ColumnApi) {
-    this.fundingLineColumnApi = columnApi;
+    this.assetColumnApi = columnApi;
   }
 
   onRowAdd(event: any) {
     if (this.currentRowDataState.isEditMode) {
       return;
     }
-    this.fundingLineRows.push(
+    const assetDetails: { [year: number]: AssetDetail } = {};
+    for (let year = this.pomYear - 2; year < this.pomYear + 6; year++) {
+      assetDetails[year] = {
+        unitCost: 0,
+        quantity: 0,
+        totalCost: 0
+      };
+    }
+    this.assetRows.push(
       {
-        assetDescription: '',
-        contractorManufacturer: '',
+        fundingLineId: this.selectedFundingLine,
+        description: '',
+        contractorOrManufacturer: '',
         toBeUsedBy: '',
 
-        py1UnitCost: 0,
-        py1Quantity: 0,
-        py1TotalCost: 0,
-        pyUnitCost: 0,
-        pyQuantity: 0,
-        pyTotalCost: 0,
-        cyUnitCost: 0,
-        cyQuantity: 0,
-        cyTotalCost: 0,
-        byUnitCost: 0,
-        byQuantity: 0,
-        byTotalCost: 0,
-        by1UnitCost: 0,
-        by1Quantity: 0,
-        by1TotalCost: 0,
-        by2UnitCost: 0,
-        by2Quantity: 0,
-        by2TotalCost: 0,
-        by3UnitCost: 0,
-        by3Quantity: 0,
-        by3TotalCost: 0,
-        by4UnitCost: 0,
-        by4Quantity: 0,
-        by4TotalCost: 0,
+        details: assetDetails,
 
         action: this.actionState.EDIT
       }
     );
     this.currentRowDataState.isAddMode = true;
-    this.fundingLineGridApi.setRowData(this.fundingLineRows);
-    this.editRow(this.fundingLineRows.length - 1);
+    this.assetGridApi.setRowData(this.assetRows);
+    this.editRow(this.assetRows.length - 1);
   }
 
   onCellAction(cellAction: DataGridMessage) {
@@ -212,23 +251,55 @@ export class AssetsComponent implements OnInit {
   }
 
   private saveRow(rowIndex: number) {
-    this.fundingLineGridApi.stopEditing();
-    const row = this.fundingLineRows[rowIndex];
+    this.assetGridApi.stopEditing();
+    const row = this.assetRows[rowIndex];
     const canSave = this.validateRowData(row);
     if (canSave) {
+      if (this.currentRowDataState.isAddMode || !row.id) {
+        this.performSave(
+          this.assetService.createAsset.bind(this.assetService),
+          row,
+          rowIndex
+        );
+      } else {
+        this.performSave(
+          this.assetService.updateAsset.bind(this.assetService),
+          row,
+          rowIndex
+        );
+      }
       this.viewMode(rowIndex);
     } else {
       this.editRow(rowIndex);
     }
   }
 
+  private performSave(
+    saveOrUpdate: (asset: Asset) => Observable<any>,
+    asset: Asset,
+    rowIndex: number
+  ) {
+    saveOrUpdate(asset)
+      .pipe(map(resp => resp.result as Asset))
+      .subscribe(
+        assetResponse => {
+          this.assetRows[rowIndex] = assetResponse;
+          this.viewMode(rowIndex);
+        },
+        error => {
+          this.dialogService.displayDebug(error);
+          this.editRow(rowIndex);
+        }
+      );
+  }
+
   private validateRowData(row: any) {
     let errorMessage = '';
-    if (!row.assetDescription.length) {
+    if (!row.description.length) {
       errorMessage = 'Asset Description cannot be empty.';
-    } else if (row.assetDescription.length > 45) {
+    } else if (row.description.length > 45) {
       errorMessage = 'Asset Description cannot have more than 45 characters.';
-    } else if (row.contractorManufacturer.toLowerCase() === 'select') {
+    } else if (row.contractorOrManufacturer.toLowerCase() === 'select') {
       errorMessage = 'Please, select a Contractor / Manufacturer.';
     } else if (row.toBeUsedBy.toLowerCase() === 'select') {
       errorMessage = 'Please, select a To be Used By.';
@@ -240,55 +311,67 @@ export class AssetsComponent implements OnInit {
   }
 
   private cancelRow(rowIndex: number) {
-    this.fundingLineRows[rowIndex] = this.currentRowDataState.currentEditingRowData;
+    this.assetRows[rowIndex] = this.currentRowDataState.currentEditingRowData;
     this.viewMode(rowIndex);
   }
 
   private editRow(rowIndex: number, updatePreviousState?: boolean) {
     if (updatePreviousState) {
-      this.currentRowDataState.currentEditingRowData = { ...this.fundingLineRows[rowIndex] };
+      this.currentRowDataState.currentEditingRowData = { ...this.assetRows[rowIndex] };
     }
     this.editMode(rowIndex);
   }
 
   private deleteRow(rowIndex: number) {
-    this.fundingLineRows.splice(rowIndex, 1);
-    this.fundingLineRows.forEach(row => {
-      row.order--;
-    });
+    if (this.assetRows[rowIndex].id) {
+      this.assetService.removeAssetById(this.assetRows[rowIndex].id)
+        .subscribe(
+          () => {
+            this.performDelete(rowIndex);
+          },
+          error => {
+            this.dialogService.displayDebug(error);
+          });
+    } else {
+      this.performDelete(rowIndex);
+    }
+  }
+
+  private performDelete(rowIndex: number) {
+    this.assetRows.splice(rowIndex, 1);
     this.currentRowDataState.currentEditingRowIndex = 0;
     this.currentRowDataState.isEditMode = false;
     this.currentRowDataState.isAddMode = false;
-    this.fundingLineGridApi.stopEditing();
-    this.fundingLineRows.forEach(row => {
+    this.assetGridApi.stopEditing();
+    this.assetRows.forEach(row => {
       row.isDisabled = false;
     });
-    this.fundingLineGridApi.setRowData(this.fundingLineRows);
+    this.assetGridApi.setRowData(this.assetRows);
   }
 
   private viewMode(rowIndex: number) {
     this.currentRowDataState.currentEditingRowIndex = 0;
     this.currentRowDataState.isEditMode = false;
     this.currentRowDataState.isAddMode = false;
-    this.fundingLineGridApi.stopEditing();
-    this.fundingLineRows[rowIndex].action = this.actionState.VIEW;
-    this.fundingLineRows.forEach(row => {
+    this.assetGridApi.stopEditing();
+    this.assetRows[rowIndex].action = this.actionState.VIEW;
+    this.assetRows.forEach(row => {
       row.isDisabled = false;
     });
-    this.fundingLineGridApi.setRowData(this.fundingLineRows);
+    this.assetGridApi.setRowData(this.assetRows);
   }
 
   private editMode(rowIndex: number) {
     this.currentRowDataState.currentEditingRowIndex = rowIndex;
     this.currentRowDataState.isEditMode = true;
-    this.fundingLineRows[rowIndex].action = this.actionState.EDIT;
-    this.fundingLineRows.forEach((row, index) => {
+    this.assetRows[rowIndex].action = this.actionState.EDIT;
+    this.assetRows.forEach((row, index) => {
       if (rowIndex !== index) {
         row.isDisabled = true;
       }
     });
-    this.fundingLineGridApi.setRowData(this.fundingLineRows);
-    this.fundingLineGridApi.startEditingCell({
+    this.assetGridApi.setRowData(this.assetRows);
+    this.assetGridApi.startEditingCell({
       rowIndex,
       colKey: '0'
     });
@@ -296,21 +379,20 @@ export class AssetsComponent implements OnInit {
 
   onMouseDown(mouseEvent: MouseEvent) {
     if (this.currentRowDataState.isEditMode) {
-      this.fundingLineGridApi.startEditingCell({
+      this.assetGridApi.startEditingCell({
         rowIndex: this.currentRowDataState.currentEditingRowIndex,
         colKey: '0'
       });
     }
   }
 
-  setupFundingLineGrid() {
+  private setupAssetGrid() {
     const columnGroups: any[] = [];
-    for (let i = this.pomYear - 2, x = 0; i < this.pomYear + 6; i++ , x++) {
+    for (let i = this.pomYear - 2, x = 0; i < this.pomYear + 6; i++, x++) {
       const headerName = i < this.pomYear ?
         'PY' + (this.pomYear - i === 1 ? '' : '-' + (this.pomYear - i - 1)) :
         i > this.pomYear ? 'BY' + (i === this.pomYear + 1 ? '' : '+' + (i - this.pomYear - 1)) :
           'CY';
-      const fieldPrefix = headerName.toLowerCase().replace('+', '').replace('-', '');
       columnGroups.push(
         {
           groupId: 'main-header',
@@ -326,7 +408,6 @@ export class AssetsComponent implements OnInit {
                 {
                   colId: 2 + x * 3 + 1,
                   headerName: 'Unit Cost',
-                  field: fieldPrefix + 'UnitCost',
                   editable: i > this.pomYear,
                   suppressMovable: true,
                   filter: false,
@@ -335,19 +416,28 @@ export class AssetsComponent implements OnInit {
                   cellClass: 'numeric-class',
                   cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
                   minWidth: 80,
+                  valueGetter: params => params.data.details[i].unitCost,
+                  valueSetter: params => {
+                    params.data.details[i].unitCost = Number(params.newValue);
+                    return true;
+                  },
                   cellEditor: NumericCellEditor.create({ returnUndefinedOnZero: false }),
-                  valueFormatter: params => this.currencyFormatter(params.data[params.colDef.field])
+                  valueFormatter: params => this.currencyFormatter(params.data.details[i].unitCost)
                 },
                 {
                   colId: 2 + x * 3 + 2,
                   headerName: 'Qty',
-                  field: fieldPrefix + 'Quantity',
                   editable: i > this.pomYear,
                   suppressMovable: true,
                   suppressMenu: true,
                   filter: false,
                   sortable: false,
                   cellClass: 'numeric-class',
+                  valueGetter: params => params.data.details[i].quantity,
+                  valueSetter: params => {
+                    params.data.details[i].quantity = Number(params.newValue);
+                    return true;
+                  },
                   cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
                   minWidth: 80,
                   cellEditor: NumericCellEditor.create({ returnUndefinedOnZero: false })
@@ -355,7 +445,6 @@ export class AssetsComponent implements OnInit {
                 {
                   colId: 2 + x * 3 + 3,
                   headerName: 'Total Cost',
-                  field: fieldPrefix + 'TotalCost',
                   editable: i > this.pomYear,
                   suppressMovable: true,
                   suppressMenu: true,
@@ -364,8 +453,13 @@ export class AssetsComponent implements OnInit {
                   cellClass: 'numeric-class',
                   cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
                   minWidth: 80,
+                  valueGetter: params => params.data.details[i].totalCost,
+                  valueSetter: params => {
+                    params.data.details[i].totalCost = Number(params.newValue);
+                    return true;
+                  },
                   cellEditor: NumericCellEditor.create({ returnUndefinedOnZero: false }),
-                  valueFormatter: params => this.currencyFormatter(params.data[params.colDef.field])
+                  valueFormatter: params => this.currencyFormatter(params.data.details[i].totalCost)
                 }
               ]
             }
@@ -373,7 +467,7 @@ export class AssetsComponent implements OnInit {
         }
       );
     }
-    this.fundingLineColumnsDefinition = [
+    this.assetColumnsDefinition = [
       {
         groupId: 'main-header',
         headerName: 'Unit Costs in $K Total Costs in $M',
@@ -383,7 +477,7 @@ export class AssetsComponent implements OnInit {
           {
             colId: 0,
             headerName: 'Asset Description',
-            field: 'assetDescription',
+            field: 'description',
             editable: true,
             suppressMovable: true,
             filter: false,
@@ -398,7 +492,7 @@ export class AssetsComponent implements OnInit {
           {
             colId: 1,
             headerName: 'Contractor / Manufacturer',
-            field: 'contractorManufacturer',
+            field: 'contractorOrManufacturer',
             editable: true,
             suppressMovable: true,
             filter: false,
@@ -417,7 +511,7 @@ export class AssetsComponent implements OnInit {
             cellEditor: 'select',
             cellEditorParams: {
               cellHeight: 100,
-              values: this.contractorManufacturerOptions
+              values: this.contractorOrManufacturerOptions.map(tag => tag.name)
             },
           },
           {
@@ -437,7 +531,7 @@ export class AssetsComponent implements OnInit {
             cellEditor: 'select',
             cellEditorParams: {
               cellHeight: 100,
-              values: this.toBeUsedByOptions
+              values: this.toBeUsedByOptions.map(tag => tag.name)
             },
           },
         ],
@@ -465,11 +559,11 @@ export class AssetsComponent implements OnInit {
     ];
   }
 
-  currencyFormatter(params) {
+  private currencyFormatter(params) {
     return '$ ' + Number(params).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
   }
 
-  headerClassFunc(params: any) {
+  private headerClassFunc(params: any) {
     let isSubHeader = false;
     let isMainHeader = false;
     let column = params.column ? params.column : params.columnGroup;
@@ -542,7 +636,7 @@ export class AssetsComponent implements OnInit {
       }
     }
 
-    const nextColumn = this.fundingLineColumnApi.getColumn(isBackward ? --previousColId : ++previousColId);
+    const nextColumn = this.assetColumnApi.getColumn(isBackward ? --previousColId : ++previousColId);
     const nextCell: CellPosition = {
       rowIndex,
       column: nextColumn,

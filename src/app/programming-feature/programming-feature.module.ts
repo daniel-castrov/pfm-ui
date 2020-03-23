@@ -61,6 +61,8 @@ import { ProcessPrioritizationServiceImpl } from './services/process-prioritizat
 import { ProcessPrioritizationService } from './services/process-prioritization.service';
 import { FundingLineService } from './services/funding-line.service';
 import { FundingLineServiceImpl } from './services/funding-line-impl.service';
+import { AssetService } from './services/asset.service';
+import { AssetServiceImpl } from './services/asset-impl.service';
 
 @NgModule({
   declarations: [
@@ -114,6 +116,7 @@ import { FundingLineServiceImpl } from './services/funding-line-impl.service';
   { provide: EvaluationMeasureService, useClass: EvaluationMeasureServiceImpl },
   { provide: ProcessPrioritizationService, useClass: ProcessPrioritizationServiceImpl },
   { provide: FundingLineService, useClass: FundingLineServiceImpl },
+  { provide: AssetService, useClass: AssetServiceImpl },
     ProgrammingModel,
     RequestSummaryNavigationHistoryService]
 })
