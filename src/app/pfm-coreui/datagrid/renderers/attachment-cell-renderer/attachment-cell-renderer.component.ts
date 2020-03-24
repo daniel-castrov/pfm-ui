@@ -12,30 +12,31 @@ export class AttachmentCellRendererComponent implements OnInit {
 
   data: any;
   params: any;
-  list:ListItem[];
-  attachmentsDisabled:boolean;
+  list: ListItem[];
+  attachmentsDisabled: boolean;
 
-  constructor(private datagridMBService:DatagridMbService){}
+  constructor(private datagridMBService: DatagridMbService) { }
 
-  handleSelectionChanged(data:any):void{
-    let message:DataGridMessage = new DataGridMessage();
+  handleSelectionChanged(data: any): void {
+    const message: DataGridMessage = new DataGridMessage();
     message.rowIndex = this.params.rowIndex;
-    message.columnIndex = -1;//not used - we know the column based on the action
-    message.message = "download-attachment";
-    message.rendererName = "AttachmentCellRendererComponent";
+    message.columnIndex = -1; // not used - we know the column based on the action
+    message.message = 'download-attachment';
+    message.rendererName = 'AttachmentCellRendererComponent';
     message.rowData = this.data;
     message.rawData = data.rawData;
-    message.messageType = "cell-renderer";
+    message.messageType = 'cell-renderer';
+    message.apiCompId = this.params.api.gridCore.compId;
     this.datagridMBService.sendMessage(message);
   }
 
   agInit(params) {
     this.params = params;
-    this.data =  params.value;
+    this.data = params.value;
 
     this.list = [];
-    for(let x of this.data){
-      let item:ListItem = new ListItem();
+    for (const x of this.data) {
+      const item: ListItem = new ListItem();
       item.name = x.file.name;
       item.value = x.file.name;
       item.id = x.id;
@@ -45,10 +46,6 @@ export class AttachmentCellRendererComponent implements OnInit {
     this.attachmentsDisabled = this.params.data.attachmentsDisabled;
   }
 
-  ngOnChanges() {
-
-  }
-
-  ngOnInit() {}
+  ngOnInit() { }
 
 }
