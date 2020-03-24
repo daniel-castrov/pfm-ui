@@ -16,10 +16,13 @@ import { PfmAuthModuleModule } from './pfm-auth-module/pfm-auth-module.module';
 import { DialogService } from './pfm-coreui/services/dialog.service';
 import { AuthorizationService } from './pfm-auth-module/services/authorization.service';
 import { AuthGuard } from './pfm-auth-module/services/auth-guard';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 @NgModule({
   declarations: [AppComponent],
   imports: [
+    ToastModule,
     HttpClientModule,
     BrowserTransferStateModule,
     AppRoutingModule,
@@ -31,7 +34,8 @@ import { AuthGuard } from './pfm-auth-module/services/auth-guard';
     AppModel,
     DialogService,
     AuthorizationService,
-    AuthGuard
+    AuthGuard,
+    MessageService
   ],
   bootstrap: [AppComponent]
 })

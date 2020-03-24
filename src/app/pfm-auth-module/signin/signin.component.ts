@@ -5,6 +5,7 @@ import { AppModel } from '../../pfm-common-models/AppModel';
 import { UserRole } from '../../pfm-common-models/UserRole';
 import { DialogService } from '../../pfm-coreui/services/dialog.service';
 import { CommunityService } from '../../services/community-service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-signin',
@@ -19,12 +20,19 @@ export class SigninComponent implements OnInit {
               private communityService: CommunityService,
               private dialogService: DialogService,
               private signInService: SigninService,
-              private router: Router) { }
+              private router: Router,
+              private messageService: MessageService) {
+  }
 
   onLoginClick(): void {
     this.busy = true;
     this.signInService.signIn().subscribe(
       resp => {
+        this.messageService.add({
+          severity: 'warn',
+          summary: 'Warn Message',
+          detail: 'Last Login at Mon, 16 Mar 2020 14:25:46'
+        });
         this.appModel.isUserSignedIn = true;
         this.getUserDetails();
       },
@@ -40,11 +48,11 @@ export class SigninComponent implements OnInit {
       resp => {
         this.appModel.userDetails = (resp as any).result;
         this.appModel.userDetails.fullName = this.appModel.userDetails.firstName + ' ' +
-            this.appModel.userDetails.lastName;
+          this.appModel.userDetails.lastName;
         this.communityService.getCommunity(this.appModel.userDetails.currentCommunityId).toPromise().then(
-            communityResp => {
-              this. appModel.userDetails.currentCommunity = (communityResp as any).result;
-            });
+          communityResp => {
+            this.appModel.userDetails.currentCommunity = (communityResp as any).result;
+          });
         this.getUserRoles();
       },
       error => {
