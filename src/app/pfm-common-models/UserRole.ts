@@ -12,6 +12,7 @@ export class UserRole {
   isUserApprover: boolean;
   isUser: boolean;
   isOrganizationMember: boolean;
+  isFinancialManager: boolean;
 
   constructor(roles: string[]) {
 
@@ -41,6 +42,9 @@ export class UserRole {
     }
     if (roles.includes(RoleConstants.ORGANIZATION_MEMBER)) {
       this.isOrganizationMember = true;
+    }
+    if (roles.includes(RoleConstants.FINANCIAL_MANAGER)) {
+      this.isFinancialManager = true;
     }
   }
 }
