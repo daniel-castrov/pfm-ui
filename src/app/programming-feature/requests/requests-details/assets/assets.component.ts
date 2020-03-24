@@ -251,7 +251,8 @@ export class AssetsComponent implements OnInit {
     if (canSave) {
       if (row.contractorOrManufacturer.toLowerCase() === 'select') {
         row.contractorOrManufacturer = '';
-      } else if (row.toBeUsedBy.toLowerCase() === 'select') {
+      }
+      if (row.toBeUsedBy.toLowerCase() === 'select') {
         row.toBeUsedBy = '';
       }
       if (this.currentRowDataState.isAddMode || !row.id) {
