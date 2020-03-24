@@ -5,7 +5,7 @@ import { AppModel } from '../../pfm-common-models/AppModel';
 import { UserRole } from '../../pfm-common-models/UserRole';
 import { DialogService } from '../../pfm-coreui/services/dialog.service';
 import { CommunityService } from '../../services/community-service';
-import { MessageService } from 'primeng/api';
+import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
 
 @Component({
   selector: 'app-signin',
@@ -16,23 +16,21 @@ export class SigninComponent implements OnInit {
 
   busy: boolean;
 
-  constructor(private appModel: AppModel,
-              private communityService: CommunityService,
-              private dialogService: DialogService,
-              private signInService: SigninService,
-              private router: Router,
-              private messageService: MessageService) {
+  constructor(
+    private appModel: AppModel,
+    private communityService: CommunityService,
+    private dialogService: DialogService,
+    private signInService: SigninService,
+    private router: Router,
+    private toastService: ToastService
+  ) {
   }
 
   onLoginClick(): void {
     this.busy = true;
     this.signInService.signIn().subscribe(
       resp => {
-        this.messageService.add({
-          severity: 'warn',
-          summary: 'Warn Message',
-          detail: 'Last Login at Mon, 16 Mar 2020 14:25:46'
-        });
+        this.toastService.displayWarning('Last Login at Mon, 16 Mar 2020 14:25:46');
         this.appModel.isUserSignedIn = true;
         this.getUserDetails();
       },

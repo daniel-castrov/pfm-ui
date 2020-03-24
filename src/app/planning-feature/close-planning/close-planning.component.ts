@@ -6,6 +6,7 @@ import { DialogService } from '../../pfm-coreui/services/dialog.service';
 import { SigninService } from '../../pfm-auth-module/services/signin.service';
 import { DropdownComponent } from '../../pfm-coreui/form-inputs/dropdown/dropdown.component';
 import { RoleConstants } from 'src/app/pfm-common-models/RoleConstants';
+import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
 
 @Component({
   selector: 'pfm-planning',
@@ -25,7 +26,8 @@ export class ClosePlanningComponent implements OnInit {
     private appModel: AppModel,
     private dialogService: DialogService,
     private signInService: SigninService,
-    private router: Router
+    private router: Router,
+    private toastService: ToastService
   ) { }
 
   ngOnInit() {
@@ -48,7 +50,7 @@ export class ClosePlanningComponent implements OnInit {
       // Open Mission Priorities
       this.router.navigate(['/planning/mission-priorities']);
     } else {
-      this.dialogService.displayToastError(`Please select a year from the dropdown.`);
+      this.toastService.displayError(`Please select a year from the dropdown.`);
     }
   }
 
