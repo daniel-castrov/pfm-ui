@@ -3,13 +3,9 @@ import { PlanningService } from '../services/planning-service';
 import { DialogService } from '../../pfm-coreui/services/dialog.service';
 import { ListItem } from '../../pfm-common-models/ListItem';
 import { DropdownComponent } from '../../pfm-coreui/form-inputs/dropdown/dropdown.component';
-import { TextInputComponent } from '../../pfm-coreui/form-inputs/text-input/text-input.component';
-import { PasswordInputComponent } from '../../pfm-coreui/form-inputs/password-input/password-input.component';
-import { ZipcodeInputComponent } from '../../pfm-coreui/form-inputs/zipcode-input/zipcode-input.component';
-import { EmailInputComponent } from '../../pfm-coreui/form-inputs/email-input/email-input.component';
-import { PhoneInputComponent } from '../../pfm-coreui/form-inputs/phone-input/phone-input.component';
 import { Router } from '@angular/router';
 import { AppModel } from '../../pfm-common-models/AppModel';
+import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
 
 @Component({
   selector: 'pfm-planning',
@@ -17,59 +13,65 @@ import { AppModel } from '../../pfm-common-models/AppModel';
   styleUrls: ['./create-planning.component.scss']
 })
 export class CreatePlanningComponent implements OnInit {
-  @ViewChild(DropdownComponent, {static: false}) yearDropDown: DropdownComponent;
+  @ViewChild(DropdownComponent, { static: false }) yearDropDown: DropdownComponent;
 
-  id:string = 'create-planning-component';
-  busy:boolean;
-  availableYears:ListItem[];
-  selectedYear:string;
+  id = 'create-planning-component';
+  busy: boolean;
+  availableYears: ListItem[];
+  selectedYear: string;
 
-  constructor(private appModel:AppModel, private planningService:PlanningService, private dialogService:DialogService, private router:Router) { }
+  constructor(
+    private appModel: AppModel,
+    private planningService: PlanningService,
+    private dialogService: DialogService,
+    private toastService: ToastService,
+    private router: Router
+  ) { }
 
-  yearSelected(year:ListItem):void{
+  yearSelected(year: ListItem): void {
     this.selectedYear = year.value;
   }
 
-  onCreatePlanningPhase():void{
-    let year:any = this.selectedYear;
-    if(this.yearDropDown.isValid()){
+  onCreatePlanningPhase(): void {
+    const year: any = this.selectedYear;
+    if (this.yearDropDown.isValid()) {
       this.busy = true;
-      let planningData = this.appModel.planningData.find( obj => obj.id === year + "_id");
+      const planningData = this.appModel.planningData.find(obj => obj.id === year + '_id');
 
       this.planningService.createPlanningPhase(planningData).subscribe(
-          resp => {
-            this.busy = false;
+        resp => {
+          this.busy = false;
 
-            // Update model state
-            planningData.state = 'CREATED';
+          // Update model state
+          planningData.state = 'CREATED';
 
-            this.dialogService.displayToastInfo(`Planning phase for ${ year } successfully created.`);
+          this.toastService.displaySuccess(`Planning phase for ${year} successfully created.`);
 
-            this.router.navigate(['home']);
-          },
-          error =>{
-            this.busy = false;
-            this.dialogService.displayDebug(error);
+          this.router.navigate(['home']);
+        },
+        error => {
+          this.busy = false;
+          this.dialogService.displayDebug(error);
         });
-    } else{
-      this.dialogService.displayToastError(`Please select a year from the dropdown.`);
+    } else {
+      this.toastService.displayError(`Please select a year from the dropdown.`);
     }
   }
 
   ngOnInit() {
-    let years:string[] = [];
-    for(let item of this.appModel.planningData){
-      if(!item.state){
+    const years: string[] = [];
+    for (const item of this.appModel.planningData) {
+      if (!item.state) {
         years.push(item.name);
       }
     }
     this.availableYears = this.toListItem(years);
   }
 
-  private toListItem(years:string[]):ListItem[]{
-    let items:ListItem[] = [];
-    for(let year of years){
-      let item:ListItem = new ListItem();
+  private toListItem(years: string[]): ListItem[] {
+    const items: ListItem[] = [];
+    for (const year of years) {
+      const item: ListItem = new ListItem();
       item.id = year;
       item.name = year;
       item.value = year;
