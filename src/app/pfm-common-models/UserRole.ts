@@ -1,52 +1,46 @@
-export class UserRole {
-  public isAdmin:boolean;
-  public isBudget_Manager:boolean;
-  public isPOM_Manager:boolean;
-  public isFunds_Requestor:boolean;
-  public isProgram_Manager:boolean;
-  public isExecution_Manager:boolean;
-  public isExecution_Reporter:boolean;
-  public isUser_Approver:boolean;
-  public isUser:boolean;
-  constructor(roles:string[]){
+import { RoleConstants } from './RoleConstants';
 
-    if(roles.indexOf("Budget_Manager") !== -1){
-      this.isBudget_Manager = true;
+export class UserRole {
+
+  isAdmin: boolean;
+  isBudgetManager: boolean;
+  isPOMManager: boolean;
+  isFundsRequestor: boolean;
+  isProgramManager: boolean;
+  isExecutionManager: boolean;
+  isExecutionReporter: boolean;
+  isUserApprover: boolean;
+  isUser: boolean;
+  isOrganizationMember: boolean;
+
+  constructor(roles: string[]) {
+
+    if (roles.includes(RoleConstants.BUDGET_MANAGER)) {
+      this.isBudgetManager = true;
     }
-    if(roles.indexOf("POM_Manager") !== -1){
-      this.isPOM_Manager = true;
+    if (roles.includes(RoleConstants.POM_MANAGER)) {
+      this.isPOMManager = true;
     }
-    if(roles.indexOf("Budget_Manager") !== -1){
-      this.isBudget_Manager = true;
+    if (roles.includes(RoleConstants.FUNDS_REQUESTOR)) {
+      this.isFundsRequestor = true;
     }
-    if(roles.indexOf("Funds_Requestor") !== -1){
-      this.isFunds_Requestor = true;
+    if (roles.includes(RoleConstants.PROGRAM_MANAGER)) {
+      this.isProgramManager = true;
     }
-    if(roles.indexOf("Program_Manager") !== -1){
-      this.isProgram_Manager = true;
+    if (roles.includes(RoleConstants.EXECUTION_MANAGER)) {
+      this.isExecutionManager = true;
     }
-    if(roles.indexOf("Execution_Manager") !== -1){
-      this.isExecution_Manager = true;
+    if (roles.includes(RoleConstants.EXECUTION_REPORTER)) {
+      this.isExecutionReporter = true;
     }
-    if(roles.indexOf("Execution_Reporter") !== -1){
-      this.isExecution_Reporter = true;
+    if (roles.includes(RoleConstants.USER_APPROVER)) {
+      this.isUserApprover = true;
     }
-    if(roles.indexOf("User_Approver") !== -1){
-      this.isUser_Approver = true;
-    }
-    if(roles.indexOf("User") !== -1){
+    if (roles.includes(RoleConstants.USER)) {
       this.isUser = true;
     }
-
-    //TODO - just for testing
-    // this.isExecution_Manager = true;
-    // this.isBudget_Manager = true;
-    // this.isPOM_Manager = true;
-    // this.isProgram_Manager = true;
-    // this.isFunds_Requestor = true;
-    // this.isAdmin = true;
-    // this.isExecution_Reporter = true;
-    // this.isUser_Approver = true;
-
+    if (roles.includes(RoleConstants.ORGANIZATION_MEMBER)) {
+      this.isOrganizationMember = true;
+    }
   }
 }
