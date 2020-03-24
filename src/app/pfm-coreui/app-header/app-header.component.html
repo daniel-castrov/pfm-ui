@@ -1,79 +1,83 @@
 <div class="header">
-
   <div class="container-fluid">
-        <div class="row header-content">
-            <div class="col-6">
+    <div class="row header-content">
+      <div class="col-6">
         <span class="dod-logo">
-          <a href="#" routerLink="/home" >
+          <a href="#" routerLink="/home">
             <img src="assets/img/pfm-white-logo.png">
-        </a>
+          </a>
         </span>
-                <ng-container *ngIf="!appModel.isUserSignedIn || !appModel.userDetails || !appModel.userDetails.currentCommunity">
-                    <div class="header-title">
-                        PFM
-                    </div>
-                </ng-container>
-                <ng-container *ngIf="appModel.isUserSignedIn && appModel.userDetails && appModel.userDetails.currentCommunity">
-                    <div class="header-title">
-                        PFM ::
-                        <span class="current-community">{{appModel.userDetails.currentCommunity.abbreviation}}</span>
-                    </div>
-                </ng-container>
+        <ng-container
+          *ngIf="!appModel.isUserSignedIn || !appModel.userDetails || !appModel.userDetails.currentCommunity">
+          <div class="header-title">
+            PFM
+          </div>
+        </ng-container>
+        <ng-container *ngIf="appModel.isUserSignedIn && appModel.userDetails && appModel.userDetails.currentCommunity">
+          <div class="header-title">
+            PFM ::
+            <span class="current-community">{{appModel.userDetails.currentCommunity.abbreviation}}</span>
+          </div>
+        </ng-container>
 
-            </div>
-            <div class="col-6 col-md-3">
-            </div>
-            <div class="col-6 col-md-8">
-            </div>
+      </div>
+      <div class="col-6 col-md-3">
+      </div>
+      <div class="col-6 col-md-8">
+      </div>
+    </div>
+    <div class="row header-items">
+      <div class="col-6 col-md-6">
+        <div class="sub-title">
+          PFM tagline
         </div>
-        <div class="row header-items">
-            <div class="col-6 col-md-6">
-                <div class="sub-title">
-                    PFM tagline
-                </div>
+      </div>
+      <div class="col-6 col-md-2">
+      </div>
+
+      <ng-container *ngIf="appModel.isUserSignedIn && appModel.userDetails && appModel.userDetails.userRole">
+        <div class="col-6 col-md-4">
+
+          <!-- About Menu -->
+          <span class="dropdown show">
+            <a class="super-user dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-question-circle-o" aria-hidden="true"></i>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+              <a class="dropdown-item" routerLink="/about-private">About Us</a>
+              <a class="dropdown-item" routerLink="/library">Library</a>
             </div>
-            <div class="col-6 col-md-2">
-            </div>
+          </span>
 
-            <ng-container *ngIf="appModel.isUserSignedIn && appModel.userDetails && appModel.userDetails.userRole">
-                <div class="col-6 col-md-4">
+          <!-- User Menu -->
+          <span class="dropdown">
+            <a class="super-user dropdown-toggle" href="#" role="button" id="dropdownMenuLink2"
+              inumberOfNotificationsd="dropdownMenuLink4" data-toggle="dropdown" aria-haspopup="true"
+              aria-expanded="false">
+              <div class="icon-wrapper" *ngIf="appModel.userDetails.userRole.isUser">
+                {{ appModel.userDetails.fullName }}
+                <i class="fa fa-bell" aria-hidden="true"></i>
 
-                    <!-- About Menu -->
-                    <span class="dropdown show">
-                      <a class="super-user dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fa fa-question-circle-o" aria-hidden="true"></i>
-                      </a>
-                      <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                        <a class="dropdown-item" routerLink="/about-private">About Us</a>
-                        <a class="dropdown-item" routerLink="/library">Library</a>
-                      </div>
-                    </span>
-
-                    <!-- User Menu -->
-                    <span class="dropdown">
-                        <a class="super-user dropdown-toggle" href="#" role="button"  id="dropdownMenuLink2" inumberOfNotificationsd="dropdownMenuLink4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <div class="icon-wrapper" *ngIf="appModel.userDetails.userRole.isUser">
-                              {{ appModel.userDetails.fullName }}
-                              <i class="fa fa-bell" aria-hidden="true"></i>
-
-                            <!-- TODO
+                <!-- TODO
                           <span *roles="'User_Approver,Funds_Requestor'">
                             <span class="badge" *ngIf="(requests?.length + prChangeNotifications?.length) > 0">{{requests?.length + prChangeNotifications?.length}}</span>
                           </span>
                           -->
-                            </div>
-                        </a>
-                        <div *ngIf="appModel.userDetails.userRole.isUser" class="dropdown-menu" aria-labelledby="dropdownMenuLink2">
-                            <a class="dropdown-item" routerLink="/user/self">My Profile</a>
-                            <a class="dropdown-item" href="#" routerLink="/my-community">My Communities</a>
-                            <a class="dropdown-item" href="#" routerLink="/my-roles">My Roles</a>
-                            <div *ngIf="appModel.userDetails.userRole.isUser || appModel.userDetails.userRole.isUser_Approver || appModel.userDetails.userRole.isFunds_Requestor">
-                              <a class="dropdown-item" href="#" routerLink="/approve-requests">My Notifications</a>
-                            </div>
-                        </div>
-                    </span>
-                </div>
-            </ng-container>
+              </div>
+            </a>
+            <div *ngIf="appModel.userDetails.userRole.isUser" class="dropdown-menu" aria-labelledby="dropdownMenuLink2">
+              <a class="dropdown-item" routerLink="/user/self">My Profile</a>
+              <a class="dropdown-item" href="#" routerLink="/my-community">My Communities</a>
+              <a class="dropdown-item" href="#" routerLink="/my-roles">My Roles</a>
+              <div
+                *ngIf="appModel.userDetails.userRole.isUser || appModel.userDetails.userRole.isUserApprover || appModel.userDetails.userRole.isFundsRequestor">
+                <a class="dropdown-item" href="#" routerLink="/approve-requests">My Notifications</a>
+              </div>
+            </div>
+          </span>
         </div>
+      </ng-container>
     </div>
+  </div>
 </div>

@@ -126,12 +126,6 @@ export class AssetsComponent implements OnInit {
           type: 'NONE'
         });
         this.contractorOrManufacturerOptions.push(...resp.result as Tag[]);
-        this.contractorOrManufacturerOptions.push({
-          id: null,
-          abbr: 'NONE',
-          name: this.appModel.userDetails.currentCommunity.abbreviation,
-          type: 'NONE'
-        });
       });
   }
 
@@ -255,6 +249,12 @@ export class AssetsComponent implements OnInit {
     const row = this.assetRows[rowIndex];
     const canSave = this.validateRowData(row);
     if (canSave) {
+      if (row.contractorOrManufacturer.toLowerCase() === 'select') {
+        row.contractorOrManufacturer = '';
+      }
+      if (row.toBeUsedBy.toLowerCase() === 'select') {
+        row.toBeUsedBy = '';
+      }
       if (this.currentRowDataState.isAddMode || !row.id) {
         this.performSave(
           this.assetService.createAsset.bind(this.assetService),
@@ -299,10 +299,6 @@ export class AssetsComponent implements OnInit {
       errorMessage = 'Asset Description cannot be empty.';
     } else if (row.description.length > 45) {
       errorMessage = 'Asset Description cannot have more than 45 characters.';
-    } else if (row.contractorOrManufacturer.toLowerCase() === 'select') {
-      errorMessage = 'Please, select a Contractor / Manufacturer.';
-    } else if (row.toBeUsedBy.toLowerCase() === 'select') {
-      errorMessage = 'Please, select a To be Used By.';
     }
     if (errorMessage.length) {
       this.dialogService.displayError(errorMessage);

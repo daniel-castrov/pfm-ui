@@ -1,12 +1,11 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ListItem } from '../../pfm-common-models/ListItem';
 import { AppModel } from '../../pfm-common-models/AppModel';
-import { PlanningService } from '../services/planning-service';
 import { DialogService } from '../../pfm-coreui/services/dialog.service';
-import { ActivatedRoute } from '@angular/router';
 import { SigninService } from '../../pfm-auth-module/services/signin.service';
-import {DropdownComponent} from '../../pfm-coreui/form-inputs/dropdown/dropdown.component';
+import { DropdownComponent } from '../../pfm-coreui/form-inputs/dropdown/dropdown.component';
+import { RoleConstants } from 'src/app/pfm-common-models/RoleConstants';
 
 @Component({
   selector: 'pfm-planning',
@@ -14,7 +13,7 @@ import {DropdownComponent} from '../../pfm-coreui/form-inputs/dropdown/dropdown.
   styleUrls: ['./close-planning.component.scss']
 })
 export class ClosePlanningComponent implements OnInit {
-  @ViewChild(DropdownComponent, {static: false}) yearDropDown: DropdownComponent;
+  @ViewChild(DropdownComponent, { static: false }) yearDropDown: DropdownComponent;
 
   id = 'mission-priorities-component';
   busy: boolean;
@@ -22,10 +21,15 @@ export class ClosePlanningComponent implements OnInit {
   selectedYear: string;
   POMManager = false;
 
-  constructor(private appModel: AppModel, private planningService: PlanningService, private dialogService: DialogService, private route: ActivatedRoute, private signInService: SigninService, private router: Router) { }
+  constructor(
+    private appModel: AppModel,
+    private dialogService: DialogService,
+    private signInService: SigninService,
+    private router: Router
+  ) { }
 
   ngOnInit() {
-    this.POMManager = this.appModel.userDetails.userRole.isPOM_Manager;
+    this.POMManager = this.appModel.userDetails.userRole.isPOMManager;
     const years: string[] = [];
     for (const item of this.appModel.planningData) {
       if (item.state === 'LOCKED') {
@@ -63,9 +67,9 @@ export class ClosePlanningComponent implements OnInit {
   // check if current user has POM Manager role
   isPOMManager() {
     this.signInService.getUserRoles().subscribe(
-      resp  => {
+      resp => {
         const result: any = resp;
-        if (result.result.includes('POM_Manager')) {
+        if (result.result.includes(RoleConstants.POM_MANAGER)) {
           this.POMManager = true;
         }
       },

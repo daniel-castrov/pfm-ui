@@ -303,7 +303,7 @@ export class MissionPrioritiesComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.POMManager = this.appModel.userDetails.userRole.isPOM_Manager;
+    this.POMManager = this.appModel.userDetails.userRole.isPOMManager;
     const years: string[] = [];
     const status: string[] = ['CREATED', 'OPEN', 'LOCKED', 'CLOSED'];
     for (const item of this.appModel.planningData) {

@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { Role } from '../../../../pfm-common-models/Role';
 import { ListItem } from '../../../../pfm-common-models/ListItem';
 import { AppModel } from '../../../../pfm-common-models/AppModel';
+import { RoleConstants } from 'src/app/pfm-common-models/RoleConstants';
 
 @Component({
   selector: 'pfm-requests-summary-grid',
@@ -27,7 +28,7 @@ export class RequestsSummaryGridComponent implements OnInit {
   gridMaxYear: number;
   roles: Map<string, Role>;
   gridData: ProgramSummary[];
-  columnHeaders: string[] = ['PY-1', 'PY', 'CY', 'BY', 'BY+1', 'BY+2', 'BY+3', 'BY+4']
+  columnHeaders: string[] = ['PY-1', 'PY', 'CY', 'BY', 'BY+1', 'BY+2', 'BY+3', 'BY+4'];
 
   id = 'requests-summary-component';
   busy: boolean;
@@ -256,7 +257,7 @@ export class RequestsSummaryGridComponent implements OnInit {
   }
 
   isExternalFilterPresent() {
-    return !this.appModel.userDetails.roles.includes('POM_Manager');
+    return !this.appModel.userDetails.roles.includes(RoleConstants.POM_MANAGER);
   }
 
   doesExternalFilterPass(node) {
