@@ -46,9 +46,9 @@ export class SigninComponent implements OnInit {
           this.appModel.userDetails.lastName;
 
         this.messageService.add({
-          severity: 'warn',
+          severity: 'info',
           summary: `Welcome back ${this.appModel.userDetails.fullName}`,
-          detail: `Last Login at: Mon, 16 Mar 2020 14:25:46'`
+          detail: `Last Login at: Mon, 16 Mar 2020 14:25:46`
         });
 
         this.communityService.getCommunity(this.appModel.userDetails.currentCommunityId).toPromise().then(
