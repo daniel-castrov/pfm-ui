@@ -28,11 +28,6 @@ export class SigninComponent implements OnInit {
     this.busy = true;
     this.signInService.signIn().subscribe(
       resp => {
-        this.messageService.add({
-          severity: 'warn',
-          summary: 'Warn Message',
-          detail: 'Last Login at Mon, 16 Mar 2020 14:25:46'
-        });
         this.appModel.isUserSignedIn = true;
         this.getUserDetails();
       },
@@ -49,6 +44,13 @@ export class SigninComponent implements OnInit {
         this.appModel.userDetails = (resp as any).result;
         this.appModel.userDetails.fullName = this.appModel.userDetails.firstName + ' ' +
           this.appModel.userDetails.lastName;
+
+        this.messageService.add({
+          severity: 'warn',
+          summary: `Welcome back ${this.appModel.userDetails.fullName}`,
+          detail: `Last Login at: Mon, 16 Mar 2020 14:25:46'`
+        });
+
         this.communityService.getCommunity(this.appModel.userDetails.currentCommunityId).toPromise().then(
           communityResp => {
             this.appModel.userDetails.currentCommunity = (communityResp as any).result;

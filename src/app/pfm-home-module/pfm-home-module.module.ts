@@ -8,7 +8,6 @@ import { FormsModule } from '@angular/forms';
 import { PfmHomeModuleRoutingModule } from './pfm-home-module-routing.module';
 import { PfmHomeModuleComponent } from './pfm-home-module.component';
 import { PfmCoreuiModule } from '../pfm-coreui/pfm-coreui.module';
-import { WelcomePodComponent } from './welcome-pod/welcome-pod.component';
 import { LatestNewsPodComponent } from './latest-news-pod/latest-news-pod.component';
 import { DashboardPodComponent } from './dashboard-pod/dashboard-pod.component';
 import { PfmDashabordModuleModule } from '../pfm-dashboard-module/pfm-dashboard-module.module';
@@ -18,7 +17,7 @@ import { PfmHomeServicesImpl } from './services/pfm-home-service-impl.service';
 import { PfmHomeMockService } from './services/pfm-home-mock.service';
 
 @NgModule({
-  declarations: [PfmHomeModuleComponent, WelcomePodComponent, LatestNewsPodComponent, DashboardPodComponent],
+  declarations: [PfmHomeModuleComponent, LatestNewsPodComponent, DashboardPodComponent],
   imports: [
     CommonModule,
     FormsModule,
