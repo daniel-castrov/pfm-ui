@@ -10,7 +10,6 @@ import { DashboardMockService } from '../../../pfm-dashboard-module/services/das
 import { DialogService } from '../../../pfm-coreui/services/dialog.service';
 import { ListItem } from '../../../pfm-common-models/ListItem';
 import { RoleService } from '../../../services/role-service';
-import { OrganizationService } from '../../../services/organization-service';
 import { Role } from '../../../pfm-common-models/Role';
 import { Organization } from '../../../pfm-common-models/Organization';
 import { RequestsSummaryGridComponent } from './requests-summary-grid/requests-summary-grid.component';
@@ -20,6 +19,7 @@ import { RequestSummaryNavigationHistoryService } from './requests-summary-navig
 import { VisibilityService } from '../../../services/visibility-service';
 import { Router } from '@angular/router';
 import { AppModel } from '../../../pfm-common-models/AppModel';
+import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
 
 @Component({
   selector: 'pfm-requests-summary',
@@ -27,13 +27,13 @@ import { AppModel } from '../../../pfm-common-models/AppModel';
   styleUrls: ['./requests-summary.component.scss']
 })
 export class RequestsSummaryComponent implements OnInit {
-  @ViewChild('toaWidetItem', {static: false}) toaWidgetItem: ElementRef;
-  @ViewChild(RequestsSummaryToaWidgetComponent, {static: false}) toaWidget: RequestsSummaryToaWidgetComponent;
+  @ViewChild('toaWidetItem', { static: false }) toaWidgetItem: ElementRef;
+  @ViewChild(RequestsSummaryToaWidgetComponent, { static: false }) toaWidget: RequestsSummaryToaWidgetComponent;
 
-  @ViewChild('orgWidetItem', {static: false}) orgWidgetItem: ElementRef;
-  @ViewChild(RequestsSummaryOrgWidgetComponent, {static: false}) orgWidget: RequestsSummaryOrgWidgetComponent;
+  @ViewChild('orgWidetItem', { static: false }) orgWidgetItem: ElementRef;
+  @ViewChild(RequestsSummaryOrgWidgetComponent, { static: false }) orgWidget: RequestsSummaryOrgWidgetComponent;
 
-  @ViewChild(RequestsSummaryGridComponent, {static: false}) requestsSummaryWidget: RequestsSummaryGridComponent;
+  @ViewChild(RequestsSummaryGridComponent, { static: false }) requestsSummaryWidget: RequestsSummaryGridComponent;
 
   griddata: ProgramSummary[];
   availableOrgs: ListItem[];
@@ -56,18 +56,20 @@ export class RequestsSummaryComponent implements OnInit {
   availableToaCharts: ListItem[];
   dropdownDefault: ListItem;
 
-  constructor(private programmingModel: ProgrammingModel,
-              private pomService: PomService,
-              private programmingService: ProgrammingService,
-              private roleService: RoleService,
-              private dashboardService: DashboardMockService,
-              private dialogService: DialogService,
-              private organizationService: OrganizationService,
-              private mrdbService: MrdbService,
-              private requestSummaryNavigationHistoryService: RequestSummaryNavigationHistoryService,
-              private router: Router,
-              private visibilityService: VisibilityService,
-              public appModel: AppModel) {
+  constructor(
+    private programmingModel: ProgrammingModel,
+    private pomService: PomService,
+    private programmingService: ProgrammingService,
+    private roleService: RoleService,
+    private dashboardService: DashboardMockService,
+    private dialogService: DialogService,
+    private mrdbService: MrdbService,
+    private requestSummaryNavigationHistoryService: RequestSummaryNavigationHistoryService,
+    private router: Router,
+    private visibilityService: VisibilityService,
+    public appModel: AppModel,
+    private toastService: ToastService
+  ) {
   }
 
   ngOnInit() {
@@ -99,7 +101,7 @@ export class RequestsSummaryComponent implements OnInit {
     };
 
     // defaults
-    this.dashboard = [{x: 0, y: 0, cols: 4, rows: 8, id: 'org-widget'}, {
+    this.dashboard = [{ x: 0, y: 0, cols: 4, rows: 8, id: 'org-widget' }, {
       x: 0,
       y: 0,
       cols: 4,
@@ -161,7 +163,7 @@ export class RequestsSummaryComponent implements OnInit {
         this.orgs = orgs;
         const dropdownOptions: Organization[] = [];
         if (self.appModel.visibilityDef
-          ['requests-summary-component']['availableOrgsDropDown,option,Show All'] !== false) {
+        ['requests-summary-component']['availableOrgsDropDown,option,Show All'] !== false) {
           const showAllOrg = new Organization();
           showAllOrg.id = null;
           showAllOrg.abbreviation = 'Show All';
@@ -187,7 +189,7 @@ export class RequestsSummaryComponent implements OnInit {
         ? organization.id.toLowerCase() === selectedOrganization
         : organization.value === selectedOrganization;
       const currentOrganization = this.availableOrgs
-        .map(organization => ({...organization, isSelected: true, rawData: organization.id}))
+        .map(organization => ({ ...organization, isSelected: true, rawData: organization.id }))
         .find(organization => showAllValidation(organization));
       if (currentOrganization) {
         this.selectedOrg = currentOrganization;
@@ -297,7 +299,6 @@ export class RequestsSummaryComponent implements OnInit {
 
   handleAdd(addEvent: any) {
     if (addEvent.action === 'new-program') {
-      console.log('New program Event fired');
       this.router.navigate(['/programming/requests/details/' + undefined]);
     } else if (addEvent.action === 'previously-funded-program') {
       this.busy = true;
@@ -321,11 +322,9 @@ export class RequestsSummaryComponent implements OnInit {
   }
 
   importProgramSelected($event: any) {
-    console.log('Import Program Selected');
   }
 
   onImportProgram() {
-    console.log('Import Program');
   }
 
   onApprove(): void {
@@ -335,51 +334,51 @@ export class RequestsSummaryComponent implements OnInit {
   onApproveOrganization(): void {
     this.programmingService.processPRsForContainer(
       this.programmingModel.pom.workspaceId, 'Approve Organization', this.selectedOrg.value).subscribe(
-      resp => {
-        this.organizationSelected(this.selectedOrg);
-        this.dialogService.displayToastInfo('All program requests have been approved successfully.');
-      },
-      error => {
-        const err = (error as any).error;
-        this.dialogService.displayToastError(err.error);
-      });
+        resp => {
+          this.organizationSelected(this.selectedOrg);
+          this.toastService.displaySuccess('All program requests have been approved successfully.');
+        },
+        error => {
+          const err = (error as any).error;
+          this.toastService.displayError(err.error);
+        });
   }
 
   onReturnOrganization(): void {
     this.programmingService.processPRsForContainer(
       this.programmingModel.pom.workspaceId, 'Return Organization', this.selectedOrg.value).subscribe(
-      resp => {
-        this.organizationSelected(this.selectedOrg);
-        this.dialogService.displayToastInfo('Return organization successful.');
-      },
-      error => {
-        const err = (error as any).error;
-        this.dialogService.displayToastError(err.error);
-      });
+        resp => {
+          this.organizationSelected(this.selectedOrg);
+          this.toastService.displaySuccess('Return organization successful.');
+        },
+        error => {
+          const err = (error as any).error;
+          this.toastService.displayError(err.error);
+        });
   }
 
   onAdvanceOrganization() {
     this.programmingService.processPRsForContainer(
       this.programmingModel.pom.workspaceId, 'Advance Organization', this.selectedOrg.value).subscribe(
-      resp => {
-        this.organizationSelected(this.selectedOrg);
-        this.dialogService.displayToastInfo('All program requests successfully advanced.');
-      },
-      error => {
-        const err = (error as any).error;
-        this.dialogService.displayToastError(err.error);
-      });
+        resp => {
+          this.organizationSelected(this.selectedOrg);
+          this.toastService.displaySuccess('All program requests successfully advanced.');
+        },
+        error => {
+          const err = (error as any).error;
+          this.toastService.displayError(err.error);
+        });
   }
 
   approveAllPRs(): void {
     this.programmingService.processPRsForContainer(this.programmingModel.pom.workspaceId, 'Approve All PRs').subscribe(
       resp => {
         this.organizationSelected(this.selectedOrg);
-        this.dialogService.displayToastInfo('All program requests successfully approved.');
+        this.toastService.displaySuccess('All program requests successfully approved.');
       },
       error => {
         const err = (error as any).error;
-        this.dialogService.displayToastError(err.error);
+        this.toastService.displayError(err.error);
       });
   }
 

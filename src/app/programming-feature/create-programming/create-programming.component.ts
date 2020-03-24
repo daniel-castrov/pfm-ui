@@ -22,6 +22,7 @@ import { CreateProgrammingOrganizationGraphComponent } from './create-programmin
 import { TabDirective, TabsetComponent } from 'ngx-bootstrap';
 import { SecondaryButtonComponent } from '../../pfm-coreui/form-inputs/secondary-button-input/secondary-button.component';
 import { NumericCellEditor } from '../../ag-grid/cell-editors/NumericCellEditor';
+import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
 
 @Component({
   selector: 'pfm-programming',
@@ -29,13 +30,18 @@ import { NumericCellEditor } from '../../ag-grid/cell-editors/NumericCellEditor'
   styleUrls: ['./create-programming.component.css']
 })
 export class CreateProgrammingComponent implements OnInit {
-  @ViewChild(DropdownComponent, { static: false }) yearDropDown: DropdownComponent;
-  @ViewChild(TabsetComponent, { static: false }) tabset: TabsetComponent;
-  @ViewChild(SecondaryButtonComponent, { static: false }) resetButton: SecondaryButtonComponent;
-  @ViewChild(CreateProgrammingCommunityGraphComponent, { static: false }) communityGraph: CreateProgrammingCommunityGraphComponent;
-  @ViewChild(CreateProgrammingOrganizationGraphComponent, { static: false }) organizationGraph: CreateProgrammingOrganizationGraphComponent;
+  @ViewChild(DropdownComponent, { static: false })
+  yearDropDown: DropdownComponent;
+  @ViewChild(TabsetComponent, { static: false })
+  tabset: TabsetComponent;
+  @ViewChild(SecondaryButtonComponent, { static: false })
+  resetButton: SecondaryButtonComponent;
+  @ViewChild(CreateProgrammingCommunityGraphComponent, { static: false })
+  communityGraph: CreateProgrammingCommunityGraphComponent;
+  @ViewChild(CreateProgrammingOrganizationGraphComponent, { static: false })
+  organizationGraph: CreateProgrammingOrganizationGraphComponent;
 
-  id: string = 'create-programming-component';
+  id = 'create-programming-component';
   busy: boolean;
   availableYears: ListItem[];
   selectedYear: string;
@@ -63,16 +69,22 @@ export class CreateProgrammingComponent implements OnInit {
   activeTab: TabDirective;
   orgColors: string[] = [];
 
-  constructor(private appModel: AppModel, private organizationService: OrganizationService, private pomService: PomService, private dialogService: DialogService, private router: Router, private dashboardService: DashboardMockService) {
-    this.orgColors["PAIO"] = "#dc3912";
-    this.orgColors["DUSA-TE"] = "#3366cc";
-    this.orgColors["JSTO-CBD"] = "#ff9900";
-    this.orgColors["JPEO-CBRND"] = "#990099";
-    this.orgColors["JRO-CBRND"] = "#109618";
+  constructor(
+    private organizationService: OrganizationService,
+    private pomService: PomService,
+    private dialogService: DialogService,
+    private router: Router,
+    private toastService: ToastService
+  ) {
+    this.orgColors['PAIO'] = '#dc3912';
+    this.orgColors['DUSA-TE'] = '#3366cc';
+    this.orgColors['JSTO-CBD'] = '#ff9900';
+    this.orgColors['JPEO-CBRND'] = '#990099';
+    this.orgColors['JRO-CBRND'] = '#109618';
 
     this.subToasData = [];
 
-    organizationService.getAll().subscribe(
+    this.organizationService.getAll().subscribe(
       resp => {
         this.orgs = (resp as any).result;
       },
@@ -84,15 +96,18 @@ export class CreateProgrammingComponent implements OnInit {
   yearSelected(year: string): void {
     this.selectedYear = year;
     this.loadBaseline = false;
-    if (this.programYearSelected != "undefined") {
-      this.dialogService.displayConfirmation("You are about to replace the baseline with different values.  All values in the community and organization grid will be reset.  Do you want to continue?", "Caution",
-        () => {
-          this.loadBaseline = true;
-          this.onSelectBaseLine();
-        }, () => {
-          this.loadBaseline = false;
-          this.yearDropDown.selectedItem = this.programYearSelected;
-        });
+    if (this.programYearSelected !== 'undefined') {
+      this.dialogService
+        .displayConfirmation('You are about to replace the baseline with different values.' +
+          'All values in the community and organization grid will be reset.  Do you want to continue?',
+          'Caution',
+          () => {
+            this.loadBaseline = true;
+            this.onSelectBaseLine();
+          }, () => {
+            this.loadBaseline = false;
+            this.yearDropDown.selectedItem = this.programYearSelected;
+          });
     } else {
       this.loadBaseline = true;
     }
@@ -106,7 +121,7 @@ export class CreateProgrammingComponent implements OnInit {
   onSelectBaseLine() {
     this.programYearSelected = Object.keys(this.selectedYear).map(key => this.selectedYear[key]).slice(0, 1);
 
-    if (this.programYearSelected == "Spreadsheet") {
+    if (this.programYearSelected === 'Spreadsheet') {
       this.showUploadDialog = true;
     } else { // if it is PBYear
       this.showUploadDialog = false;
@@ -120,17 +135,17 @@ export class CreateProgrammingComponent implements OnInit {
   initGrids(selectedYear) {
     this.clearGrids();
     // set the column definitions to community and Organization grid
-    this.communityColumns = this.setAgGridColDefs("Community", selectedYear);
-    this.orgColumns = this.setAgGridColDefs("Organization", selectedYear);
+    this.communityColumns = this.setAgGridColDefs('Community', selectedYear);
+    this.orgColumns = this.setAgGridColDefs('Organization', selectedYear);
   }
 
   clearGrids() {
-    if (this.orgGridApi != undefined) {
+    if (this.orgGridApi !== undefined) {
       this.orgGridApi.setColumnDefs([]);
       this.orgGridApi.setRowData([]);
     }
 
-    if (this.communityGridApi != undefined) {
+    if (this.communityGridApi !== undefined) {
       this.communityGridApi.setColumnDefs([]);
       this.communityGridApi.setRowData([]);
     }
@@ -146,7 +161,7 @@ export class CreateProgrammingComponent implements OnInit {
       },
       error => {
         this.busy = false;
-        console.log("Error in getting community and org toas...");
+        console.log('Error in getting community and org toas...');
       });
   }
 
@@ -154,7 +169,7 @@ export class CreateProgrammingComponent implements OnInit {
     const toarow = {};
 
     // BaseLine
-    let row = {}
+    let row = {};
     row['orgid'] = '<strong><span>Baseline</span></strong>';
     this.pom.communityToas.forEach(toa => {
       row[toa.year] = toa.amount;
@@ -251,7 +266,7 @@ export class CreateProgrammingComponent implements OnInit {
   }
 
   getActions(): Action {
-    let actions = new Action();
+    const actions = new Action();
     actions.canDelete = false;
     actions.canEdit = true;
     actions.canSave = false;
@@ -272,7 +287,7 @@ export class CreateProgrammingComponent implements OnInit {
   handlePOMFile(newFile: FileMetaData): void {
     this.showUploadDialog = false;
     if (newFile) {
-      let attachment: Attachment = new Attachment();
+      const attachment: Attachment = new Attachment();
       attachment.file = newFile;
       this.programBudgetData = true;
       this.uploadedFileId = newFile.id;
@@ -283,7 +298,7 @@ export class CreateProgrammingComponent implements OnInit {
   }
 
   onCreateProgrammingPhase(): void {
-    let year: any = this.selectedYear;
+    const year: any = this.selectedYear;
   }
 
   LoadPomFromFile(fileId: string) {
@@ -304,33 +319,33 @@ export class CreateProgrammingComponent implements OnInit {
 
   ngOnInit() {
     this.byYear = FormatterUtil.getCurrentFiscalYear() + 2;
-    let pbYear: any = FormatterUtil.getCurrentFiscalYear() + 1;
+    const pbYear: any = FormatterUtil.getCurrentFiscalYear() + 1;
 
-    this.programYearSelected = "undefined";
+    this.programYearSelected = 'undefined';
     this.busy = true;
     this.pomService.pBYearExists(pbYear).subscribe(
       resp => {
-        let response: any = resp;
+        const response: any = resp;
 
         this.busy = false;
-        let pyear = "PB" + FormatterUtil.pad((pbYear - 2000), 2);
-        let years: string[] = [pyear, "Spreadsheet"];
+        const pyear = 'PB' + FormatterUtil.pad((pbYear - 2000), 2);
+        const years: string[] = [pyear, 'Spreadsheet'];
         this.availableYears = this.toListItem(years);
 
       },
       error => {
-        let response: any = error;
+        const response: any = error;
         this.busy = false;
-        let years: string[] = ["Spreadsheet"];
+        const years: string[] = ['Spreadsheet'];
         this.availableYears = this.toListItem(years);
         console.log(response.error);
       });
   }
 
   private toListItem(years: string[]): ListItem[] {
-    let items: ListItem[] = [];
-    for (let year of years) {
-      let item: ListItem = new ListItem();
+    const items: ListItem[] = [];
+    for (const year of years) {
+      const item: ListItem = new ListItem();
       item.id = year;
       item.name = year;
       item.value = year;
@@ -340,7 +355,7 @@ export class CreateProgrammingComponent implements OnInit {
   }
 
   private setAgGridColDefs(column1Name: string, fy: number): any {
-    let colDefs = [];
+    const colDefs = [];
     colDefs.push(
       {
         headerName: column1Name,
@@ -349,43 +364,43 @@ export class CreateProgrammingComponent implements OnInit {
         minWidth: 140,
         editable: false,
         pinned: 'left',
-        //rowDrag: true,
-        //rowDragManaged: true,
-        colSpan: function (params) {
+        // rowDrag: true,
+        // rowDragManaged: true,
+        colSpan(params) {
           return (params.value === '1') ? 7 : 1;
         },
         cellRenderer: params => params.value,
-        cellClass: "text-class",
+        cellClass: 'text-class',
         cellStyle: params => this.getOrgColorStyle(params),
 
       });
 
-    for (var i = 0; i < 5; i++) {
+    for (let i = 0; i < 5; i++) {
       colDefs.push(
         {
-          headerName: "FY" + (fy + i - 2000),
-          type: "numericColumn",
+          headerName: 'FY' + (fy + i - 2000),
+          type: 'numericColumn',
           minWidth: 110,
           suppressMenu: true,
           field: (fy + i).toString(),
           cellEditor: NumericCellEditor.create({ returnUndefinedOnZero: false }),
           cellRenderer: params => this.negativeNumberRenderer(params),
           editable: true,
-          cellClass: "pfm-datagrid-numeric-class",
+          cellClass: 'pfm-datagrid-numeric-class',
           cellStyle: { display: 'flex' }
         });
     }
     colDefs.push(
       {
-        headerName: "FY" + (fy - 2000) + "-" + "FY" + (fy + 4 - 2000),
-        type: "numericColumn",
+        headerName: 'FY' + (fy - 2000) + '-' + 'FY' + (fy + 4 - 2000),
+        type: 'numericColumn',
         suppressMenu: true,
         field: 'total',
         minWidth: 110,
         editable: false,
         valueGetter: params => this.rowTotal(params.data, fy),
         cellRenderer: params => this.negativeNumberRenderer(params),
-        cellClass: "pfm-datagrid-numeric-class",
+        cellClass: 'pfm-datagrid-numeric-class',
         cellStyle: { display: 'flex' }
       });
 
@@ -402,20 +417,20 @@ export class CreateProgrammingComponent implements OnInit {
     return colDefs;
   }
 
-  //updates the community graph from grid data
+  // updates the community graph from grid data
   private updateCommunityGraphData(startYear: number) {
-    //populate griddata
+    // populate griddata
     this.communityGraphData = [['Fiscal Year', 'Community TOA', 'Average',]];
     for (let row = 0; row < 5; row++) {
-      let year = 'FY' + (startYear + row - 2000);
+      const year = 'FY' + (startYear + row - 2000);
       let amount = 0;
       let change = 0;
-      //if there is a year
+      // if there is a year
       if (this.communityData[1][startYear + row]) {
-        amount = parseInt(this.communityData[1][startYear + row]);
+        amount = parseInt(this.communityData[1][startYear + row], 10);
       }
       if (this.communityData[1][startYear + row - 1]) {
-        let pastAmount = this.communityData[1][startYear + row - 1];
+        const pastAmount = this.communityData[1][startYear + row - 1];
         change = ((amount - pastAmount) / pastAmount);
       }
       this.communityGraphData[row + 1] = [year, amount, change];
@@ -447,7 +462,7 @@ export class CreateProgrammingComponent implements OnInit {
         this.organizationGraphData[0][column] = organization.substring(14, organization.length - 16);
         for (let rowIndex = 0; rowIndex < 5; rowIndex++) {
           this.organizationGraphData[rowIndex + 1][column] =
-            parseInt(this.orgData[numberOfColumns - column - 1][startYear + rowIndex]);
+            parseInt(this.orgData[numberOfColumns - column - 1][startYear + rowIndex], 10);
         }
       }
     }
@@ -480,8 +495,9 @@ export class CreateProgrammingComponent implements OnInit {
   // a simple CellRenderer for negative numbers
   private negativeNumberRenderer(params) {
 
-    if (params.value === "")
+    if (params.value === '') {
       return params.value;
+    }
 
     if (params.value < 0) {
       return '<span style="color: red;">' + this.formatCurrency(params) + '</span>';
@@ -492,16 +508,16 @@ export class CreateProgrammingComponent implements OnInit {
 
   // helper for currency formatting
   private formatCurrency(params) {
-    let str = Math.floor(params.value)
+    const str = Math.floor(params.value)
       .toString()
-      .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
-    return "$ " + str;
+      .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+    return '$ ' + str;
   }
 
   // A valueGetter for totaling a row
   private rowTotal(data, fy: number) {
-    let total: number = 0;
-    for (var i = 0; i < 5; i++) {
+    let total = 0;
+    for (let i = 0; i < 5; i++) {
       total += parseInt(data[fy + i], 10);
     }
     return total;
@@ -514,13 +530,13 @@ export class CreateProgrammingComponent implements OnInit {
 
   onCommunityGridIsReady(gridApi: GridApi): void {
     this.communityGridApi = gridApi;
-    //gridApi.sizeColumnsToFit();
+    // gridApi.sizeColumnsToFit();
   }
 
   onOrgGridIsReady(gridApi: GridApi): void {
     this.orgGridApi = gridApi;
 
-    //gridApi.sizeColumnsToFit();
+    // gridApi.sizeColumnsToFit();
   }
 
   onCommunityColumnIsReady(columnApi: ColumnApi): void {
@@ -546,12 +562,12 @@ export class CreateProgrammingComponent implements OnInit {
   onCellAction(cellAction: DataGridMessage, gridType: any): void {
 
     switch (cellAction.message) {
-      case "save": {
+      case 'save': {
         this.onSaveRow(cellAction.rowIndex, gridType);
         break;
       }
-      case "edit": {
-        this.onEditRow(cellAction.rowIndex, gridType)
+      case 'edit': {
+        this.onEditRow(cellAction.rowIndex, gridType);
         break;
       }
     }
@@ -559,14 +575,14 @@ export class CreateProgrammingComponent implements OnInit {
 
   onSaveRow(rowId, gridType): void {
 
-    let editAction = this.onSaveAction(rowId, gridType);
-    if (gridType == "org") {
-      let fy = this.byYear;
+    const editAction = this.onSaveAction(rowId, gridType);
+    if (gridType === 'org') {
+      const fy = this.byYear;
       this.orgData[rowId].actions = editAction;
       this.orgGridApi.stopEditing();
 
       // update subtotal row
-      let subtoaRow = this.calculateSubToaTotals();
+      const subtoaRow = this.calculateSubToaTotals();
       this.refreshOrgsTotalsRow(subtoaRow);
 
       // update delta row
@@ -575,8 +591,7 @@ export class CreateProgrammingComponent implements OnInit {
       this.refreshDeltaRow(deltaRow);
 
       this.orgGridApi.setRowData(this.orgData);
-    }
-    else {
+    } else {
       this.communityData[rowId].actions = editAction;
       this.communityGridApi.stopEditing();
       this.onCommunityToaChange(rowId);
@@ -588,15 +603,14 @@ export class CreateProgrammingComponent implements OnInit {
 
   onEditRow(rowId, gridType): void {
 
-    let editAction = this.onEditAction(rowId, gridType);
+    const editAction = this.onEditAction(rowId, gridType);
 
-    if (gridType == "org") {
+    if (gridType === 'org') {
       this.orgGridApi.startEditingCell({
         rowIndex: rowId,
         colKey: this.byYear
       });
-    }
-    else {
+    } else {
       this.communityGridApi.startEditingCell({
         rowIndex: rowId,
         colKey: this.byYear
@@ -637,11 +651,10 @@ export class CreateProgrammingComponent implements OnInit {
 
     let actions = new Action();
 
-    if (gridId == "org") {
-      actions = this.orgData[rowId]["Organizationactions"];
-    }
-    else {
-      actions = this.communityData[rowId]["Communityactions"];
+    if (gridId === 'org') {
+      actions = this.orgData[rowId]['Organizationactions'];
+    } else {
+      actions = this.communityData[rowId]['Communityactions'];
     }
 
     actions.canDelete = false;
@@ -655,11 +668,10 @@ export class CreateProgrammingComponent implements OnInit {
   onSaveAction(rowId: number, gridId: string): any {
 
     let actions = new Action();
-    if (gridId == "org") {
-      actions = this.orgData[rowId]["Organizationactions"];
-    }
-    else {
-      actions = this.communityData[rowId]["Communityactions"];
+    if (gridId === 'org') {
+      actions = this.orgData[rowId]['Organizationactions'];
+    } else {
+      actions = this.communityData[rowId]['Communityactions'];
     }
 
     actions.canDelete = false;
@@ -671,35 +683,35 @@ export class CreateProgrammingComponent implements OnInit {
   }
 
   onCommunityToaChange(rowId: number) {
-    let fy = this.byYear;
-    let communityTOARow = this.communityData[rowId];
+    const fy = this.byYear;
+    const communityTOARow = this.communityData[rowId];
     this.orgData.forEach(row => {
-      let rval = row['orgid'];
-      if (rval == 'sub TOA Total Goal') {
+      const rval = row['orgid'];
+      if (rval === 'sub TOA Total Goal') {
         for (let i = 0; i < 5; i++) {
           row[fy + i] = communityTOARow[fy + i];
         }
       }
     });
 
-    let orgtotals = this.calculateSubToaTotals();
-    let deltarow = this.calculateDeltaRow(orgtotals, communityTOARow);
+    const orgtotals = this.calculateSubToaTotals();
+    const deltarow = this.calculateDeltaRow(orgtotals, communityTOARow);
     this.refreshDeltaRow(deltarow);
 
     this.orgGridApi.setRowData(this.orgData);
-    //toarow['orgid'] = "sub TOA Total Goal"
+    // toarow['orgid'] = "sub TOA Total Goal"
   }
 
   calculateSubToaTotals(): any {
-    let subtoarow = {};
-    let fy = this.byYear;
+    const subtoarow = {};
+    const fy = this.byYear;
 
-    subtoarow['orgid'] = "sub-TOA Total Actual";
+    subtoarow['orgid'] = 'sub-TOA Total Actual';
     for (let i = 0; i < 5; i++) {
-      let total: number = 0;
+      let total = 0;
       this.orgData.forEach(row => {
-        if (row['Organizationactions'] != undefined) {
-          if (row[fy + i] == undefined) {
+        if (row['Organizationactions'] !== undefined) {
+          if (row[fy + i] === undefined) {
             row[fy + i] = 0;
           }
           total = total + Number(row[fy + i]);
@@ -709,15 +721,15 @@ export class CreateProgrammingComponent implements OnInit {
     }
 
     // et the sub taotal row from the org data
-    //this.orgData.forEach(row => {})
-    return subtoarow
+    // this.orgData.forEach(row => {})
+    return subtoarow;
   }
 
   refreshOrgsTotalsRow(subtoaRow: any) {
-    let fy = this.byYear;
+    const fy = this.byYear;
     this.orgData.forEach(row => {
-      let rval = row['orgid'];
-      if (rval == 'sub-TOA Total Actual') {
+      const rval = row['orgid'];
+      if (rval === 'sub-TOA Total Actual') {
         for (let i = 0; i < 5; i++) {
           row[fy + i] = subtoaRow[fy + i];
         }
@@ -727,10 +739,10 @@ export class CreateProgrammingComponent implements OnInit {
 
   calculateDeltaRow(totalsrow: any, subtoasrow: any): any {
 
-    let toaDeltarow = {};
+    const toaDeltarow = {};
 
-    let fy = this.byYear;
-    toaDeltarow['orgid'] = "Delta";
+    const fy = this.byYear;
+    toaDeltarow['orgid'] = 'Delta';
     for (let i = 0; i < 5; i++) {
       toaDeltarow[fy + i] = totalsrow[fy + i] - subtoasrow[fy + i];
     }
@@ -739,10 +751,10 @@ export class CreateProgrammingComponent implements OnInit {
   }
 
   refreshDeltaRow(deltaRow: any) {
-    let fy = this.byYear;
+    const fy = this.byYear;
     this.orgData.forEach(row => {
-      let rval = row['orgid'];
-      if (rval == 'Delta') {
+      const rval = row['orgid'];
+      if (rval === 'Delta') {
         for (let i = 0; i < 5; i++) {
           row[fy + i] = deltaRow[fy + i];
         }
@@ -768,20 +780,20 @@ export class CreateProgrammingComponent implements OnInit {
   }
 
   private onTabToNextCell(params) {
-    let rowIndex = params.previousCellPosition.rowIndex;
+    const rowIndex = params.previousCellPosition.rowIndex;
     let nextCell: CellPosition = params.nextCellPosition;
 
-    let firstColumn = (this.byYear).toString();
-    let lastColumn = (this.byYear + 4).toString();
+    const firstColumn = (this.byYear).toString();
+    const lastColumn = (this.byYear + 4).toString();
 
     if (params.previousCellPosition.column.colId === lastColumn) {
 
-      let nextColumn: Column = this.commColumnApi.getColumn(firstColumn);
+      const nextColumn: Column = this.commColumnApi.getColumn(firstColumn);
       nextCell = {
-        rowIndex: rowIndex,
+        rowIndex,
         column: nextColumn,
         rowPinned: undefined
-      }
+      };
     }
     return nextCell;
   }
@@ -803,30 +815,32 @@ export class CreateProgrammingComponent implements OnInit {
   }
 
   onCreateProgramPhase() {
-    let isOrgDataValid: boolean = true;
-    let isDelataRowValid: boolean = true;
+    const isOrgDataValid = true;
+    let isDelataRowValid = true;
 
-    for (let indx = 0; indx < this.orgData.length; indx++) {
-      let row = this.orgData[indx];
+    for (const row of this.orgData) {
       for (let i = 0; i < 5; i++) {
-        let cellVal = row[this.byYear + i];
+        const cellVal = row[this.byYear + i];
         /*if ( (cellVal <= 0) && (row["orgid"] != "Delta")){
             isOrgDataValid = false;
             break;
         }*/
 
-        if ((cellVal < 0) && (row["orgid"] == "Delta")) {
+        if ((cellVal < 0) && (row['orgid'] === 'Delta')) {
           isDelataRowValid = false;
           break;
         }
       }
 
-      if (!isOrgDataValid || !isDelataRowValid)
+      if (!isOrgDataValid || !isDelataRowValid) {
         break;
+      }
     }
 
     if (!isDelataRowValid) {
-      this.dialogService.displayInfo("The Delta row in the Organization TOA grid has at least one negative value.  All values must be zero or positive");
+      this.dialogService.displayInfo(
+        'The Delta row in the Organization TOA grid has at least one negative value.' +
+        'All values must be zero or positive');
       return;
     }
 
@@ -861,7 +875,7 @@ export class CreateProgrammingComponent implements OnInit {
       resp => {
         // Update POM from server
         this.pom = (resp as any).result;
-        this.dialogService.displayToastInfo(`Programming phase for ${this.byYear} successfully created.`);
+        this.toastService.displaySuccess(`Programming phase for ${this.byYear} successfully created.`);
         this.router.navigate(['/home']);
       },
       error => {

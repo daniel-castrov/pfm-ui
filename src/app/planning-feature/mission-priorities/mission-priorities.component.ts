@@ -14,6 +14,7 @@ import { Attachment } from '../../pfm-common-models/Attachment';
 import { SecureDownloadComponent } from '../../pfm-secure-filedownload/secure-download/secure-download.component';
 import { Action } from '../../pfm-common-models/Action';
 import { PlanningPhase } from '../models/PlanningPhase';
+import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
 
 @Component({
   selector: 'pfm-planning',
@@ -52,7 +53,8 @@ export class MissionPrioritiesComponent implements OnInit {
   constructor(
     private appModel: AppModel,
     private planningService: PlanningService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private toastService: ToastService
   ) {
 
     this.columns = [
@@ -549,7 +551,7 @@ export class MissionPrioritiesComponent implements OnInit {
         this.busy = false;
         // Update model state
         this.selectedPlanningPhase.state = 'OPEN';
-        this.dialogService.displayToastInfo(`Planning Phase for ${this.selectedYear} successfully opened`);
+        this.toastService.displaySuccess(`Planning Phase for ${this.selectedYear} successfully opened`);
       },
       error => {
         this.busy = false;
@@ -564,7 +566,7 @@ export class MissionPrioritiesComponent implements OnInit {
         this.busy = false;
         // Update model state
         this.selectedPlanningPhase.state = 'LOCKED';
-        this.dialogService.displayToastInfo(`Planning Phase for ${this.selectedYear} successfully locked`);
+        this.toastService.displaySuccess(`Planning Phase for ${this.selectedYear} successfully locked`);
       },
       error => {
         this.busy = false;
@@ -579,7 +581,7 @@ export class MissionPrioritiesComponent implements OnInit {
         this.busy = false;
         // Update model state
         this.selectedPlanningPhase.state = 'CLOSED';
-        this.dialogService.displayToastInfo(`Planning Phase for ${this.selectedYear} successfully closed`);
+        this.toastService.displaySuccess(`Planning Phase for ${this.selectedYear} successfully closed`);
       },
       error => {
         this.busy = false;

@@ -3,7 +3,6 @@ import {
   BrowserTransferStateModule
 } from '@angular/platform-browser';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
-import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
@@ -17,25 +16,23 @@ import { DialogService } from './pfm-coreui/services/dialog.service';
 import { AuthorizationService } from './pfm-auth-module/services/authorization.service';
 import { AuthGuard } from './pfm-auth-module/services/auth-guard';
 import { ToastModule } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
 
 @NgModule({
   declarations: [AppComponent],
   imports: [
-    ToastModule,
     HttpClientModule,
     BrowserTransferStateModule,
     AppRoutingModule,
     PfmCoreuiModule,
     PfmAuthModuleModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    ToastModule
   ],
   providers: [
     AppModel,
     DialogService,
     AuthorizationService,
-    AuthGuard,
-    MessageService
+    AuthGuard
   ],
   bootstrap: [AppComponent]
 })

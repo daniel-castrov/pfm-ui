@@ -38,6 +38,7 @@ import { DatePickerCellEditorComponent } from './datagrid/renderers/date-picker-
 import { DatePickerCellRendererComponent } from './datagrid/renderers/date-picker-cell-renderer/date-picker-cell-renderer.component';
 import { IsVisibleDirective } from './directives/is-visible.directive';
 import { ToggleInputComponent } from './form-inputs/toggle-input/toggle-input.component';
+import { MessageService } from 'primeng/api';
 
 @NgModule({
   declarations: [
@@ -119,6 +120,9 @@ import { ToggleInputComponent } from './form-inputs/toggle-input/toggle-input.co
     DatePickerCellRendererComponent,
     IsVisibleDirective,
     ToggleInputComponent
+  ],
+  providers: [
+    MessageService
   ]
 })
 export class PfmCoreuiModule {
