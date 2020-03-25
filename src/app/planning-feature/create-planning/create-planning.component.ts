@@ -75,6 +75,7 @@ export class CreatePlanningComponent implements OnInit {
       item.id = year;
       item.name = year;
       item.value = year;
+      item.disabled = !!items.length;
       items.push(item);
     }
     return items;

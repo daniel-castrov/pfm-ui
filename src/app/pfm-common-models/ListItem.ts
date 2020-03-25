@@ -1,8 +1,8 @@
 export class ListItem {
-  public id: string;
-  public name: string;
-  public value: string;
-  public isSelected: boolean;
-
-  public rawData: any;
+  id: string;
+  name: string;
+  value: string;
+  isSelected: boolean;
+  rawData: any;
+  disabled?: boolean;
 }

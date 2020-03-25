@@ -1,17 +1,11 @@
 <ng-container *ngIf="chartReady">
   <div class="chart" *ngIf="treeMapChart.dataTable.length > 2">
     <google-chart (chartSelect)="noClick($event)" [data]="treeMapChart"></google-chart>
-    <pfm-dropdown (onSelectionChanged)="chartSelected($event)"
-                  [type]="'labelDropdown'" [label]="''"
-                  [required]="true" [id]="'id'"
-                  [fieldName]="'name'"
-                  [fieldLabel]="'name'"
-                  [defaultOption]="defaultChart"
-                  [options]="availableCharts">
+    <pfm-dropdown (selectionChanged)="chartSelected($event)" [type]="'labelDropdown'" [label]="''" [required]="true"
+      [id]="'id'" [fieldName]="'name'" [fieldLabel]="'name'" [defaultOption]="defaultChart" [options]="availableCharts">
     </pfm-dropdown>
   </div>
   <div class="noChartData" *ngIf="treeMapChart.dataTable.length <= 2">
     <p>No data to show</p>
   </div>
 </ng-container>
-
