@@ -19,10 +19,10 @@ export class ToastService {
     });
   }
 
-  displayInfo(text: string): void {
+  displayInfo(summary?: string, text?: string): void {
     this.messageService.add({
       severity: 'info',
-      summary: '',
+      summary,
       detail: text,
       life: 10000
     });
