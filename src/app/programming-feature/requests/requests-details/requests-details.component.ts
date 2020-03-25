@@ -132,7 +132,7 @@ export class RequestsDetailsComponent implements OnInit {
       goal: this.scopeComponent.form.get(['goal']).value,
       quality: this.scopeComponent.form.get(['quality']).value,
       other: this.scopeComponent.form.get(['other']).value,
-      attachments: [...this.scopeComponent.attachmentsUploaded]
+      attachments: [...this.scopeComponent.programAttachments]
     };
   }
 

@@ -78,6 +78,7 @@ export class ScopeComponent implements OnInit {
   currentProcessPriorizationRowDataState: RowDataStateInterface = {};
 
   attachmentsUploaded: ListItem[] = [];
+  programAttachments: Attachment[] = [];
   deleteDialog: DeleteDialogInterface = { title: 'Delete' };
 
   constructor(
@@ -116,13 +117,13 @@ export class ScopeComponent implements OnInit {
   }
 
   updateForm(program: Program) {
-    const attachments = [...program.attachments];
-    attachments.forEach(attachment => {
+    this.programAttachments = [...program.attachments];
+    this.programAttachments.forEach(attachment => {
       this.attachmentsUploaded.push({
-        id: attachment.id,
+        id: attachment.file.id,
         isSelected: false,
         name: attachment.file.name,
-        value: attachment.id,
+        value: attachment.file.id,
         rawData: attachment
       });
     });
@@ -1007,6 +1008,7 @@ export class ScopeComponent implements OnInit {
     if (newFile) {
       const attachment = new Attachment();
       attachment.file = newFile;
+      this.programAttachments.push(attachment);
       this.attachmentsUploaded.push({
         id: attachment.file.id,
         isSelected: false,
