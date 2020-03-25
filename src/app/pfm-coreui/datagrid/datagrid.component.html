@@ -18,7 +18,7 @@
 
     <div class="add-row-container">
       <div title="Add" *ngIf="showAddDropdownCta">
-        <pfm-dropdown (onSelectionChanged)="handleAddDropdownCta($event)" [title]="addDropdownCtaTooltip"
+        <pfm-dropdown (selectionChanged)="handleAddDropdownCta($event)" [title]="addDropdownCtaTooltip"
           [type]="'iconDropdown'" [iconName]="'plus'" [required]="true" [id]="'grid_icon_dropdown_id'"
           [fieldName]="'name'" [fieldLabel]="'name'" [options]="options">
         </pfm-dropdown>

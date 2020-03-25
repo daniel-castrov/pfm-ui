@@ -26,7 +26,7 @@
       </div>
     </div>
   </div>
-  <pfm-dropdown *ngIf="availableOrgs" (onSelectionChanged)="organizationSelected($event)" [type]="'labelDropdown'"
+  <pfm-dropdown *ngIf="availableOrgs" (selectionChanged)="organizationSelected($event)" [type]="'labelDropdown'"
     [label]="'Select Organization to View:'" [required]="true" [id]="'availableOrgsDropDown'"
     [defaultOption]="dropdownDefault" [fieldName]="'name'" [fieldLabel]="'name'" [options]="availableOrgs">
   </pfm-dropdown>
@@ -65,7 +65,7 @@
   </pfm-custom-dialog>
 
   <ng-template #importPreviousFundedProgramBody>
-    <pfm-dropdown (onSelectionChanged)="importProgramSelected($event)" [type]="'labelDropdown'" [label]="''"
+    <pfm-dropdown (selectionChanged)="importProgramSelected($event)" [type]="'labelDropdown'" [label]="''"
       [required]="true" [id]="'id'" [fieldName]="'name'" [fieldLabel]="'name'" [options]="availablePrograms">
     </pfm-dropdown>
   </ng-template>

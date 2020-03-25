@@ -33,7 +33,7 @@
 <br />
 
 <ng-container *ngIf="availableYears" class="float-left">
-  <pfm-dropdown (onSelectionChanged)="yearSelected($event)" [type]="'labelDropdown'" [label]="'For:'" [required]="true"
+  <pfm-dropdown (selectionChanged)="yearSelected($event)" [type]="'labelDropdown'" [label]="'For:'" [required]="true"
     [id]="id" [fieldName]="'name'" [fieldLabel]="'name'" [options]="availableYears"></pfm-dropdown>
 </ng-container>
 
@@ -103,7 +103,7 @@
     (onCancelDialog)="cancelDialog()"></pfm-custom-dialog>
 
   <ng-template #importYearBody>
-    <pfm-dropdown (onSelectionChanged)="importYearSelected($event)" [type]="'labelDropdown'" [label]="''"
+    <pfm-dropdown (selectionChanged)="importYearSelected($event)" [type]="'labelDropdown'" [label]="''"
       [required]="true" [id]="id" [fieldName]="'name'" [fieldLabel]="'name'" [options]="availableImportYears">
     </pfm-dropdown>
   </ng-template>

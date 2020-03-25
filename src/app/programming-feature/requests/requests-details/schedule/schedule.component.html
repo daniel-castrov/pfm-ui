@@ -5,7 +5,7 @@
   <div class="schedule-container row col-12">
     <div class="funding-line-table-container col-6">
       <span>
-        <pfm-dropdown (onSelectionChanged)="onFilterSelection($event)" [type]="'labelDropdown'"
+        <pfm-dropdown (selectionChanged)="onFilterSelection($event)" [type]="'labelDropdown'"
           [label]="'Filter by Funding Line:'" [id]="'id'" [fieldName]="'name'" [fieldLabel]="'name'"
           [options]="fundingFilter" [defaultOption]="'selectedFundingFilter'">
         </pfm-dropdown>

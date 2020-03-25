@@ -1,11 +1,8 @@
 import { Component, Injector, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { DialogService } from '../pfm-coreui/services/dialog.service';
 import { PlanningService } from './services/planning-service';
-import { PlanningPhase } from './models/PlanningPhase';
 import { AppModel } from '../pfm-common-models/AppModel';
 import { PlanningUtils } from './utils/planning-utils';
-import { ProgrammingModel } from '../programming-feature/models/ProgrammingModel';
-import { Route } from '@angular/router';
 
 @Component({
   selector: 'app-planning-feature',
@@ -13,17 +10,23 @@ import { Route } from '@angular/router';
   styleUrls: ['./planning-feature.component.css']
 })
 export class PlanningFeatureComponent implements OnInit {
-  @ViewChild('targetRef', { read: ViewContainerRef, static: true }) vcRef: ViewContainerRef;
+
+  @ViewChild('targetRef', { read: ViewContainerRef, static: true })
+  vcRef: ViewContainerRef;
 
   busy: boolean;
   ready: boolean;
   displayOverrideFlag: boolean;
 
-  constructor(private appModel: AppModel, private planningService: PlanningService, private dialogService: DialogService) {
+  constructor(
+    private appModel: AppModel,
+    private planningService: PlanningService,
+    private dialogService: DialogService
+  ) {
   }
 
   ngOnInit() {
-    //TODO - Notes for dynamic loading libs
+    // TODO - Notes for dynamic loading libs
     // the appModel should contain an information that can override the default view
     /*
         use the router:Route from angular to find the current page being loaded
@@ -32,7 +35,7 @@ export class PlanningFeatureComponent implements OnInit {
           displayOverrideFlag = true
         else
            displayOverrideFlag = false
-*/
+    */
     this.planningService.getAllPlanning().subscribe(
       resp => {
         this.busy = false;
