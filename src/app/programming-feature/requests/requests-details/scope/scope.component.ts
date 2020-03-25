@@ -104,8 +104,7 @@ export class ScopeComponent implements OnInit {
       aim: new FormControl(''),
       goal: new FormControl(''),
       quality: new FormControl(''),
-      other: new FormControl(''),
-      attachment: new FormControl('')
+      other: new FormControl('')
     });
   }
 
@@ -131,8 +130,7 @@ export class ScopeComponent implements OnInit {
       aim: program.aim,
       goal: program.goal,
       quality: program.quality,
-      other: program.other,
-      attachment: '0'
+      other: program.other
     });
   }
 
