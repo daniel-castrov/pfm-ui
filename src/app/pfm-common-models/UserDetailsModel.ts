@@ -1,25 +1,27 @@
 import { UserRole } from './UserRole';
 import { Communication } from './Communication';
 import { CommunityModel } from './CommunityModel';
+import { Moment } from 'moment';
 
 export class UserDetailsModel {
-  public admin:boolean;
-  public cn:string;
-  public communication:Communication;
-  public created:Date;
-  public createdBy:string;
-  public currentCommunityId:string;
-  public firstName:string;
-  public id:string;
-  public lastName:string;
-  public middleInitial:string;
-  public modified:Date;
-  public modifiedBy:string;
-  public organizationId:string;
-  public suspended:boolean;
-  public valid:boolean;
-  public userRole:UserRole;
-  public roles: string[];
-  public currentCommunity:CommunityModel;
-  public fullName:string;
+  admin: boolean;
+  cn: string;
+  communication: Communication;
+  created: Date;
+  createdBy: string;
+  currentCommunityId: string;
+  firstName: string;
+  id: string;
+  lastName: string;
+  middleInitial: string;
+  modified: Date;
+  modifiedBy: string;
+  organizationId: string;
+  suspended: boolean;
+  valid: boolean;
+  userRole: UserRole;
+  roles: string[];
+  currentCommunity: CommunityModel;
+  fullName: string;
+  lastLoginDate: Moment;
 }
