@@ -167,6 +167,12 @@ hr {
   color: $primary-color;
 }
 
+/* PrimeNG */
+
+.ui-toast-message-error .ui-toast-icon::before {
+  content: '\e90c';
+}
+
 /* bootstrap containers */
 
 .card-header-text-pad {
