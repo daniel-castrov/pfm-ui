@@ -36,6 +36,9 @@ export class DropdownComponent implements ValidatedComponent, OnInit {
     const item: any = this.updateIsChecked();
     setTimeout(() => {
       this.selectionChanged.emit(item);
+      if (this.type === 'attatchmentDropdown') {
+        this.selectedItem = this.prompt;
+      }
     });
   }
 

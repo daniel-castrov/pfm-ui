@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ColDef, GridApi } from '@ag-grid-community/all-modules';
 import { ActionCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/action-cell-renderer/action-cell-renderer.component';
 import { DatePickerCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/date-picker-cell-renderer/date-picker-cell-renderer.component';
@@ -8,15 +8,13 @@ import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
 import { FileMetaData } from 'src/app/pfm-common-models/FileMetaData';
 import { Attachment } from 'src/app/pfm-common-models/Attachment';
 import { Program } from '../../../models/Program';
-import { EvaluationMeasureServiceImpl } from '../../../services/evaluation-measure-impl.service';
 import { EvaluationMeasureService } from '../../../services/evaluation-measure.service';
 import { ProcessPrioritizationService } from '../../../services/process-prioritization.service';
 import { TeamLeadService } from '../../../services/team-lead.service';
-import { Action } from '../../../../pfm-common-models/Action';
-import { objectKeys } from 'codelyzer/util/objectKeys';
-import { Moment } from 'moment';
 import * as moment from 'moment';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
+import { SecureDownloadComponent } from 'src/app/pfm-secure-filedownload/secure-download/secure-download.component';
+import { ListItem } from 'src/app/pfm-common-models/ListItem';
 
 @Component({
   selector: 'pfm-scope',
@@ -24,6 +22,9 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./scope.component.scss']
 })
 export class ScopeComponent implements OnInit {
+
+  @ViewChild(SecureDownloadComponent, { static: false })
+  secureDownloadComponent: SecureDownloadComponent;
 
   @Input() program: Program;
 
@@ -76,13 +77,14 @@ export class ScopeComponent implements OnInit {
   currentTeamLeadRowDataState: RowDataStateInterface = {};
   currentProcessPriorizationRowDataState: RowDataStateInterface = {};
 
-  attachmentsUploaded: Attachment[] = [];
+  attachmentsUploaded: ListItem[] = [];
   deleteDialog: DeleteDialogInterface = { title: 'Delete' };
 
-  constructor(private evaluationMeasureService: EvaluationMeasureService,
-              private processPrioritizationService: ProcessPrioritizationService,
-              private teamLeadService: TeamLeadService,
-              private dialogService: DialogService) {
+  constructor(
+    private evaluationMeasureService: EvaluationMeasureService,
+    private processPrioritizationService: ProcessPrioritizationService,
+    private teamLeadService: TeamLeadService,
+    private dialogService: DialogService) {
   }
 
   ngOnInit() {
@@ -104,11 +106,26 @@ export class ScopeComponent implements OnInit {
       quality: new FormControl(''),
       other: new FormControl('')
     });
+  }
 
+  downloadAttachment(file: ListItem) {
+    const fileMetaData = new FileMetaData();
+    fileMetaData.id = file.id;
+    fileMetaData.name = file.name;
+    this.secureDownloadComponent.downloadFile(fileMetaData);
   }
 
   updateForm(program: Program) {
-    this.attachmentsUploaded = [...program.attachments];
+    const attachments = [...program.attachments];
+    attachments.forEach(attachment => {
+      this.attachmentsUploaded.push({
+        id: attachment.id,
+        isSelected: false,
+        name: attachment.file.name,
+        value: attachment.id,
+        rawData: attachment
+      });
+    });
     this.form.patchValue({
       aim: program.aim,
       goal: program.goal,
@@ -990,7 +1007,13 @@ export class ScopeComponent implements OnInit {
     if (newFile) {
       const attachment = new Attachment();
       attachment.file = newFile;
-      this.attachmentsUploaded.push(attachment);
+      this.attachmentsUploaded.push({
+        id: attachment.file.id,
+        isSelected: false,
+        name: attachment.file.name,
+        value: attachment.file.id,
+        rawData: attachment
+      });
     }
   }
 

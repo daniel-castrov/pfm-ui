@@ -16,7 +16,7 @@
 
 <ng-container *ngIf='type == "attatchmentDropdown"'>
   <div class="pfm-dropdown-section">
-    <div class="pfm-dropdown">
+    <div class="pfm-dropdown col-12 p-0">
       <select (ngModelChange)="handleSelectionChanged($event)" [name]="id" [id]="id" class="form-control"
         [(ngModel)]="selectedItem" [disabled]="attachmentsDisabled">
         <option disabled value="{{prompt}}">{{prompt}}</option>

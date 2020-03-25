@@ -56,13 +56,13 @@ import { TeamLeadService } from './services/team-lead.service';
 import { TeamLeadServiceImpl } from './services/team-lead-impl.service';
 import { EvaluationMeasureService } from './services/evaluation-measure.service';
 import { EvaluationMeasureServiceImpl } from './services/evaluation-measure-impl.service';
-import { ProcessPrioritization } from './models/process-prioritization.model';
 import { ProcessPrioritizationServiceImpl } from './services/process-prioritization-impl.service';
 import { ProcessPrioritizationService } from './services/process-prioritization.service';
 import { FundingLineService } from './services/funding-line.service';
 import { FundingLineServiceImpl } from './services/funding-line-impl.service';
 import { AssetService } from './services/asset.service';
 import { AssetServiceImpl } from './services/asset-impl.service';
+import { PfmSecureFiledownloadModule } from '../pfm-secure-filedownload/pfm-secure-filedownload.module';
 
 @NgModule({
   declarations: [
@@ -100,6 +100,7 @@ import { AssetServiceImpl } from './services/asset-impl.service';
     Ng2GoogleChartsModule,
     PfmCoreuiModule,
     PfmSecureFileuploadModule,
+    PfmSecureFiledownloadModule,
     TabsModule.forRoot(),
     ProgrammingFeatureRoutingModule,
     AngularFontAwesomeModule

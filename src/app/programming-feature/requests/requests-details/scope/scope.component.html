@@ -1,47 +1,47 @@
 <div class="pl-5 pr-5">
   <form [formGroup]="form">
 
-  <fieldset>
-    <legend>Program Goals</legend>
-    <div class="form-group row">
-      <div class="row col-12 mt-3">
-        <p class="col-1 ml-4">Program Aim</p>
-        <textarea class="form-control col-10" formControlName="aim"></textarea>
+    <fieldset>
+      <legend>Program Goals</legend>
+      <div class="form-group row">
+        <div class="row col-12 mt-3">
+          <p class="col-1 ml-4">Program Aim</p>
+          <textarea class="form-control col-10" formControlName="aim"></textarea>
+        </div>
+        <div class="row col-12 mt-3">
+          <p class="col-1 ml-4">Program Goal</p>
+          <textarea class="form-control col-10" formControlName="goal"></textarea>
+        </div>
       </div>
-      <div class="row col-12 mt-3">
-        <p class="col-1 ml-4">Program Goal</p>
-        <textarea class="form-control col-10" formControlName="goal"></textarea>
+    </fieldset>
+    <fieldset>
+      <legend>Program Constraints</legend>
+      <div class="form-group row">
+        <div class="row col-12 mt-3">
+          <p class="col-1 ml-4">Budget</p>
+          <p class="col-10">{{ budget | currency:'':'symbol':'0.0'}}</p>
+        </div>
+        <div class="row col-12 mt-1">
+          <p class="col-1 ml-4">Schedule</p>
+          <p class="col-10">{{ schedule }}</p>
+        </div>
+        <div class="row col-12 mt-3">
+          <p class="col-1 ml-4">Quality</p>
+          <textarea class="form-control col-10" formControlName="quality"></textarea>
+        </div>
+        <div class="row col-12 mt-3">
+          <p class="col-1 ml-4">Other</p>
+          <textarea class="form-control col-10" formControlName="other"></textarea>
+        </div>
+        <div class="row col-12 mt-3 attachment-container">
+          <p class="col-1 ml-4">Attachment</p>
+          <pfm-dropdown class="col-5 p-0" (selectionChanged)="downloadAttachment($event)" [type]="'attatchmentDropdown'"
+            [options]="attachmentsUploaded" [id]="'render'" [fieldLabel]="'name'" [fieldName]="'name'"
+            [attachmentsDisabled]="attachmentsDisabled"></pfm-dropdown>
+          <i class="fa fa-upload col-1 text-center" (click)="onFileUploadClick()"></i>
+        </div>
       </div>
-    </div>
-  </fieldset>
-  <fieldset>
-    <legend>Program Constraints</legend>
-    <div class="form-group row">
-      <div class="row col-12 mt-3">
-        <p class="col-1 ml-4">Budget</p>
-        <p class="col-10">{{ budget | currency:'':'symbol':'0.0'}}</p>
-      </div>
-      <div class="row col-12 mt-1">
-        <p class="col-1 ml-4">Schedule</p>
-        <p class="col-10">{{ schedule }}</p>
-      </div>
-      <div class="row col-12 mt-3">
-        <p class="col-1 ml-4">Quality</p>
-        <textarea class="form-control col-10" formControlName="quality"></textarea>
-      </div>
-      <div class="row col-12 mt-3">
-        <p class="col-1 ml-4">Other</p>
-        <textarea class="form-control col-10" formControlName="other"></textarea>
-      </div>
-      <div class="row col-12 mt-3 attachment-container">
-        <p class="col-1 ml-4">Attachment</p>
-        <select class="form-control col-5">
-          <option *ngFor="let attachment of attachmentsUploaded">{{ attachment.file.name }}</option>
-        </select>
-        <i class="fa fa-upload col-1 text-center" (click)="onFileUploadClick()"></i>
-      </div>
-    </div>
-  </fieldset>
+    </fieldset>
   </form>
 
   <fieldset>
@@ -89,3 +89,4 @@
     </div>
   </ng-template>
 </ng-container>
+<pfm-secure-download></pfm-secure-download>

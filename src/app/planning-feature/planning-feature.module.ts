@@ -10,7 +10,6 @@ import { LockPlanningComponent } from './lock-planning/lock-planning.component';
 import { ClosePlanningComponent } from './close-planning/close-planning.component';
 import { PfmCoreuiModule } from '../pfm-coreui/pfm-coreui.module';
 import { PlanningService } from './services/planning-service';
-import { PlanningServiceMock } from './services/planning-service-mock';
 import { HttpClientModule } from '@angular/common/http';
 import { PlanningServicesImpl } from './services/planning-services-impl.service';
 import { PfmSecureFileuploadModule } from '../pfm-secure-fileupload/pfm-secure-fileupload.module';
@@ -19,7 +18,14 @@ import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
-  declarations: [PlanningFeatureComponent, CreatePlanningComponent, OpenPlanningComponent, MissionPrioritiesComponent, LockPlanningComponent, ClosePlanningComponent],
+  declarations: [
+    PlanningFeatureComponent,
+    CreatePlanningComponent,
+    OpenPlanningComponent,
+    MissionPrioritiesComponent,
+    LockPlanningComponent,
+    ClosePlanningComponent
+  ],
   imports: [
     CommonModule,
     FormsModule,
@@ -29,6 +35,6 @@ import { FormsModule } from '@angular/forms';
     PfmSecureFiledownloadModule,
     PlanningFeatureRoutingModule
   ],
-  providers: [{provide: PlanningService, useClass: PlanningServicesImpl}]
+  providers: [{ provide: PlanningService, useClass: PlanningServicesImpl }]
 })
 export class PlanningFeatureModule { }
