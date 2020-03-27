@@ -2,7 +2,7 @@
   <form [formGroup]="form">
     <div class="form-group row col-12">
       <label for="fundingLineSelect" class="col-2 my-auto">Select Funding Line to View</label>
-      <select id="fundingLineSelect" formControlName="fundingLineSelect" (change)="onChangeSuit($event)"
+      <select id="fundingLineSelect" formControlName="fundingLineSelect" (change)="onChangeFundingLine($event)"
         class="form-control col-4">
         <option value="0">Select</option>
         <option *ngFor="let fundingLine of fundingLineOptions" [value]="fundingLine.id">

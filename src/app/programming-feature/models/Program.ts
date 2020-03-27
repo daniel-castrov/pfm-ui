@@ -2,6 +2,7 @@ import { FundingLine } from './funding-line.model';
 import { Milestone } from './Milestone';
 import { ProgramStatus } from './enumerations/program-status.model';
 import { Attachment } from '../../pfm-common-models/Attachment';
+import { Asset } from './asset.model';
 
 export class Program {
   created: any;
@@ -27,6 +28,7 @@ export class Program {
   impactN: string;
   execution: string;
   fundingLines: Array<FundingLine>;
+  assets: Array<Asset>;
   milestones: Array<Milestone>;
   primaryCapability: string;
   coreCapability: string;
