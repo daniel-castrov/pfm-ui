@@ -1,0 +1,7 @@
+export const enum PropertyType {
+  WORK_UNIT_CODE = 'WORK_UNIT_CODE',
+  EXPENDITURE_TYPE = 'EXPENDITURE_TYPE',
+  SAG = 'SAG',
+  BA_BLIN = 'BA_BLIN',
+  APPROPRIATION = 'APPROPRIATION'
+}

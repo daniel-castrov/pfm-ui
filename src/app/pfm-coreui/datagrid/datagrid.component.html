@@ -38,7 +38,7 @@
       [doesExternalFilterPass]="doesExternalFilterPass" [getContextMenuItems]="getContextMenuItems"
       [rowDragManaged]="rowDragManaged" (gridReady)="onGridReady($event)" (rowDragEnter)="onRowDragEnter($event)"
       (rowDragLeave)="onRowDragLeave($event)" (rowDragEnd)="onRowDragEnd($event)" (cellClicked)="onCellClicked($event)"
-      (modelUpdated)="onModelUpdated()" (gridSizeChanged)="onGridSizeChanged()"
+      (modelUpdated)="onModelUpdated()" (gridSizeChanged)="onGridSizeChanged()" (rowValueChanged)="onRowValueChanged($event)"
       (columnResized)="onColumnResized($event)" [suppressAggFuncInHeader]="true" [groupSuppressAutoColumn]="true"
       [rememberGroupStateWhenNewData]="true" [groupIncludeTotalFooter]="showGrandTotal">
     </ag-grid-angular>

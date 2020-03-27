@@ -63,6 +63,8 @@ import { FundingLineServiceImpl } from './services/funding-line-impl.service';
 import { AssetService } from './services/asset.service';
 import { AssetServiceImpl } from './services/asset-impl.service';
 import { PfmSecureFiledownloadModule } from '../pfm-secure-filedownload/pfm-secure-filedownload.module';
+import { PropertyService } from './services/property.service';
+import { PropertyServiceImpl } from './services/property-impl.service';
 
 @NgModule({
   declarations: [
@@ -105,21 +107,24 @@ import { PfmSecureFiledownloadModule } from '../pfm-secure-filedownload/pfm-secu
     ProgrammingFeatureRoutingModule,
     AngularFontAwesomeModule
   ],
-  providers: [{ provide: ProgrammingService, useClass: ProgrammingServiceImpl },
-  { provide: PomService, useClass: PomServiceImpl },
-  { provide: OrganizationService, useClass: OrganizationServiceImpl },
-  { provide: RoleService, useClass: RoleServiceImpl },
-  { provide: MrdbService, useClass: MrdbServiceImpl },
-  { provide: VisibilityService, useClass: VisibilityServiceImpl },
-  { provide: PlanningService, useClass: PlanningServicesImpl },
-  { provide: TagService, useClass: TagServiceImpl },
-  { provide: TeamLeadService, useClass: TeamLeadServiceImpl },
-  { provide: EvaluationMeasureService, useClass: EvaluationMeasureServiceImpl },
-  { provide: ProcessPrioritizationService, useClass: ProcessPrioritizationServiceImpl },
-  { provide: FundingLineService, useClass: FundingLineServiceImpl },
-  { provide: AssetService, useClass: AssetServiceImpl },
+  providers: [
+    { provide: ProgrammingService, useClass: ProgrammingServiceImpl },
+    { provide: PomService, useClass: PomServiceImpl },
+    { provide: OrganizationService, useClass: OrganizationServiceImpl },
+    { provide: RoleService, useClass: RoleServiceImpl },
+    { provide: MrdbService, useClass: MrdbServiceImpl },
+    { provide: VisibilityService, useClass: VisibilityServiceImpl },
+    { provide: PlanningService, useClass: PlanningServicesImpl },
+    { provide: TagService, useClass: TagServiceImpl },
+    { provide: TeamLeadService, useClass: TeamLeadServiceImpl },
+    { provide: EvaluationMeasureService, useClass: EvaluationMeasureServiceImpl },
+    { provide: ProcessPrioritizationService, useClass: ProcessPrioritizationServiceImpl },
+    { provide: FundingLineService, useClass: FundingLineServiceImpl },
+    { provide: AssetService, useClass: AssetServiceImpl },
+    { provide: PropertyService, useClass: PropertyServiceImpl },
     ProgrammingModel,
-    RequestSummaryNavigationHistoryService]
+    RequestSummaryNavigationHistoryService
+  ]
 })
 export class ProgrammingFeatureModule {
 }

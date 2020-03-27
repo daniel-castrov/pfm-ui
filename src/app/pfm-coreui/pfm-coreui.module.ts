@@ -39,8 +39,10 @@ import { DatePickerCellRendererComponent } from './datagrid/renderers/date-picke
 import { IsVisibleDirective } from './directives/is-visible.directive';
 import { ToggleInputComponent } from './form-inputs/toggle-input/toggle-input.component';
 import { MessageService } from 'primeng/api';
+import { DropdownCellRendererComponent } from './datagrid/renderers/dropdown-cell-renderer/dropdown-cell-renderer.component';
 
 @NgModule({
+  entryComponents: [DropdownCellRendererComponent],
   declarations: [
     RadioButtonWrapperComponent,
     AppHeaderComponent,
@@ -61,6 +63,7 @@ import { MessageService } from 'primeng/api';
     DisplaydatagridComponent,
     ActionCellRendererComponent,
     AttachmentCellRendererComponent,
+    DropdownCellRendererComponent,
     TextCellEditorComponent,
     TextCellRendererComponent,
     DisabledActionCellRendererComponent,
@@ -83,6 +86,7 @@ import { MessageService } from 'primeng/api';
     AgGridModule.withComponents([
       ActionCellRendererComponent,
       AttachmentCellRendererComponent,
+      DropdownCellRendererComponent,
       TextCellEditorComponent,
       TextCellRendererComponent,
       DisabledActionCellRendererComponent,
@@ -110,6 +114,7 @@ import { MessageService } from 'primeng/api';
     DisplaydatagridComponent,
     ActionCellRendererComponent,
     AttachmentCellRendererComponent,
+    DropdownCellRendererComponent,
     TextCellEditorComponent,
     TextCellRendererComponent,
     DisabledActionCellRendererComponent,

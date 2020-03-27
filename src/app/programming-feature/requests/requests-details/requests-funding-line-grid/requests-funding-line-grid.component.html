@@ -11,7 +11,7 @@
   <div class="grid-container" *ngIf="!showSubtotals">
     <pfm-datagrid (gridIsReady)="onNonSummaryGridIsReady($event)" (cellAction)="onNonSummaryCellAction($event)"
                   [columns]="nonSummaryFundingLineColumnsDefinition" [rows]="nonSummaryFundingLineRows"
-                  [showAddSingleRow]="true"
+                  [showAddSingleRow]="true" (rowValueChanged)="onRowValueChanged($event)"
                   [showPagination]="false" (addCtaEvent)="onNonSummaryRowAdd($event)"
                   (mousedown)="onNonSummaryMouseDown($event)">
     </pfm-datagrid>
@@ -42,3 +42,6 @@
     <fa name="angle-double-up" title="Collapse all rows" *ngIf="expanded" (click)="collapse()"></fa>
   </div>
 </ng-template>
+
+
+<pfm-dropdown-cell-renderer #appnDropdown [list]="appnOptions" ></pfm-dropdown-cell-renderer>

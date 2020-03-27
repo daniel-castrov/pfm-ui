@@ -1,5 +1,5 @@
-class RestResponse {
+class RestResponse<T> {
   error: any;
-  result: any;
+  result: T;
 
 }

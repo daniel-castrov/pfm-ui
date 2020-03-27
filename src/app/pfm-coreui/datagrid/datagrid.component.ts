@@ -37,6 +37,7 @@ export class DatagridComponent implements OnInit {
   @Output() rowDragLeaveEvent: EventEmitter<any> = new EventEmitter<any>();
   @Output() rowDragEndEvent: EventEmitter<any> = new EventEmitter<any>();
   @Output() columnIsReady: EventEmitter<ColumnApi> = new EventEmitter<ColumnApi>();
+  @Output() rowValueChanged: EventEmitter<any> = new EventEmitter<any>();
 
   excelMessageHeader: any;
   excelMessageFooter: any;
@@ -57,7 +58,7 @@ export class DatagridComponent implements OnInit {
       return true;
     }
     return false;
-  }
+  };
 
   constructor(private datagridMBService: DatagridMbService) {
   }
@@ -82,6 +83,10 @@ export class DatagridComponent implements OnInit {
 
   onRowDragEnd(event: any): void {
     this.rowDragEndEvent.emit(event);
+  }
+
+  onRowValueChanged(event: any) {
+    this.rowValueChanged.emit(event);
   }
 
   onCellClicked(event: any): void {
@@ -122,7 +127,7 @@ export class DatagridComponent implements OnInit {
     this.defaultColDef = {
       resizable: true,
       sortable: true,
-      filter: true,
+      filter: true
     };
     if (this.addDropdownCtaOptions) {
       this.options = this.addDropdownCtaOptions;
@@ -168,7 +173,7 @@ export class DatagridComponent implements OnInit {
           color: '#008000', pattern: 'Solid'
         },
         dataType: 'string'
-      },
+      }
     ];
   }
 
@@ -186,7 +191,7 @@ export class DatagridComponent implements OnInit {
   getExportParams() {
     return {
       customHeader: this.excelMessageHeader,
-      customFooter: this.excelMessageFooter,
+      customFooter: this.excelMessageFooter
     };
   }
 
@@ -198,7 +203,7 @@ export class DatagridComponent implements OnInit {
         action: () => {
           params.context.onExport();
         }
-      },
+      }
     ];
     return result;
   }
