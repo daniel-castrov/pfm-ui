@@ -59,7 +59,7 @@
   </tab>
   <tab heading="Assets" style="width:100%;height:100%" (selectTab)="onSelectTab($event)">
     <div class="section-tab">
-      <pfm-assets [pomYear]="pomYear" [program]="program"></pfm-assets>
+      <pfm-assets #assets [pomYear]="pomYear" [program]="program"></pfm-assets>
     </div>
   </tab>
   <tab heading="Justification" style="width:100%;height:100%" (selectTab)="onSelectTab($event)">

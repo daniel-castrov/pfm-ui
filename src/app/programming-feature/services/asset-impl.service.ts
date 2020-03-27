@@ -8,7 +8,7 @@ import { AssetService } from './asset.service';
 })
 export class AssetServiceImpl extends AssetService {
 
-  obtainAssetsByFundingLineId(fundingLineId: string): Observable<any> {
+  obtainAssetByFundingLineId(fundingLineId: string): Observable<any> {
     return this.get('assets/funding-line/' + fundingLineId);
   }
 

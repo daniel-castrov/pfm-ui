@@ -63,6 +63,8 @@ import { FundingLineServiceImpl } from './services/funding-line-impl.service';
 import { AssetService } from './services/asset.service';
 import { AssetServiceImpl } from './services/asset-impl.service';
 import { PfmSecureFiledownloadModule } from '../pfm-secure-filedownload/pfm-secure-filedownload.module';
+import { AssetSummaryService } from './services/asset-summary.service';
+import { AssetSummaryServiceImpl } from './services/asset-summary-impl.service';
 import { PropertyService } from './services/property.service';
 import { PropertyServiceImpl } from './services/property-impl.service';
 
@@ -107,20 +109,20 @@ import { PropertyServiceImpl } from './services/property-impl.service';
     ProgrammingFeatureRoutingModule,
     AngularFontAwesomeModule
   ],
-  providers: [
-    { provide: ProgrammingService, useClass: ProgrammingServiceImpl },
-    { provide: PomService, useClass: PomServiceImpl },
-    { provide: OrganizationService, useClass: OrganizationServiceImpl },
-    { provide: RoleService, useClass: RoleServiceImpl },
-    { provide: MrdbService, useClass: MrdbServiceImpl },
-    { provide: VisibilityService, useClass: VisibilityServiceImpl },
-    { provide: PlanningService, useClass: PlanningServicesImpl },
-    { provide: TagService, useClass: TagServiceImpl },
-    { provide: TeamLeadService, useClass: TeamLeadServiceImpl },
-    { provide: EvaluationMeasureService, useClass: EvaluationMeasureServiceImpl },
-    { provide: ProcessPrioritizationService, useClass: ProcessPrioritizationServiceImpl },
-    { provide: FundingLineService, useClass: FundingLineServiceImpl },
-    { provide: AssetService, useClass: AssetServiceImpl },
+  providers: [{ provide: ProgrammingService, useClass: ProgrammingServiceImpl },
+  { provide: PomService, useClass: PomServiceImpl },
+  { provide: OrganizationService, useClass: OrganizationServiceImpl },
+  { provide: RoleService, useClass: RoleServiceImpl },
+  { provide: MrdbService, useClass: MrdbServiceImpl },
+  { provide: VisibilityService, useClass: VisibilityServiceImpl },
+  { provide: PlanningService, useClass: PlanningServicesImpl },
+  { provide: TagService, useClass: TagServiceImpl },
+  { provide: TeamLeadService, useClass: TeamLeadServiceImpl },
+  { provide: EvaluationMeasureService, useClass: EvaluationMeasureServiceImpl },
+  { provide: ProcessPrioritizationService, useClass: ProcessPrioritizationServiceImpl },
+  { provide: FundingLineService, useClass: FundingLineServiceImpl },
+  { provide: AssetService, useClass: AssetServiceImpl },
+  { provide: AssetSummaryService, useClass: AssetSummaryServiceImpl },
     { provide: PropertyService, useClass: PropertyServiceImpl },
     ProgrammingModel,
     RequestSummaryNavigationHistoryService
