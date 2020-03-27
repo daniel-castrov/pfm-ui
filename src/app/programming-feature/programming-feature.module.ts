@@ -63,6 +63,8 @@ import { FundingLineServiceImpl } from './services/funding-line-impl.service';
 import { AssetService } from './services/asset.service';
 import { AssetServiceImpl } from './services/asset-impl.service';
 import { PfmSecureFiledownloadModule } from '../pfm-secure-filedownload/pfm-secure-filedownload.module';
+import { AssetSummaryService } from './services/asset-summary.service';
+import { AssetSummaryServiceImpl } from './services/asset-summary-impl.service';
 
 @NgModule({
   declarations: [
@@ -118,6 +120,7 @@ import { PfmSecureFiledownloadModule } from '../pfm-secure-filedownload/pfm-secu
   { provide: ProcessPrioritizationService, useClass: ProcessPrioritizationServiceImpl },
   { provide: FundingLineService, useClass: FundingLineServiceImpl },
   { provide: AssetService, useClass: AssetServiceImpl },
+  { provide: AssetSummaryService, useClass: AssetSummaryServiceImpl },
     ProgrammingModel,
     RequestSummaryNavigationHistoryService]
 })

@@ -16,6 +16,8 @@ import { AssetService } from 'src/app/programming-feature/services/asset.service
 import { Observable } from 'rxjs';
 import { TagService } from 'src/app/programming-feature/services/tag.service';
 import { Tag } from 'src/app/programming-feature/models/Tag';
+import { AssetSummary } from 'src/app/programming-feature/models/asset-summary.model';
+import { AssetSummaryService } from 'src/app/programming-feature/services/asset-summary.service';
 
 @Component({
   selector: 'pfm-assets',
@@ -53,12 +55,13 @@ export class AssetsComponent implements OnInit {
   contractorOrManufacturerOptions: Tag[] = [];
 
   fundingLineOptions: any[] = [];
+  selectedAsset: Asset;
   selectedFundingLine: string;
 
   assetGridApi: GridApi;
   assetColumnApi: ColumnApi;
   assetColumnsDefinition: ColGroupDef[];
-  assetRows: Asset[] = [];
+  assetSummaryRows: AssetSummary[] = [];
 
   currentRowDataState: RowDataStateInterface = {};
   deleteDialog: DeleteDialogInterface = { title: 'Delete' };
@@ -68,6 +71,7 @@ export class AssetsComponent implements OnInit {
     private dialogService: DialogService,
     private fundingLineService: FundingLineService,
     private assetService: AssetService,
+    private assetSummaryService: AssetSummaryService,
     private tagService: TagService,
     private appModel: AppModel
   ) { }
@@ -82,7 +86,7 @@ export class AssetsComponent implements OnInit {
 
   private async setupGrid() {
     await this.loadToBeUsedBy();
-    await this.loadcontractorOrManufacturer();
+    await this.loadContractorOrManufacturer();
     this.setupAssetGrid();
   }
 
@@ -115,7 +119,7 @@ export class AssetsComponent implements OnInit {
       });
   }
 
-  private async loadcontractorOrManufacturer() {
+  private async loadContractorOrManufacturer() {
     await this.tagService.getByType(this.CONTRACTOR_OR_MANUFACTURER)
       .toPromise()
       .then(resp => {
@@ -129,18 +133,29 @@ export class AssetsComponent implements OnInit {
       });
   }
 
-  onChangeSuit(event: any) {
+  onChangeFundingLine(event: any) {
     this.form.get('fundingLineSelect').setValue(event.target.value, {
       onlySelf: true
     });
     this.selectedFundingLine = this.form.get('fundingLineSelect').value;
     if (this.selectedFundingLine.toLowerCase() !== '0') {
-      this.assetService.obtainAssetsByFundingLineId(this.selectedFundingLine)
-        .pipe(map(resp => resp.result as Asset[]))
+      this.assetService.obtainAssetByFundingLineId(this.selectedFundingLine)
+        .pipe(map(resp => resp.result as Asset))
         .subscribe(
           resp => {
-            this.assetRows = resp.map(asset => ({ ...asset, action: this.actionState.VIEW }));
+            this.selectedAsset = resp;
+            if (this.selectedAsset.assetSummaries) {
+              this.assetSummaryRows = this.selectedAsset.assetSummaries
+                .map(assetSummary => ({ ...assetSummary, action: this.actionState.VIEW }));
+            } else {
+              this.assetSummaryRows = [];
+            }
             this.showAssetGrid = true;
+            if (this.assetGridApi) {
+              this.assetGridApi.setRowData(this.assetSummaryRows);
+            }
+            const asset = this.program.assets && this.program.assets.find(a => a.id === this.selectedAsset.id);
+            this.form.controls.remarks.patchValue(asset.remarks);
           },
           error => {
             this.dialogService.displayDebug(error);
@@ -151,7 +166,7 @@ export class AssetsComponent implements OnInit {
     }
   }
 
-  private async getFundingLineOptions() {
+  async getFundingLineOptions() {
     await this.fundingLineService.obtainFundingLinesByProgramId(this.program.id)
       .pipe(map(resp => {
         const fundingLines = resp.result as FundingLine[];
@@ -162,7 +177,8 @@ export class AssetsComponent implements OnInit {
           const wucd = fundingLine.wucd ? fundingLine.wucd : '';
           const expType = fundingLine.expenditureType ? fundingLine.expenditureType : '';
           return {
-            id: fundingLine.id, value: [appn, baOrBlin, sag, wucd, expType].join('/')
+            id: fundingLine.id,
+            value: [appn, baOrBlin, sag, wucd, expType].join('/')
           };
         });
       }))
@@ -170,6 +186,33 @@ export class AssetsComponent implements OnInit {
       .then(
         resp => {
           this.fundingLineOptions = resp;
+          this.fundingLineOptions.forEach(option => {
+            const asset = this.program.assets && this.program.assets.find(a => a.fundingLineId === option.id);
+            if (!asset) {
+              this.assetService.createAsset(
+                {
+                  fundingLineId: option.id,
+                  remarks: ''
+                }
+              ).subscribe(assetRespose => {
+                if (!this.program.assets) {
+                  this.program.assets = [];
+                }
+                this.program.assets.push(assetRespose.result);
+              });
+            }
+          });
+          if (this.selectedAsset) {
+            const asset = this.fundingLineOptions.find(option => option.id === this.selectedAsset.fundingLineId);
+            if (!asset) {
+              this.form.controls.fundingLineSelect.patchValue(0);
+              this.assetSummaryRows = [];
+              this.showAssetGrid = false;
+              if (this.assetGridApi) {
+                this.assetGridApi.setRowData(this.assetSummaryRows);
+              }
+            }
+          }
         },
         error => {
           this.dialogService.displayDebug(error);
@@ -181,7 +224,7 @@ export class AssetsComponent implements OnInit {
     this.assetGridApi = assetGridApi;
     this.assetGridApi.setHeaderHeight(50);
     this.assetGridApi.setGroupHeaderHeight(25);
-    this.assetGridApi.setRowData(this.assetRows);
+    this.assetGridApi.setRowData(this.assetSummaryRows);
   }
 
   onColumnIsReady(columnApi: ColumnApi) {
@@ -192,6 +235,13 @@ export class AssetsComponent implements OnInit {
     if (this.currentRowDataState.isEditMode) {
       return;
     }
+    this.addEmptyRow();
+    this.currentRowDataState.isAddMode = true;
+    this.assetGridApi.setRowData(this.assetSummaryRows);
+    this.editRow(this.assetSummaryRows.length - 1);
+  }
+
+  private addEmptyRow() {
     const assetDetails: { [year: number]: AssetDetail } = {};
     for (let year = this.pomYear - 2; year < this.pomYear + 6; year++) {
       assetDetails[year] = {
@@ -200,21 +250,21 @@ export class AssetsComponent implements OnInit {
         totalCost: 0
       };
     }
-    this.assetRows.push(
+    this.assetSummaryRows.push(
       {
-        fundingLineId: this.selectedFundingLine,
+        assetId: this.selectedAsset.id,
         description: '',
         contractorOrManufacturer: '',
         toBeUsedBy: '',
-
         details: assetDetails,
 
         action: this.actionState.EDIT
       }
     );
-    this.currentRowDataState.isAddMode = true;
-    this.assetGridApi.setRowData(this.assetRows);
-    this.editRow(this.assetRows.length - 1);
+    const asset = this.program.assets.find(a => a.id === this.selectedAsset.id);
+    if (!asset.assetSummaries) {
+      asset.assetSummaries = [];
+    }
   }
 
   onCellAction(cellAction: DataGridMessage) {
@@ -246,7 +296,7 @@ export class AssetsComponent implements OnInit {
 
   private saveRow(rowIndex: number) {
     this.assetGridApi.stopEditing();
-    const row = this.assetRows[rowIndex];
+    const row = this.assetSummaryRows[rowIndex];
     const canSave = this.validateRowData(row);
     if (canSave) {
       if (row.contractorOrManufacturer.toLowerCase() === 'select') {
@@ -257,13 +307,13 @@ export class AssetsComponent implements OnInit {
       }
       if (this.currentRowDataState.isAddMode || !row.id) {
         this.performSave(
-          this.assetService.createAsset.bind(this.assetService),
+          this.assetSummaryService.createAssetSummary.bind(this.assetSummaryService),
           row,
           rowIndex
         );
       } else {
         this.performSave(
-          this.assetService.updateAsset.bind(this.assetService),
+          this.assetSummaryService.updateAssetSummary.bind(this.assetSummaryService),
           row,
           rowIndex
         );
@@ -275,16 +325,19 @@ export class AssetsComponent implements OnInit {
   }
 
   private performSave(
-    saveOrUpdate: (asset: Asset) => Observable<any>,
-    asset: Asset,
+    saveOrUpdate: (assetSummary: AssetSummary) => Observable<any>,
+    assetSummary: AssetSummary,
     rowIndex: number
   ) {
-    saveOrUpdate(asset)
-      .pipe(map(resp => resp.result as Asset))
+    saveOrUpdate(assetSummary)
+      .pipe(map(resp => resp.result as AssetSummary))
       .subscribe(
         assetResponse => {
-          this.assetRows[rowIndex] = assetResponse;
+          this.assetSummaryRows[rowIndex] = assetResponse;
           this.viewMode(rowIndex);
+          this.program.assets
+            .find(a => a.id === this.selectedAsset.id).assetSummaries
+            .splice(rowIndex, 1, assetResponse);
         },
         error => {
           this.dialogService.displayDebug(error);
@@ -293,7 +346,7 @@ export class AssetsComponent implements OnInit {
       );
   }
 
-  private validateRowData(row: any) {
+  private validateRowData(row: AssetSummary) {
     let errorMessage = '';
     if (!row.description.length) {
       errorMessage = 'Asset Description cannot be empty.';
@@ -307,20 +360,20 @@ export class AssetsComponent implements OnInit {
   }
 
   private cancelRow(rowIndex: number) {
-    this.assetRows[rowIndex] = this.currentRowDataState.currentEditingRowData;
+    this.assetSummaryRows[rowIndex] = this.currentRowDataState.currentEditingRowData;
     this.viewMode(rowIndex);
   }
 
   private editRow(rowIndex: number, updatePreviousState?: boolean) {
     if (updatePreviousState) {
-      this.currentRowDataState.currentEditingRowData = { ...this.assetRows[rowIndex] };
+      this.currentRowDataState.currentEditingRowData = { ...this.assetSummaryRows[rowIndex] };
     }
     this.editMode(rowIndex);
   }
 
   private deleteRow(rowIndex: number) {
-    if (this.assetRows[rowIndex].id) {
-      this.assetService.removeAssetById(this.assetRows[rowIndex].id)
+    if (this.assetSummaryRows[rowIndex].id) {
+      this.assetSummaryService.removeAssetSummaryById(this.assetSummaryRows[rowIndex].id)
         .subscribe(
           () => {
             this.performDelete(rowIndex);
@@ -334,15 +387,16 @@ export class AssetsComponent implements OnInit {
   }
 
   private performDelete(rowIndex: number) {
-    this.assetRows.splice(rowIndex, 1);
+    this.assetSummaryRows.splice(rowIndex, 1);
     this.currentRowDataState.currentEditingRowIndex = 0;
     this.currentRowDataState.isEditMode = false;
     this.currentRowDataState.isAddMode = false;
     this.assetGridApi.stopEditing();
-    this.assetRows.forEach(row => {
+    this.assetSummaryRows.forEach(row => {
       row.isDisabled = false;
     });
-    this.assetGridApi.setRowData(this.assetRows);
+    this.assetGridApi.setRowData(this.assetSummaryRows);
+    this.program.assets.find(a => a.id === this.selectedAsset.id).assetSummaries.splice(rowIndex, 1);
   }
 
   private viewMode(rowIndex: number) {
@@ -350,23 +404,23 @@ export class AssetsComponent implements OnInit {
     this.currentRowDataState.isEditMode = false;
     this.currentRowDataState.isAddMode = false;
     this.assetGridApi.stopEditing();
-    this.assetRows[rowIndex].action = this.actionState.VIEW;
-    this.assetRows.forEach(row => {
+    this.assetSummaryRows[rowIndex].action = this.actionState.VIEW;
+    this.assetSummaryRows.forEach(row => {
       row.isDisabled = false;
     });
-    this.assetGridApi.setRowData(this.assetRows);
+    this.assetGridApi.setRowData(this.assetSummaryRows);
   }
 
   private editMode(rowIndex: number) {
     this.currentRowDataState.currentEditingRowIndex = rowIndex;
     this.currentRowDataState.isEditMode = true;
-    this.assetRows[rowIndex].action = this.actionState.EDIT;
-    this.assetRows.forEach((row, index) => {
+    this.assetSummaryRows[rowIndex].action = this.actionState.EDIT;
+    this.assetSummaryRows.forEach((row, index) => {
       if (rowIndex !== index) {
         row.isDisabled = true;
       }
     });
-    this.assetGridApi.setRowData(this.assetRows);
+    this.assetGridApi.setRowData(this.assetSummaryRows);
     this.assetGridApi.startEditingCell({
       rowIndex,
       colKey: '0'

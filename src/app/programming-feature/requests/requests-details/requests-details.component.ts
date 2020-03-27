@@ -10,6 +10,7 @@ import { RequestsDetailsFormComponent } from './requests-details-form/requests-d
 import { ProgramStatus } from '../../models/enumerations/program-status.model';
 import { ScopeComponent } from './scope/scope.component';
 import { JustificationComponent } from './justification/justification.component';
+import { AssetsComponent } from './assets/assets.component';
 
 @Component({
   selector: 'pfm-requests-details',
@@ -27,6 +28,8 @@ export class RequestsDetailsComponent implements OnInit {
   scopeComponent: ScopeComponent;
   @ViewChild('justification', { static: false })
   justificationComponent: JustificationComponent;
+  @ViewChild('assets', { static: false })
+  assetsComponent: AssetsComponent;
 
   currentSelectedTab = 1;
   pomYear: number;
@@ -102,6 +105,7 @@ export class RequestsDetailsComponent implements OnInit {
         this.currentSelectedTab = 3;
         break;
       case 'assets':
+        this.assetsComponent.getFundingLineOptions();
         this.currentSelectedTab = 4;
         break;
       case 'justification':
