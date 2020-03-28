@@ -90,12 +90,12 @@ export class AssetsComponent implements OnInit {
     this.setupAssetGrid();
   }
 
-  private loadForm() {
+  private async loadForm() {
     this.form = this.formBuilder.group({
       fundingLineSelect: [''],
       remarks: new FormControl('')
     });
-    this.getFundingLineOptions();
+    await this.getFundingLineOptions();
     this.form.controls.fundingLineSelect.patchValue(0);
   }
 
@@ -139,6 +139,7 @@ export class AssetsComponent implements OnInit {
     });
     this.selectedFundingLine = this.form.get('fundingLineSelect').value;
     if (this.selectedFundingLine.toLowerCase() !== '0') {
+      this.resetState();
       this.assetService.obtainAssetByFundingLineId(this.selectedFundingLine)
         .pipe(map(resp => resp.result as Asset))
         .subscribe(
@@ -209,6 +210,7 @@ export class AssetsComponent implements OnInit {
               this.assetSummaryRows = [];
               this.showAssetGrid = false;
               if (this.assetGridApi) {
+                this.resetState();
                 this.assetGridApi.setRowData(this.assetSummaryRows);
               }
             }
@@ -218,6 +220,19 @@ export class AssetsComponent implements OnInit {
           this.dialogService.displayDebug(error);
         }
       );
+  }
+
+  private resetState() {
+    this.currentRowDataState.currentEditingRowIndex = -1;
+    this.currentRowDataState.isEditMode = false;
+    this.currentRowDataState.isAddMode = false;
+    this.assetSummaryRows.forEach(row => {
+      row.isDisabled = false;
+    });
+    if (this.assetGridApi) {
+      this.assetGridApi.stopEditing();
+      this.assetGridApi.setRowData(this.assetSummaryRows);
+    }
   }
 
   onGridIsReady(assetGridApi: GridApi) {
@@ -388,27 +403,13 @@ export class AssetsComponent implements OnInit {
 
   private performDelete(rowIndex: number) {
     this.assetSummaryRows.splice(rowIndex, 1);
-    this.currentRowDataState.currentEditingRowIndex = 0;
-    this.currentRowDataState.isEditMode = false;
-    this.currentRowDataState.isAddMode = false;
-    this.assetGridApi.stopEditing();
-    this.assetSummaryRows.forEach(row => {
-      row.isDisabled = false;
-    });
-    this.assetGridApi.setRowData(this.assetSummaryRows);
+    this.resetState();
     this.program.assets.find(a => a.id === this.selectedAsset.id).assetSummaries.splice(rowIndex, 1);
   }
 
   private viewMode(rowIndex: number) {
-    this.currentRowDataState.currentEditingRowIndex = 0;
-    this.currentRowDataState.isEditMode = false;
-    this.currentRowDataState.isAddMode = false;
-    this.assetGridApi.stopEditing();
     this.assetSummaryRows[rowIndex].action = this.actionState.VIEW;
-    this.assetSummaryRows.forEach(row => {
-      row.isDisabled = false;
-    });
-    this.assetGridApi.setRowData(this.assetSummaryRows);
+    this.resetState();
   }
 
   private editMode(rowIndex: number) {
