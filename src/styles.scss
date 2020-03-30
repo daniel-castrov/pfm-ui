@@ -26,8 +26,7 @@
 
 @font-face {
   font-family: 'Lato';
-  src: url('assets/fonts/Lato/Lato-Bold.woff2') format('woff2'),
-    url('assets/fonts/Lato/Lato-Bold.woff') format('woff');
+  src: url('assets/fonts/Lato/Lato-Bold.woff2') format('woff2'), url('assets/fonts/Lato/Lato-Bold.woff') format('woff');
   font-weight: 700;
   font-style: normal;
 }
@@ -427,12 +426,6 @@ gridster .gridster-row {
 
 .pfm-datagrid-warning {
   color: #a94442;
-}
-
-.pfm-datagrid-lightgreybg {
-}
-
-.pfm-datagrid-greybg {
 }
 
 .ag-header {
@@ -980,17 +973,11 @@ body {
   background-color: #e6e6e6;
 }
 
-.ag-chart-tabbed-menu
-  .ag-chart-settings
-  .ag-chart-settings-mini-wrapper
-  .ag-group-component-container {
+.ag-chart-tabbed-menu .ag-chart-settings .ag-chart-settings-mini-wrapper .ag-group-component-container {
   margin-left: 0;
 }
 
-.ag-chart-tabbed-menu
-  .ag-chart-settings
-  .ag-chart-settings-mini-wrapper
-  .ag-chart-mini-thumbnail {
+.ag-chart-tabbed-menu .ag-chart-settings .ag-chart-settings-mini-wrapper .ag-chart-mini-thumbnail {
   border: 1px solid #bdc3c7;
   border-radius: 5px;
   margin: 5px;
@@ -1004,32 +991,19 @@ body {
   margin-right: auto;
 }
 
-.ag-chart-tabbed-menu
-  .ag-chart-settings
-  .ag-chart-settings-mini-wrapper
-  .ag-chart-mini-thumbnail:nth-child(3n + 1) {
+.ag-chart-tabbed-menu .ag-chart-settings .ag-chart-settings-mini-wrapper .ag-chart-mini-thumbnail:nth-child(3n + 1) {
   margin-left: 2px;
 }
 
-.ag-chart-tabbed-menu
-  .ag-chart-settings
-  .ag-chart-settings-mini-wrapper
-  .ag-chart-mini-thumbnail:nth-child(3n) {
+.ag-chart-tabbed-menu .ag-chart-settings .ag-chart-settings-mini-wrapper .ag-chart-mini-thumbnail:nth-child(3n) {
   margin-right: 2px;
 }
 
-.ag-chart-tabbed-menu
-  .ag-chart-settings
-  .ag-chart-settings-mini-wrapper
-  .ag-chart-mini-thumbnail.ag-selected {
+.ag-chart-tabbed-menu .ag-chart-settings .ag-chart-settings-mini-wrapper .ag-chart-mini-thumbnail.ag-selected {
   border-color: #0091ea;
 }
 
-.ag-chart-tabbed-menu
-  .ag-chart-settings
-  .ag-chart-settings-nav-bar
-  .ag-nav-card-selector
-  .ag-nav-card-item {
+.ag-chart-tabbed-menu .ag-chart-settings .ag-chart-settings-nav-bar .ag-nav-card-selector .ag-nav-card-item {
   background: #000;
   width: 8px;
   height: 8px;
@@ -1048,10 +1022,7 @@ body {
   margin-left: 4px;
 }
 
-.ag-chart-tabbed-menu
-  .ag-chart-data
-  .ag-chart-data-wrapper
-  .ag-toggle-button.ag-group-item {
+.ag-chart-tabbed-menu .ag-chart-data .ag-chart-data-wrapper .ag-toggle-button.ag-group-item {
   margin: 4.8px 0;
 }
 
