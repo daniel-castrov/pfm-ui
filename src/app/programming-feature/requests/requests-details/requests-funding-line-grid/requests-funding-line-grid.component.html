@@ -11,7 +11,7 @@
   <div class="grid-container" *ngIf="!showSubtotals">
     <pfm-datagrid (gridIsReady)="onNonSummaryGridIsReady($event)" (cellAction)="onNonSummaryCellAction($event)"
                   [columns]="nonSummaryFundingLineColumnsDefinition" [rows]="nonSummaryFundingLineRows"
-                  [showAddSingleRow]="true"
+                  [showAddSingleRow]="true" (rowValueChanged)="onRowValueChanged($event)"
                   [showPagination]="false" (addCtaEvent)="onNonSummaryRowAdd($event)"
                   (mousedown)="onNonSummaryMouseDown($event)">
     </pfm-datagrid>

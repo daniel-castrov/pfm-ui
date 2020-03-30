@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { ColumnApi, GridApi, ColGroupDef, GroupCellRenderer } from '@ag-grid-community/all-modules';
 import { DataGridMessage } from '../../../../pfm-coreui/models/DataGridMessage';
 import { ActionCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/action-cell-renderer/action-cell-renderer.component';
@@ -10,6 +10,17 @@ import { FundingData } from 'src/app/programming-feature/models/funding-data.mod
 import { map } from 'rxjs/operators';
 import { FundingLine } from 'src/app/programming-feature/models/funding-line.model';
 import { Observable } from 'rxjs';
+import { PropertyService } from '../../../services/property.service';
+import { PropertyType } from '../../../models/enumerations/property-type.model';
+import { Property } from '../../../models/property.model';
+import { Appropriation } from '../../../models/appropriation.model';
+import { BaBlin } from '../../../models/ba-blin.model';
+import { SAG } from '../../../models/sag.model';
+import { ExpenditureType } from '../../../models/expenditure-type.model';
+import { WorkUnitCode } from '../../../models/work-unit-code.model';
+import { DropdownCellRendererComponent } from '../../../../pfm-coreui/datagrid/renderers/dropdown-cell-renderer/dropdown-cell-renderer.component';
+import { AttachmentCellRendererComponent } from '../../../../pfm-coreui/datagrid/renderers/attachment-cell-renderer/attachment-cell-renderer.component';
+import { DatagridMbService } from '../../../../pfm-coreui/services/datagrid-mb.service';
 
 @Component({
   selector: 'pfm-requests-funding-line-grid',
@@ -66,6 +77,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
   expanded: boolean;
 
   appnOptions = [];
+  allBaBlins = [];
   baOptions = [];
   sagOptions = [];
   wucdOptions = [];
@@ -73,14 +85,15 @@ export class RequestsFundingLineGridComponent implements OnInit {
 
   constructor(
     private dialogService: DialogService,
+    private propertyService: PropertyService,
     private fundingLineService: FundingLineService
   ) {
   }
 
   ngOnInit() {
-    this.loadDropDownValues();
     this.setupSummaryFundingLineGrid();
     this.setupNonSummaryFundingLineGrid();
+    this.loadDropDownValues();
   }
 
   onNonSummaryGridIsReady(api: GridApi) {
@@ -119,11 +132,31 @@ export class RequestsFundingLineGridComponent implements OnInit {
   }
 
   private loadDropDownValues() {
-    this.appnOptions = [...new Set(this.program.fundingLines.map(fund => fund.appropriation).filter(fund => fund))];
-    this.baOptions = [...new Set(this.program.fundingLines.map(fund => fund.baOrBlin).filter(fund => fund))];
-    this.sagOptions = [...new Set(this.program.fundingLines.map(fund => fund.opAgency).filter(fund => fund))];
-    this.wucdOptions = [...new Set(this.program.fundingLines.map(fund => fund.item).filter(fund => fund))];
-    this.expTypeOptions = [...new Set(this.program.fundingLines.map(fund => fund.programElement).filter(fund => fund))];
+
+    this.propertyService.getByType(PropertyType.APPROPRIATION).subscribe(
+      (res: RestResponse<Property<Appropriation>[]>) => {
+        this.appnOptions = res.result.map(x => x.value).map(x => x.appropriation);
+      });
+
+    this.propertyService.getByType(PropertyType.BA_BLIN).subscribe(
+      (res: RestResponse<Property<BaBlin>[]>) => {
+        this.allBaBlins = res.result.map(x => x.value);
+      });
+
+    this.propertyService.getByType(PropertyType.SAG).subscribe(
+      (res: RestResponse<Property<SAG>[]>) => {
+        this.sagOptions = res.result.map(x => x.value).map(x => x.sag);
+      });
+    this.propertyService.getByType(PropertyType.WORK_UNIT_CODE).subscribe(
+      (res: RestResponse<Property<WorkUnitCode>[]>) => {
+        this.wucdOptions = res.result.map(x => x.value).map(x => x.workUnitCode);
+      });
+
+    this.propertyService.getByType(PropertyType.EXPENDITURE_TYPE).subscribe(
+      (res: RestResponse<Property<ExpenditureType>[]>) => {
+        this.expTypeOptions = res.result.map(x => x.value).map(x => x.code);
+      });
+
   }
 
   private loadDataFromProgram() {
@@ -386,6 +419,9 @@ export class RequestsFundingLineGridComponent implements OnInit {
       case 'cancel':
         this.performNonSummaryCancel(cellAction.rowIndex);
         break;
+      case 'selection-changed':
+        this.performNonSummaryCancel(cellAction.rowIndex);
+        break;
     }
   }
 
@@ -492,12 +528,10 @@ export class RequestsFundingLineGridComponent implements OnInit {
             maxWidth: 110,
             minWidth: 110,
             cellEditor: 'agSelectCellEditor',
-            cellEditorParams: {
-              cellHeight: 100,
-              values: [
-                'Select',
-                ...this.appnOptions
-              ]
+            cellEditorParams: params => {
+              return {
+                values: ['Select', ...this.appnOptions]
+              };
             }
           },
           {
@@ -519,12 +553,10 @@ export class RequestsFundingLineGridComponent implements OnInit {
             maxWidth: 110,
             minWidth: 110,
             cellEditor: 'agSelectCellEditor',
-            cellEditorParams: {
-              cellHeight: 100,
-              values: [
-                'Select',
-                ...this.baOptions
-              ]
+            cellEditorParams: params => {
+              return {
+                values: ['Select', ...this.allBaBlins.map(x => x.code)]
+              };
             }
           },
           {
@@ -541,12 +573,10 @@ export class RequestsFundingLineGridComponent implements OnInit {
             maxWidth: 110,
             minWidth: 110,
             cellEditor: 'agSelectCellEditor',
-            cellEditorParams: {
-              cellHeight: 100,
-              values: [
-                'Select',
-                ...this.sagOptions
-              ]
+            cellEditorParams: params => {
+              return {
+                values: ['Select', ...new Set(this.sagOptions)]
+              };
             }
           },
           {
@@ -563,12 +593,10 @@ export class RequestsFundingLineGridComponent implements OnInit {
             maxWidth: 110,
             minWidth: 110,
             cellEditor: 'agSelectCellEditor',
-            cellEditorParams: {
-              cellHeight: 100,
-              values: [
-                'Select',
-                ...this.wucdOptions
-              ]
+            cellEditorParams: params => {
+              return {
+                values: ['Select', ...this.wucdOptions]
+              };
             }
           },
           {
@@ -585,12 +613,10 @@ export class RequestsFundingLineGridComponent implements OnInit {
             maxWidth: 110,
             minWidth: 110,
             cellEditor: 'agSelectCellEditor',
-            cellEditorParams: {
-              cellHeight: 100,
-              values: [
-                'Select',
-                ...this.expTypeOptions
-              ]
+            cellEditorParams: params => {
+              return {
+                values: ['Select', ...this.expTypeOptions]
+              };
             }
           }
         ]
@@ -1010,6 +1036,17 @@ export class RequestsFundingLineGridComponent implements OnInit {
   expand() {
     this.expanded = true;
     this.summaryFundingLineGridApi.expandAll();
+  }
+
+  onRowValueChanged(params: any) {
+    console.log('se ejecuto');
+    if (params.colDef.headerName === 'APPN') {
+      params.data.baOrBlin = null;
+    }
+
+    this.nonSummaryFundingLineGridApi.refreshCells({
+      force: true
+    });
   }
 }
 

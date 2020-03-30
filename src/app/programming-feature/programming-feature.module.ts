@@ -65,6 +65,8 @@ import { AssetServiceImpl } from './services/asset-impl.service';
 import { PfmSecureFiledownloadModule } from '../pfm-secure-filedownload/pfm-secure-filedownload.module';
 import { AssetSummaryService } from './services/asset-summary.service';
 import { AssetSummaryServiceImpl } from './services/asset-summary-impl.service';
+import { PropertyService } from './services/property.service';
+import { PropertyServiceImpl } from './services/property-impl.service';
 
 @NgModule({
   declarations: [
@@ -121,8 +123,10 @@ import { AssetSummaryServiceImpl } from './services/asset-summary-impl.service';
   { provide: FundingLineService, useClass: FundingLineServiceImpl },
   { provide: AssetService, useClass: AssetServiceImpl },
   { provide: AssetSummaryService, useClass: AssetSummaryServiceImpl },
+    { provide: PropertyService, useClass: PropertyServiceImpl },
     ProgrammingModel,
-    RequestSummaryNavigationHistoryService]
+    RequestSummaryNavigationHistoryService
+  ]
 })
 export class ProgrammingFeatureModule {
 }

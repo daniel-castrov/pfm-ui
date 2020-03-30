@@ -20,13 +20,13 @@ export class EvaluationMeasureServiceImpl extends EvaluationMeasureService {
 
   getByProgram(programId: string): Observable<object> {
     return this.get('evaluationMeasure/programId/' + programId)
-      .pipe(map((res: RestResponse) => this.convertDateArrayFromServer(res)));
+      .pipe(map((res: RestResponse<any>) => this.convertDateArrayFromServer(res)));
   }
 
   createEvaluationMeasure(data: any): Observable<object> {
     const copy = this.convertDateFromClient(data);
     return this.post('evaluationMeasure', copy)
-      .pipe(map((res: RestResponse) => this.convertDateFromServer(res)));
+      .pipe(map((res: RestResponse<any>) => this.convertDateFromServer(res)));
   }
 
   updateEvaluationMeasure(data: any): Observable<object> {
@@ -47,7 +47,7 @@ export class EvaluationMeasureServiceImpl extends EvaluationMeasureService {
     return copy;
   }
 
-  protected convertDateFromServer(res: RestResponse): RestResponse {
+  protected convertDateFromServer(res: RestResponse<any>): RestResponse<any> {
     if (res.result) {
       res.result.currentPerformanceDate = res.result.currentPerformanceDate != null ?
         moment(res.result.currentPerformanceDate) : null;
@@ -55,7 +55,7 @@ export class EvaluationMeasureServiceImpl extends EvaluationMeasureService {
     return res;
   }
 
-  protected convertDateArrayFromServer(res: RestResponse): RestResponse {
+  protected convertDateArrayFromServer(res: RestResponse<any>): RestResponse<any> {
     if (res.result) {
       res.result.forEach((evaluationMeasure: EvaluationMeasure) => {
         evaluationMeasure.currentPerformanceDate = evaluationMeasure.currentPerformanceDate != null ?

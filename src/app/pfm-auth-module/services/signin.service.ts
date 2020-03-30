@@ -20,14 +20,14 @@ export class SigninService extends BaseRestService {
 
   public getUserDetails(): Observable<object> {
     return this.get('mydetails')
-      .pipe(map((res: RestResponse) => this.convertDateFromServer(res)));
+      .pipe(map((res: RestResponse<any>) => this.convertDateFromServer(res)));
   }
 
   public getUserRoles(): Observable<object> {
     return this.get('getroles');
   }
 
-  protected convertDateFromServer(res: RestResponse): RestResponse {
+  protected convertDateFromServer(res: RestResponse<any>): RestResponse<any> {
     if (res.result) {
       res.result.lastLoginDate = res.result.lastLoginDate != null ?
         moment(res.result.lastLoginDate) : null;
