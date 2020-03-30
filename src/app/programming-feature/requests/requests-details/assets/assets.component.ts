@@ -176,6 +176,7 @@ export class AssetsComponent implements OnInit {
       .obtainFundingLinesByProgramId(this.program.id)
       .pipe(
         map(resp => {
+          this.form.controls.fundingLineSelect.disable();
           const fundingLines = resp.result as FundingLine[];
           return fundingLines.map(fundingLine => {
             const appn = fundingLine.appropriation ? fundingLine.appropriation : '';
@@ -197,19 +198,19 @@ export class AssetsComponent implements OnInit {
           this.fundingLineOptions.forEach(option => {
             const asset = this.program.assets && this.program.assets.find(a => a.fundingLineId === option.id);
             if (!asset) {
-              this.assetService
-                .createAsset({
-                  fundingLineId: option.id,
-                  remarks: ''
-                })
-                .subscribe(assetRespose => {
-                  if (!this.program.assets) {
-                    this.program.assets = [];
-                  }
+              this.assetService.obtainAssetByFundingLineId(option.id).subscribe(
+                assetRespose => {
                   this.program.assets.push(assetRespose.result);
-                });
+                },
+                error => {
+                  this.dialogService.displayDebug(error);
+                }
+              );
             }
           });
+          if (!this.program.assets) {
+            this.program.assets = [];
+          }
           if (this.selectedAsset) {
             const asset = this.fundingLineOptions.find(option => option.id === this.selectedAsset.fundingLineId);
             if (!asset) {
@@ -226,7 +227,10 @@ export class AssetsComponent implements OnInit {
         error => {
           this.dialogService.displayDebug(error);
         }
-      );
+      )
+      .finally(() => {
+        this.form.controls.fundingLineSelect.enable();
+      });
   }
 
   private resetState() {
