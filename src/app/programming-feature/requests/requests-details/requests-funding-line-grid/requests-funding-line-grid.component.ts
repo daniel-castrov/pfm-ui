@@ -83,15 +83,10 @@ export class RequestsFundingLineGridComponent implements OnInit {
   wucdOptions = [];
   expTypeOptions = [];
 
-  @ViewChild('appnDropdown', { static: false })
-  appnDropdown: DropdownCellRendererComponent;
-  baBlinDropdown = DropdownCellRendererComponent;
-
   constructor(
     private dialogService: DialogService,
     private propertyService: PropertyService,
-    private fundingLineService: FundingLineService,
-    private datagridMBService: DatagridMbService
+    private fundingLineService: FundingLineService
   ) {
   }
 
@@ -162,12 +157,6 @@ export class RequestsFundingLineGridComponent implements OnInit {
         this.expTypeOptions = res.result.map(x => x.value).map(x => x.code);
       });
 
-    // this.appnOptions = [...new Set(this.program.fundingLines.map(fund => fund.appropriation).filter(fund => fund))];
-    // this.baOptions = [...new Set(this.program.fundingLines.map(fund => fund.baOrBlin).filter(fund => fund))];
-    // this.sagOptions = [...new Set(this.program.fundingLines.map(fund => fund.opAgency).filter(fund => fund))];
-    // this.wucdOptions = [...new Set(this.program.fundingLines.map(fund => fund.item).filter(fund => fund))];
-    // this.expTypeOptions = [...new Set(this.program.fundingLines.map(fund => fund.programElement)
-    // .filter(fund => fund))];
   }
 
   private loadDataFromProgram() {
@@ -538,8 +527,12 @@ export class RequestsFundingLineGridComponent implements OnInit {
             cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-start' },
             maxWidth: 110,
             minWidth: 110,
-            cellRendererFramework: this.appnDropdown
-
+            cellEditor: 'agSelectCellEditor',
+            cellEditorParams: params => {
+              return {
+                values: ['Select', ...this.appnOptions]
+              };
+            }
           },
           {
             colId: 1,
@@ -559,7 +552,12 @@ export class RequestsFundingLineGridComponent implements OnInit {
             },
             maxWidth: 110,
             minWidth: 110,
-            cellRendererFramework: this.baBlinDropdown
+            cellEditor: 'agSelectCellEditor',
+            cellEditorParams: params => {
+              return {
+                values: ['Select', ...this.allBaBlins.map(x => x.code)]
+              };
+            }
           },
           {
             colId: 2,
@@ -577,7 +575,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
             cellEditor: 'agSelectCellEditor',
             cellEditorParams: params => {
               return {
-                values: ['Select', ...this.sagOptions]
+                values: ['Select', ...new Set(this.sagOptions)]
               };
             }
           },
