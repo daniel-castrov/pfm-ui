@@ -25,7 +25,6 @@ import { AssetSummaryService } from 'src/app/programming-feature/services/asset-
   styleUrls: ['./assets.component.scss']
 })
 export class AssetsComponent implements OnInit {
-
   @Input() pomYear: number;
   @Input() program: Program;
 
@@ -74,7 +73,7 @@ export class AssetsComponent implements OnInit {
     private assetSummaryService: AssetSummaryService,
     private tagService: TagService,
     private appModel: AppModel
-  ) { }
+  ) {}
 
   ngOnInit() {
     if (!this.pomYear) {
@@ -100,7 +99,8 @@ export class AssetsComponent implements OnInit {
   }
 
   private async loadToBeUsedBy() {
-    await this.tagService.getByType(this.TO_BE_USED_BY)
+    await this.tagService
+      .getByType(this.TO_BE_USED_BY)
       .toPromise()
       .then(resp => {
         this.toBeUsedByOptions.push({
@@ -109,7 +109,7 @@ export class AssetsComponent implements OnInit {
           name: 'Select',
           type: 'NONE'
         });
-        this.toBeUsedByOptions.push(...resp.result as Tag[]);
+        this.toBeUsedByOptions.push(...(resp.result as Tag[]));
         this.toBeUsedByOptions.push({
           id: null,
           abbr: 'NONE',
@@ -120,7 +120,8 @@ export class AssetsComponent implements OnInit {
   }
 
   private async loadContractorOrManufacturer() {
-    await this.tagService.getByType(this.CONTRACTOR_OR_MANUFACTURER)
+    await this.tagService
+      .getByType(this.CONTRACTOR_OR_MANUFACTURER)
       .toPromise()
       .then(resp => {
         this.contractorOrManufacturerOptions.push({
@@ -129,7 +130,7 @@ export class AssetsComponent implements OnInit {
           name: 'Select',
           type: 'NONE'
         });
-        this.contractorOrManufacturerOptions.push(...resp.result as Tag[]);
+        this.contractorOrManufacturerOptions.push(...(resp.result as Tag[]));
       });
   }
 
@@ -140,14 +141,17 @@ export class AssetsComponent implements OnInit {
     this.selectedFundingLine = this.form.get('fundingLineSelect').value;
     if (this.selectedFundingLine.toLowerCase() !== '0') {
       this.resetState();
-      this.assetService.obtainAssetByFundingLineId(this.selectedFundingLine)
+      this.assetService
+        .obtainAssetByFundingLineId(this.selectedFundingLine)
         .pipe(map(resp => resp.result as Asset))
         .subscribe(
           resp => {
             this.selectedAsset = resp;
             if (this.selectedAsset.assetSummaries) {
-              this.assetSummaryRows = this.selectedAsset.assetSummaries
-                .map(assetSummary => ({ ...assetSummary, action: this.actionState.VIEW }));
+              this.assetSummaryRows = this.selectedAsset.assetSummaries.map(assetSummary => ({
+                ...assetSummary,
+                action: this.actionState.VIEW
+              }));
             } else {
               this.assetSummaryRows = [];
             }
@@ -168,21 +172,24 @@ export class AssetsComponent implements OnInit {
   }
 
   async getFundingLineOptions() {
-    await this.fundingLineService.obtainFundingLinesByProgramId(this.program.id)
-      .pipe(map(resp => {
-        const fundingLines = resp.result as FundingLine[];
-        return fundingLines.map(fundingLine => {
-          const appn = fundingLine.appropriation ? fundingLine.appropriation : '';
-          const baOrBlin = fundingLine.baOrBlin ? fundingLine.baOrBlin : '';
-          const sag = fundingLine.sag ? fundingLine.sag : '';
-          const wucd = fundingLine.wucd ? fundingLine.wucd : '';
-          const expType = fundingLine.expenditureType ? fundingLine.expenditureType : '';
-          return {
-            id: fundingLine.id,
-            value: [appn, baOrBlin, sag, wucd, expType].join('/')
-          };
-        });
-      }))
+    await this.fundingLineService
+      .obtainFundingLinesByProgramId(this.program.id)
+      .pipe(
+        map(resp => {
+          const fundingLines = resp.result as FundingLine[];
+          return fundingLines.map(fundingLine => {
+            const appn = fundingLine.appropriation ? fundingLine.appropriation : '';
+            const baOrBlin = fundingLine.baOrBlin ? fundingLine.baOrBlin : '';
+            const sag = fundingLine.sag ? fundingLine.sag : '';
+            const wucd = fundingLine.wucd ? fundingLine.wucd : '';
+            const expType = fundingLine.expenditureType ? fundingLine.expenditureType : '';
+            return {
+              id: fundingLine.id,
+              value: [appn, baOrBlin, sag, wucd, expType].join('/')
+            };
+          });
+        })
+      )
       .toPromise()
       .then(
         resp => {
@@ -190,17 +197,17 @@ export class AssetsComponent implements OnInit {
           this.fundingLineOptions.forEach(option => {
             const asset = this.program.assets && this.program.assets.find(a => a.fundingLineId === option.id);
             if (!asset) {
-              this.assetService.createAsset(
-                {
+              this.assetService
+                .createAsset({
                   fundingLineId: option.id,
                   remarks: ''
-                }
-              ).subscribe(assetRespose => {
-                if (!this.program.assets) {
-                  this.program.assets = [];
-                }
-                this.program.assets.push(assetRespose.result);
-              });
+                })
+                .subscribe(assetRespose => {
+                  if (!this.program.assets) {
+                    this.program.assets = [];
+                  }
+                  this.program.assets.push(assetRespose.result);
+                });
             }
           });
           if (this.selectedAsset) {
@@ -265,17 +272,15 @@ export class AssetsComponent implements OnInit {
         totalCost: 0
       };
     }
-    this.assetSummaryRows.push(
-      {
-        assetId: this.selectedAsset.id,
-        description: '',
-        contractorOrManufacturer: '',
-        toBeUsedBy: '',
-        details: assetDetails,
+    this.assetSummaryRows.push({
+      assetId: this.selectedAsset.id,
+      description: '',
+      contractorOrManufacturer: '',
+      toBeUsedBy: '',
+      details: assetDetails,
 
-        action: this.actionState.EDIT
-      }
-    );
+      action: this.actionState.EDIT
+    });
     const asset = this.program.assets.find(a => a.id === this.selectedAsset.id);
     if (!asset.assetSummaries) {
       asset.assetSummaries = [];
@@ -321,17 +326,9 @@ export class AssetsComponent implements OnInit {
         row.toBeUsedBy = '';
       }
       if (this.currentRowDataState.isAddMode || !row.id) {
-        this.performSave(
-          this.assetSummaryService.createAssetSummary.bind(this.assetSummaryService),
-          row,
-          rowIndex
-        );
+        this.performSave(this.assetSummaryService.createAssetSummary.bind(this.assetSummaryService), row, rowIndex);
       } else {
-        this.performSave(
-          this.assetSummaryService.updateAssetSummary.bind(this.assetSummaryService),
-          row,
-          rowIndex
-        );
+        this.performSave(this.assetSummaryService.updateAssetSummary.bind(this.assetSummaryService), row, rowIndex);
       }
       this.viewMode(rowIndex);
     } else {
@@ -351,8 +348,8 @@ export class AssetsComponent implements OnInit {
           this.assetSummaryRows[rowIndex] = assetResponse;
           this.viewMode(rowIndex);
           this.program.assets
-            .find(a => a.id === this.selectedAsset.id).assetSummaries
-            .splice(rowIndex, 1, assetResponse);
+            .find(a => a.id === this.selectedAsset.id)
+            .assetSummaries.splice(rowIndex, 1, assetResponse);
         },
         error => {
           this.dialogService.displayDebug(error);
@@ -381,21 +378,23 @@ export class AssetsComponent implements OnInit {
 
   private editRow(rowIndex: number, updatePreviousState?: boolean) {
     if (updatePreviousState) {
-      this.currentRowDataState.currentEditingRowData = { ...this.assetSummaryRows[rowIndex] };
+      this.currentRowDataState.currentEditingRowData = {
+        ...this.assetSummaryRows[rowIndex]
+      };
     }
     this.editMode(rowIndex);
   }
 
   private deleteRow(rowIndex: number) {
     if (this.assetSummaryRows[rowIndex].id) {
-      this.assetSummaryService.removeAssetSummaryById(this.assetSummaryRows[rowIndex].id)
-        .subscribe(
-          () => {
-            this.performDelete(rowIndex);
-          },
-          error => {
-            this.dialogService.displayDebug(error);
-          });
+      this.assetSummaryService.removeAssetSummaryById(this.assetSummaryRows[rowIndex].id).subscribe(
+        () => {
+          this.performDelete(rowIndex);
+        },
+        error => {
+          this.dialogService.displayDebug(error);
+        }
+      );
     } else {
       this.performDelete(rowIndex);
     }
@@ -440,83 +439,101 @@ export class AssetsComponent implements OnInit {
   private setupAssetGrid() {
     const columnGroups: any[] = [];
     for (let i = this.pomYear - 2, x = 0; i < this.pomYear + 6; i++, x++) {
-      const headerName = i < this.pomYear ?
-        'PY' + (this.pomYear - i === 1 ? '' : '-' + (this.pomYear - i - 1)) :
-        i > this.pomYear ? 'BY' + (i === this.pomYear + 1 ? '' : '+' + (i - this.pomYear - 1)) :
-          'CY';
-      columnGroups.push(
-        {
-          groupId: 'main-header',
-          headerName,
-          headerClass: this.headerClassFunc,
-          marryChildren: true,
-          children: [
-            {
-              groupId: 'sub-header',
-              headerClass: this.headerClassFunc,
-              headerName: 'FY' + i,
-              children: [
-                {
-                  colId: 2 + x * 3 + 1,
-                  headerName: 'Unit Cost',
-                  editable: i > this.pomYear,
-                  suppressMovable: true,
-                  filter: false,
-                  sortable: false,
-                  suppressMenu: true,
-                  cellClass: 'numeric-class',
-                  cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
-                  minWidth: 80,
-                  valueGetter: params => params.data.details[i].unitCost,
-                  valueSetter: params => {
-                    params.data.details[i].unitCost = Number(params.newValue);
-                    return true;
-                  },
-                  cellEditor: NumericCellEditor.create({ returnUndefinedOnZero: false }),
-                  valueFormatter: params => this.currencyFormatter(params.data.details[i].unitCost)
+      const headerName =
+        i < this.pomYear
+          ? 'PY' + (this.pomYear - i === 1 ? '' : '-' + (this.pomYear - i - 1))
+          : i > this.pomYear
+          ? 'BY' + (i === this.pomYear + 1 ? '' : '+' + (i - this.pomYear - 1))
+          : 'CY';
+      columnGroups.push({
+        groupId: 'main-header',
+        headerName,
+        headerClass: this.headerClassFunc,
+        marryChildren: true,
+        children: [
+          {
+            groupId: 'sub-header',
+            headerClass: this.headerClassFunc,
+            headerName: 'FY' + i,
+            children: [
+              {
+                colId: 2 + x * 3 + 1,
+                headerName: 'Unit Cost',
+                editable: i > this.pomYear,
+                suppressMovable: true,
+                filter: false,
+                sortable: false,
+                suppressMenu: true,
+                cellClass: 'numeric-class',
+                cellStyle: {
+                  display: 'flex',
+                  'align-items': 'center',
+                  'justify-content': 'flex-end'
                 },
-                {
-                  colId: 2 + x * 3 + 2,
-                  headerName: 'Qty',
-                  editable: i > this.pomYear,
-                  suppressMovable: true,
-                  suppressMenu: true,
-                  filter: false,
-                  sortable: false,
-                  cellClass: 'numeric-class',
-                  valueGetter: params => params.data.details[i].quantity,
-                  valueSetter: params => {
-                    params.data.details[i].quantity = Number(params.newValue);
-                    return true;
-                  },
-                  cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
-                  minWidth: 80,
-                  cellEditor: NumericCellEditor.create({ returnUndefinedOnZero: false })
+                minWidth: 80,
+                valueGetter: params => params.data.details[i].unitCost,
+                valueSetter: params => {
+                  params.data.details[i].unitCost = Number(params.newValue);
+                  return true;
                 },
-                {
-                  colId: 2 + x * 3 + 3,
-                  headerName: 'Total Cost',
-                  editable: i > this.pomYear,
-                  suppressMovable: true,
-                  suppressMenu: true,
-                  filter: false,
-                  sortable: false,
-                  cellClass: 'numeric-class',
-                  cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
-                  minWidth: 80,
-                  valueGetter: params => params.data.details[i].totalCost,
-                  valueSetter: params => {
-                    params.data.details[i].totalCost = Number(params.newValue);
-                    return true;
-                  },
-                  cellEditor: NumericCellEditor.create({ returnUndefinedOnZero: false }),
-                  valueFormatter: params => this.currencyFormatter(params.data.details[i].totalCost)
-                }
-              ]
-            }
-          ]
-        }
-      );
+                cellEditor: NumericCellEditor.create({
+                  returnUndefinedOnZero: false
+                }),
+                valueFormatter: params => this.currencyFormatter(params.data.details[i].unitCost)
+              },
+              {
+                colId: 2 + x * 3 + 2,
+                headerName: 'Qty',
+                editable: i > this.pomYear,
+                suppressMovable: true,
+                suppressMenu: true,
+                filter: false,
+                sortable: false,
+                cellClass: 'numeric-class',
+                valueGetter: params => params.data.details[i].quantity,
+                valueSetter: params => {
+                  params.data.details[i].quantity = Number(params.newValue);
+                  return true;
+                },
+                cellStyle: {
+                  display: 'flex',
+                  'align-items': 'center',
+                  'justify-content': 'flex-end'
+                },
+                minWidth: 80,
+                cellEditor: NumericCellEditor.create({
+                  returnUndefinedOnZero: false
+                })
+              },
+              {
+                colId: 2 + x * 3 + 3,
+                headerName: 'Total Cost',
+                editable: i > this.pomYear,
+                suppressMovable: true,
+                suppressMenu: true,
+                filter: false,
+                sortable: false,
+                cellClass: 'numeric-class',
+                cellStyle: {
+                  display: 'flex',
+                  'align-items': 'center',
+                  'justify-content': 'flex-end'
+                },
+                minWidth: 80,
+                valueGetter: params => params.data.details[i].totalCost,
+                valueSetter: params => {
+                  params.data.details[i].totalCost = Number(params.newValue);
+                  return true;
+                },
+                cellEditor: NumericCellEditor.create({
+                  returnUndefinedOnZero: false
+                }),
+                valueFormatter: params => this.currencyFormatter(params.data.details[i].totalCost)
+              }
+            ]
+          }
+        ]
+      });
     }
     this.assetColumnsDefinition = [
       {
@@ -536,7 +553,11 @@ export class AssetsComponent implements OnInit {
             suppressMenu: true,
             pinned: 'left',
             cellClass: 'text-class',
-            cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-start' },
+            cellStyle: {
+              display: 'flex',
+              'align-items': 'center',
+              'justify-content': 'flex-start'
+            },
             maxWidth: 180,
             minWidth: 180
           },
@@ -563,7 +584,7 @@ export class AssetsComponent implements OnInit {
             cellEditorParams: {
               cellHeight: 100,
               values: this.contractorOrManufacturerOptions.map(tag => tag.name)
-            },
+            }
           },
           {
             colId: 2,
@@ -576,16 +597,20 @@ export class AssetsComponent implements OnInit {
             suppressMenu: true,
             pinned: 'left',
             cellClass: 'text-class',
-            cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-start' },
+            cellStyle: {
+              display: 'flex',
+              'align-items': 'center',
+              'justify-content': 'flex-start'
+            },
             maxWidth: 120,
             minWidth: 120,
             cellEditor: 'select',
             cellEditorParams: {
               cellHeight: 100,
               values: this.toBeUsedByOptions.map(tag => tag.name)
-            },
-          },
-        ],
+            }
+          }
+        ]
       },
       ...columnGroups,
       {
@@ -611,7 +636,12 @@ export class AssetsComponent implements OnInit {
   }
 
   private currencyFormatter(params) {
-    return '$ ' + Number(params).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+    return (
+      '$ ' +
+      Number(params)
+        .toString()
+        .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+    );
   }
 
   private headerClassFunc(params: any) {
@@ -676,13 +706,17 @@ export class AssetsComponent implements OnInit {
 
     // Auto-Calculate TotalCost
     if (previousColId > 2 && previousColId < 27) {
-      if ((previousColId - 2) % 3 === 2) { // Quantity Column
-        const unitCostInput: any = window.document
-          .querySelector('div[row-index="' + rowIndex + '"] > div[col-id="' + (previousColId - 1) + '"] > input');
-        const quantityInput: any = window.document
-          .querySelector('div[row-index="' + rowIndex + '"] > div[col-id="' + previousColId + '"] > input');
-        const totalCostInput: any = window.document
-          .querySelector('div[row-index="' + rowIndex + '"] > div[col-id="' + (previousColId + 1) + '"] > input');
+      if ((previousColId - 2) % 3 === 2) {
+        // Quantity Column
+        const unitCostInput: any = window.document.querySelector(
+          'div[row-index="' + rowIndex + '"] > div[col-id="' + (previousColId - 1) + '"] > input'
+        );
+        const quantityInput: any = window.document.querySelector(
+          'div[row-index="' + rowIndex + '"] > div[col-id="' + previousColId + '"] > input'
+        );
+        const totalCostInput: any = window.document.querySelector(
+          'div[row-index="' + rowIndex + '"] > div[col-id="' + (previousColId + 1) + '"] > input'
+        );
         totalCostInput.value = unitCostInput.value * quantityInput.value;
       }
     }
@@ -696,24 +730,19 @@ export class AssetsComponent implements OnInit {
 
     return nextCell;
   }
-
 }
 
 export interface RowDataStateInterface {
-
   currentEditingRowIndex?: number;
   isAddMode?: boolean;
   isEditMode?: boolean;
   currentEditingRowData?: any;
-
 }
 
 export interface DeleteDialogInterface {
-
   title: string;
   bodyText?: string;
   display?: boolean;
   cellAction?: DataGridMessage;
   delete?: (rowIndex: number) => void;
-
 }
