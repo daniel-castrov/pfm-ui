@@ -2,24 +2,39 @@
   <pfm-toggle-input [checked]="showSubtotals" [label]="'Show Subtotals'" (valueChanged)="onToggleValueChanged($event)">
   </pfm-toggle-input>
   <div class="grid-container" *ngIf="showSubtotals">
-    <pfm-datagrid [extras]="expandCollapse" (gridIsReady)="onSummaryGridReady($event)"
-                  [columns]="summaryFundingLineColumnsDefinition"
-                  [rows]="summaryFundingLineRows" (cellAction)="onSummaryCellAction($event)" [showPagination]="false"
-                  (mousedown)="onSummaryMouseDown($event)" [showGrandTotal]="true">
+    <pfm-datagrid
+      [extras]="expandCollapse"
+      (gridIsReady)="onSummaryGridReady($event)"
+      [columns]="summaryFundingLineColumnsDefinition"
+      [rows]="summaryFundingLineRows"
+      (cellAction)="onSummaryCellAction($event)"
+      [showPagination]="false"
+      (mousedown)="onSummaryMouseDown($event)"
+      [showGrandTotal]="true"
+    >
     </pfm-datagrid>
   </div>
   <div class="grid-container" *ngIf="!showSubtotals">
-    <pfm-datagrid (gridIsReady)="onNonSummaryGridIsReady($event)" (cellAction)="onNonSummaryCellAction($event)"
-                  [columns]="nonSummaryFundingLineColumnsDefinition" [rows]="nonSummaryFundingLineRows"
-                  [showAddSingleRow]="true" (rowValueChanged)="onRowValueChanged($event)"
-                  [showPagination]="false" (addCtaEvent)="onNonSummaryRowAdd($event)"
-                  (mousedown)="onNonSummaryMouseDown($event)">
+    <pfm-datagrid
+      (gridIsReady)="onNonSummaryGridIsReady($event)"
+      (cellAction)="onNonSummaryCellAction($event)"
+      [columns]="nonSummaryFundingLineColumnsDefinition"
+      [rows]="nonSummaryFundingLineRows"
+      [showAddSingleRow]="true"
+      [showPagination]="false"
+      (addCtaEvent)="onNonSummaryRowAdd($event)"
+      (mousedown)="onNonSummaryMouseDown($event)"
+    >
     </pfm-datagrid>
   </div>
 </div>
 <ng-container *ngIf="deleteDialog.display">
-  <pfm-custom-dialog [title]="deleteDialog.title" [body]="deleteBody" [actions]="deleteActions"
-                     (onCancelDialog)="onCancelDeleteDialog()"></pfm-custom-dialog>
+  <pfm-custom-dialog
+    [title]="deleteDialog.title"
+    [body]="deleteBody"
+    [actions]="deleteActions"
+    (onCancelDialog)="onCancelDeleteDialog()"
+  ></pfm-custom-dialog>
 
   <ng-template #deleteBody>
     <span>{{ deleteDialog.bodyText }}</span>

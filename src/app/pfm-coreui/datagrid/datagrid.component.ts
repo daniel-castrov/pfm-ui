@@ -12,14 +12,13 @@ import { AllModules } from '@ag-grid-enterprise/all-modules';
   styleUrls: ['./datagrid.component.scss']
 })
 export class DatagridComponent implements OnInit {
-
   @Input() columns: any; // Data grid columns
   @Input() rows: any; // Data grid rows
   @Input() showAddDropdownCta: boolean; // Controls visibility of add dropdown CTA
   @Input() showAddSingleRow: boolean;
   @Input() showGrandTotal: boolean;
   @Input() showPagination = true; // Controls visibility and activation of pagination
-  @Input() addDropdownCtaTooltip = 'Add';  // Add dropdown CTA tooltip
+  @Input() addDropdownCtaTooltip = 'Add'; // Add dropdown CTA tooltip
   @Input() addDropdownCtaOptions: ListItem[];
   @Input() tabToNextCell;
   @Input() isExternalFilterPresent;
@@ -37,7 +36,6 @@ export class DatagridComponent implements OnInit {
   @Output() rowDragLeaveEvent: EventEmitter<any> = new EventEmitter<any>();
   @Output() rowDragEndEvent: EventEmitter<any> = new EventEmitter<any>();
   @Output() columnIsReady: EventEmitter<ColumnApi> = new EventEmitter<ColumnApi>();
-  @Output() rowValueChanged: EventEmitter<any> = new EventEmitter<any>();
 
   excelMessageHeader: any;
   excelMessageFooter: any;
@@ -60,8 +58,7 @@ export class DatagridComponent implements OnInit {
     return false;
   };
 
-  constructor(private datagridMBService: DatagridMbService) {
-  }
+  constructor(private datagridMBService: DatagridMbService) {}
 
   handleAddCta(itemId: string) {
     this.addCtaEvent.emit({ action: itemId });
@@ -85,10 +82,6 @@ export class DatagridComponent implements OnInit {
     this.rowDragEndEvent.emit(event);
   }
 
-  onRowValueChanged(event: any) {
-    this.rowValueChanged.emit(event);
-  }
-
   onCellClicked(event: any): void {
     const message: DataGridMessage = new DataGridMessage();
 
@@ -100,8 +93,7 @@ export class DatagridComponent implements OnInit {
     this.cellAction.emit(message);
   }
 
-  onModelUpdated() {
-  }
+  onModelUpdated() {}
 
   onGridReady(params: any) {
     this.api = params.api;
@@ -144,33 +136,38 @@ export class DatagridComponent implements OnInit {
       this.options = [item, item2];
     }
     this.excelMessageHeader = [
-      [{
-        styleId: 'message',
-        data: {
-          type: 'String',
-          value: this.excelMessage
-        },
-        mergeAcross: this.columns.length - 1
-      }],
+      [
+        {
+          styleId: 'message',
+          data: {
+            type: 'String',
+            value: this.excelMessage
+          },
+          mergeAcross: this.columns.length - 1
+        }
+      ],
       []
     ];
     this.excelMessageFooter = [
       [],
-      [{
-        styleId: 'message',
-        data: {
-          type: 'String',
-          value: this.excelMessage
-        },
-        mergeAcross: this.columns.length - 1
-      }]
+      [
+        {
+          styleId: 'message',
+          data: {
+            type: 'String',
+            value: this.excelMessage
+          },
+          mergeAcross: this.columns.length - 1
+        }
+      ]
     ];
     this.excelStyles = [
       {
         id: 'message',
         alignment: { horizontal: 'CenterAcrossSelection' },
         interior: {
-          color: '#008000', pattern: 'Solid'
+          color: '#008000',
+          pattern: 'Solid'
         },
         dataType: 'string'
       }
