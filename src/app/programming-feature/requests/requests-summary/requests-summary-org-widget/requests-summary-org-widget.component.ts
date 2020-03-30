@@ -12,7 +12,6 @@ import { RequestSummaryNavigationHistoryService } from '../requests-summary-navi
   styleUrls: ['./requests-summary-org-widget.component.scss']
 })
 export class RequestsSummaryOrgWidgetComponent implements OnInit {
-
   @Input() griddata: ProgramSummary[];
   @Input() orgs: Organization[];
   @Input() roles: Role[];
@@ -57,7 +56,7 @@ export class RequestsSummaryOrgWidgetComponent implements OnInit {
     }
   };
 
-  constructor(private requestSummaryNavigationHistoryService: RequestSummaryNavigationHistoryService) { }
+  constructor(private requestSummaryNavigationHistoryService: RequestSummaryNavigationHistoryService) {}
 
   onResize(width: number, height: number): void {
     this.chartReady = false;
@@ -85,15 +84,14 @@ export class RequestsSummaryOrgWidgetComponent implements OnInit {
   loadPreviousSelection() {
     const previousOrganizationWidget = this.requestSummaryNavigationHistoryService.getSelectedOrganizationWidget();
     if (previousOrganizationWidget) {
-      const currentOrganizationWidget = this.availableCharts
-        .find(chart => chart.id === previousOrganizationWidget);
+      const currentOrganizationWidget = this.availableCharts.find(chart => chart.id === previousOrganizationWidget);
       if (currentOrganizationWidget) {
         this.defaultChart = currentOrganizationWidget;
       }
     }
-    this.requestSummaryNavigationHistoryService.updateRequestSummaryNavigationHistory(
-      { selectedOrganizationWidget: this.defaultChart.id }
-      );
+    this.requestSummaryNavigationHistoryService.updateRequestSummaryNavigationHistory({
+      selectedOrganizationWidget: this.defaultChart.id
+    });
   }
 
   chartSelected(chartType: any) {
@@ -110,9 +108,9 @@ export class RequestsSummaryOrgWidgetComponent implements OnInit {
       this.defaultChart = this.availableCharts[2];
       this.chartProgramStatus();
     }
-    this.requestSummaryNavigationHistoryService.updateRequestSummaryNavigationHistory(
-      { selectedOrganizationWidget: this.defaultChart.id }
-      );
+    this.requestSummaryNavigationHistoryService.updateRequestSummaryNavigationHistory({
+      selectedOrganizationWidget: this.defaultChart.id
+    });
   }
 
   private chartOrganization() {
@@ -137,9 +135,14 @@ export class RequestsSummaryOrgWidgetComponent implements OnInit {
 
       this.griddata.forEach(ps => {
         const orgName = this.getOrgName(ps.organiztionId);
-        orgDataTable.push(
-          [ps.programName, orgName, ((ps.fundsTotal / toltaltfunding) * 100), this.getOrgColors(orgName)]
-        );
+        if (orgName) {
+          orgDataTable.push([
+            ps.programName,
+            orgName,
+            (ps.fundsTotal / toltaltfunding) * 100,
+            this.getOrgColors(orgName)
+          ]);
+        }
       });
       // set data to chart
       this.treeMapChart.dataTable = orgDataTable; // organizationTable;
@@ -179,7 +182,6 @@ export class RequestsSummaryOrgWidgetComponent implements OnInit {
       // this.treeMapChart.component.draw();
       this.treeMapChart = Object.assign({}, this.treeMapChart);
     }, 0);
-
   }
 
   private chartProgramStatus() {
@@ -226,10 +228,10 @@ export class RequestsSummaryOrgWidgetComponent implements OnInit {
         }
       });
 
-      const outstanding = ((outstandingcount * 100) / toltalNoOfPrograms);
-      const saved = ((savedcount * 100) / toltalNoOfPrograms);
-      const rejected = ((rejectedcount * 100) / toltalNoOfPrograms);
-      const approved = ((approvedcount * 100) / toltalNoOfPrograms);
+      const outstanding = (outstandingcount * 100) / toltalNoOfPrograms;
+      const saved = (savedcount * 100) / toltalNoOfPrograms;
+      const rejected = (rejectedcount * 100) / toltalNoOfPrograms;
+      const approved = (approvedcount * 100) / toltalNoOfPrograms;
 
       // assignedTo = assignedTo.replace('_',' ');
       statusTable.push([roleacrynm + ' : Outstanding', 'Program Status', outstanding, 100]);
@@ -246,7 +248,6 @@ export class RequestsSummaryOrgWidgetComponent implements OnInit {
     this.treeMapChart = Object.assign({}, this.treeMapChart);
     // this.treeMapChart.component.draw();
     // this.treeMapChart.goUpAndDraw();
-
   }
 
   private toListItem(years: string[]): ListItem[] {
