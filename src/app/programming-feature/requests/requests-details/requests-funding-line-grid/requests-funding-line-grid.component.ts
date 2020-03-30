@@ -1,5 +1,5 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
-import { ColumnApi, GridApi, ColGroupDef, GroupCellRenderer, ICellEditorParams } from '@ag-grid-community/all-modules';
+import { Component, OnInit, Input } from '@angular/core';
+import { ColumnApi, GridApi, ColGroupDef, GroupCellRenderer } from '@ag-grid-community/all-modules';
 import { DataGridMessage } from '../../../../pfm-coreui/models/DataGridMessage';
 import { ActionCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/action-cell-renderer/action-cell-renderer.component';
 import { NumericCellEditor } from 'src/app/ag-grid/cell-editors/NumericCellEditor';
@@ -18,10 +18,6 @@ import { BaBlin } from '../../../models/ba-blin.model';
 import { SAG } from '../../../models/sag.model';
 import { ExpenditureType } from '../../../models/expenditure-type.model';
 import { WorkUnitCode } from '../../../models/work-unit-code.model';
-import { DropdownCellRendererComponent } from '../../../../pfm-coreui/datagrid/renderers/dropdown-cell-renderer/dropdown-cell-renderer.component';
-import { AttachmentCellRendererComponent } from '../../../../pfm-coreui/datagrid/renderers/attachment-cell-renderer/attachment-cell-renderer.component';
-import { DatagridMbService } from '../../../../pfm-coreui/services/datagrid-mb.service';
-import { ISelectCellEditorParams } from 'ag-grid-community/dist/lib/rendering/cellEditors/selectCellEditor';
 
 @Component({
   selector: 'pfm-requests-funding-line-grid',
