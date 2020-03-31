@@ -20,13 +20,21 @@ export class CreatePlanningComponent implements OnInit {
   availableYears: ListItem[];
   selectedYear: string;
 
+  yearSkipDialog: DialogInterface = {
+    title: 'Caution',
+    bodyText:
+      'Warning! You have skipped over one or more years. ' +
+      'If you continue, the skipped years will never be available for planning. ' +
+      'Do you want to continue?'
+  };
+
   constructor(
     private appModel: AppModel,
     private planningService: PlanningService,
     private dialogService: DialogService,
     private toastService: ToastService,
     private router: Router
-  ) { }
+  ) {}
 
   yearSelected(year: ListItem): void {
     this.selectedYear = year.value;
@@ -35,33 +43,53 @@ export class CreatePlanningComponent implements OnInit {
   onCreatePlanningPhase(): void {
     const year: any = this.selectedYear;
     if (this.yearDropDown.isValid()) {
-      this.busy = true;
-      const planningData = this.appModel.planningData.find(obj => obj.id === year + '_id');
-
-      this.planningService.createPlanningPhase(planningData).subscribe(
-        resp => {
-          this.busy = false;
-
-          // Update model state
-          planningData.state = 'CREATED';
-
-          this.toastService.displaySuccess(`Planning phase for ${year} successfully created.`);
-
-          this.router.navigate(['home']);
-        },
-        error => {
-          this.busy = false;
-          this.dialogService.displayDebug(error);
-        });
+      if (this.availableYears[0].value === year) {
+        this.performPlanningPhaseCreation(year);
+      } else {
+        this.yearSkipDialog.display = true;
+      }
     } else {
       this.toastService.displayError(`Please select a year from the dropdown.`);
     }
   }
 
+  onYearSkipData() {
+    this.performPlanningPhaseCreation(Number(this.selectedYear));
+  }
+
+  onCancelYearSkipDialog() {
+    this.yearSkipDialog.display = false;
+  }
+
+  performPlanningPhaseCreation(year: number) {
+    this.busy = true;
+    const planningData = this.appModel.planningData.find(obj => obj.id === year + '_id');
+    this.planningService.createPlanningPhase(planningData).subscribe(
+      resp => {
+        this.busy = false;
+
+        // Update model state
+        planningData.state = 'CREATED';
+
+        this.toastService.displaySuccess(`Planning phase for ${year} successfully created.`);
+
+        this.router.navigate(['home']);
+      },
+      error => {
+        this.busy = false;
+        this.dialogService.displayDebug(error);
+      }
+    );
+  }
+
   ngOnInit() {
     const years: string[] = [];
+    const createdYears = this.appModel.planningData.filter(
+      year => year.state && year.state.toUpperCase() === 'CREATED'
+    );
+    const maxCreatedYear = Math.max(...createdYears.map(year => year.year));
     for (const item of this.appModel.planningData) {
-      if (!item.state) {
+      if (item.year > maxCreatedYear) {
         years.push(item.name);
       }
     }
@@ -75,10 +103,14 @@ export class CreatePlanningComponent implements OnInit {
       item.id = year;
       item.name = year;
       item.value = year;
-      item.disabled = !!items.length;
       items.push(item);
     }
     return items;
   }
+}
 
+export interface DialogInterface {
+  title: string;
+  bodyText?: string;
+  display?: boolean;
 }

@@ -5,8 +5,39 @@
 </div>
 
 <ng-container *ngIf="availableYears">
-  <pfm-dropdown (selectionChanged)="yearSelected($event)" [type]="'labelDropdown'" [label]="'For:'" [required]="true"
-    [id]="id" [fieldName]="'name'" [fieldLabel]="'name'" [options]="availableYears"></pfm-dropdown>
+  <pfm-dropdown
+    (selectionChanged)="yearSelected($event)"
+    [type]="'labelDropdown'"
+    [label]="'For:'"
+    [required]="true"
+    [id]="id"
+    [fieldName]="'name'"
+    [fieldLabel]="'name'"
+    [options]="availableYears"
+  ></pfm-dropdown>
+</ng-container>
+
+<ng-container *ngIf="yearSkipDialog.display">
+  <pfm-custom-dialog
+    [title]="yearSkipDialog.title"
+    [body]="yearSkipBody"
+    [actions]="yearSkipActions"
+    (onCancelDialog)="onCancelYearSkipDialog()"
+  ></pfm-custom-dialog>
+
+  <ng-template #yearSkipBody>
+    <span>{{ yearSkipDialog.bodyText }}</span>
+  </ng-template>
+
+  <ng-template #yearSkipActions>
+    <div class="pull-left">
+      <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onYearSkipData()">Continue</button>
+    </div>
+
+    <div class="pull-right">
+      <pfm-cancel-cta (onCancelClicked)="onCancelYearSkipDialog()"></pfm-cancel-cta>
+    </div>
+  </ng-template>
 </ng-container>
 
 <pfm-busy [busy]="busy"></pfm-busy>
