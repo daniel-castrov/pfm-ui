@@ -1047,3 +1047,12 @@ body {
   background-color: white;
   color: #000;
 }
+
+.modal-footer > .pull-left {
+  margin: 0 !important;
+}
+
+.modal-footer > .pull-right {
+  margin-left: auto;
+  align-self: center;
+}

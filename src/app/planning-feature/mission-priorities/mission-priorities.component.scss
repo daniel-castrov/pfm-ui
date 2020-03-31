@@ -1,30 +1,21 @@
-.grid-container{
+.grid-container {
   width: 100%;
   height: calc(100vh);
 }
 
-.section-actions{
+.section-actions {
   display: flex;
   flex-grow: 1;
 }
 
-.float-right{
+.float-right {
   align-items: flex-end;
 }
 
-.float-left{
+.float-left {
   align-items: flex-start;
 }
 
-.modal{
-
-}
-
-.modal-content{
+.modal-content {
   width: 80vh;
-}
-
-
-.pull-left{
-  width: 100%;
 }
