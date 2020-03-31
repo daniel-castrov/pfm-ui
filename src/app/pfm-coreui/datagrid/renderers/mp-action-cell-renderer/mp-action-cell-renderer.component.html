@@ -1,0 +1,25 @@
+<pfm-action-cell-renderer
+  [data]="data"
+  [params]="params"
+  [columnApi]="columnApi"
+  [options]="options"
+  [disabled]="disabled"
+  [extraActions]="extraActions"
+>
+</pfm-action-cell-renderer>
+
+<ng-container></ng-container>
+
+<ng-template #extraActions>
+  <div
+    *ngIf="data.canEdit"
+    class="action"
+    [class.green-color]="params.data.selected"
+    [class.amber-color]="!params.data.selected"
+    (click)="onSelected('toggle-select')"
+  >
+    <span [title]="title">
+      <fa name="check-circle"></fa>
+    </span>
+  </div>
+</ng-template>

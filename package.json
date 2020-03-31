@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve -o",
+    "prod": "ng serve -o -c production",
     "local": "ng serve -o -c local",
     "build": "ng build",
     "test": "jest --coverage --logHeapUsage -w=2 --config src/test/jest.conf.js",
