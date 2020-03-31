@@ -94,7 +94,6 @@ export class AssetsComponent implements OnInit {
       fundingLineSelect: [''],
       remarks: new FormControl('')
     });
-    await this.getFundingLineOptions();
     this.form.controls.fundingLineSelect.patchValue(0);
   }
 
@@ -167,6 +166,7 @@ export class AssetsComponent implements OnInit {
           }
         );
     } else {
+      this.selectedAsset = null;
       this.showAssetGrid = false;
     }
   }
