@@ -13,8 +13,17 @@
 
   <ng-container *ngIf="data.canDelete">
     <div class="action" title="Delete" *ngIf="!data.isSingleDelete">
-      <pfm-dropdown (selectionChanged)="handleDelete($event)" [type]="'iconDropdown'" [iconName]="'trash'"
-        [label]="'Delete'" [required]="true" [id]="id" [fieldName]="'name'" [fieldLabel]="'name'" [options]="options">
+      <pfm-dropdown
+        (selectionChanged)="handleDelete($event)"
+        [type]="'iconDropdown'"
+        [iconName]="'trash'"
+        [label]="'Delete'"
+        [required]="true"
+        [id]="id"
+        [fieldName]="'name'"
+        [fieldLabel]="'name'"
+        [options]="options"
+      >
       </pfm-dropdown>
     </div>
     <div class="action" (click)="onSelected('delete-row')" *ngIf="data.isSingleDelete && data.canEdit">
@@ -30,4 +39,6 @@
       <fa name="upload" title="Add attachment"></fa>
     </div>
   </ng-container>
+
+  <ng-container *ngTemplateOutlet="extraActions"></ng-container>
 </div>

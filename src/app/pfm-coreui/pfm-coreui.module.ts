@@ -40,6 +40,7 @@ import { IsVisibleDirective } from './directives/is-visible.directive';
 import { ToggleInputComponent } from './form-inputs/toggle-input/toggle-input.component';
 import { MessageService } from 'primeng/api';
 import { DropdownCellRendererComponent } from './datagrid/renderers/dropdown-cell-renderer/dropdown-cell-renderer.component';
+import { MpActionCellRendererComponent } from './datagrid/renderers/mp-action-cell-renderer/mp-action-cell-renderer.component';
 
 @NgModule({
   entryComponents: [DropdownCellRendererComponent],
@@ -73,7 +74,8 @@ import { DropdownCellRendererComponent } from './datagrid/renderers/dropdown-cel
     DatePickerCellEditorComponent,
     DatePickerCellRendererComponent,
     IsVisibleDirective,
-    ToggleInputComponent
+    ToggleInputComponent,
+    MpActionCellRendererComponent
   ],
   imports: [
     ToastModule,
@@ -84,6 +86,7 @@ import { DropdownCellRendererComponent } from './datagrid/renderers/dropdown-cel
     NgbModule,
     CKEditorModule,
     AgGridModule.withComponents([
+      MpActionCellRendererComponent,
       ActionCellRendererComponent,
       AttachmentCellRendererComponent,
       DropdownCellRendererComponent,
@@ -124,11 +127,9 @@ import { DropdownCellRendererComponent } from './datagrid/renderers/dropdown-cel
     DatePickerCellEditorComponent,
     DatePickerCellRendererComponent,
     IsVisibleDirective,
-    ToggleInputComponent
+    ToggleInputComponent,
+    MpActionCellRendererComponent
   ],
-  providers: [
-    MessageService
-  ]
+  providers: [MessageService]
 })
-export class PfmCoreuiModule {
-}
+export class PfmCoreuiModule {}

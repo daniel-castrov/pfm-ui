@@ -2,18 +2,19 @@ import { Attachment } from '../../pfm-common-models/Attachment';
 import { Action } from '../../pfm-common-models/Action';
 
 export class MissionPriority {
-  public created:Date;
-  public modified:Date;
-  public modifiedBy:string;
-  public createdBy:string;
-  public id:string;
-  public planningPhaseId:string;
-  public order:number;
-  public title:string;
-  public description:string;
-  public attachments:Attachment[];
+  created: Date;
+  modified: Date;
+  modifiedBy: string;
+  createdBy: string;
+  id: string;
+  planningPhaseId: string;
+  order: number;
+  title: string;
+  description: string;
+  attachments: Attachment[];
+  selected: boolean;
 
-  //client side only
-  public attachmentsDisabled:boolean;
-  public actions:Action;
+  // client side only
+  attachmentsDisabled: boolean;
+  actions: Action;
 }

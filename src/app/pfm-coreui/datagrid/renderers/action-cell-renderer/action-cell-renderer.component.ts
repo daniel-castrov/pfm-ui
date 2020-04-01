@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit, TemplateRef } from '@angular/core';
 import { DatagridMbService } from '../../../services/datagrid-mb.service';
 import { DataGridMessage } from '../../../models/DataGridMessage';
-import { ColumnApi, GridApi } from '@ag-grid-community/all-modules';
+import { ColumnApi } from '@ag-grid-community/all-modules';
 import { ListItem } from 'src/app/pfm-common-models/ListItem';
 
 @Component({
@@ -10,14 +10,20 @@ import { ListItem } from 'src/app/pfm-common-models/ListItem';
   styleUrls: ['./action-cell-renderer.component.scss']
 })
 export class ActionCellRendererComponent implements OnInit {
-
+  @Input()
   data: any;
+  @Input()
   params: any;
+  @Input()
   columnApi: ColumnApi;
+  @Input()
   options: ListItem[];
+  @Input()
   disabled: boolean;
+  @Input()
+  extraActions: TemplateRef<any>;
 
-  constructor(private datagridMBService: DatagridMbService) { }
+  constructor(protected datagridMBService: DatagridMbService) {}
 
   onSelected(action: string) {
     const message: DataGridMessage = new DataGridMessage();
@@ -63,5 +69,4 @@ export class ActionCellRendererComponent implements OnInit {
   enable() {
     this.disabled = false;
   }
-
 }

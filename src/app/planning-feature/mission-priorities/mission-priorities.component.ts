@@ -1,13 +1,12 @@
-import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { PlanningService } from '../services/planning-service';
 import { ListItem } from '../../pfm-common-models/ListItem';
 import { DropdownComponent } from '../../pfm-coreui/form-inputs/dropdown/dropdown.component';
 import { DialogService } from '../../pfm-coreui/services/dialog.service';
 import { MissionPriority } from '../models/MissionPriority';
-import { ActionCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/action-cell-renderer/action-cell-renderer.component';
 import { AttachmentCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/attachment-cell-renderer/attachment-cell-renderer.component';
 import { DataGridMessage } from '../../pfm-coreui/models/DataGridMessage';
-import { GridApi, ColumnApi, Column, CellPosition } from '@ag-grid-community/all-modules';
+import { CellPosition, Column, ColumnApi, GridApi } from '@ag-grid-community/all-modules';
 import { AppModel } from '../../pfm-common-models/AppModel';
 import { FileMetaData } from '../../pfm-common-models/FileMetaData';
 import { Attachment } from '../../pfm-common-models/Attachment';
@@ -15,6 +14,7 @@ import { SecureDownloadComponent } from '../../pfm-secure-filedownload/secure-do
 import { Action } from '../../pfm-common-models/Action';
 import { PlanningPhase } from '../models/PlanningPhase';
 import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
+import { MpActionCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/mp-action-cell-renderer/mp-action-cell-renderer.component';
 
 @Component({
   selector: 'pfm-planning',
@@ -22,7 +22,6 @@ import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
   styleUrls: ['./mission-priorities.component.scss']
 })
 export class MissionPrioritiesComponent implements OnInit {
-
   @ViewChild(DropdownComponent, { static: false }) yearDropDown: DropdownComponent;
   @ViewChild(SecureDownloadComponent, { static: false }) secureDownloadComponent: SecureDownloadComponent;
 
@@ -56,7 +55,6 @@ export class MissionPrioritiesComponent implements OnInit {
     private dialogService: DialogService,
     private toastService: ToastService
   ) {
-
     this.columns = [
       {
         headerName: 'Priority',
@@ -65,7 +63,9 @@ export class MissionPrioritiesComponent implements OnInit {
         minWidth: 75,
         rowDrag: true,
         rowDragManaged: true,
-        valueGetter(params) { return params.node.rowIndex + 1; },
+        valueGetter(params) {
+          return params.node.rowIndex + 1;
+        },
         cellClass: 'numeric-class',
         cellStyle: { display: 'flex', 'align-items': 'right' }
       },
@@ -97,7 +97,7 @@ export class MissionPrioritiesComponent implements OnInit {
         field: 'actions',
         minWidth: 175,
         maxWidth: 175,
-        cellRendererFramework: ActionCellRendererComponent
+        cellRendererFramework: MpActionCellRendererComponent
       }
     ];
     this.tabToNextCell = this.tabToNextCell.bind(this);
@@ -183,6 +183,11 @@ export class MissionPrioritiesComponent implements OnInit {
       }
       case 'download-attachment': {
         this.downloadAttachment(cellAction);
+        break;
+      }
+      case 'toggle-select': {
+        this.toggleSelect(cellAction.rowIndex);
+        console.log(cellAction);
       }
     }
   }
@@ -203,6 +208,7 @@ export class MissionPrioritiesComponent implements OnInit {
       mp.description = '';
       mp.attachments = [];
       mp.attachmentsDisabled = true;
+      mp.selected = false;
       mp.actions = new Action();
       mp.actions.canEdit = false;
       mp.actions.canSave = true;
@@ -255,7 +261,8 @@ export class MissionPrioritiesComponent implements OnInit {
         error => {
           this.busy = false;
           this.dialogService.displayDebug(error);
-        });
+        }
+      );
     }
   }
 
@@ -280,13 +287,15 @@ export class MissionPrioritiesComponent implements OnInit {
         error => {
           this.busy = false;
           this.dialogService.displayDebug(error);
-        });
+        }
+      );
     }
   }
 
   handleNewAttachments(newFile: FileMetaData): void {
     this.showUploadDialog = false;
-    if (newFile) {// undefined is returned for cancel/errors, so only proceed if we have a value
+    if (newFile) {
+      // undefined is returned for cancel/errors, so only proceed if we have a value
       // wrap the FileMetaData in an Attachment object
       const attachment: Attachment = new Attachment();
       attachment.file = newFile;
@@ -392,7 +401,8 @@ export class MissionPrioritiesComponent implements OnInit {
           error => {
             this.busy = false;
             this.dialogService.displayDebug(error);
-          });
+          }
+        );
       } else {
         // Ensure creation information is preserved
         this.planningService.updateMissionPriority([serverMp]).subscribe(
@@ -405,7 +415,8 @@ export class MissionPrioritiesComponent implements OnInit {
           error => {
             this.busy = false;
             this.dialogService.displayDebug(error);
-          });
+          }
+        );
       }
     } else {
       if (row.title.length === 0) {
@@ -448,7 +459,8 @@ export class MissionPrioritiesComponent implements OnInit {
         error => {
           this.busy = false;
           this.dialogService.displayDebug(error);
-        });
+        }
+      );
     }
   }
 
@@ -484,7 +496,8 @@ export class MissionPrioritiesComponent implements OnInit {
       error => {
         this.busy = false;
         this.dialogService.displayDebug(error);
-      });
+      }
+    );
 
     this.showDeleteRowDialog = false;
   }
@@ -556,7 +569,8 @@ export class MissionPrioritiesComponent implements OnInit {
       error => {
         this.busy = false;
         this.dialogService.displayDebug(error);
-      });
+      }
+    );
   }
 
   lockPlanningPhase() {
@@ -571,7 +585,8 @@ export class MissionPrioritiesComponent implements OnInit {
       error => {
         this.busy = false;
         this.dialogService.displayDebug(error);
-      });
+      }
+    );
   }
 
   closePlanningPhase() {
@@ -586,7 +601,8 @@ export class MissionPrioritiesComponent implements OnInit {
       error => {
         this.busy = false;
         this.dialogService.displayDebug(error);
-      });
+      }
+    );
   }
 
   cancelDialog() {
@@ -626,4 +642,7 @@ export class MissionPrioritiesComponent implements OnInit {
     }
   }
 
+  private toggleSelect(rowIndex: number) {
+    this.missionData[rowIndex].selected = !this.missionData[rowIndex].selected;
+  }
 }
