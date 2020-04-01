@@ -11,10 +11,10 @@ import { AppModel } from '../../pfm-common-models/AppModel';
 import { FileMetaData } from '../../pfm-common-models/FileMetaData';
 import { Attachment } from '../../pfm-common-models/Attachment';
 import { SecureDownloadComponent } from '../../pfm-secure-filedownload/secure-download/secure-download.component';
-import { Action } from '../../pfm-common-models/Action';
 import { PlanningPhase } from '../models/PlanningPhase';
 import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
 import { MpActionCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/mp-action-cell-renderer/mp-action-cell-renderer.component';
+import { PlanningStatus } from '../models/enumerators/planning-status.model';
 
 @Component({
   selector: 'pfm-planning',
@@ -24,6 +24,30 @@ import { MpActionCellRendererComponent } from '../../pfm-coreui/datagrid/rendere
 export class MissionPrioritiesComponent implements OnInit {
   @ViewChild(DropdownComponent, { static: false }) yearDropDown: DropdownComponent;
   @ViewChild(SecureDownloadComponent, { static: false }) secureDownloadComponent: SecureDownloadComponent;
+
+  actionState = {
+    VIEW: {
+      canSave: false,
+      canEdit: true,
+      canDelete: true,
+      canUpload: false,
+      hideStatus: false
+    },
+    PLANNING_CREATED_VIEW: {
+      canSave: false,
+      canEdit: true,
+      canDelete: true,
+      canUpload: false,
+      hideStatus: true
+    },
+    EDIT: {
+      canEdit: false,
+      canSave: true,
+      canDelete: true,
+      canUpload: true,
+      hideStatus: false
+    }
+  };
 
   showDeleteAttachmentDialog: boolean;
   showDeleteRowDialog: boolean;
@@ -37,12 +61,13 @@ export class MissionPrioritiesComponent implements OnInit {
   selectedYear: string;
   selectedPlanningPhase: PlanningPhase;
   missionData: MissionPriority[];
-  POMManager = false;
+  POMManager: boolean;
   showUploadDialog: boolean;
   selectedRowId: number;
   selectedRow: MissionPriority;
   selectedImportYear: string;
   availableImportYears: ListItem[];
+  hidePlanningPhaseActionButton: boolean;
 
   columns: any[];
   rowDragEnterEvent: any;
@@ -54,7 +79,37 @@ export class MissionPrioritiesComponent implements OnInit {
     private planningService: PlanningService,
     private dialogService: DialogService,
     private toastService: ToastService
-  ) {
+  ) {}
+
+  ngOnInit() {
+    this.setupGrid();
+    this.POMManager = this.appModel.userDetails.userRole.isPOMManager;
+    const years: string[] = [];
+    const status: string[] = [
+      PlanningStatus.CREATED,
+      PlanningStatus.OPEN,
+      PlanningStatus.LOCKED,
+      PlanningStatus.CLOSED
+    ];
+    for (const item of this.appModel.planningData) {
+      // Opened, Locked or Closed.
+      if (status.indexOf(item.state) !== -1) {
+        years.push(item.name);
+      }
+    }
+    // trigger a default selection
+    if (this.appModel.selectedYear) {
+      this.selectedYear = this.appModel.selectedYear;
+      this.appModel.selectedYear = undefined;
+      this.yearSelected({ name: this.selectedYear });
+      if (this.POMManager && this.selectedYear) {
+        this.hidePlanningPhaseActionButton = true;
+      }
+    }
+    this.availableYears = this.toListItem(years);
+  }
+
+  private setupGrid() {
     this.columns = [
       {
         headerName: 'Priority',
@@ -209,11 +264,7 @@ export class MissionPrioritiesComponent implements OnInit {
       mp.attachments = [];
       mp.attachmentsDisabled = true;
       mp.selected = false;
-      mp.actions = new Action();
-      mp.actions.canEdit = false;
-      mp.actions.canSave = true;
-      mp.actions.canDelete = true;
-      mp.actions.canUpload = true;
+      mp.actions = this.actionState.EDIT;
       this.missionData.push(mp);
 
       this.gridApi.setRowData(this.missionData);
@@ -267,6 +318,7 @@ export class MissionPrioritiesComponent implements OnInit {
   }
 
   yearSelected(year: any): void {
+    this.hidePlanningPhaseActionButton = false;
     this.selectedYear = year ? year.name : undefined;
     if (this.selectedYear) {
       this.busy = true;
@@ -313,25 +365,6 @@ export class MissionPrioritiesComponent implements OnInit {
     }
   }
 
-  ngOnInit() {
-    this.POMManager = this.appModel.userDetails.userRole.isPOMManager;
-    const years: string[] = [];
-    const status: string[] = ['CREATED', 'OPEN', 'LOCKED', 'CLOSED'];
-    for (const item of this.appModel.planningData) {
-      // Opened, Locked or Closed.
-      if (status.indexOf(item.state) !== -1) {
-        years.push(item.name);
-      }
-    }
-    // trigger a default selection
-    if (this.appModel.selectedYear) {
-      this.selectedYear = this.appModel.selectedYear;
-      this.appModel.selectedYear = undefined;
-      this.yearSelected({ name: this.selectedYear });
-    }
-    this.availableYears = this.toListItem(years);
-  }
-
   private toListItem(years: string[]): ListItem[] {
     const items: ListItem[] = [];
     for (const year of years) {
@@ -349,9 +382,7 @@ export class MissionPrioritiesComponent implements OnInit {
 
   private editMode(rowId: number) {
     // toggle actions
-    this.missionData[rowId].actions.canUpload = true;
-    this.missionData[rowId].actions.canSave = true;
-    this.missionData[rowId].actions.canEdit = false;
+    this.missionData[rowId].actions = this.actionState.EDIT;
     // disable attachments dropdown
     this.missionData[rowId].attachmentsDisabled = true;
     this.gridApi.setRowData(this.missionData);
@@ -360,9 +391,7 @@ export class MissionPrioritiesComponent implements OnInit {
   private viewMode(rowId: number) {
     // Toggle actions
     this.gridApi.stopEditing();
-    this.missionData[rowId].actions.canUpload = false;
-    this.missionData[rowId].actions.canSave = false;
-    this.missionData[rowId].actions.canEdit = true;
+    this.missionData[rowId].actions = this.actionViewSetup();
     // Enable attachments dropdown
     this.missionData[rowId].attachmentsDisabled = false;
     this.gridApi.setRowData(this.missionData);
@@ -388,11 +417,7 @@ export class MissionPrioritiesComponent implements OnInit {
           resp => {
             this.busy = false;
             this.missionData[rowId] = (resp as any).result;
-            this.missionData[rowId].actions = new Action();
-            this.missionData[rowId].actions.canEdit = false;
-            this.missionData[rowId].actions.canSave = true;
-            this.missionData[rowId].actions.canDelete = true;
-            this.missionData[rowId].actions.canUpload = true;
+            this.missionData[rowId].actions = this.actionState.EDIT;
 
             // Update view
             this.viewMode(rowId);
@@ -563,7 +588,7 @@ export class MissionPrioritiesComponent implements OnInit {
       resp => {
         this.busy = false;
         // Update model state
-        this.selectedPlanningPhase.state = 'OPEN';
+        this.selectedPlanningPhase.state = PlanningStatus.OPEN;
         this.toastService.displaySuccess(`Planning Phase for ${this.selectedYear} successfully opened`);
       },
       error => {
@@ -579,7 +604,7 @@ export class MissionPrioritiesComponent implements OnInit {
       resp => {
         this.busy = false;
         // Update model state
-        this.selectedPlanningPhase.state = 'LOCKED';
+        this.selectedPlanningPhase.state = PlanningStatus.LOCKED;
         this.toastService.displaySuccess(`Planning Phase for ${this.selectedYear} successfully locked`);
       },
       error => {
@@ -595,7 +620,7 @@ export class MissionPrioritiesComponent implements OnInit {
       resp => {
         this.busy = false;
         // Update model state
-        this.selectedPlanningPhase.state = 'CLOSED';
+        this.selectedPlanningPhase.state = PlanningStatus.CLOSED;
         this.toastService.displaySuccess(`Planning Phase for ${this.selectedYear} successfully closed`);
       },
       error => {
@@ -634,15 +659,18 @@ export class MissionPrioritiesComponent implements OnInit {
       clientMP.attachmentsDisabled = false;
     }
     if (!clientMP.actions) {
-      clientMP.actions = new Action();
-      clientMP.actions.canUpload = false;
-      clientMP.actions.canSave = false;
-      clientMP.actions.canEdit = true;
-      clientMP.actions.canDelete = true;
+      clientMP.actions = this.actionViewSetup();
     }
   }
 
   private toggleSelect(rowIndex: number) {
     this.missionData[rowIndex].selected = !this.missionData[rowIndex].selected;
+  }
+
+  private actionViewSetup() {
+    if (this.selectedPlanningPhase.state === PlanningStatus.CREATED) {
+      return this.actionState.PLANNING_CREATED_VIEW;
+    }
+    return this.actionState.VIEW;
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { ActionCellRendererComponent } from '../action-cell-renderer/action-cell-renderer.component';
 
 @Component({
@@ -8,6 +8,9 @@ import { ActionCellRendererComponent } from '../action-cell-renderer/action-cell
 })
 export class MpActionCellRendererComponent extends ActionCellRendererComponent implements OnInit {
   title = '';
+
+  @Input()
+  hideStatus: boolean;
 
   agInit(params) {
     super.agInit(params);

@@ -6,6 +6,7 @@ import { DropdownComponent } from '../../pfm-coreui/form-inputs/dropdown/dropdow
 import { Router } from '@angular/router';
 import { AppModel } from '../../pfm-common-models/AppModel';
 import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
+import { PlanningStatus } from '../models/enumerators/planning-status.model';
 
 @Component({
   selector: 'pfm-planning',
@@ -69,11 +70,12 @@ export class CreatePlanningComponent implements OnInit {
         this.busy = false;
 
         // Update model state
-        planningData.state = 'CREATED';
+        planningData.state = PlanningStatus.CREATED;
+        this.appModel.selectedYear = this.selectedYear;
 
         this.toastService.displaySuccess(`Planning phase for ${year} successfully created.`);
 
-        this.router.navigate(['home']);
+        this.router.navigate(['/planning/mission-priorities']);
       },
       error => {
         this.busy = false;
@@ -84,9 +86,7 @@ export class CreatePlanningComponent implements OnInit {
 
   ngOnInit() {
     const years: string[] = [];
-    const createdYears = this.appModel.planningData.filter(
-      year => year.state && year.state.toUpperCase() === 'CREATED'
-    );
+    const createdYears = this.appModel.planningData.filter(year => year.state);
     const maxCreatedYear = Math.max(...createdYears.map(year => year.year));
     for (const item of this.appModel.planningData) {
       if (item.year > maxCreatedYear) {
