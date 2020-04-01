@@ -7,14 +7,13 @@ import { Router } from '@angular/router';
 import { Role } from '../../../../pfm-common-models/Role';
 import { ListItem } from '../../../../pfm-common-models/ListItem';
 import { AppModel } from '../../../../pfm-common-models/AppModel';
-import { RoleConstants } from 'src/app/pfm-common-models/RoleConstants';
+import { RoleConstants } from 'src/app/pfm-common-models/role-contants.model';
 
 @Component({
   selector: 'pfm-requests-summary-grid',
   templateUrl: './requests-summary-grid.component.html',
   styleUrls: ['./requests-summary-grid.component.scss']
 })
-
 export class RequestsSummaryGridComponent implements OnInit {
   @Input() pomYear: number;
   @Input() dropdownOptions: ListItem[];
@@ -33,11 +32,7 @@ export class RequestsSummaryGridComponent implements OnInit {
   id = 'requests-summary-component';
   busy: boolean;
 
-  constructor(
-    private programmingModel: ProgrammingModel,
-    private appModel: AppModel,
-    private router: Router
-  ) {
+  constructor(private programmingModel: ProgrammingModel, private appModel: AppModel, private router: Router) {
     this.columns = [
       {
         groupId: 'sub-header',
@@ -50,7 +45,7 @@ export class RequestsSummaryGridComponent implements OnInit {
             headerName: 'Program',
             field: 'programName',
             editable: false,
-            cellClass: 'pfm-datagrid-text pfm-datagrid-text-underline pfm-datagrid-lightgreybg',
+            cellClass: 'pfm-datagrid-text pfm-datagrid-text-underline pfm-datagrid-lightgreybg'
           }
         ]
       },
@@ -65,7 +60,7 @@ export class RequestsSummaryGridComponent implements OnInit {
             headerName: 'Assigned To',
             field: 'assignedTo',
             editable: false,
-            cellClass: 'pfm-datagrid-text pfm-datagrid-lightgreybg',
+            cellClass: 'pfm-datagrid-text pfm-datagrid-lightgreybg'
           }
         ]
       },
@@ -80,10 +75,10 @@ export class RequestsSummaryGridComponent implements OnInit {
             headerName: 'Status',
             field: 'status',
             editable: false,
-            cellClass: 'pfm-datagrid-text pfm-datagrid-warning pfm-datagrid-lightgreybg',
+            cellClass: 'pfm-datagrid-text pfm-datagrid-warning pfm-datagrid-lightgreybg'
           }
         ]
-      },
+      }
     ];
 
     this.gridMinYear = this.programmingModel.pom.fy - 3;
@@ -91,63 +86,64 @@ export class RequestsSummaryGridComponent implements OnInit {
     for (let i = this.gridMinYear; i <= this.gridMaxYear; i++) {
       let fyColumnHeaderName = i.toString();
       fyColumnHeaderName = 'FY' + fyColumnHeaderName.substr(fyColumnHeaderName.length - 2);
-      this.columns.push(
-        {
-          groupId: 'sub-header',
-          headerName: this.columnHeaders[i - this.gridMinYear],
-          headerClass: this.headerClassFunc,
-          marryChildren: true,
-          children: [
-            {
-              groupId: 'main-header',
-              headerName: fyColumnHeaderName,
-              field: i.toString(),
-              maxWidth: 100,
-              minWidth: 100,
-              rowDrag: false,
-              cellClass: 'pfm-datagrid-numeric-class'
-                + ((i >= this.programmingModel.pom.fy) ? ' pfm-datagrid-lightgreybg' : ''),
-              valueFormatter: params => this.currencyFormatter(params.data.funds[params.colDef.field])
-            }
-          ]
-        }
-      );
-    }
-
-    this.columns.push(
-      {
+      this.columns.push({
         groupId: 'sub-header',
-        headerName: '',
+        headerName: this.columnHeaders[i - this.gridMinYear],
         headerClass: this.headerClassFunc,
         marryChildren: true,
         children: [
           {
             groupId: 'main-header',
-            headerName: 'FYDP Total',
-            field: 'fundsTotal',
-            maxWidth: 120,
-            minWidth: 120,
+            headerName: fyColumnHeaderName,
+            field: i.toString(),
+            maxWidth: 100,
+            minWidth: 100,
             rowDrag: false,
-            cellClass: 'pfm-datagrid-numeric-class',
-            valueFormatter: params => this.currencyFormatter(params.data[params.colDef.field])
-          },
-          {
-            groupId: 'main-header',
-            headerName: 'Actions',
-            maxWidth: 120,
-            minWidth: 120,
-            rowDrag: false,
+            cellClass:
+              'pfm-datagrid-numeric-class' + (i >= this.programmingModel.pom.fy ? ' pfm-datagrid-lightgreybg' : ''),
+            valueFormatter: params => this.currencyFormatter(params.data.funds[params.colDef.field])
           }
         ]
-      },
-    );
+      });
+    }
+
+    this.columns.push({
+      groupId: 'sub-header',
+      headerName: '',
+      headerClass: this.headerClassFunc,
+      marryChildren: true,
+      children: [
+        {
+          groupId: 'main-header',
+          headerName: 'FYDP Total',
+          field: 'fundsTotal',
+          maxWidth: 120,
+          minWidth: 120,
+          rowDrag: false,
+          cellClass: 'pfm-datagrid-numeric-class',
+          valueFormatter: params => this.currencyFormatter(params.data[params.colDef.field])
+        },
+        {
+          groupId: 'main-header',
+          headerName: 'Actions',
+          maxWidth: 120,
+          minWidth: 120,
+          rowDrag: false
+        }
+      ]
+    });
     this.isExternalFilterPresent = this.isExternalFilterPresent.bind(this);
     this.doesExternalFilterPass = this.doesExternalFilterPass.bind(this);
     this.resetGridData();
   }
 
   currencyFormatter(params) {
-    return '$ ' + Math.floor(params).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+    return (
+      '$ ' +
+      Math.floor(params)
+        .toString()
+        .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+    );
   }
 
   handleCellAction(cellAction: DataGridMessage): void {
@@ -179,12 +175,12 @@ export class RequestsSummaryGridComponent implements OnInit {
   onCellClicked(cellAction: DataGridMessage): void {
     if (cellAction.columnId === 'programName') {
       // navigate to the program details
-      this.router.navigate(
-        ['/programming/requests/details/' + cellAction.rowData['id'],
+      this.router.navigate([
+        '/programming/requests/details/' + cellAction.rowData['id'],
         {
           pomYear: this.pomYear
         }
-        ]);
+      ]);
     }
   }
 
@@ -197,12 +193,11 @@ export class RequestsSummaryGridComponent implements OnInit {
     this.columnApi = columnApi;
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   getRoleName(key: string): string {
     const role = this.programmingModel.roles.get(key);
-    return (role) ? role.name : 'Unknown Role';
+    return role ? role.name : 'Unknown Role';
   }
 
   resetGridData() {

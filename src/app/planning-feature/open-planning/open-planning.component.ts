@@ -6,6 +6,7 @@ import { DialogService } from '../../pfm-coreui/services/dialog.service';
 import { Router } from '@angular/router';
 import { AppModel } from '../../pfm-common-models/AppModel';
 import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
+import { PlanningStatus } from '../models/enumerators/planning-status.model';
 
 @Component({
   selector: 'pfm-planning',
@@ -13,7 +14,6 @@ import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
   styleUrls: ['./open-planning.component.scss']
 })
 export class OpenPlanningComponent implements OnInit {
-
   @ViewChild(DropdownComponent, { static: false }) yearDropDown: DropdownComponent;
 
   id = 'open-planning-component';
@@ -27,14 +27,13 @@ export class OpenPlanningComponent implements OnInit {
     private dialogService: DialogService,
     private router: Router,
     private toastService: ToastService
-  ) { }
+  ) {}
 
   yearSelected(year: ListItem): void {
     this.selectedYear = year.value;
   }
 
   onOpenPlanningPhase(): void {
-
     if (this.yearDropDown.isValid()) {
       this.busy = true;
       const year: any = this.selectedYear;
@@ -45,7 +44,7 @@ export class OpenPlanningComponent implements OnInit {
 
           // Update shared model state
           this.appModel.selectedYear = year;
-          planningData.state = 'OPEN';
+          planningData.state = PlanningStatus.OPEN;
 
           this.toastService.displaySuccess(`Planning phase for ${year} successfully opened.`);
 
@@ -54,7 +53,8 @@ export class OpenPlanningComponent implements OnInit {
         error => {
           this.busy = false;
           this.dialogService.displayDebug(error);
-        });
+        }
+      );
     } else {
       this.toastService.displayError(`Please select a year from the dropdown.`);
     }
@@ -63,7 +63,7 @@ export class OpenPlanningComponent implements OnInit {
   ngOnInit() {
     const years: string[] = [];
     for (const item of this.appModel.planningData) {
-      if (item.state === 'CREATED') {
+      if (item.state === PlanningStatus.CREATED) {
         years.push(item.name);
       }
     }
@@ -81,5 +81,4 @@ export class OpenPlanningComponent implements OnInit {
     }
     return items;
   }
-
 }

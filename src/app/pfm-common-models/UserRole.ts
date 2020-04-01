@@ -1,7 +1,6 @@
-import { RoleConstants } from './RoleConstants';
+import { RoleConstants } from './role-contants.model';
 
 export class UserRole {
-
   isAdmin: boolean;
   isBudgetManager: boolean;
   isPOMManager: boolean;
@@ -15,7 +14,6 @@ export class UserRole {
   isFinancialManager: boolean;
 
   constructor(roles: string[]) {
-
     if (roles.includes(RoleConstants.BUDGET_MANAGER)) {
       this.isBudgetManager = true;
     }

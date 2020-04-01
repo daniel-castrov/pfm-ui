@@ -1,5 +1,4 @@
-export enum RoleConstants {
-
+export const enum RoleConstants {
   POM_MANAGER = 'POM_MANAGER',
   BUDGET_MANAGER = 'BUDGET_MANAGER',
   FUNDS_REQUESTOR = 'FUNDS_REQUESTOR',
@@ -10,5 +9,4 @@ export enum RoleConstants {
   USER_APPROVER = 'USER_APPROVER',
   USER = 'USER',
   ORGANIZATION_MEMBER = 'ORGANIZATION_MEMBER'
-
 }

@@ -5,8 +5,9 @@ import { DialogService } from '../../pfm-coreui/services/dialog.service';
 import { ListItem } from '../../pfm-common-models/ListItem';
 import { SigninService } from '../../pfm-auth-module/services/signin.service';
 import { DropdownComponent } from '../../pfm-coreui/form-inputs/dropdown/dropdown.component';
-import { RoleConstants } from 'src/app/pfm-common-models/RoleConstants';
+import { RoleConstants } from 'src/app/pfm-common-models/role-contants.model';
 import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
+import { PlanningStatus } from '../models/enumerators/planning-status.model';
 
 @Component({
   selector: 'pfm-planning',
@@ -28,13 +29,13 @@ export class LockPlanningComponent implements OnInit {
     private signInService: SigninService,
     private router: Router,
     private toastService: ToastService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.POMManager = this.appModel.userDetails.userRole.isPOMManager;
     const years: string[] = [];
     for (const item of this.appModel.planningData) {
-      if (item.state === 'OPEN') {
+      if (item.state === PlanningStatus.OPEN) {
         years.push(item.name);
       }
     }
@@ -44,7 +45,6 @@ export class LockPlanningComponent implements OnInit {
   lockPlanningPhase() {
     this.busy = true;
     if (this.yearDropDown.isValid()) {
-
       // Update shared model state
       this.appModel.selectedYear = this.selectedYear;
 
@@ -79,7 +79,8 @@ export class LockPlanningComponent implements OnInit {
       error => {
         this.busy = false;
         this.dialogService.displayDebug(error);
-      });
+      }
+    );
   }
 
   yearSelected(item: any): void {
