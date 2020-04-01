@@ -665,6 +665,7 @@ export class MissionPrioritiesComponent implements OnInit {
 
   private toggleSelect(rowIndex: number) {
     this.missionData[rowIndex].selected = !this.missionData[rowIndex].selected;
+    this.saveRow(rowIndex);
   }
 
   private actionViewSetup() {
