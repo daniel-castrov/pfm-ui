@@ -46,8 +46,33 @@ export class MissionPrioritiesComponent implements OnInit {
       canDelete: true,
       canUpload: true,
       hideStatus: false
+    },
+    PLANNING_OPEN_EDIT: {
+      canEdit: false,
+      canSave: true,
+      canDelete: false,
+      canUpload: true,
+      hideStatus: false
     }
   };
+
+  ctaOptions: ListItem[];
+  missionPriorityOptions: ListItem[] = [
+    {
+      name: 'Add a new row',
+      value: 'add-single-row',
+      id: 'add-single-row',
+      isSelected: false,
+      rawData: null
+    },
+    {
+      name: 'Add all rows from another year',
+      value: 'add-rows-from-year',
+      id: 'add-rows-from-year',
+      isSelected: false,
+      rawData: null
+    }
+  ];
 
   showDeleteAttachmentDialog: boolean;
   showDeleteRowDialog: boolean;
@@ -67,7 +92,7 @@ export class MissionPrioritiesComponent implements OnInit {
   selectedRow: MissionPriority;
   selectedImportYear: string;
   availableImportYears: ListItem[];
-  hidePlanningPhaseActionButton: boolean;
+  showPlanningPhaseActionButton: boolean;
 
   columns: any[];
   rowDragEnterEvent: any;
@@ -103,7 +128,9 @@ export class MissionPrioritiesComponent implements OnInit {
       this.appModel.selectedYear = undefined;
       this.yearSelected({ name: this.selectedYear });
       if (this.POMManager && this.selectedYear) {
-        this.hidePlanningPhaseActionButton = true;
+        if (this.selectedPlanningPhase.state === PlanningStatus.OPEN) {
+          this.ctaOptions.splice(1, 1);
+        }
       }
     }
     this.availableYears = this.toListItem(years);
@@ -264,7 +291,7 @@ export class MissionPrioritiesComponent implements OnInit {
       mp.attachments = [];
       mp.attachmentsDisabled = true;
       mp.selected = false;
-      mp.actions = this.actionState.EDIT;
+      mp.actions = this.actionEditSetup();
       this.missionData.push(mp);
 
       this.gridApi.setRowData(this.missionData);
@@ -318,11 +345,16 @@ export class MissionPrioritiesComponent implements OnInit {
   }
 
   yearSelected(year: any): void {
-    this.hidePlanningPhaseActionButton = false;
+    this.showPlanningPhaseActionButton = false;
     this.selectedYear = year ? year.name : undefined;
     if (this.selectedYear) {
       this.busy = true;
       this.selectedPlanningPhase = this.appModel.planningData.find(obj => obj.id === this.selectedYear + '_id');
+      if (this.selectedPlanningPhase.state === PlanningStatus.OPEN) {
+        this.ctaOptions = [...this.missionPriorityOptions].splice(0, 1);
+      } else {
+        this.ctaOptions = [...this.missionPriorityOptions];
+      }
       this.planningService.getMissionPriorities(this.selectedPlanningPhase.id).subscribe(
         resp => {
           this.busy = false;
@@ -382,7 +414,7 @@ export class MissionPrioritiesComponent implements OnInit {
 
   private editMode(rowId: number) {
     // toggle actions
-    this.missionData[rowId].actions = this.actionState.EDIT;
+    this.missionData[rowId].actions = this.actionEditSetup();
     // disable attachments dropdown
     this.missionData[rowId].attachmentsDisabled = true;
     this.gridApi.setRowData(this.missionData);
@@ -417,7 +449,7 @@ export class MissionPrioritiesComponent implements OnInit {
           resp => {
             this.busy = false;
             this.missionData[rowId] = (resp as any).result;
-            this.missionData[rowId].actions = this.actionState.EDIT;
+            this.missionData[rowId].actions = this.actionEditSetup();
 
             // Update view
             this.viewMode(rowId);
@@ -673,5 +705,12 @@ export class MissionPrioritiesComponent implements OnInit {
       return this.actionState.PLANNING_CREATED_VIEW;
     }
     return this.actionState.VIEW;
+  }
+
+  private actionEditSetup() {
+    if (this.selectedPlanningPhase.state === PlanningStatus.OPEN) {
+      return this.actionState.PLANNING_OPEN_EDIT;
+    }
+    return this.actionState.EDIT;
   }
 }

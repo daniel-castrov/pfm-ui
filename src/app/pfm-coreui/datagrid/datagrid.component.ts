@@ -19,13 +19,24 @@ export class DatagridComponent implements OnInit {
   @Input() showGrandTotal: boolean;
   @Input() showPagination = true; // Controls visibility and activation of pagination
   @Input() addDropdownCtaTooltip = 'Add'; // Add dropdown CTA tooltip
-  @Input() addDropdownCtaOptions: ListItem[];
   @Input() tabToNextCell;
   @Input() isExternalFilterPresent;
   @Input() doesExternalFilterPass;
   @Input() excelMessage = 'UNCLASSIFIED / FOUO';
   @Input() suppressKeyboardEvent = true;
   @Input() rowDragManaged = true;
+
+  private dropdownCtaOptions: ListItem[];
+
+  get addDropdownCtaOptions() {
+    return this.dropdownCtaOptions;
+  }
+
+  @Input()
+  set addDropdownCtaOptions(val: ListItem[]) {
+    this.dropdownCtaOptions = val;
+    this.updateAddCTAOptions();
+  }
 
   @Input() extras: TemplateRef<any>;
 
@@ -121,20 +132,7 @@ export class DatagridComponent implements OnInit {
       sortable: true,
       filter: true
     };
-    if (this.addDropdownCtaOptions) {
-      this.options = this.addDropdownCtaOptions;
-    } else {
-      // Populate dropdown options with default
-      const item: ListItem = new ListItem();
-      item.name = 'Add a new row';
-      item.value = 'add-single-row';
-      item.id = 'add-single-row';
-      const item2: ListItem = new ListItem();
-      item2.name = 'Add all rows from another year';
-      item2.value = 'add-rows-from-year';
-      item2.id = 'add-rows-from-year';
-      this.options = [item, item2];
-    }
+    this.updateAddCTAOptions();
     this.excelMessageHeader = [
       [
         {
@@ -215,6 +213,23 @@ export class DatagridComponent implements OnInit {
   onWindowResize(event: any) {
     if (this.api) {
       this.api.sizeColumnsToFit();
+    }
+  }
+
+  updateAddCTAOptions() {
+    if (this.dropdownCtaOptions) {
+      this.options = this.dropdownCtaOptions;
+    } else {
+      // Populate dropdown options with default
+      const item: ListItem = new ListItem();
+      item.name = 'Add a new row';
+      item.value = 'add-single-row';
+      item.id = 'add-single-row';
+      const item2: ListItem = new ListItem();
+      item2.name = 'Add all rows from another year';
+      item2.value = 'add-rows-from-year';
+      item2.id = 'add-rows-from-year';
+      this.options = [item, item2];
     }
   }
 }

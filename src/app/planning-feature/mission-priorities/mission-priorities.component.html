@@ -13,7 +13,12 @@
       </ng-container>
     </h3>
   </div>
-  <ng-container *ngIf="!hidePlanningPhaseActionButton">
+  <ng-container *ngIf="showPlanningPhaseActionButton">
+    <div *ngIf="POMManager && selectedYear && selectedPlanningPhase.state === 'OPEN'">
+      <button type="button" class="btn btn-primary float-right" (click)="lockPlanningPhase()">
+        Lock Planning Phase
+      </button>
+    </div>
     <div *ngIf="POMManager && selectedYear && selectedPlanningPhase.state === 'LOCKED'">
       <button type="button" class="btn btn-primary float-right" (click)="closePlanningPhase()">
         Close Planning Phase
@@ -53,6 +58,7 @@
       [columns]="columns"
       [rows]="missionData"
       [tabToNextCell]="tabToNextCell.bind(this)"
+      [addDropdownCtaOptions]="ctaOptions"
     ></pfm-datagrid>
   </div>
 </div>
