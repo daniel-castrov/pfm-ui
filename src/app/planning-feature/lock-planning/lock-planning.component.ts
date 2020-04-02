@@ -49,7 +49,12 @@ export class LockPlanningComponent implements OnInit {
       this.appModel.selectedYear = this.selectedYear;
 
       // Open Mission Priorities
-      this.router.navigate(['/planning/mission-priorities']);
+      this.router.navigate([
+        '/planning/mission-priorities',
+        {
+          lockPhase: true
+        }
+      ]);
     } else {
       this.toastService.displayError(`Please select a year from the dropdown.`);
     }

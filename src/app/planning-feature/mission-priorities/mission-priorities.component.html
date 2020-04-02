@@ -13,13 +13,13 @@
       </ng-container>
     </h3>
   </div>
-  <ng-container *ngIf="showPlanningPhaseActionButton">
-    <div *ngIf="isPlannerManager && selectedYear && selectedPlanningPhase.state === 'OPEN'">
+  <ng-container>
+    <div *ngIf="canShowLockCTA">
       <button type="button" class="btn btn-primary float-right" (click)="lockPlanningPhase()">
         Lock Planning Phase
       </button>
     </div>
-    <div *ngIf="isPlannerManager && selectedYear && selectedPlanningPhase.state === 'LOCKED'">
+    <div *ngIf="canShowCloseCTA">
       <button type="button" class="btn btn-primary float-right" (click)="closePlanningPhase()">
         Close Planning Phase
       </button>
