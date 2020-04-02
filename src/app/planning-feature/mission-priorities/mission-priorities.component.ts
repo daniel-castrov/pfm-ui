@@ -40,6 +40,13 @@ export class MissionPrioritiesComponent implements OnInit {
       canUpload: false,
       hideStatus: true
     },
+    PLANNING_OPEN_VIEW: {
+      canSave: false,
+      canEdit: true,
+      canDelete: true,
+      canUpload: false,
+      hideStatus: true
+    },
     EDIT: {
       canEdit: false,
       canSave: true,
@@ -86,13 +93,15 @@ export class MissionPrioritiesComponent implements OnInit {
   selectedYear: string;
   selectedPlanningPhase: PlanningPhase;
   missionData: MissionPriority[];
-  POMManager: boolean;
+  isPlannerManager: boolean;
+  isPlanner: boolean;
   showUploadDialog: boolean;
   selectedRowId: number;
   selectedRow: MissionPriority;
   selectedImportYear: string;
   availableImportYears: ListItem[];
   showPlanningPhaseActionButton: boolean;
+  canAddNewRow: boolean;
 
   columns: any[];
   rowDragEnterEvent: any;
@@ -107,8 +116,12 @@ export class MissionPrioritiesComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.isPlannerManager =
+      this.appModel.userDetails.userRole.isPOMManager || this.appModel.userDetails.userRole.isPlanningManager;
+    this.isPlanner = this.appModel.userDetails.userRole.isPlanner;
+    this.canAddNewRow = this.isPlannerManager || this.isPlanner;
     this.setupGrid();
-    this.POMManager = this.appModel.userDetails.userRole.isPOMManager;
+    // POM Manager is here for demo purpose
     const years: string[] = [];
     const status: string[] = [
       PlanningStatus.CREATED,
@@ -127,7 +140,7 @@ export class MissionPrioritiesComponent implements OnInit {
       this.selectedYear = this.appModel.selectedYear;
       this.appModel.selectedYear = undefined;
       this.yearSelected({ name: this.selectedYear });
-      if (this.POMManager && this.selectedYear) {
+      if (this.isPlannerManager && this.selectedYear) {
         if (this.selectedPlanningPhase.state === PlanningStatus.OPEN) {
           this.ctaOptions.splice(1, 1);
         }
@@ -703,14 +716,16 @@ export class MissionPrioritiesComponent implements OnInit {
   private actionViewSetup() {
     if (this.selectedPlanningPhase.state === PlanningStatus.CREATED) {
       return this.actionState.PLANNING_CREATED_VIEW;
+    } else if (this.selectedPlanningPhase.state === PlanningStatus.OPEN && !this.isPlannerManager && this.isPlanner) {
+      return this.actionState.PLANNING_OPEN_VIEW;
     }
-    return this.actionState.VIEW;
+    return this.isPlanner || this.isPlannerManager ? this.actionState.VIEW : null;
   }
 
   private actionEditSetup() {
     if (this.selectedPlanningPhase.state === PlanningStatus.OPEN) {
       return this.actionState.PLANNING_OPEN_EDIT;
     }
-    return this.actionState.EDIT;
+    return this.isPlanner || this.isPlannerManager ? this.actionState.EDIT : null;
   }
 }
