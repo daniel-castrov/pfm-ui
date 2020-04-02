@@ -12,6 +12,8 @@ export class UserRole {
   isUser: boolean;
   isOrganizationMember: boolean;
   isFinancialManager: boolean;
+  isPlanningManager: boolean;
+  isPlanner: boolean;
 
   constructor(roles: string[]) {
     if (roles.includes(RoleConstants.BUDGET_MANAGER)) {
@@ -43,6 +45,12 @@ export class UserRole {
     }
     if (roles.includes(RoleConstants.FINANCIAL_MANAGER)) {
       this.isFinancialManager = true;
+    }
+    if (roles.includes(RoleConstants.PLANNING_MANAGER)) {
+      this.isPlanningManager = true;
+    }
+    if (roles.includes(RoleConstants.PLANNER)) {
+      this.isPlanner = true;
     }
   }
 }
