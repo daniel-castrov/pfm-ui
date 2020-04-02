@@ -14,12 +14,12 @@
     </h3>
   </div>
   <ng-container *ngIf="showPlanningPhaseActionButton">
-    <div *ngIf="POMManager && selectedYear && selectedPlanningPhase.state === 'OPEN'">
+    <div *ngIf="isPlannerManager && selectedYear && selectedPlanningPhase.state === 'OPEN'">
       <button type="button" class="btn btn-primary float-right" (click)="lockPlanningPhase()">
         Lock Planning Phase
       </button>
     </div>
-    <div *ngIf="POMManager && selectedYear && selectedPlanningPhase.state === 'LOCKED'">
+    <div *ngIf="isPlannerManager && selectedYear && selectedPlanningPhase.state === 'LOCKED'">
       <button type="button" class="btn btn-primary float-right" (click)="closePlanningPhase()">
         Close Planning Phase
       </button>
@@ -54,7 +54,7 @@
       (addCtaEvent)="onAddNewRow($event)"
       (cellAction)="handleCellAction($event)"
       [showPagination]="false"
-      [showAddDropdownCta]="true"
+      [showAddDropdownCta]="canAddNewRow"
       [columns]="columns"
       [rows]="missionData"
       [tabToNextCell]="tabToNextCell.bind(this)"
