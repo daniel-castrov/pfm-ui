@@ -12,7 +12,7 @@
 
 <ng-template #extraActions>
   <div
-    *ngIf="data.canEdit && !data.hideStatus"
+    *ngIf="!data.hideCheckmark"
     class="action"
     [class.green-color]="params.data.selected"
     [class.amber-color]="!params.data.selected"
