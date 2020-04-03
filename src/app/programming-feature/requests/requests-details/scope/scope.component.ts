@@ -22,7 +22,6 @@ import { ListItem } from 'src/app/pfm-common-models/ListItem';
   styleUrls: ['./scope.component.scss']
 })
 export class ScopeComponent implements OnInit {
-
   @ViewChild(SecureDownloadComponent, { static: false })
   secureDownloadComponent: SecureDownloadComponent;
 
@@ -47,12 +46,7 @@ export class ScopeComponent implements OnInit {
     }
   };
 
-  priorityRankingOptions = [
-    'None',
-    'High',
-    'Medium',
-    'Low'
-  ];
+  priorityRankingOptions = ['None', 'High', 'Medium', 'Low'];
 
   busy: boolean;
 
@@ -85,8 +79,8 @@ export class ScopeComponent implements OnInit {
     private evaluationMeasureService: EvaluationMeasureService,
     private processPrioritizationService: ProcessPrioritizationService,
     private teamLeadService: TeamLeadService,
-    private dialogService: DialogService) {
-  }
+    private dialogService: DialogService
+  ) {}
 
   ngOnInit() {
     this.budget = 210000000;
@@ -405,14 +399,13 @@ export class ScopeComponent implements OnInit {
             }
             // Update view
             this.viewEvaluationMeasureMode(rowIndex);
-
           },
           error => {
             this.busy = false;
             this.dialogService.displayDebug(error);
             this.editEvaluationMeasureRow(rowIndex);
-
-          });
+          }
+        );
       } else {
         // Ensure creation information is preserved
         this.evaluationMeasureService.updateEvaluationMeasure(row).subscribe(
@@ -423,13 +416,13 @@ export class ScopeComponent implements OnInit {
             }
             // Update view
             this.viewEvaluationMeasureMode(rowIndex);
-
           },
           error => {
             this.busy = false;
             this.dialogService.displayDebug(error);
             this.editEvaluationMeasureRow(rowIndex);
-          });
+          }
+        );
       }
       this.viewEvaluationMeasureMode(rowIndex);
     } else {
@@ -520,8 +513,11 @@ export class ScopeComponent implements OnInit {
       errorMessage = 'Target Performance cannot have more than 45 characters.';
     } else if (row.currentPerformance.length > 45) {
       errorMessage = 'Current Performance cannot have more than 45 characters.';
-    } else if ((row.currentPerformanceDate !== null && row.currentPerformanceDate !== '')
-      && !this.validateDate(row.currentPerformanceDate)) {
+    } else if (
+      row.currentPerformanceDate !== null &&
+      row.currentPerformanceDate !== '' &&
+      !this.validateDate(row.currentPerformanceDate)
+    ) {
       errorMessage = 'Make sure Current Performance Date is a valid date in the format (Month/Day/Year).';
     }
     if (errorMessage.length) {
@@ -549,8 +545,10 @@ export class ScopeComponent implements OnInit {
           }
           break;
         case 'cancel':
-          if (this.currentEvaluationMeasureRowDataState.isEditMode &&
-            !this.currentEvaluationMeasureRowDataState.isAddMode) {
+          if (
+            this.currentEvaluationMeasureRowDataState.isEditMode &&
+            !this.currentEvaluationMeasureRowDataState.isAddMode
+          ) {
             this.cancelEvaluationMeasureRow(cellAction.rowIndex);
           } else {
             this.deleteEvaluationMeasureRow(cellAction.rowIndex);
@@ -573,14 +571,13 @@ export class ScopeComponent implements OnInit {
 
             // Update view
             this.viewTeamLeadMode(rowIndex);
-
           },
           error => {
             this.busy = false;
             this.dialogService.displayDebug(error);
             this.editTeamLeadRow(rowIndex);
-
-          });
+          }
+        );
       } else {
         // Ensure creation information is preserved
         this.teamLeadService.updateTeamLead(row).subscribe(
@@ -588,13 +585,13 @@ export class ScopeComponent implements OnInit {
             this.busy = false;
             // Update view
             this.viewTeamLeadMode(rowIndex);
-
           },
           error => {
             this.busy = false;
             this.dialogService.displayDebug(error);
             this.editTeamLeadRow(rowIndex);
-          });
+          }
+        );
       }
       this.viewTeamLeadMode(rowIndex);
     } else {
@@ -707,8 +704,7 @@ export class ScopeComponent implements OnInit {
           }
           break;
         case 'cancel':
-          if (this.currentTeamLeadRowDataState.isEditMode &&
-            !this.currentTeamLeadRowDataState.isAddMode) {
+          if (this.currentTeamLeadRowDataState.isEditMode && !this.currentTeamLeadRowDataState.isAddMode) {
             this.cancelTeamLeadRow(cellAction.rowIndex);
           } else {
             this.deleteTeamLeadRow(cellAction.rowIndex);
@@ -737,14 +733,13 @@ export class ScopeComponent implements OnInit {
             }
             // Update view
             this.viewProcessPriorizationMode(rowIndex);
-
           },
           error => {
             this.busy = false;
             this.dialogService.displayDebug(error);
             this.editProcessPriorizationRow(rowIndex);
-
-          });
+          }
+        );
       } else {
         // Ensure creation information is preserved
         this.processPrioritizationService.updateProcessPrioritization(row).subscribe(
@@ -756,13 +751,13 @@ export class ScopeComponent implements OnInit {
             }
             // Update view
             this.viewProcessPriorizationMode(rowIndex);
-
           },
           error => {
             this.busy = false;
             this.dialogService.displayDebug(error);
             this.editProcessPriorizationRow(rowIndex);
-          });
+          }
+        );
       }
       this.viewProcessPriorizationMode(rowIndex);
     } else {
@@ -845,8 +840,11 @@ export class ScopeComponent implements OnInit {
       errorMessage = 'Potential Process have more than 45 characters.';
     } else if (row.notes.length > 500) {
       errorMessage = 'Notes cannot have more than 500 characters.';
-    } else if ((row.estimatedCompletionDate !== null && row.estimatedCompletionDate !== '')
-      && !this.validateDate(row.estimatedCompletionDate)) {
+    } else if (
+      row.estimatedCompletionDate !== null &&
+      row.estimatedCompletionDate !== '' &&
+      !this.validateDate(row.estimatedCompletionDate)
+    ) {
       errorMessage = 'Make sure Estimated Completion Date is a valid date in the format (Month/Day/Year).';
     }
     if (errorMessage.length) {
@@ -874,8 +872,10 @@ export class ScopeComponent implements OnInit {
           }
           break;
         case 'cancel':
-          if (this.currentProcessPriorizationRowDataState.isEditMode &&
-            !this.currentProcessPriorizationRowDataState.isAddMode) {
+          if (
+            this.currentProcessPriorizationRowDataState.isEditMode &&
+            !this.currentProcessPriorizationRowDataState.isAddMode
+          ) {
             this.cancelProcessPriorizationRow(cellAction.rowIndex);
           } else {
             this.deleteProcessPriorizationRow(cellAction.rowIndex);
@@ -890,9 +890,11 @@ export class ScopeComponent implements OnInit {
       try {
         const date = new Date(dateString);
         const dateSplit = dateString.split('/');
-        if (date.getFullYear() === Number(dateSplit[2]) &&
+        if (
+          date.getFullYear() === Number(dateSplit[2]) &&
           date.getMonth() === Number(dateSplit[0]) - 1 &&
-          date.getDate() === Number(dateSplit[1])) {
+          date.getDate() === Number(dateSplit[1])
+        ) {
           return true;
         }
       } catch (err) {
@@ -933,17 +935,15 @@ export class ScopeComponent implements OnInit {
     if (this.currentEvaluationMeasureRowDataState.isEditMode) {
       return;
     }
-    this.evaluationMeasureRows.push(
-      {
-        measureId: '',
-        description: '',
-        dataSource: '',
-        targetPerformance: '',
-        currentPerformance: '',
-        currentPerformanceDate: null,
-        action: { ...this.actionState.EDIT, dataGrid: ScopeGridName.EVALUATION_MEASURE }
-      }
-    );
+    this.evaluationMeasureRows.push({
+      measureId: '',
+      description: '',
+      dataSource: '',
+      targetPerformance: '',
+      currentPerformance: '',
+      currentPerformanceDate: null,
+      action: { ...this.actionState.EDIT, dataGrid: ScopeGridName.EVALUATION_MEASURE }
+    });
     this.currentEvaluationMeasureRowDataState.isAddMode = true;
     this.evaluationMeasureGridApi.setRowData(this.evaluationMeasureRows);
     this.editEvaluationMeasureRow(this.evaluationMeasureRows.length - 1);
@@ -953,15 +953,13 @@ export class ScopeComponent implements OnInit {
     if (this.currentTeamLeadRowDataState.isEditMode) {
       return;
     }
-    this.teamLeadRows.push(
-      {
-        name: '',
-        title: '',
-        role: '',
-        responsibilities: '',
-        action: { ...this.actionState.EDIT, dataGrid: ScopeGridName.TEAM_LEAD }
-      }
-    );
+    this.teamLeadRows.push({
+      name: '',
+      title: '',
+      role: '',
+      responsibilities: '',
+      action: { ...this.actionState.EDIT, dataGrid: ScopeGridName.TEAM_LEAD }
+    });
     this.currentTeamLeadRowDataState.isAddMode = true;
     this.teamLeadGridApi.setRowData(this.teamLeadRows);
     this.editTeamLeadRow(this.teamLeadRows.length - 1);
@@ -971,15 +969,13 @@ export class ScopeComponent implements OnInit {
     if (this.currentProcessPriorizationRowDataState.isEditMode) {
       return;
     }
-    this.processPriorizationRows.push(
-      {
-        potentialProcesses: '',
-        priorityRanking: '',
-        estimatedCompletionDate: null,
-        notes: '',
-        action: { ...this.actionState.EDIT, dataGrid: ScopeGridName.PROCESS_PRIORIZATION }
-      }
-    );
+    this.processPriorizationRows.push({
+      potentialProcesses: '',
+      priorityRanking: '',
+      estimatedCompletionDate: null,
+      notes: '',
+      action: { ...this.actionState.EDIT, dataGrid: ScopeGridName.PROCESS_PRIORIZATION }
+    });
     this.currentProcessPriorizationRowDataState.isAddMode = true;
     this.processPriorizationGridApi.setRowData(this.processPriorizationRows);
     this.editProcessPriorizationRow(this.processPriorizationRows.length - 1);
@@ -1043,26 +1039,21 @@ export class ScopeComponent implements OnInit {
     this.deleteDialog.delete = null;
     this.deleteDialog.display = false;
   }
-
 }
 
 export interface RowDataStateInterface {
-
   currentEditingRowIndex?: number;
   isAddMode?: boolean;
   isEditMode?: boolean;
   currentEditingRowData?: any;
-
 }
 
 export interface DeleteDialogInterface {
-
   title: string;
   bodyText?: string;
   display?: boolean;
   cellAction?: DataGridMessage;
   delete?: (rowIndex: number) => void;
-
 }
 
 export enum ScopeGridName {

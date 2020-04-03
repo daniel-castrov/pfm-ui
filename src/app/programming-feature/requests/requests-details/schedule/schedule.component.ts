@@ -14,6 +14,9 @@ import { FundingLineService } from '../../../services/funding-line.service';
 import { map } from 'rxjs/operators';
 import { FundingLine } from '../../../models/funding-line.model';
 import { Program } from '../../../models/Program';
+import { ScheduleService } from '../../../services/schedule.service';
+import * as moment from 'moment';
+import { Schedule } from '../../../models/schedule.model';
 
 @Component({
   selector: 'pfm-schedule',
@@ -74,17 +77,21 @@ export class ScheduleComponent implements OnInit {
   gridApi: GridApi;
   components: any;
   fundingGridColumnDefinitions: ColDef[] = [];
-  fundingGridRows: ScheduleDataMockInterface[];
+  scheduleGridRows: ScheduleDataMockInterface[];
 
   busy: boolean;
   firstTimeLoading: boolean;
   currentRowDataState: ScheduleRowDataStateInterface = {};
 
-  constructor(private dialogService: DialogService, private fundingLineService: FundingLineService) {}
+  constructor(
+    private dialogService: DialogService,
+    private fundingLineService: FundingLineService,
+    private scheduleService: ScheduleService
+  ) {}
 
   ngOnInit() {
     this.loadFundingLines();
-    this.loadFundsGrid();
+    this.loadSchedulesGrid();
     this.drawGanttChart();
   }
 
@@ -99,6 +106,7 @@ export class ScheduleComponent implements OnInit {
       }
     ];
     this.fundingGridAssociations = [];
+    this.scheduleGridRows = [];
     this.fundingLineService
       .obtainFundingLinesByProgramId(this.program.id)
       .pipe(
@@ -126,32 +134,50 @@ export class ScheduleComponent implements OnInit {
         for (const fundingLine of fundingLines) {
           this.fundingFilter.push(fundingLine);
           this.fundingGridAssociations.push(fundingLine);
+          this.scheduleService.getByFundingLineId(fundingLine.id).subscribe(schResp => {
+            const schedules = (schResp as any).result;
+            for (let i = 0; i < schedules.length; i++) {
+              const schedule = schedules[i];
+              if (schedule.startDate) {
+                schedule.startDate = schedule.startDate.format('MM/DD/YYYY');
+              }
+              if (schedule.endDate) {
+                schedule.endDate = schedule.endDate.format('MM/DD/YYYY');
+              }
+              this.scheduleGridRows.push(schedule);
+            }
+            this.scheduleGridRows.sort((a, b) => a.order - b.order);
+            for (let i = 0; i < this.scheduleGridRows.length; i++) {
+              this.viewMode(i);
+            }
+            this.gridApi.setRowData(this.scheduleGridRows);
+            this.updateGanttChart();
+          });
         }
       });
   }
 
-  onFundingRowAdd(event: any) {
+  onScheduleRowAdd(event: any) {
     if (this.currentRowDataState.isEditMode) {
       return;
     }
-    const id = this.fundingGridRows.length
+    const maxOrder = this.scheduleGridRows.length
       ? Math.max.apply(
           Math,
-          this.fundingGridRows.map(row => row.id)
+          this.scheduleGridRows.map(row => row.order)
         )
       : 0;
-    this.fundingGridRows.push({
-      id: id + 1,
+    this.scheduleGridRows.push({
       taskDescription: '',
-      fundingLineAssociation: '',
+      fundingLineId: '',
       startDate: formatDate(new Date(this.currentFiscalYear + '-01-01 00:00:00'), 'MM/dd/yyyy', 'en-US'),
       endDate: formatDate(new Date(this.currentFiscalYear + 5 + '-12-31  00:00:00'), 'MM/dd/yyyy', 'en-US'),
-      order: id,
+      order: maxOrder + 1,
       action: this.fundingGridActionState.EDIT
     });
     this.currentRowDataState.isAddMode = true;
-    this.gridApi.setRowData(this.fundingGridRows);
-    this.editRow(this.fundingGridRows.length - 1);
+    this.gridApi.setRowData(this.scheduleGridRows);
+    this.editRow(this.scheduleGridRows.length - 1);
   }
 
   drawGanttChart(redraw?: boolean) {
@@ -168,13 +194,13 @@ export class ScheduleComponent implements OnInit {
       null
     ]);
     if (this.selectedFundingFilter.toLowerCase() !== 'show all') {
-      this.fundingGridRows
-        .filter((row, index) => row.fundingLineAssociation === this.selectedFundingFilter)
+      this.scheduleGridRows
+        .filter((row, index) => row.fundingLineId === this.selectedFundingFilter)
         .forEach(row => {
           data.push([row.id + '', '', new Date(row.startDate), new Date(row.endDate), 0, 100, '0']);
         });
     } else {
-      this.fundingGridRows.forEach(row => {
+      this.scheduleGridRows.forEach(row => {
         data.push([row.id + '', '', new Date(row.startDate), new Date(row.endDate), 0, 100, '0']);
       });
     }
@@ -219,16 +245,15 @@ export class ScheduleComponent implements OnInit {
     this.gridApi = gridApi;
   }
 
-  private loadFundsGrid() {
+  private loadSchedulesGrid() {
     this.loadFundColumns();
-    this.loadFundsData();
   }
 
   private loadFundColumns() {
     this.fundingGridColumnDefinitions.push(
       {
         headerName: 'ID',
-        field: 'id',
+        field: 'order',
         editable: false,
         suppressMovable: true,
         maxWidth: 60,
@@ -251,7 +276,7 @@ export class ScheduleComponent implements OnInit {
       },
       {
         headerName: 'Funding Line Association',
-        field: 'fundingLineAssociation',
+        field: 'fundingLineId',
         editable: true,
         suppressMovable: true,
         filter: false,
@@ -319,16 +344,12 @@ export class ScheduleComponent implements OnInit {
     if (item && item.value) {
       this.selectedFundingFilter = item.value;
       if (item.value.toLowerCase() === 'show all') {
-        this.gridApi.setRowData(this.fundingGridRows);
+        this.gridApi.setRowData(this.scheduleGridRows);
       } else {
-        this.gridApi.setRowData(this.fundingGridRows.filter((row, index) => row.fundingLineAssociation === item.value));
+        this.gridApi.setRowData(this.scheduleGridRows.filter((row, index) => row.fundingLineId === item.value));
       }
       this.drawGanttChart(true);
     }
-  }
-
-  private loadFundsData() {
-    this.fundingGridRows = [];
   }
 
   onMouseDown(event: MouseEvent) {
@@ -367,9 +388,58 @@ export class ScheduleComponent implements OnInit {
 
   private saveRow(rowIndex: number) {
     this.gridApi.stopEditing();
-    const row: ScheduleDataMockInterface = this.fundingGridRows[rowIndex];
+    const row: ScheduleDataMockInterface = this.scheduleGridRows[rowIndex];
     const canSave = this.validateRowData(row);
     if (canSave) {
+      if (row.startDate) {
+        row.startDate = moment(row.startDate, 'MM/DD/YYYY');
+      }
+      if (row.endDate) {
+        row.endDate = moment(row.endDate, 'MM/DD/YYYY');
+      }
+      if (!row.id) {
+        this.scheduleService.createSchedule(row).subscribe(
+          resp => {
+            const dbSchedule = resp.result as Schedule;
+            row.id = dbSchedule.id;
+            debugger;
+            if (row.startDate) {
+              row.startDate = row.startDate.format('MM/DD/YYYY');
+            }
+            if (row.endDate) {
+              row.endDate = row.endDate.format('MM/DD/YYYY');
+            }
+            // Update view
+            this.viewMode(rowIndex);
+            this.updateGanttChart();
+          },
+          error => {
+            this.busy = false;
+            this.dialogService.displayDebug(error);
+            this.editRow(rowIndex);
+          }
+        );
+      } else {
+        // Ensure creation information is preserved
+        this.scheduleService.updateSchedule(row).subscribe(
+          resp => {
+            this.busy = false;
+            if (row.startDate) {
+              row.startDate = row.startDate.format('MM/DD/YYYY');
+            }
+            if (row.endDate) {
+              row.endDate = row.endDate.format('MM/DD/YYYY');
+            }
+            // Update view
+            this.viewMode(rowIndex);
+          },
+          error => {
+            this.busy = false;
+            this.dialogService.displayDebug(error);
+            this.editRow(rowIndex);
+          }
+        );
+      }
       this.busy = true;
       this.viewMode(rowIndex);
       this.updateGanttChart();
@@ -385,7 +455,7 @@ export class ScheduleComponent implements OnInit {
       errorMessage = 'Task Description cannot be empty.';
     } else if (row.taskDescription.length > 45) {
       errorMessage = 'Task Description cannot have more than 45 characters.';
-    } else if (!this.fundingGridAssociations.some(fund => fund.id === row.fundingLineAssociation)) {
+    } else if (!this.fundingGridAssociations.some(fund => fund.id === row.fundingLineId)) {
       errorMessage = 'Please, select a valid Funding Line Association.';
     } else if (!this.validateDate(row.startDate)) {
       errorMessage = 'Make sure Start Date is a valid date in the format (Month/Day/Year).';
@@ -430,14 +500,14 @@ export class ScheduleComponent implements OnInit {
   }
 
   private cancelRow(rowIndex: number) {
-    this.fundingGridRows[rowIndex] = this.currentRowDataState.currentEditingRowData;
+    this.scheduleGridRows[rowIndex] = this.currentRowDataState.currentEditingRowData;
     this.viewMode(rowIndex);
     this.updateGanttChart();
   }
 
   private editRow(rowIndex: number, updatePreviousState?: boolean) {
     if (updatePreviousState) {
-      this.currentRowDataState.currentEditingRowData = { ...this.fundingGridRows[rowIndex] };
+      this.currentRowDataState.currentEditingRowData = { ...this.scheduleGridRows[rowIndex] };
     }
     this.editMode(rowIndex);
   }
@@ -450,20 +520,22 @@ export class ScheduleComponent implements OnInit {
 
   private deleteRow(rowIndex: number) {
     this.busy = true;
-    this.fundingGridRows.splice(rowIndex, 1);
-    this.fundingGridRows.forEach(row => {
-      row.order--;
-    });
+    const rowObj = this.scheduleGridRows[rowIndex];
+    if (rowObj.id) {
+      this.scheduleService.deleteSchedule(rowObj.id).subscribe(x => {
+        this.busy = false;
+      });
+    }
+    this.scheduleGridRows.splice(rowIndex, 1);
     this.currentRowDataState.currentEditingRowIndex = 0;
     this.currentRowDataState.isEditMode = false;
     this.currentRowDataState.isAddMode = false;
     this.gridApi.stopEditing();
-    this.fundingGridRows.forEach(row => {
+    this.scheduleGridRows.forEach(row => {
       row.isDisabled = false;
     });
-    this.gridApi.setRowData(this.fundingGridRows);
+    this.gridApi.setRowData(this.scheduleGridRows);
     this.updateGanttChart();
-    this.busy = false;
   }
 
   private viewMode(rowIndex: number) {
@@ -471,23 +543,23 @@ export class ScheduleComponent implements OnInit {
     this.currentRowDataState.isEditMode = false;
     this.currentRowDataState.isAddMode = false;
     this.gridApi.stopEditing();
-    this.fundingGridRows[rowIndex].action = this.fundingGridActionState.VIEW;
-    this.fundingGridRows.forEach(row => {
+    this.scheduleGridRows[rowIndex].action = this.fundingGridActionState.VIEW;
+    this.scheduleGridRows.forEach(row => {
       row.isDisabled = false;
     });
-    this.gridApi.setRowData(this.fundingGridRows);
+    this.gridApi.setRowData(this.scheduleGridRows);
   }
 
   private editMode(rowIndex: number) {
     this.currentRowDataState.currentEditingRowIndex = rowIndex;
     this.currentRowDataState.isEditMode = true;
-    this.fundingGridRows[rowIndex].action = this.fundingGridActionState.EDIT;
-    this.fundingGridRows.forEach((row, index) => {
+    this.scheduleGridRows[rowIndex].action = this.fundingGridActionState.EDIT;
+    this.scheduleGridRows.forEach((row, index) => {
       if (rowIndex !== index) {
         row.isDisabled = true;
       }
     });
-    this.gridApi.setRowData(this.fundingGridRows);
+    this.gridApi.setRowData(this.scheduleGridRows);
     this.gridApi.startEditingCell({
       rowIndex,
       colKey: 'taskDescription'
@@ -496,11 +568,11 @@ export class ScheduleComponent implements OnInit {
 }
 
 export interface ScheduleDataMockInterface {
-  id?: number;
+  id?: string;
   taskDescription?: string;
-  fundingLineAssociation?: string;
-  startDate?: string;
-  endDate?: string;
+  fundingLineId?: string;
+  startDate?: any;
+  endDate?: any;
   order?: number;
   action?: Action;
   isDisabled?: boolean;
