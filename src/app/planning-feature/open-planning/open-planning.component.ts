@@ -20,6 +20,7 @@ export class OpenPlanningComponent implements OnInit {
   busy: boolean;
   availableYears: ListItem[];
   selectedYear: string;
+  isPlannerManager: boolean;
 
   constructor(
     private appModel: AppModel,
@@ -61,6 +62,8 @@ export class OpenPlanningComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.isPlannerManager =
+      this.appModel.userDetails.userRole.isPOMManager || this.appModel.userDetails.userRole.isPlanningManager;
     const years: string[] = [];
     for (const item of this.appModel.planningData) {
       if (item.state === PlanningStatus.CREATED) {

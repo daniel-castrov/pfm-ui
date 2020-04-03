@@ -8,14 +8,18 @@ import { ActionCellRendererComponent } from '../action-cell-renderer/action-cell
 })
 export class MpActionCellRendererComponent extends ActionCellRendererComponent implements OnInit {
   title = '';
+  switchCheckmark: boolean;
 
   @Input()
   hideStatus: boolean;
 
   agInit(params) {
     super.agInit(params);
+    this.switchCheckmark = !!params.value.switchCheckmark;
     this.title = this.params.data.selected
       ? 'Selected for final version'
+      : this.switchCheckmark
+      ? 'Not selected for final version.'
       : 'Not selected for final version.  Click to select.';
   }
 }

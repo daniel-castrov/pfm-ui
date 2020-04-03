@@ -2,10 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ListItem } from '../../pfm-common-models/ListItem';
 import { AppModel } from '../../pfm-common-models/AppModel';
-import { DialogService } from '../../pfm-coreui/services/dialog.service';
-import { SigninService } from '../../pfm-auth-module/services/signin.service';
 import { DropdownComponent } from '../../pfm-coreui/form-inputs/dropdown/dropdown.component';
-import { RoleConstants } from 'src/app/pfm-common-models/role-contants.model';
 import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
 import { PlanningStatus } from '../models/enumerators/planning-status.model';
 
@@ -21,18 +18,13 @@ export class ClosePlanningComponent implements OnInit {
   busy: boolean;
   availableYears: ListItem[];
   selectedYear: string;
-  POMManager = false;
+  isPlannerManager: boolean;
 
-  constructor(
-    private appModel: AppModel,
-    private dialogService: DialogService,
-    private signInService: SigninService,
-    private router: Router,
-    private toastService: ToastService
-  ) {}
+  constructor(private appModel: AppModel, private router: Router, private toastService: ToastService) {}
 
   ngOnInit() {
-    this.POMManager = this.appModel.userDetails.userRole.isPOMManager;
+    this.isPlannerManager =
+      this.appModel.userDetails.userRole.isPOMManager || this.appModel.userDetails.userRole.isPlanningManager;
     const years: string[] = [];
     for (const item of this.appModel.planningData) {
       if (item.state === PlanningStatus.LOCKED) {
@@ -49,7 +41,12 @@ export class ClosePlanningComponent implements OnInit {
       this.appModel.selectedYear = this.selectedYear;
 
       // Open Mission Priorities
-      this.router.navigate(['/planning/mission-priorities']);
+      this.router.navigate([
+        '/planning/mission-priorities',
+        {
+          closePhase: true
+        }
+      ]);
     } else {
       this.toastService.displayError(`Please select a year from the dropdown.`);
     }
@@ -65,22 +62,6 @@ export class ClosePlanningComponent implements OnInit {
       items.push(item);
     }
     return items;
-  }
-
-  // check if current user has POM Manager role
-  isPOMManager() {
-    this.signInService.getUserRoles().subscribe(
-      resp => {
-        const result: any = resp;
-        if (result.result.includes(RoleConstants.POM_MANAGER)) {
-          this.POMManager = true;
-        }
-      },
-      error => {
-        this.busy = false;
-        this.dialogService.displayDebug(error);
-      }
-    );
   }
 
   yearSelected(item: any): void {

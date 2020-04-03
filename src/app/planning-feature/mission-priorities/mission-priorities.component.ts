@@ -15,6 +15,7 @@ import { PlanningPhase } from '../models/PlanningPhase';
 import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
 import { MpActionCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/mp-action-cell-renderer/mp-action-cell-renderer.component';
 import { PlanningStatus } from '../models/enumerators/planning-status.model';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'pfm-planning',
@@ -31,35 +32,50 @@ export class MissionPrioritiesComponent implements OnInit {
       canEdit: true,
       canDelete: true,
       canUpload: false,
-      hideStatus: false
+      hideCheckmark: false
     },
     PLANNING_CREATED_VIEW: {
       canSave: false,
       canEdit: true,
       canDelete: true,
       canUpload: false,
-      hideStatus: true
+      hideCheckmark: true
     },
     PLANNING_OPEN_VIEW: {
       canSave: false,
       canEdit: true,
       canDelete: true,
       canUpload: false,
-      hideStatus: true
+      hideCheckmark: true
+    },
+    PLANNING_LOCKED_VIEW: {
+      canSave: false,
+      canEdit: false,
+      canDelete: false,
+      canUpload: false,
+      hideCheckmark: false
+    },
+    PLANNING_CLOSED_VIEW: {
+      canSave: false,
+      canEdit: false,
+      canDelete: false,
+      canUpload: false,
+      hideCheckmark: false,
+      switchCheckmark: true
     },
     EDIT: {
       canEdit: false,
       canSave: true,
       canDelete: true,
       canUpload: true,
-      hideStatus: false
+      hideCheckmark: true
     },
     PLANNING_OPEN_EDIT: {
       canEdit: false,
       canSave: true,
       canDelete: false,
       canUpload: true,
-      hideStatus: false
+      hideCheckmark: true
     }
   };
 
@@ -100,8 +116,9 @@ export class MissionPrioritiesComponent implements OnInit {
   selectedRow: MissionPriority;
   selectedImportYear: string;
   availableImportYears: ListItem[];
-  showPlanningPhaseActionButton: boolean;
   canAddNewRow: boolean;
+  canShowLockCTA: boolean;
+  canShowCloseCTA: boolean;
 
   columns: any[];
   rowDragEnterEvent: any;
@@ -112,14 +129,14 @@ export class MissionPrioritiesComponent implements OnInit {
     private appModel: AppModel,
     private planningService: PlanningService,
     private dialogService: DialogService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
     this.isPlannerManager =
       this.appModel.userDetails.userRole.isPOMManager || this.appModel.userDetails.userRole.isPlanningManager;
     this.isPlanner = this.appModel.userDetails.userRole.isPlanner;
-    this.canAddNewRow = this.isPlannerManager || this.isPlanner;
     this.setupGrid();
     // POM Manager is here for demo purpose
     const years: string[] = [];
@@ -140,9 +157,21 @@ export class MissionPrioritiesComponent implements OnInit {
       this.selectedYear = this.appModel.selectedYear;
       this.appModel.selectedYear = undefined;
       this.yearSelected({ name: this.selectedYear });
-      if (this.isPlannerManager && this.selectedYear) {
-        if (this.selectedPlanningPhase.state === PlanningStatus.OPEN) {
+      if (this.selectedYear) {
+        this.canAddNewRow =
+          (this.isPlannerManager || this.isPlanner) && this.selectedPlanningPhase.state !== PlanningStatus.LOCKED;
+        const isLockPhase = !!this.route.snapshot.paramMap.get('lockPhase');
+        const isClosePhase = !!this.route.snapshot.paramMap.get('closePhase');
+        if (this.selectedPlanningPhase.state === PlanningStatus.OPEN && !isLockPhase) {
           this.ctaOptions.splice(1, 1);
+        } else if (this.selectedPlanningPhase.state === PlanningStatus.OPEN && isLockPhase && this.isPlannerManager) {
+          this.canShowLockCTA = true;
+        } else if (
+          this.selectedPlanningPhase.state === PlanningStatus.LOCKED &&
+          isClosePhase &&
+          this.isPlannerManager
+        ) {
+          this.canShowCloseCTA = true;
         }
       }
     }
@@ -256,34 +285,27 @@ export class MissionPrioritiesComponent implements OnInit {
 
   handleCellAction(cellAction: DataGridMessage): void {
     switch (cellAction.message) {
-      case 'save': {
+      case 'save':
         this.saveRow(cellAction.rowIndex);
         break;
-      }
-      case 'edit': {
+      case 'edit':
         this.editRow(cellAction.rowIndex);
         break;
-      }
-      case 'upload': {
+      case 'upload':
         this.addAttachment(cellAction.rowIndex);
         break;
-      }
-      case 'delete-row': {
+      case 'delete-row':
         this.deleteRow(cellAction.rowIndex);
         break;
-      }
-      case 'delete-attachments': {
+      case 'delete-attachments':
         this.deleteAttachments(cellAction.rowIndex);
         break;
-      }
-      case 'download-attachment': {
+      case 'download-attachment':
         this.downloadAttachment(cellAction);
         break;
-      }
-      case 'toggle-select': {
+      case 'toggle-select':
         this.toggleSelect(cellAction.rowIndex);
-        console.log(cellAction);
-      }
+        break;
     }
   }
 
@@ -358,11 +380,14 @@ export class MissionPrioritiesComponent implements OnInit {
   }
 
   yearSelected(year: any): void {
-    this.showPlanningPhaseActionButton = false;
+    this.canShowLockCTA = false;
+    this.canShowCloseCTA = false;
     this.selectedYear = year ? year.name : undefined;
     if (this.selectedYear) {
       this.busy = true;
       this.selectedPlanningPhase = this.appModel.planningData.find(obj => obj.id === this.selectedYear + '_id');
+      this.canAddNewRow =
+        (this.isPlannerManager || this.isPlanner) && this.selectedPlanningPhase.state !== PlanningStatus.LOCKED;
       if (this.selectedPlanningPhase.state === PlanningStatus.OPEN) {
         this.ctaOptions = [...this.missionPriorityOptions].splice(0, 1);
       } else {
@@ -502,7 +527,7 @@ export class MissionPrioritiesComponent implements OnInit {
         isError = true;
       }
       if (row.description.length > 200) {
-        errorMsg = errorMsg + 'The Description is longer than the max of 200 characters';
+        errorMsg = errorMsg + 'The Description is longer than the max of 200 characters.';
         isError = true;
       }
       if (isError) {
@@ -634,7 +659,7 @@ export class MissionPrioritiesComponent implements OnInit {
         this.busy = false;
         // Update model state
         this.selectedPlanningPhase.state = PlanningStatus.OPEN;
-        this.toastService.displaySuccess(`Planning Phase for ${this.selectedYear} successfully opened`);
+        this.toastService.displaySuccess(`Planning Phase for ${this.selectedYear} successfully opened.`);
       },
       error => {
         this.busy = false;
@@ -644,35 +669,51 @@ export class MissionPrioritiesComponent implements OnInit {
   }
 
   lockPlanningPhase() {
-    this.busy = true;
-    this.planningService.lockPlanningPhase(this.selectedPlanningPhase).subscribe(
-      resp => {
-        this.busy = false;
-        // Update model state
-        this.selectedPlanningPhase.state = PlanningStatus.LOCKED;
-        this.toastService.displaySuccess(`Planning Phase for ${this.selectedYear} successfully locked`);
-      },
-      error => {
-        this.busy = false;
-        this.dialogService.displayDebug(error);
-      }
-    );
+    const hasCheckmarkSelected = this.missionData.filter(mission => mission.selected);
+    if (hasCheckmarkSelected.length) {
+      this.busy = true;
+      this.planningService.lockPlanningPhase(this.selectedPlanningPhase).subscribe(
+        resp => {
+          this.busy = false;
+          // Update model state
+          this.selectedPlanningPhase.state = PlanningStatus.LOCKED;
+          this.toastService.displaySuccess(`Planning Phase for ${this.selectedYear} successfully locked.`);
+          this.yearSelected({ name: this.selectedYear });
+        },
+        error => {
+          this.busy = false;
+          this.dialogService.displayDebug(error);
+        }
+      );
+    } else {
+      this.toastService.displayError(
+        'Please select at least one row in the grid. To do this, click the amber checkmark to change it to green.'
+      );
+    }
   }
 
   closePlanningPhase() {
-    this.busy = true;
-    this.planningService.closePlanningPhase(this.selectedPlanningPhase).subscribe(
-      resp => {
-        this.busy = false;
-        // Update model state
-        this.selectedPlanningPhase.state = PlanningStatus.CLOSED;
-        this.toastService.displaySuccess(`Planning Phase for ${this.selectedYear} successfully closed`);
-      },
-      error => {
-        this.busy = false;
-        this.dialogService.displayDebug(error);
-      }
-    );
+    const hasCheckmarkSelected = this.missionData.filter(mission => mission.selected);
+    if (hasCheckmarkSelected.length) {
+      this.busy = true;
+      this.planningService.closePlanningPhase(this.selectedPlanningPhase).subscribe(
+        resp => {
+          this.busy = false;
+          // Update model state
+          this.selectedPlanningPhase.state = PlanningStatus.CLOSED;
+          this.toastService.displaySuccess(`Planning Phase for ${this.selectedYear} successfully closed.`);
+          this.yearSelected({ name: this.selectedYear });
+        },
+        error => {
+          this.busy = false;
+          this.dialogService.displayDebug(error);
+        }
+      );
+    } else {
+      this.toastService.displayError(
+        'Please select at least one row in the grid. To do this, click the amber checkmark to change it to green.'
+      );
+    }
   }
 
   cancelDialog() {
@@ -693,6 +734,7 @@ export class MissionPrioritiesComponent implements OnInit {
     serverMP.order = clientMP.order;
     serverMP.planningPhaseId = clientMP.planningPhaseId;
     serverMP.title = clientMP.title;
+    serverMP.selected = clientMP.selected;
     return serverMP;
   }
 
@@ -718,6 +760,12 @@ export class MissionPrioritiesComponent implements OnInit {
       return this.actionState.PLANNING_CREATED_VIEW;
     } else if (this.selectedPlanningPhase.state === PlanningStatus.OPEN && !this.isPlannerManager && this.isPlanner) {
       return this.actionState.PLANNING_OPEN_VIEW;
+    } else if (this.selectedPlanningPhase.state === PlanningStatus.LOCKED && this.isPlannerManager) {
+      return this.actionState.PLANNING_LOCKED_VIEW;
+    } else if (this.selectedPlanningPhase.state === PlanningStatus.LOCKED && !this.isPlannerManager) {
+      return null;
+    } else if (this.selectedPlanningPhase.state === PlanningStatus.CLOSED) {
+      return this.actionState.PLANNING_CLOSED_VIEW;
     }
     return this.isPlanner || this.isPlannerManager ? this.actionState.VIEW : null;
   }

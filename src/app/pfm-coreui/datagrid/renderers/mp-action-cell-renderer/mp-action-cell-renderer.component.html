@@ -12,20 +12,20 @@
 
 <ng-template #extraActions>
   <div
-    *ngIf="data.canEdit && !data.hideStatus"
-    class="action"
+    *ngIf="!data.hideCheckmark"
+    [class.action]="!switchCheckmark"
     [class.green-color]="params.data.selected"
-    [class.amber-color]="!params.data.selected"
-    (click)="onSelected('toggle-select')"
+    [class.amber-color]="!params.data.selected && !switchCheckmark"
+    [class.red-color]="!params.data.selected && switchCheckmark"
+    (click)="switchCheckmark ? null : onSelected('toggle-select')"
   >
     <span [title]="title">
-      <fa name="check-circle"></fa>
-    </span>
-  </div>
-
-  <div *ngIf="false" class="action red-color">
-    <span title="Not selected for final version.">
-      <fa name="times-circle"></fa>
+      <ng-container *ngIf="switchCheckmark && !params.data.selected">
+        <fa name="times-circle"></fa>
+      </ng-container>
+      <ng-container *ngIf="!switchCheckmark || params.data.selected">
+        <fa name="check-circle"></fa>
+      </ng-container>
     </span>
   </div>
 </ng-template>

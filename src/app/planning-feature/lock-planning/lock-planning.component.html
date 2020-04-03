@@ -1,9 +1,23 @@
 <div class="main">
   <h3>Lock Planning Phase</h3>
-  <pfm-primary-button [label]="'Lock Planning Phase'" [name]="id" [id]="id" (onClick)="lockPlanningPhase()">
+  <pfm-primary-button
+    *ngIf="isPlannerManager"
+    [label]="'Lock Planning Phase'"
+    [name]="id"
+    [id]="id"
+    (onClick)="lockPlanningPhase()"
+  >
   </pfm-primary-button>
 </div>
 <ng-container *ngIf="availableYears">
-  <pfm-dropdown (selectionChanged)="yearSelected($event)" [type]="'labelDropdown'" [label]="'For:'" [required]="true"
-    [id]="id" [fieldName]="'name'" [fieldLabel]="'name'" [options]="availableYears"></pfm-dropdown>
+  <pfm-dropdown
+    (selectionChanged)="yearSelected($event)"
+    [type]="'labelDropdown'"
+    [label]="'For:'"
+    [required]="true"
+    [id]="id"
+    [fieldName]="'name'"
+    [fieldLabel]="'name'"
+    [options]="availableYears"
+  ></pfm-dropdown>
 </ng-container>
