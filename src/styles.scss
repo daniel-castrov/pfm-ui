@@ -54,6 +54,10 @@
 body {
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   background-color: #fff;
+}
+
+body,
+.btn-secondary {
   line-height: 1.5;
 }
 
@@ -235,6 +239,13 @@ hr {
     opacity: 0.5;
     transform: translateY(0);
   }
+  &::before {
+    font-family: FontAwesome;
+  }
+  opacity: 0.9;
+  border-radius: 0.25rem;
+  font-size: 16px;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
 
 // button primary custom colors
