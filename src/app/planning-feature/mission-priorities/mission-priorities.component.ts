@@ -166,7 +166,11 @@ export class MissionPrioritiesComponent implements OnInit {
           this.ctaOptions.splice(1, 1);
         } else if (this.selectedPlanningPhase.state === PlanningStatus.OPEN && isLockPhase && this.isPlannerManager) {
           this.canShowLockCTA = true;
-        } else if (this.selectedPlanningPhase.state === PlanningStatus.LOCKED && isClosePhase) {
+        } else if (
+          this.selectedPlanningPhase.state === PlanningStatus.LOCKED &&
+          isClosePhase &&
+          this.isPlannerManager
+        ) {
           this.canShowCloseCTA = true;
         }
       }
