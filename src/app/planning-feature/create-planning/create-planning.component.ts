@@ -20,6 +20,7 @@ export class CreatePlanningComponent implements OnInit {
   busy: boolean;
   availableYears: ListItem[];
   selectedYear: string;
+  isPlannerManager: boolean;
 
   yearSkipDialog: DialogInterface = {
     title: 'Caution',
@@ -85,6 +86,8 @@ export class CreatePlanningComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.isPlannerManager =
+      this.appModel.userDetails.userRole.isPOMManager || this.appModel.userDetails.userRole.isPlanningManager;
     const years: string[] = [];
     const createdYears = this.appModel.planningData.filter(year => year.state);
     const maxCreatedYear = Math.max(...createdYears.map(year => year.year));
