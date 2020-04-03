@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
+import { Component, HostListener, Input, OnInit, ViewChild } from '@angular/core';
 import { ColDef, GridApi } from '@ag-grid-community/all-modules';
 import { formatDate } from '@angular/common';
 import { DataGridMessage } from 'src/app/pfm-coreui/models/DataGridMessage';
@@ -10,6 +10,13 @@ import { DatePickerCellEditorComponent } from 'src/app/pfm-coreui/datagrid/rende
 import { DatePickerCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/date-picker-cell-renderer/date-picker-cell-renderer.component';
 import { ListItem } from 'src/app/pfm-common-models/ListItem';
 import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
+import { FundingLineService } from '../../../services/funding-line.service';
+import { map } from 'rxjs/operators';
+import { FundingLine } from '../../../models/funding-line.model';
+import { Program } from '../../../models/Program';
+import { ScheduleService } from '../../../services/schedule.service';
+import * as moment from 'moment';
+import { Schedule } from '../../../models/schedule.model';
 
 @Component({
   selector: 'pfm-schedule',
@@ -17,6 +24,7 @@ import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
   styleUrls: ['./schedule.component.scss']
 })
 export class ScheduleComponent implements OnInit {
+  @Input() program: Program;
 
   @ViewChild('googleChart', { static: false })
   chart: GoogleChartComponent;
@@ -40,34 +48,11 @@ export class ScheduleComponent implements OnInit {
     }
   };
 
-  fundingFilter: ListItem[] = [
-    { id: 'Show All', name: 'Show All', value: 'Show All', isSelected: true, rawData: 'Show All' },
-    { id: 'AAS/BA4/DE1', name: 'AAS/BA4/DE1', value: 'AAS/BA4/DE1', isSelected: false, rawData: 'AAS/BA4/DE1' },
-    { id: 'AAS/BA4/DE2', name: 'AAS/BA4/DE2', value: 'AAS/BA4/DE2', isSelected: false, rawData: 'AAS/BA4/DE2' },
-    { id: 'AAS/BA4/DE3', name: 'AAS/BA4/DE3', value: 'AAS/BA4/DE3', isSelected: false, rawData: 'AAS/BA4/DE3' },
-    { id: 'APT/BZ2/DE4', name: 'APT/BZ2/DE4', value: 'APT/BZ2/DE4', isSelected: false, rawData: 'APT/BZ2/DE4' },
-    { id: 'AAS/BA4/DE5', name: 'AAS/BA4/DE5', value: 'AAS/BA4/DE5', isSelected: false, rawData: 'AAS/BA4/DE5' },
-    { id: 'ATT/BA9/DE6', name: 'ATT/BA9/DE6', value: 'ATT/BA9/DE6', isSelected: false, rawData: 'ATT/BA9/DE6' },
-    { id: 'AAS/BC4/DE7', name: 'AAS/BC4/DE7', value: 'AAS/BC4/DE7', isSelected: false, rawData: 'AAS/BC4/DE7' },
-    { id: 'AAS/BA9/DE8', name: 'AAS/BA9/DE8', value: 'AAS/BA9/DE8', isSelected: false, rawData: 'AAS/BA9/DE8' },
-    { id: 'AXX/BA4/DE9', name: 'AXX/BA4/DE9', value: 'AXX/BA4/DE9', isSelected: false, rawData: 'AXX/BA4/DE9' },
-    { id: 'AAS/BA4/DE10', name: 'AAS/BA4/DE10', value: 'AAS/BA4/DE10', isSelected: false, rawData: 'AAS/BA4/DE10' }
-  ];
+  fundingFilter: ListItem[] = [];
 
   selectedFundingFilter = 'Show All';
 
-  fundingGridMockAssociationData = [
-    'AAS/BA4/DE1',
-    'AAS/BA4/DE2',
-    'AAS/BA4/DE3',
-    'APT/BZ2/DE4',
-    'AAS/BA4/DE5',
-    'ATT/BA9/DE6',
-    'AAS/BC4/DE7',
-    'AAS/BA9/DE8',
-    'AXX/BA4/DE9',
-    'AAS/BA4/DE10',
-  ];
+  fundingGridAssociations = [];
 
   chartData: GoogleChartInterface = {
     chartType: 'Gantt',
@@ -92,89 +77,131 @@ export class ScheduleComponent implements OnInit {
   gridApi: GridApi;
   components: any;
   fundingGridColumnDefinitions: ColDef[] = [];
-  fundingGridRows: ScheduleDataMockInterface[];
+  scheduleGridRows: ScheduleDataMockInterface[];
 
   busy: boolean;
   firstTimeLoading: boolean;
   currentRowDataState: ScheduleRowDataStateInterface = {};
 
   constructor(
-    private dialogService: DialogService
-  ) { }
+    private dialogService: DialogService,
+    private fundingLineService: FundingLineService,
+    private scheduleService: ScheduleService
+  ) {}
 
   ngOnInit() {
-    this.loadFundsGrid();
+    this.loadFundingLines();
+    this.loadSchedulesGrid();
     this.drawGanttChart();
   }
 
-  onFundingRowAdd(event: any) {
+  loadFundingLines() {
+    this.fundingFilter = [
+      {
+        id: 'Show All',
+        name: 'Show All',
+        value: 'Show All',
+        isSelected: true,
+        rawData: 'Show All'
+      }
+    ];
+    this.fundingGridAssociations = [];
+    this.scheduleGridRows = [];
+    this.fundingLineService
+      .obtainFundingLinesByProgramId(this.program.id)
+      .pipe(
+        map(resp => {
+          const fundingLines = resp.result as FundingLine[];
+          return fundingLines.map(fundingLine => {
+            const appn = fundingLine.appropriation ? fundingLine.appropriation : '';
+            const baOrBlin = fundingLine.baOrBlin ? fundingLine.baOrBlin : '';
+            const sag = fundingLine.sag ? fundingLine.sag : '';
+            const wucd = fundingLine.wucd ? fundingLine.wucd : '';
+            const expType = fundingLine.expenditureType ? fundingLine.expenditureType : '';
+            return {
+              id: fundingLine.id,
+              value: [appn, baOrBlin, sag, wucd, expType].join('/')
+            };
+          });
+        }),
+        map(objs => {
+          return objs.map(obj => {
+            return { id: obj.id, name: obj.value, value: obj.id, isSelected: false, rawData: obj.value };
+          });
+        })
+      )
+      .subscribe(fundingLines => {
+        for (const fundingLine of fundingLines) {
+          this.fundingFilter.push(fundingLine);
+          this.fundingGridAssociations.push(fundingLine);
+          this.scheduleService.getByFundingLineId(fundingLine.id).subscribe(schResp => {
+            const schedules = (schResp as any).result;
+            for (let i = 0; i < schedules.length; i++) {
+              const schedule = schedules[i];
+              if (schedule.startDate) {
+                schedule.startDate = schedule.startDate.format('MM/DD/YYYY');
+              }
+              if (schedule.endDate) {
+                schedule.endDate = schedule.endDate.format('MM/DD/YYYY');
+              }
+              this.scheduleGridRows.push(schedule);
+            }
+            this.scheduleGridRows.sort((a, b) => a.order - b.order);
+            for (let i = 0; i < this.scheduleGridRows.length; i++) {
+              this.viewMode(i);
+            }
+            this.gridApi.setRowData(this.scheduleGridRows);
+            this.updateGanttChart();
+          });
+        }
+      });
+  }
+
+  onScheduleRowAdd(event: any) {
     if (this.currentRowDataState.isEditMode) {
       return;
     }
-    const id = this.fundingGridRows.length ? Math.max.apply(Math, this.fundingGridRows.map(row => row.id)) : 0;
-    this.fundingGridRows.push(
-      {
-        id: id + 1,
-        taskDescription: '',
-        fundingLineAssociation: '',
-        startDate: formatDate(new Date(this.currentFiscalYear + '-01-01 00:00:00'), 'MM/dd/yyyy', 'en-US'),
-        endDate: formatDate(new Date((this.currentFiscalYear + 5) + '-12-31  00:00:00'), 'MM/dd/yyyy', 'en-US'),
-        order: id,
-        action: this.fundingGridActionState.EDIT
-      }
-    );
+    const maxOrder = this.scheduleGridRows.length
+      ? Math.max.apply(
+          Math,
+          this.scheduleGridRows.map(row => row.order)
+        )
+      : 0;
+    this.scheduleGridRows.push({
+      taskDescription: '',
+      fundingLineId: '',
+      startDate: formatDate(new Date(this.currentFiscalYear + '-01-01 00:00:00'), 'MM/dd/yyyy', 'en-US'),
+      endDate: formatDate(new Date(this.currentFiscalYear + 5 + '-12-31  00:00:00'), 'MM/dd/yyyy', 'en-US'),
+      order: maxOrder + 1,
+      action: this.fundingGridActionState.EDIT
+    });
     this.currentRowDataState.isAddMode = true;
-    this.gridApi.setRowData(this.fundingGridRows);
-    this.editRow(this.fundingGridRows.length - 1);
+    this.gridApi.setRowData(this.scheduleGridRows);
+    this.editRow(this.scheduleGridRows.length - 1);
   }
 
   drawGanttChart(redraw?: boolean) {
     const data: any[] = [
-      [
-        'Task ID',
-        'Task Name',
-        'Start Date',
-        'End Date',
-        'Duration',
-        'Percent Complete',
-        'Dependencies'
-      ]
+      ['Task ID', 'Task Name', 'Start Date', 'End Date', 'Duration', 'Percent Complete', 'Dependencies']
     ];
     data.push([
       '0',
       '',
       new Date(this.currentFiscalYear + '-01-01 00:00:00'),
-      new Date((this.currentFiscalYear + 5) + '-12-31 00:00:00'),
+      new Date(this.currentFiscalYear + 5 + '-12-31 00:00:00'),
       0,
       100,
       null
     ]);
     if (this.selectedFundingFilter.toLowerCase() !== 'show all') {
-      this.fundingGridRows.filter(
-        (row, index) =>
-          row.fundingLineAssociation === this.selectedFundingFilter
-      ).forEach(row => {
-        data.push([
-          row.id + '',
-          '',
-          new Date(row.startDate),
-          new Date(row.endDate),
-          0,
-          100,
-          '0'
-        ]);
-      });
+      this.scheduleGridRows
+        .filter((row, index) => row.fundingLineId === this.selectedFundingFilter)
+        .forEach(row => {
+          data.push([row.id + '', '', new Date(row.startDate), new Date(row.endDate), 0, 100, '0']);
+        });
     } else {
-      this.fundingGridRows.forEach(row => {
-        data.push([
-          row.id + '',
-          '',
-          new Date(row.startDate),
-          new Date(row.endDate),
-          0,
-          100,
-          '0'
-        ]);
+      this.scheduleGridRows.forEach(row => {
+        data.push([row.id + '', '', new Date(row.startDate), new Date(row.endDate), 0, 100, '0']);
       });
     }
     if (data.length === 1) {
@@ -189,7 +216,7 @@ export class ScheduleComponent implements OnInit {
       ]);
     }
     this.chartData.dataTable = data;
-    if (this.chart && !this.firstTimeLoading || redraw) {
+    if ((this.chart && !this.firstTimeLoading) || redraw) {
       this.firstTimeLoading = true;
       this.chart.draw();
     }
@@ -218,16 +245,15 @@ export class ScheduleComponent implements OnInit {
     this.gridApi = gridApi;
   }
 
-  private loadFundsGrid() {
+  private loadSchedulesGrid() {
     this.loadFundColumns();
-    this.loadFundsData();
   }
 
   private loadFundColumns() {
     this.fundingGridColumnDefinitions.push(
       {
         headerName: 'ID',
-        field: 'id',
+        field: 'order',
         editable: false,
         suppressMovable: true,
         maxWidth: 60,
@@ -250,7 +276,7 @@ export class ScheduleComponent implements OnInit {
       },
       {
         headerName: 'Funding Line Association',
-        field: 'fundingLineAssociation',
+        field: 'fundingLineId',
         editable: true,
         suppressMovable: true,
         filter: false,
@@ -258,10 +284,18 @@ export class ScheduleComponent implements OnInit {
         suppressMenu: true,
         cellClass: 'text-class',
         cellStyle: { display: 'flex', 'align-items': 'center', 'white-space': 'normal' },
-        cellEditor: 'select',
-        cellEditorParams: {
-          cellHeight: 50,
-          values: this.fundingGridMockAssociationData
+        cellEditor: 'agSelectCellEditor',
+        valueFormatter: params => {
+          if (params.value) {
+            return this.fundingGridAssociations.find(x => x.id === params.value).name;
+          }
+          return '';
+        },
+        cellEditorParams: params => {
+          return {
+            cellHeight: 50,
+            values: [...this.fundingGridAssociations.map(x => x.id)]
+          };
         }
       },
       {
@@ -276,7 +310,7 @@ export class ScheduleComponent implements OnInit {
         cellStyle: { display: 'flex', 'align-items': 'center', 'white-space': 'normal' },
         cellRendererFramework: DatePickerCellRendererComponent,
         cellEditorFramework: DatePickerCellEditorComponent,
-        minWidth: 145,
+        minWidth: 145
       },
       {
         headerName: 'End Date',
@@ -290,7 +324,7 @@ export class ScheduleComponent implements OnInit {
         cellStyle: { display: 'flex', 'align-items': 'center', 'white-space': 'normal' },
         cellRendererFramework: DatePickerCellRendererComponent,
         cellEditorFramework: DatePickerCellEditorComponent,
-        minWidth: 145,
+        minWidth: 145
       },
       {
         headerName: 'Actions',
@@ -310,56 +344,12 @@ export class ScheduleComponent implements OnInit {
     if (item && item.value) {
       this.selectedFundingFilter = item.value;
       if (item.value.toLowerCase() === 'show all') {
-        this.gridApi.setRowData(this.fundingGridRows);
+        this.gridApi.setRowData(this.scheduleGridRows);
       } else {
-        this.gridApi.setRowData(this.fundingGridRows.filter(
-          (row, index) =>
-            row.fundingLineAssociation === item.value
-        ));
+        this.gridApi.setRowData(this.scheduleGridRows.filter((row, index) => row.fundingLineId === item.value));
       }
       this.drawGanttChart(true);
     }
-  }
-
-  private loadFundsData() {
-    this.fundingGridRows = [
-      {
-        id: 1,
-        taskDescription: 'Mocked Task #1',
-        fundingLineAssociation: 'ATT/BA9/DE6',
-        startDate: formatDate(new Date(), 'MM/dd/yyyy', 'en-US'),
-        endDate: formatDate(new Date('2020-04-01'), 'MM/dd/yyyy', 'en-US'),
-        order: 1,
-        action: this.fundingGridActionState.VIEW
-      },
-      {
-        id: 2,
-        taskDescription: 'Mocked Task #2',
-        fundingLineAssociation: 'AAS/BA4/DE1',
-        startDate: formatDate(new Date(), 'MM/dd/yyyy', 'en-US'),
-        endDate: formatDate(new Date('2020-04-02'), 'MM/dd/yyyy', 'en-US'),
-        order: 2,
-        action: this.fundingGridActionState.VIEW
-      },
-      {
-        id: 3,
-        taskDescription: 'Mocked Task #3',
-        fundingLineAssociation: 'AAS/BA9/DE8',
-        startDate: formatDate(new Date(), 'MM/dd/yyyy', 'en-US'),
-        endDate: formatDate(new Date('2020-05-01'), 'MM/dd/yyyy', 'en-US'),
-        order: 3,
-        action: this.fundingGridActionState.VIEW
-      },
-      {
-        id: 4,
-        taskDescription: 'Mocked Task #4',
-        fundingLineAssociation: 'AAS/BC4/DE7',
-        startDate: formatDate(new Date(), 'MM/dd/yyyy', 'en-US'),
-        endDate: formatDate(new Date('2024-12-31'), 'MM/dd/yyyy', 'en-US'),
-        order: 4,
-        action: this.fundingGridActionState.VIEW
-      }
-    ];
   }
 
   onMouseDown(event: MouseEvent) {
@@ -398,9 +388,58 @@ export class ScheduleComponent implements OnInit {
 
   private saveRow(rowIndex: number) {
     this.gridApi.stopEditing();
-    const row: ScheduleDataMockInterface = this.fundingGridRows[rowIndex];
+    const row: ScheduleDataMockInterface = this.scheduleGridRows[rowIndex];
     const canSave = this.validateRowData(row);
     if (canSave) {
+      if (row.startDate) {
+        row.startDate = moment(row.startDate, 'MM/DD/YYYY');
+      }
+      if (row.endDate) {
+        row.endDate = moment(row.endDate, 'MM/DD/YYYY');
+      }
+      if (!row.id) {
+        this.scheduleService.createSchedule(row).subscribe(
+          resp => {
+            const dbSchedule = resp.result as Schedule;
+            row.id = dbSchedule.id;
+            debugger;
+            if (row.startDate) {
+              row.startDate = row.startDate.format('MM/DD/YYYY');
+            }
+            if (row.endDate) {
+              row.endDate = row.endDate.format('MM/DD/YYYY');
+            }
+            // Update view
+            this.viewMode(rowIndex);
+            this.updateGanttChart();
+          },
+          error => {
+            this.busy = false;
+            this.dialogService.displayDebug(error);
+            this.editRow(rowIndex);
+          }
+        );
+      } else {
+        // Ensure creation information is preserved
+        this.scheduleService.updateSchedule(row).subscribe(
+          resp => {
+            this.busy = false;
+            if (row.startDate) {
+              row.startDate = row.startDate.format('MM/DD/YYYY');
+            }
+            if (row.endDate) {
+              row.endDate = row.endDate.format('MM/DD/YYYY');
+            }
+            // Update view
+            this.viewMode(rowIndex);
+          },
+          error => {
+            this.busy = false;
+            this.dialogService.displayDebug(error);
+            this.editRow(rowIndex);
+          }
+        );
+      }
       this.busy = true;
       this.viewMode(rowIndex);
       this.updateGanttChart();
@@ -416,7 +455,7 @@ export class ScheduleComponent implements OnInit {
       errorMessage = 'Task Description cannot be empty.';
     } else if (row.taskDescription.length > 45) {
       errorMessage = 'Task Description cannot have more than 45 characters.';
-    } else if (!this.fundingGridMockAssociationData.filter(fund => fund === row.fundingLineAssociation).length) {
+    } else if (!this.fundingGridAssociations.some(fund => fund.id === row.fundingLineId)) {
       errorMessage = 'Please, select a valid Funding Line Association.';
     } else if (!this.validateDate(row.startDate)) {
       errorMessage = 'Make sure Start Date is a valid date in the format (Month/Day/Year).';
@@ -424,10 +463,16 @@ export class ScheduleComponent implements OnInit {
       errorMessage = 'Make sure End Date is a valid date in the format (Month/Day/Year).';
     } else if (new Date(row.startDate) > new Date(row.endDate)) {
       errorMessage = 'Start Date cannot be greater than End Date.';
-    } else if (new Date(row.startDate).getFullYear() < this.currentFiscalYear ||
-      new Date(row.endDate).getFullYear() > this.currentFiscalYear + 5) {
-      errorMessage = 'Start Date cannot be less than the current fiscal year (' + this.currentFiscalYear +
-        ') and End Date cannot greater than ' + (this.currentFiscalYear + 5) + '.';
+    } else if (
+      new Date(row.startDate).getFullYear() < this.currentFiscalYear ||
+      new Date(row.endDate).getFullYear() > this.currentFiscalYear + 5
+    ) {
+      errorMessage =
+        'Start Date cannot be less than the current fiscal year (' +
+        this.currentFiscalYear +
+        ') and End Date cannot greater than ' +
+        (this.currentFiscalYear + 5) +
+        '.';
     }
     if (errorMessage.length) {
       this.dialogService.displayError(errorMessage);
@@ -440,9 +485,11 @@ export class ScheduleComponent implements OnInit {
       try {
         const date = new Date(dateString);
         const dateSplit = dateString.split('/');
-        if (date.getFullYear() === Number(dateSplit[2]) &&
+        if (
+          date.getFullYear() === Number(dateSplit[2]) &&
           date.getMonth() === Number(dateSplit[0]) - 1 &&
-          date.getDate() === Number(dateSplit[1])) {
+          date.getDate() === Number(dateSplit[1])
+        ) {
           return true;
         }
       } catch (err) {
@@ -453,14 +500,14 @@ export class ScheduleComponent implements OnInit {
   }
 
   private cancelRow(rowIndex: number) {
-    this.fundingGridRows[rowIndex] = this.currentRowDataState.currentEditingRowData;
+    this.scheduleGridRows[rowIndex] = this.currentRowDataState.currentEditingRowData;
     this.viewMode(rowIndex);
     this.updateGanttChart();
   }
 
   private editRow(rowIndex: number, updatePreviousState?: boolean) {
     if (updatePreviousState) {
-      this.currentRowDataState.currentEditingRowData = { ...this.fundingGridRows[rowIndex] };
+      this.currentRowDataState.currentEditingRowData = { ...this.scheduleGridRows[rowIndex] };
     }
     this.editMode(rowIndex);
   }
@@ -473,20 +520,22 @@ export class ScheduleComponent implements OnInit {
 
   private deleteRow(rowIndex: number) {
     this.busy = true;
-    this.fundingGridRows.splice(rowIndex, 1);
-    this.fundingGridRows.forEach(row => {
-      row.order--;
-    });
+    const rowObj = this.scheduleGridRows[rowIndex];
+    if (rowObj.id) {
+      this.scheduleService.deleteSchedule(rowObj.id).subscribe(x => {
+        this.busy = false;
+      });
+    }
+    this.scheduleGridRows.splice(rowIndex, 1);
     this.currentRowDataState.currentEditingRowIndex = 0;
     this.currentRowDataState.isEditMode = false;
     this.currentRowDataState.isAddMode = false;
     this.gridApi.stopEditing();
-    this.fundingGridRows.forEach(row => {
+    this.scheduleGridRows.forEach(row => {
       row.isDisabled = false;
     });
-    this.gridApi.setRowData(this.fundingGridRows);
+    this.gridApi.setRowData(this.scheduleGridRows);
     this.updateGanttChart();
-    this.busy = false;
   }
 
   private viewMode(rowIndex: number) {
@@ -494,49 +543,44 @@ export class ScheduleComponent implements OnInit {
     this.currentRowDataState.isEditMode = false;
     this.currentRowDataState.isAddMode = false;
     this.gridApi.stopEditing();
-    this.fundingGridRows[rowIndex].action = this.fundingGridActionState.VIEW;
-    this.fundingGridRows.forEach(row => {
+    this.scheduleGridRows[rowIndex].action = this.fundingGridActionState.VIEW;
+    this.scheduleGridRows.forEach(row => {
       row.isDisabled = false;
     });
-    this.gridApi.setRowData(this.fundingGridRows);
+    this.gridApi.setRowData(this.scheduleGridRows);
   }
 
   private editMode(rowIndex: number) {
     this.currentRowDataState.currentEditingRowIndex = rowIndex;
     this.currentRowDataState.isEditMode = true;
-    this.fundingGridRows[rowIndex].action = this.fundingGridActionState.EDIT;
-    this.fundingGridRows.forEach((row, index) => {
+    this.scheduleGridRows[rowIndex].action = this.fundingGridActionState.EDIT;
+    this.scheduleGridRows.forEach((row, index) => {
       if (rowIndex !== index) {
         row.isDisabled = true;
       }
     });
-    this.gridApi.setRowData(this.fundingGridRows);
+    this.gridApi.setRowData(this.scheduleGridRows);
     this.gridApi.startEditingCell({
       rowIndex,
       colKey: 'taskDescription'
     });
   }
-
 }
 
 export interface ScheduleDataMockInterface {
-
-  id?: number;
+  id?: string;
   taskDescription?: string;
-  fundingLineAssociation?: string;
-  startDate?: string;
-  endDate?: string;
+  fundingLineId?: string;
+  startDate?: any;
+  endDate?: any;
   order?: number;
   action?: Action;
   isDisabled?: boolean;
-
 }
 
 export interface ScheduleRowDataStateInterface {
-
   currentEditingRowIndex?: number;
   isAddMode?: boolean;
   isEditMode?: boolean;
   currentEditingRowData?: ScheduleDataMockInterface;
-
 }

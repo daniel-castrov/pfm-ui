@@ -2,15 +2,19 @@
   <div class="table w-100">
     <div class="table-row w-100">
       <div class="float-left">
-        <h3>Create Programming Phase for {{byYear}} </h3>
+        <h3>Create Programming Phase for {{ byYear }}</h3>
         <div class="float-right text-right w-20">
           <a href="" class="edit-year-blue-link ">Edit Year</a>
         </div>
       </div>
       <div style="float: right;">
         <ng-container *ngIf="selectedYear">
-          <pfm-primary-button [label]="'Create Programming Phase'" [name]="id" [id]="btnCreatePrg"
-            (onClick)="onCreateProgramPhase()"></pfm-primary-button>
+          <pfm-primary-button
+            [label]="'Create Programming Phase'"
+            [name]="id"
+            [id]="btnCreatePrg"
+            (onClick)="onCreateProgramPhase()"
+          ></pfm-primary-button>
         </ng-container>
       </div>
     </div>
@@ -21,8 +25,15 @@
       <div class="table-row">
         <div class="rTableCell">
           <ng-container *ngIf="availableYears">
-            <pfm-dropdown (selectionChanged)="yearSelected($event)" [label]="'Baseline Loaded from:'" [required]="true"
-              [id]="id" [fieldName]="'name'" [fieldLabel]="'name'" [options]="availableYears"></pfm-dropdown>
+            <pfm-dropdown
+              (selectionChanged)="yearSelected($event)"
+              [label]="'Baseline Loaded from:'"
+              [required]="true"
+              [id]="id"
+              [fieldName]="'name'"
+              [fieldLabel]="'name'"
+              [options]="availableYears"
+            ></pfm-dropdown>
           </ng-container>
         </div>
       </div>
@@ -35,49 +46,57 @@
     <tabset class="program-tab-style" destroyOnHide="true">
       <tab heading="Community" active="true" style="width:100%;height:100%" (selectTab)="onTabSelected($event)">
         <div class="section-tab">
-
           <div class="section-chart">
             <pfm-programming-community-graph></pfm-programming-community-graph>
           </div>
 
           <div class="section-datagrid">
-            <div><span>&nbsp;Set TOAs for Comunity ($K)&nbsp;</span>
+            <div>
+              <span>&nbsp;Set TOAs for Comunity ($K)&nbsp;</span>
               <pfm-secondary-button [label]="' Reset'" [icon]="'fa fa-refresh'" (click)="onResetCommunityData()">
               </pfm-secondary-button>
             </div>
             <div class="grid-container">
-              <pfm-displaydatagrid [tabToNextCell]="onTabToNextCell.bind(this)"
-                (onGridIsReady)="onCommunityGridIsReady($event)" (onColumnIsReady)="onCommunityColumnIsReady($event)"
-                (onCellAction)="onCommunityGridCellAction($event)" [showAddRow]="false" [columns]="communityColumns"
-                [rows]="communityData">
+              <pfm-displaydatagrid
+                [tabToNextCell]="onTabToNextCell.bind(this)"
+                (onGridIsReady)="onCommunityGridIsReady($event)"
+                (onColumnIsReady)="onCommunityColumnIsReady($event)"
+                (onCellAction)="onCommunityGridCellAction($event)"
+                [showAddRow]="false"
+                [columns]="communityColumns"
+                [rows]="communityData"
+              >
               </pfm-displaydatagrid>
             </div>
           </div>
-
         </div>
       </tab>
       <tab heading="Organization" style="width:100%;height:100%" (selectTab)="onTabSelected($event)">
         <div class="section-tab">
-
           <div class="section-chart">
             <pfm-programming-organization-graph></pfm-programming-organization-graph>
           </div>
 
           <div class="section-datagrid">
-            <div><span>&nbsp;Set TOAs for Organization ($K)&nbsp;</span>
+            <div>
+              <span>&nbsp;Set TOAs for Organization ($K)&nbsp;</span>
               <pfm-secondary-button [label]="' Reset'" [icon]="'fa fa-refresh'" (click)="onResetOrgData()">
               </pfm-secondary-button>
             </div>
             <!--<div style="height:300px;width:98%">-->
             <div class="grid-container">
-              <pfm-displaydatagrid [tabToNextCell]="onTabToNextCell.bind(this)"
-                (onGridIsReady)="onOrgGridIsReady($event)" (onColumnIsReady)="onOrgColumnIsReady($event)"
-                (onCellAction)="onOrgGridCellAction($event)" [showAddRow]="false" [columns]="orgColumns"
-                [rows]="orgData">
+              <pfm-displaydatagrid
+                [tabToNextCell]="onTabToNextCell.bind(this)"
+                (onGridIsReady)="onOrgGridIsReady($event)"
+                (onColumnIsReady)="onOrgColumnIsReady($event)"
+                (onCellAction)="onOrgGridCellAction($event)"
+                [showAddRow]="false"
+                [columns]="orgColumns"
+                [rows]="orgData"
+              >
               </pfm-displaydatagrid>
             </div>
           </div>
-
         </div>
         <!--</div>-->
         <!--
@@ -97,11 +116,9 @@
   </div>
 </div>
 
-
 <ng-container *ngIf="showUploadDialog">
   <pfm-secure-upload (onFilesUploaded)="handlePOMFile($event)"></pfm-secure-upload>
 </ng-container>
-<br><br>
-
+<br /><br />
 
 <pfm-busy [busy]="busy"></pfm-busy>
