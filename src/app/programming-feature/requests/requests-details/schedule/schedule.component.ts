@@ -287,14 +287,19 @@ export class ScheduleComponent implements OnInit {
         cellEditor: 'agSelectCellEditor',
         valueFormatter: params => {
           if (params.value) {
-            return this.fundingGridAssociations.find(x => x.id === params.value).name;
+            const find = this.fundingGridAssociations.find(x => x.id === params.value);
+            if (find) {
+              return find.name;
+            } else {
+              return params.value;
+            }
           }
           return '';
         },
         cellEditorParams: params => {
           return {
             cellHeight: 50,
-            values: [...this.fundingGridAssociations.map(x => x.id)]
+            values: ['Select', ...this.fundingGridAssociations.map(x => x.id)]
           };
         }
       },
@@ -391,6 +396,9 @@ export class ScheduleComponent implements OnInit {
     const row: ScheduleDataMockInterface = this.scheduleGridRows[rowIndex];
     const canSave = this.validateRowData(row);
     if (canSave) {
+      if (row.fundingLineId.toLowerCase() === 'select') {
+        row.fundingLineId = null;
+      }
       if (row.startDate) {
         row.startDate = moment(row.startDate, 'MM/DD/YYYY');
       }
@@ -402,7 +410,6 @@ export class ScheduleComponent implements OnInit {
           resp => {
             const dbSchedule = resp.result as Schedule;
             row.id = dbSchedule.id;
-            debugger;
             if (row.startDate) {
               row.startDate = row.startDate.format('MM/DD/YYYY');
             }
@@ -455,8 +462,6 @@ export class ScheduleComponent implements OnInit {
       errorMessage = 'Task Description cannot be empty.';
     } else if (row.taskDescription.length > 45) {
       errorMessage = 'Task Description cannot have more than 45 characters.';
-    } else if (!this.fundingGridAssociations.some(fund => fund.id === row.fundingLineId)) {
-      errorMessage = 'Please, select a valid Funding Line Association.';
     } else if (!this.validateDate(row.startDate)) {
       errorMessage = 'Make sure Start Date is a valid date in the format (Month/Day/Year).';
     } else if (!this.validateDate(row.endDate)) {
