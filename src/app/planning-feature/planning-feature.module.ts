@@ -15,8 +15,6 @@ import { PlanningServicesImpl } from './services/planning-services-impl.service'
 import { PfmSecureFileuploadModule } from '../pfm-secure-fileupload/pfm-secure-fileupload.module';
 import { PfmSecureFiledownloadModule } from '../pfm-secure-filedownload/pfm-secure-filedownload.module';
 import { FormsModule } from '@angular/forms';
-import { VisibilityService } from '../services/visibility-service';
-import { VisibilityServiceImpl } from '../services/visibility-service-impl.service';
 
 @NgModule({
   declarations: [
@@ -36,9 +34,6 @@ import { VisibilityServiceImpl } from '../services/visibility-service-impl.servi
     PfmSecureFiledownloadModule,
     PlanningFeatureRoutingModule
   ],
-  providers: [
-    { provide: PlanningService, useClass: PlanningServicesImpl },
-    { provide: VisibilityService, useClass: VisibilityServiceImpl }
-  ]
+  providers: [{ provide: PlanningService, useClass: PlanningServicesImpl }]
 })
 export class PlanningFeatureModule {}

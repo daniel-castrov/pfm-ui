@@ -23,7 +23,7 @@ export class PlanningFeatureComponent implements OnInit {
     private dialogService: DialogService
   ) {}
 
-  async ngOnInit() {
+  ngOnInit() {
     // TODO - Notes for dynamic loading libs
     // the appModel should contain an information that can override the default view
     /*

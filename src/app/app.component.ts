@@ -34,7 +34,6 @@ export class AppComponent implements OnInit {
 
     if (json) {
       const temp: AppModel = JSON.parse(json);
-      console.log(temp);
       this.appModel.userDetails = temp.userDetails;
       this.appModel.isUserSignedIn = this.authService.isAuthenticated();
       this.setupVisibility();
