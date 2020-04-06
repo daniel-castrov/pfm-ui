@@ -1,1 +1,11 @@
-<button #buttonElement [disabled]="disabled" class="btn-secondary {{icon}}" type="button" id="{id} + _secondary_button" [name]="name" (click)="handleClick($event)">{{label}}</button>
+<button
+  #buttonElement
+  [disabled]="disabled"
+  class="btn btn-secondary {{ icon }}"
+  type="button"
+  id="{id} + _secondary_button"
+  [name]="name"
+  (click)="handleClick($event)"
+>
+  {{ label }}
+</button>
