@@ -1,10 +1,5 @@
-import {
-  Directive, Input,
-  OnInit,
-  TemplateRef,
-  ViewContainerRef
-} from '@angular/core';
-import {AppModel} from '../../pfm-common-models/AppModel';
+import { Directive, Input, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
+import { AppModel } from '../../pfm-common-models/AppModel';
 
 @Directive({
   selector: '[pfmIsVisible]'
@@ -25,11 +20,10 @@ export class IsVisibleDirective implements OnInit {
     private viewContainerRef: ViewContainerRef,
     private templateRef: TemplateRef<any>,
     private appModel: AppModel
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
-    let showComponent = true;
+    let showComponent: boolean;
     const visibilityDefIdParts = this.pfmIsVisible.split('.');
     const compositeId: string = visibilityDefIdParts[0];
     const componentId: string = visibilityDefIdParts[1];

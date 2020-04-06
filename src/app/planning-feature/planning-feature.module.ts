@@ -16,7 +16,6 @@ import { PfmSecureFileuploadModule } from '../pfm-secure-fileupload/pfm-secure-f
 import { PfmSecureFiledownloadModule } from '../pfm-secure-filedownload/pfm-secure-filedownload.module';
 import { FormsModule } from '@angular/forms';
 
-
 @NgModule({
   declarations: [
     PlanningFeatureComponent,
@@ -37,4 +36,4 @@ import { FormsModule } from '@angular/forms';
   ],
   providers: [{ provide: PlanningService, useClass: PlanningServicesImpl }]
 })
-export class PlanningFeatureModule { }
+export class PlanningFeatureModule {}

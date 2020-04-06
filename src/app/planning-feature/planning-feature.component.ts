@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { DialogService } from '../pfm-coreui/services/dialog.service';
 import { PlanningService } from './services/planning-service';
 import { AppModel } from '../pfm-common-models/AppModel';
@@ -10,7 +10,6 @@ import { PlanningUtils } from './utils/planning-utils';
   styleUrls: ['./planning-feature.component.css']
 })
 export class PlanningFeatureComponent implements OnInit {
-
   @ViewChild('targetRef', { read: ViewContainerRef, static: true })
   vcRef: ViewContainerRef;
 
@@ -22,8 +21,7 @@ export class PlanningFeatureComponent implements OnInit {
     private appModel: AppModel,
     private planningService: PlanningService,
     private dialogService: DialogService
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
     // TODO - Notes for dynamic loading libs
@@ -45,11 +43,11 @@ export class PlanningFeatureComponent implements OnInit {
       error => {
         this.busy = false;
         this.dialogService.displayDebug(error);
-      });
+      }
+    );
   }
 
   private processPlanningData(data: any): void {
     this.appModel.planningData = PlanningUtils.processPlanningPhase(data);
   }
 }
-
