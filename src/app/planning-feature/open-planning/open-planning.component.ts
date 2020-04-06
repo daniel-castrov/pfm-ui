@@ -30,37 +30,6 @@ export class OpenPlanningComponent implements OnInit {
     private toastService: ToastService
   ) {}
 
-  yearSelected(year: ListItem): void {
-    this.selectedYear = year.value;
-  }
-
-  onOpenPlanningPhase(): void {
-    if (this.yearDropDown.isValid()) {
-      this.busy = true;
-      const year: any = this.selectedYear;
-      const planningData = this.appModel.planningData.find(obj => obj.id === year + '_id');
-      this.planningService.openPlanningPhase(planningData).subscribe(
-        resp => {
-          this.busy = false;
-
-          // Update shared model state
-          this.appModel.selectedYear = year;
-          planningData.state = PlanningStatus.OPEN;
-
-          this.toastService.displaySuccess(`Planning phase for ${year} successfully opened.`);
-
-          this.router.navigate(['/planning/mission-priorities']);
-        },
-        error => {
-          this.busy = false;
-          this.dialogService.displayDebug(error);
-        }
-      );
-    } else {
-      this.toastService.displayError(`Please select a year from the dropdown.`);
-    }
-  }
-
   ngOnInit() {
     this.isPlannerManager =
       this.appModel.userDetails.userRole.isPOMManager || this.appModel.userDetails.userRole.isPlanningManager;
@@ -71,6 +40,28 @@ export class OpenPlanningComponent implements OnInit {
       }
     }
     this.availableYears = this.toListItem(years);
+  }
+
+  yearSelected(year: ListItem): void {
+    this.selectedYear = year.value;
+    this.openPlanningPhase();
+  }
+
+  openPlanningPhase(): void {
+    if (this.yearDropDown.isValid()) {
+      // Update shared model state
+      this.appModel.selectedYear = this.selectedYear;
+
+      // Open Mission Priorities
+      this.router.navigate([
+        '/planning/mission-priorities',
+        {
+          openPhase: true
+        }
+      ]);
+    } else {
+      this.toastService.displayError(`Please select a year from the dropdown.`);
+    }
   }
 
   private toListItem(years: string[]): ListItem[] {
