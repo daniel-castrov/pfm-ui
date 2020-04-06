@@ -1,5 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { ColumnApi, GridApi, ColGroupDef, GroupCellRenderer } from '@ag-grid-community/all-modules';
+import { Component, Input, OnInit } from '@angular/core';
+import { ColGroupDef, ColumnApi, GridApi, GroupCellRenderer } from '@ag-grid-community/all-modules';
 import { DataGridMessage } from '../../../../pfm-coreui/models/DataGridMessage';
 import { ActionCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/action-cell-renderer/action-cell-renderer.component';
 import { NumericCellEditor } from 'src/app/ag-grid/cell-editors/NumericCellEditor';
@@ -734,7 +734,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
   private saveRow(rowIndex: number) {
     this.nonSummaryFundingLineGridApi.stopEditing();
     const row = this.nonSummaryFundingLineRows[rowIndex];
-    const canSave = this.validateNonSummaryRowData(row);
+    const canSave = this.validateNonSummaryRowData(rowIndex);
     if (canSave) {
       const fundingLine = this.convertFiscalYearToFunds(row);
       fundingLine.programId = this.program.id;
@@ -801,8 +801,10 @@ export class RequestsFundingLineGridComponent implements OnInit {
       });
   }
 
-  private validateNonSummaryRowData(row: any) {
+  private validateNonSummaryRowData(rowIndex: any) {
+    const row = this.nonSummaryFundingLineRows[rowIndex];
     let errorMessage = '';
+
     if (row.appropriation && (!row.appropriation.length || row.appropriation.toLowerCase() === 'select')) {
       errorMessage = 'Please, select an APPN.';
     } else if (row.baOrBlin && (!row.baOrBlin.length || row.baOrBlin.toLowerCase() === 'select')) {
@@ -813,6 +815,20 @@ export class RequestsFundingLineGridComponent implements OnInit {
       errorMessage = 'Please, select a WUCD.';
     } else if (row.expenditureType && (!row.expenditureType.length || row.expenditureType.toLowerCase() === 'select')) {
       errorMessage = 'Please, select a Exp Type.';
+    } else if (
+      this.nonSummaryFundingLineRows.some((fundingLine, idx) => {
+        return (
+          idx !== rowIndex &&
+          fundingLine.appropriation === row.appropriation &&
+          fundingLine.baOrBlin === row.baOrBlin &&
+          fundingLine.sag === row.sag &&
+          fundingLine.wucd === row.wucd &&
+          fundingLine.expenditureType === row.expenditureType
+        );
+      })
+    ) {
+      debugger;
+      errorMessage = 'You have repeated an existing funding line.  Please delete this row and edit the existing line.';
     }
     if (errorMessage.length) {
       this.dialogService.displayError(errorMessage);
