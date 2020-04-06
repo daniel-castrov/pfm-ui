@@ -36,13 +36,13 @@ export class AppComponent implements OnInit {
       const temp: AppModel = JSON.parse(json);
       this.appModel.userDetails = temp.userDetails;
       this.appModel.isUserSignedIn = this.authService.isAuthenticated();
-      this.setupVisibility();
     } else {
       this.appModel.isUserSignedIn = false;
       this.appModel.userDetails = new UserDetailsModel();
       this.appModel.userDetails.userRole = new UserRole(['']);
       this.router.navigate(['signin']);
     }
+    this.setupVisibility();
   }
 
   async setupVisibility() {
