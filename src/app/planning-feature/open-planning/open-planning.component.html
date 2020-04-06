@@ -5,7 +5,7 @@
     [label]="'Open Planning Phase'"
     [name]="id"
     [id]="id"
-    (onClick)="onOpenPlanningPhase()"
+    (onClick)="openPlanningPhase()"
   >
   </pfm-primary-button>
 </div>
@@ -22,7 +22,5 @@
     [options]="availableYears"
   ></pfm-dropdown>
 </ng-container>
-
-<pfm-busy [busy]="busy"></pfm-busy>
 
 <pfm-busy [busy]="busy"></pfm-busy>

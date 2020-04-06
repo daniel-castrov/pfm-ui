@@ -14,13 +14,33 @@
     </h3>
   </div>
   <ng-container>
+    <div *ngIf="canShowOpenCTA">
+      <button
+        *pfmIsVisible="'planning-phase-component.openPlanningPhase'"
+        type="button"
+        class="btn btn-primary float-right"
+        (click)="openPlanningPhase()"
+      >
+        Open Planning Phase
+      </button>
+    </div>
     <div *ngIf="canShowLockCTA">
-      <button type="button" class="btn btn-primary float-right" (click)="lockPlanningPhase()">
+      <button
+        *pfmIsVisible="'planning-phase-component.lockPlanningPhase'"
+        type="button"
+        class="btn btn-primary float-right"
+        (click)="lockPlanningPhase()"
+      >
         Lock Planning Phase
       </button>
     </div>
     <div *ngIf="canShowCloseCTA">
-      <button type="button" class="btn btn-primary float-right" (click)="closePlanningPhase()">
+      <button
+        *pfmIsVisible="'planning-phase-component.closePlanningPhase'"
+        type="button"
+        class="btn btn-primary float-right"
+        (click)="closePlanningPhase()"
+      >
         Close Planning Phase
       </button>
     </div>

@@ -117,6 +117,7 @@ export class MissionPrioritiesComponent implements OnInit {
   selectedImportYear: string;
   availableImportYears: ListItem[];
   canAddNewRow: boolean;
+  canShowOpenCTA: boolean;
   canShowLockCTA: boolean;
   canShowCloseCTA: boolean;
 
@@ -160,17 +161,16 @@ export class MissionPrioritiesComponent implements OnInit {
       if (this.selectedYear) {
         this.canAddNewRow =
           (this.isPlannerManager || this.isPlanner) && this.selectedPlanningPhase.state !== PlanningStatus.LOCKED;
+        const isOpenPhase = !!this.route.snapshot.paramMap.get('openPhase');
         const isLockPhase = !!this.route.snapshot.paramMap.get('lockPhase');
         const isClosePhase = !!this.route.snapshot.paramMap.get('closePhase');
-        if (this.selectedPlanningPhase.state === PlanningStatus.OPEN && !isLockPhase) {
+        if (this.selectedPlanningPhase.state === PlanningStatus.CREATED && isOpenPhase) {
+          this.canShowOpenCTA = true;
+        } else if (this.selectedPlanningPhase.state === PlanningStatus.OPEN && !isLockPhase) {
           this.ctaOptions.splice(1, 1);
-        } else if (this.selectedPlanningPhase.state === PlanningStatus.OPEN && isLockPhase && this.isPlannerManager) {
+        } else if (this.selectedPlanningPhase.state === PlanningStatus.OPEN && isLockPhase) {
           this.canShowLockCTA = true;
-        } else if (
-          this.selectedPlanningPhase.state === PlanningStatus.LOCKED &&
-          isClosePhase &&
-          this.isPlannerManager
-        ) {
+        } else if (this.selectedPlanningPhase.state === PlanningStatus.LOCKED && isClosePhase) {
           this.canShowCloseCTA = true;
         }
       }
@@ -654,12 +654,14 @@ export class MissionPrioritiesComponent implements OnInit {
 
   openPlanningPhase() {
     this.busy = true;
+    const year: any = this.selectedYear;
     this.planningService.openPlanningPhase(this.selectedPlanningPhase).subscribe(
       resp => {
         this.busy = false;
         // Update model state
         this.selectedPlanningPhase.state = PlanningStatus.OPEN;
-        this.toastService.displaySuccess(`Planning Phase for ${this.selectedYear} successfully opened.`);
+        this.toastService.displaySuccess(`Planning phase for ${year} successfully opened.`);
+        this.yearSelected({ name: this.selectedYear });
       },
       error => {
         this.busy = false;
