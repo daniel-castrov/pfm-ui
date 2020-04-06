@@ -53,7 +53,12 @@
           <div class="section-datagrid">
             <div>
               <span>&nbsp;Set TOAs for Comunity ($K)&nbsp;</span>
-              <pfm-secondary-button [label]="' Reset'" [icon]="'fa fa-refresh'" (click)="onResetCommunityData()">
+              <pfm-secondary-button
+                [label]="' Reset'"
+                [icon]="'fa fa-refresh reset-button'"
+                class="reset-button"
+                (click)="onResetCommunityData()"
+              >
               </pfm-secondary-button>
             </div>
             <div class="grid-container">

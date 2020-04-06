@@ -110,3 +110,7 @@
 .edit-year-blue-link {
   color: #0000ff;
 }
+
+.reset-button {
+  margin-right: 0 !important;
+}
