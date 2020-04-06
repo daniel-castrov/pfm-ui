@@ -38,6 +38,20 @@ export class CreatePlanningComponent implements OnInit {
     private router: Router
   ) {}
 
+  ngOnInit() {
+    this.isPlannerManager =
+      this.appModel.userDetails.userRole.isPOMManager || this.appModel.userDetails.userRole.isPlanningManager;
+    const years: string[] = [];
+    const createdYears = this.appModel.planningData.filter(year => year.state);
+    const maxCreatedYear = Math.max(...createdYears.map(year => year.year));
+    for (const item of this.appModel.planningData) {
+      if (item.year > maxCreatedYear) {
+        years.push(item.name);
+      }
+    }
+    this.availableYears = this.toListItem(years);
+  }
+
   yearSelected(year: ListItem): void {
     this.selectedYear = year.value;
   }
@@ -83,20 +97,6 @@ export class CreatePlanningComponent implements OnInit {
         this.dialogService.displayDebug(error);
       }
     );
-  }
-
-  ngOnInit() {
-    this.isPlannerManager =
-      this.appModel.userDetails.userRole.isPOMManager || this.appModel.userDetails.userRole.isPlanningManager;
-    const years: string[] = [];
-    const createdYears = this.appModel.planningData.filter(year => year.state);
-    const maxCreatedYear = Math.max(...createdYears.map(year => year.year));
-    for (const item of this.appModel.planningData) {
-      if (item.year > maxCreatedYear) {
-        years.push(item.name);
-      }
-    }
-    this.availableYears = this.toListItem(years);
   }
 
   private toListItem(years: string[]): ListItem[] {

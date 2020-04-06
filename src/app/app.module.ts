@@ -1,7 +1,4 @@
-import {
-  BrowserModule,
-  BrowserTransferStateModule
-} from '@angular/platform-browser';
+import { BrowserModule, BrowserTransferStateModule } from '@angular/platform-browser';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -16,6 +13,8 @@ import { DialogService } from './pfm-coreui/services/dialog.service';
 import { AuthorizationService } from './pfm-auth-module/services/authorization.service';
 import { AuthGuard } from './pfm-auth-module/services/auth-guard';
 import { ToastModule } from 'primeng/toast';
+import { VisibilityService } from './services/visibility-service';
+import { VisibilityServiceImpl } from './services/visibility-service-impl.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -32,10 +31,11 @@ import { ToastModule } from 'primeng/toast';
     AppModel,
     DialogService,
     AuthorizationService,
-    AuthGuard
+    AuthGuard,
+    [{ provide: VisibilityService, useClass: VisibilityServiceImpl }]
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor(transferStateService: TransferStateService) { }
+  constructor(transferStateService: TransferStateService) {}
 }

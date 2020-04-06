@@ -5,6 +5,7 @@ import { onMainContentChange, onSideNavChange } from './pfm-coreui/menu-bar/anim
 import { UserRole } from './pfm-common-models/UserRole';
 import { UserDetailsModel } from './pfm-common-models/UserDetailsModel';
 import { Router } from '@angular/router';
+import { VisibilityService } from './services/visibility-service';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +14,6 @@ import { Router } from '@angular/router';
   animations: [onMainContentChange, onSideNavChange]
 })
 export class AppComponent implements OnInit {
-
   sideNavState: boolean;
   linkText: boolean;
   isSideMenuOpen: boolean;
@@ -21,8 +21,9 @@ export class AppComponent implements OnInit {
   constructor(
     public appModel: AppModel,
     private authService: AuthorizationService,
-    private router: Router
-  ) { }
+    private router: Router,
+    private visibilityService: VisibilityService
+  ) {}
 
   onMenuToogle(newValue): void {
     this.isSideMenuOpen = newValue;
@@ -33,14 +34,30 @@ export class AppComponent implements OnInit {
 
     if (json) {
       const temp: AppModel = JSON.parse(json);
+      console.log(temp);
       this.appModel.userDetails = temp.userDetails;
       this.appModel.isUserSignedIn = this.authService.isAuthenticated();
+      this.setupVisibility();
     } else {
       this.appModel.isUserSignedIn = false;
       this.appModel.userDetails = new UserDetailsModel();
       this.appModel.userDetails.userRole = new UserRole(['']);
       this.router.navigate(['signin']);
     }
+  }
+
+  async setupVisibility() {
+    await this.visibilityService
+      .isCurrentlyVisible('planning-phase-component')
+      .toPromise()
+      .then(response => {
+        if (!this.appModel['visibilityDef']) {
+          this.appModel['visibilityDef'] = {};
+        }
+        if ((response as any).result) {
+          this.appModel['visibilityDef']['planning-phase-component'] = (response as any).result;
+        }
+      });
   }
 
   // This adds the sticky class to the nav bar
