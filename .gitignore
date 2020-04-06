@@ -49,3 +49,7 @@ Thumbs.db
 /builders/plugin-builder/index.js
 /src/assets/plugins
 *.iml
+
+# Test output
+/build
+/results

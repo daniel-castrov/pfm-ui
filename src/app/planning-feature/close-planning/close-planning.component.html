@@ -1,7 +1,7 @@
 <div class="main">
   <h3>Close Planning Phase</h3>
   <pfm-primary-button
-    *ngIf="isPlannerManager"
+    *pfmIsVisible="'planning-phase-component.closePlanningPhase'"
     [label]="'Close Planning Phase'"
     [name]="id"
     [id]="id"
