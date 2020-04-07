@@ -1,0 +1,15 @@
+<ul *ngIf="showPagination" class="pagination justify-content-center">
+  <li class="page-item">
+    <a class="page-link" (click)="onBtnFirst()">First</a>
+  </li>
+  <li class="page-item">
+    <a class="page-link" (click)="onBtnPrevious()">Previous</a>
+  </li>
+  <li class="page-link align-self-center disabled">Page {{ currentPage }} of {{ totalPages }}</li>
+  <li class="page-item">
+    <a class="page-link" (click)="onBtnNext()">Next</a>
+  </li>
+  <li class="page-item">
+    <a class="page-link" (click)="onBtnLast()">Last</a>
+  </li>
+</ul>

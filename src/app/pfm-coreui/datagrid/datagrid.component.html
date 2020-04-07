@@ -38,7 +38,8 @@
   </div>
   <div class="pfm-data">
     <ag-grid-angular
-      class="w-100 h-100"
+      #agGrid
+      class="w-100 pb-1 ag-grid"
       [suppressKeyboardEvent]="onSuppressKeyboardEvent"
       [columnDefs]="columns"
       [rowData]="rows"
@@ -71,7 +72,11 @@
       [groupSuppressAutoColumn]="true"
       [rememberGroupStateWhenNewData]="true"
       [groupIncludeTotalFooter]="showGrandTotal"
+      [suppressPaginationPanel]="true"
+      (paginationChanged)="agGridPagination.onPaginationChanged($event)"
+      domLayout="autoHeight"
     >
     </ag-grid-angular>
+    <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
   </div>
 </div>
