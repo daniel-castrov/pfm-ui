@@ -12,7 +12,7 @@ import { PlanningStatus } from '../models/enumerators/planning-status.model';
   styleUrls: ['./lock-planning.component.scss']
 })
 export class LockPlanningComponent implements OnInit {
-  @ViewChild(DropdownComponent, { static: false }) yearDropDown: DropdownComponent;
+  @ViewChild(DropdownComponent) yearDropDown: DropdownComponent;
 
   id = 'mission-priorities-component';
   busy: boolean;

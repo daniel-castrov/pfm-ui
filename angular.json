@@ -13,6 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "aot": true,
             "outputPath": "dist/browser",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -53,10 +54,20 @@
                   "type": "initial",
                   "maximumWarning": "2mb",
                   "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
                 }
               ]
             },
             "local": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -125,7 +136,8 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ]
-            },
+            ,              "optimization": true
+},
             "local": {
               "fileReplacements": [
                 {
@@ -133,7 +145,8 @@
                   "with": "src/environments/environment.local.ts"
                 }
               ]
-            }
+            ,              "optimization": true
+}
           }
         }
       }
@@ -200,7 +213,7 @@
             "main": "projects/app/src/main.ts",
             "polyfills": "projects/app/src/polyfills.ts",
             "tsConfig": "projects/app/tsconfig.app.json",
-            "aot": false,
+            "aot": true,
             "assets": ["projects/app/src/favicon.ico", "projects/app/src/assets"],
             "styles": ["projects/app/src/styles.scss"],
             "scripts": []
@@ -218,7 +231,6 @@
               "sourceMap": false,
               "extractCss": true,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,

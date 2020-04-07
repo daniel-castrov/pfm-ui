@@ -20,15 +20,15 @@ import { AssetsComponent } from './assets/assets.component';
 
 export class RequestsDetailsComponent implements OnInit {
 
-  @ViewChild('pfmSchedule', { static: false })
+  @ViewChild('pfmSchedule')
   pfmSchedule: ScheduleComponent;
-  @ViewChild('detailsForm', { static: false })
+  @ViewChild('detailsForm')
   requestDetailsFormComponent: RequestsDetailsFormComponent;
-  @ViewChild('scope', { static: false })
+  @ViewChild('scope')
   scopeComponent: ScopeComponent;
-  @ViewChild('justification', { static: false })
+  @ViewChild('justification')
   justificationComponent: JustificationComponent;
-  @ViewChild('assets', { static: false })
+  @ViewChild('assets')
   assetsComponent: AssetsComponent;
 
   currentSelectedTab = 1;

@@ -23,8 +23,8 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./mission-priorities.component.scss']
 })
 export class MissionPrioritiesComponent implements OnInit {
-  @ViewChild(DropdownComponent, { static: false }) yearDropDown: DropdownComponent;
-  @ViewChild(SecureDownloadComponent, { static: false }) secureDownloadComponent: SecureDownloadComponent;
+  @ViewChild(DropdownComponent) yearDropDown: DropdownComponent;
+  @ViewChild(SecureDownloadComponent) secureDownloadComponent: SecureDownloadComponent;
 
   actionState = {
     VIEW: {

@@ -30,15 +30,15 @@ import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
   styleUrls: ['./create-programming.component.css']
 })
 export class CreateProgrammingComponent implements OnInit {
-  @ViewChild(DropdownComponent, { static: false })
+  @ViewChild(DropdownComponent)
   yearDropDown: DropdownComponent;
-  @ViewChild(TabsetComponent, { static: false })
+  @ViewChild(TabsetComponent)
   tabset: TabsetComponent;
-  @ViewChild(SecondaryButtonComponent, { static: false })
+  @ViewChild(SecondaryButtonComponent)
   resetButton: SecondaryButtonComponent;
-  @ViewChild(CreateProgrammingCommunityGraphComponent, { static: false })
+  @ViewChild(CreateProgrammingCommunityGraphComponent)
   communityGraph: CreateProgrammingCommunityGraphComponent;
-  @ViewChild(CreateProgrammingOrganizationGraphComponent, { static: false })
+  @ViewChild(CreateProgrammingOrganizationGraphComponent)
   organizationGraph: CreateProgrammingOrganizationGraphComponent;
 
   id = 'create-programming-component';

@@ -8,7 +8,7 @@ import { FileMetaData } from '../../pfm-common-models/FileMetaData';
   styleUrls: ['./secure-download.component.css']
 })
 export class SecureDownloadComponent {
-  @ViewChild('downloadLink', { static: false }) private downloadLink: ElementRef;
+  @ViewChild('downloadLink') private downloadLink: ElementRef;
 
   linkeURL: string;
 

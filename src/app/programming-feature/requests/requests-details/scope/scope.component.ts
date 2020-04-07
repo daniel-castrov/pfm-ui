@@ -22,7 +22,7 @@ import { ListItem } from 'src/app/pfm-common-models/ListItem';
   styleUrls: ['./scope.component.scss']
 })
 export class ScopeComponent implements OnInit {
-  @ViewChild(SecureDownloadComponent, { static: false })
+  @ViewChild(SecureDownloadComponent)
   secureDownloadComponent: SecureDownloadComponent;
 
   @Input() program: Program;

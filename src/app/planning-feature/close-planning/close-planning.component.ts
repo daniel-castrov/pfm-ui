@@ -12,7 +12,7 @@ import { PlanningStatus } from '../models/enumerators/planning-status.model';
   styleUrls: ['./close-planning.component.scss']
 })
 export class ClosePlanningComponent implements OnInit {
-  @ViewChild(DropdownComponent, { static: false }) yearDropDown: DropdownComponent;
+  @ViewChild(DropdownComponent) yearDropDown: DropdownComponent;
 
   id = 'mission-priorities-component';
   busy: boolean;

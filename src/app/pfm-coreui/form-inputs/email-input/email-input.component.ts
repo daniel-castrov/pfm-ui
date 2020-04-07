@@ -7,7 +7,7 @@ import { TextInputComponent } from '../text-input/text-input.component';
   styleUrls: ['./email-input.component.scss']
 })
 export class EmailInputComponent implements OnInit {
-  @ViewChild(TextInputComponent, {static: false}) textInput: TextInputComponent;
+  @ViewChild(TextInputComponent) textInput: TextInputComponent;
   @Input() id:string;
   @Input() dataModel:any;
   @Input() fieldName:string;

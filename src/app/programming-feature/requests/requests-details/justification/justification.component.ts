@@ -14,7 +14,7 @@ export class JustificationComponent implements OnInit {
 
   static MAX_YEAR = 5;
 
-  @ViewChild('googleChart', { static: false })
+  @ViewChild('googleChart')
   chart: GoogleChartComponent;
 
   @Input() pomYear: number;

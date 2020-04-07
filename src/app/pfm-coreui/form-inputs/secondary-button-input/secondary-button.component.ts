@@ -15,7 +15,7 @@ export class SecondaryButtonComponent {
 
   @Output() click = new EventEmitter<MouseEvent>();
 
-  @ViewChild( 'buttonElement', { static: false } ) buttonElement;
+  @ViewChild('buttonElement') buttonElement;
 
   constructor() {
   }

@@ -5,7 +5,7 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { FormsModule } from '@angular/forms';
 import { AgGridModule } from '@ag-grid-community/angular';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { BsDatepickerModule } from 'ngx-bootstrap';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { ToastModule } from 'primeng/toast';
 
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';

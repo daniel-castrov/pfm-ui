@@ -8,7 +8,7 @@ import { TextInputComponent } from '../text-input/text-input.component';
   styleUrls: ['./zipcode-input.component.scss']
 })
 export class ZipcodeInputComponent implements OnInit, ValidatedComponent{
-  @ViewChild(TextInputComponent, {static: false}) textInput: TextInputComponent;
+  @ViewChild(TextInputComponent) textInput: TextInputComponent;
   @Input() id:string;
   @Input() dataModel:any;
   @Input() fieldName:string;

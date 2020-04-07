@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { ElementRef, NgModule, Renderer } from '@angular/core';
+import { ElementRef, NgModule, Renderer2 } from '@angular/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TabDirective, TabsetComponent } from 'ngx-bootstrap';
 import { GoogleChartComponent } from 'ng2-google-charts';

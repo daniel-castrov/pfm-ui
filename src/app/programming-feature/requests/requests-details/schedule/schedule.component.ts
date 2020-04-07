@@ -26,7 +26,7 @@ import { Schedule } from '../../../models/schedule.model';
 export class ScheduleComponent implements OnInit {
   @Input() program: Program;
 
-  @ViewChild('googleChart', { static: false })
+  @ViewChild('googleChart')
   chart: GoogleChartComponent;
 
   currentFiscalYear = 2019;
