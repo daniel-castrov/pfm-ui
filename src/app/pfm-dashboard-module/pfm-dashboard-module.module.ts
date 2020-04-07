@@ -12,15 +12,31 @@ import { DashboardService } from './services/dashboard.service';
 import { DashboardMockService } from './services/dashboard.mock.service';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { GridsterModule } from 'angular-gridster2';
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
-  declarations: [DashboardComponent, DemoWidgetMissionFundingPriorityComponent, DemoWidgetMissionFundingMoneyComponent, DemoWidgetPOMPhaseFundingComponent, DemoWidgetPrStatusComponent],
+  declarations: [
+    DashboardComponent,
+    DemoWidgetMissionFundingPriorityComponent,
+    DemoWidgetMissionFundingMoneyComponent,
+    DemoWidgetPOMPhaseFundingComponent,
+    DemoWidgetPrStatusComponent
+  ],
   imports: [
-    CommonModule, FormsModule, Ng2GoogleChartsModule, AngularFontAwesomeModule, DragDropModule, GridsterModule, PfmCoreuiModule
+    CommonModule,
+    FormsModule,
+    Ng2GoogleChartsModule,
+    FontAwesomeModule,
+    DragDropModule,
+    GridsterModule,
+    PfmCoreuiModule
   ],
   exports: [DashboardComponent],
-  entryComponents: [DashboardComponent, DemoWidgetMissionFundingPriorityComponent, DemoWidgetMissionFundingMoneyComponent],
-  providers: [DashboardService, DashboardMockService]//TODO - see notes in DashboardMockService
+  entryComponents: [
+    DashboardComponent,
+    DemoWidgetMissionFundingPriorityComponent,
+    DemoWidgetMissionFundingMoneyComponent
+  ],
+  providers: [DashboardService, DashboardMockService] //TODO - see notes in DashboardMockService
 })
-export class PfmDashabordModuleModule { }
+export class PfmDashabordModuleModule {}

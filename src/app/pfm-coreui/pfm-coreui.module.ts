@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { FormsModule } from '@angular/forms';
 import { AgGridModule } from '@ag-grid-community/angular';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { ToastModule } from 'primeng/toast';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { CardComponent } from './card/card.component';
@@ -81,7 +81,7 @@ import { MpActionCellRendererComponent } from './datagrid/renderers/mp-action-ce
     ToastModule,
     CommonModule,
     RouterModule,
-    AngularFontAwesomeModule,
+    FontAwesomeModule,
     FormsModule,
     NgbModule,
     CKEditorModule,
