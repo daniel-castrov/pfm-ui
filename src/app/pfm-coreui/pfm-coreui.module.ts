@@ -41,6 +41,7 @@ import { ToggleInputComponent } from './form-inputs/toggle-input/toggle-input.co
 import { MessageService } from 'primeng/api';
 import { DropdownCellRendererComponent } from './datagrid/renderers/dropdown-cell-renderer/dropdown-cell-renderer.component';
 import { MpActionCellRendererComponent } from './datagrid/renderers/mp-action-cell-renderer/mp-action-cell-renderer.component';
+import { AgGridPaginationComponent } from './datagrid/ag-grid-pagination/ag-grid-pagination.component';
 
 @NgModule({
   entryComponents: [DropdownCellRendererComponent],
@@ -75,7 +76,8 @@ import { MpActionCellRendererComponent } from './datagrid/renderers/mp-action-ce
     DatePickerCellRendererComponent,
     IsVisibleDirective,
     ToggleInputComponent,
-    MpActionCellRendererComponent
+    MpActionCellRendererComponent,
+    AgGridPaginationComponent
   ],
   imports: [
     ToastModule,
