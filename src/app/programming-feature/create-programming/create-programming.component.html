@@ -85,7 +85,12 @@
           <div class="section-datagrid">
             <div>
               <span>&nbsp;Set TOAs for Organization ($K)&nbsp;</span>
-              <pfm-secondary-button [label]="' Reset'" [icon]="'fa fa-refresh'" (click)="onResetOrgData()">
+              <pfm-secondary-button
+                [label]="' Reset'"
+                class="reset-button"
+                [icon]="'fa fa-refresh reset-button'"
+                (click)="onResetOrgData()"
+              >
               </pfm-secondary-button>
             </div>
             <!--<div style="height:300px;width:98%">-->
