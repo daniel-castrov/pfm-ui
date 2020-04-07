@@ -2,7 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CalendarModule } from 'primeng/calendar';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
-import { BsDatepickerModule, TimepickerModule } from 'ngx-bootstrap';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 import { FormsModule } from '@angular/forms';
 
 import { PfmHomeModuleRoutingModule } from './pfm-home-module-routing.module';
@@ -32,4 +33,4 @@ import { PfmHomeMockService } from './services/pfm-home-mock.service';
   ],
   providers: [{ provide: PfmHomeService, useClass: PfmHomeServicesImpl }, PfmHomeMockService]
 })
-export class PfmHomeModuleModule { }
+export class PfmHomeModuleModule {}
