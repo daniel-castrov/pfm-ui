@@ -134,27 +134,28 @@ export class ScheduleComponent implements OnInit {
         for (const fundingLine of fundingLines) {
           this.fundingFilter.push(fundingLine);
           this.fundingGridAssociations.push(fundingLine);
-          this.scheduleService.getByFundingLineId(fundingLine.id).subscribe(schResp => {
-            const schedules = (schResp as any).result;
-            for (let i = 0; i < schedules.length; i++) {
-              const schedule = schedules[i];
-              if (schedule.startDate) {
-                schedule.startDate = schedule.startDate.format('MM/DD/YYYY');
-              }
-              if (schedule.endDate) {
-                schedule.endDate = schedule.endDate.format('MM/DD/YYYY');
-              }
-              this.scheduleGridRows.push(schedule);
-            }
-            this.scheduleGridRows.sort((a, b) => a.order - b.order);
-            for (let i = 0; i < this.scheduleGridRows.length; i++) {
-              this.viewMode(i);
-            }
-            this.gridApi.setRowData(this.scheduleGridRows);
-            this.updateGanttChart();
-          });
         }
       });
+
+    this.scheduleService.getByProgramId(this.program.id).subscribe(schResp => {
+      const schedules = (schResp as any).result;
+      for (let i = 0; i < schedules.length; i++) {
+        const schedule = schedules[i];
+        if (schedule.startDate) {
+          schedule.startDate = schedule.startDate.format('MM/DD/YYYY');
+        }
+        if (schedule.endDate) {
+          schedule.endDate = schedule.endDate.format('MM/DD/YYYY');
+        }
+        this.scheduleGridRows.push(schedule);
+      }
+      this.scheduleGridRows.sort((a, b) => a.order - b.order);
+      for (let i = 0; i < this.scheduleGridRows.length; i++) {
+        this.viewMode(i);
+      }
+      this.gridApi.setRowData(this.scheduleGridRows);
+      this.updateGanttChart();
+    });
   }
 
   onScheduleRowAdd(event: any) {
@@ -396,6 +397,7 @@ export class ScheduleComponent implements OnInit {
     const row: ScheduleDataMockInterface = this.scheduleGridRows[rowIndex];
     const canSave = this.validateRowData(row);
     if (canSave) {
+      row.programId = this.program.id;
       if (row.fundingLineId.toLowerCase() === 'select') {
         row.fundingLineId = null;
       }
@@ -574,6 +576,7 @@ export class ScheduleComponent implements OnInit {
 
 export interface ScheduleDataMockInterface {
   id?: string;
+  programId?: string;
   taskDescription?: string;
   fundingLineId?: string;
   startDate?: any;

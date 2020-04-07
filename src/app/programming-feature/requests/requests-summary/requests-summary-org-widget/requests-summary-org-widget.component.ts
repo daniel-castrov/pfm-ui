@@ -4,6 +4,7 @@ import { ListItem } from '../../../../pfm-common-models/ListItem';
 import { Organization } from 'src/app/pfm-common-models/Organization';
 import { Role } from 'src/app/pfm-common-models/Role';
 import { RequestSummaryNavigationHistoryService } from '../requests-summary-navigation-history.service';
+
 // import { runInThisContext } from 'vm';
 
 @Component({
@@ -72,7 +73,7 @@ export class RequestsSummaryOrgWidgetComponent implements OnInit {
   }
 
   ngOnInit() {
-    const chartOptions: string[] = ['Organization', 'BA Line', 'Program Status'];
+    const chartOptions: string[] = ['Organization', 'BA/BLIN', 'Program Status'];
     this.availableCharts = this.toListItem(chartOptions);
     this.defaultChart = this.availableCharts[0];
   }
@@ -99,10 +100,10 @@ export class RequestsSummaryOrgWidgetComponent implements OnInit {
       // change to org
       this.defaultChart = this.availableCharts[0];
       this.chartOrganization();
-    } else if (chartType.id === 'BA Line') {
+    } else if (chartType.id === 'BA/BLIN') {
       // change to ba line
       this.defaultChart = this.availableCharts[1];
-      this.chartBALine();
+      this.chartBABlin();
     } else if (chartType.id === 'Program Status') {
       // change to program status
       this.defaultChart = this.availableCharts[2];
@@ -151,11 +152,11 @@ export class RequestsSummaryOrgWidgetComponent implements OnInit {
     }
   }
 
-  private chartBALine() {
+  private chartBABlin() {
     // set up BA Line tree structure
     const lineTable = [
       ['Program', 'Organization', 'Health', 'Demands'],
-      ['BA Line', null, 0, 0],
+      ['BA/BLIN', null, 0, 0],
       ['SA0001', 'BA Line', 0, 0],
       ['BA2', 'BA Line', 0, 0],
       ['BA5', 'BA Line', 0, 0],
@@ -167,6 +168,7 @@ export class RequestsSummaryOrgWidgetComponent implements OnInit {
       ['Test1', 'SA0001', 10, 100],
       ['Test2', 'BA1', 20, 50],
       ['Test3', 'BA2', 30, 10],
+      ['Test33', 'BA2', 30, 10],
       ['Test4', 'BA3', 40, 0],
       ['Test5', 'BA4', 50, 40],
       ['Test6', 'BA5', 5, 10],
