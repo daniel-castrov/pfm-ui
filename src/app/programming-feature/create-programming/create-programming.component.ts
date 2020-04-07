@@ -8,7 +8,6 @@ import { FormatterUtil } from '../../util/formatterUtil';
 import { FileMetaData } from '../../pfm-common-models/FileMetaData';
 import { Attachment } from '../../pfm-common-models/Attachment';
 import { CellPosition, Column, ColumnApi, GridApi } from '@ag-grid-community/all-modules';
-import { AppModel } from '../../pfm-common-models/AppModel';
 import { ActionCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/action-cell-renderer/action-cell-renderer.component';
 import { Action } from '../../pfm-common-models/Action';
 import { TOA } from '../models/TOA';
@@ -16,10 +15,9 @@ import { Pom } from '../models/Pom';
 import { Organization } from '../../pfm-common-models/Organization';
 import { OrganizationService } from '../../services/organization-service';
 import { CreateProgrammingCommunityGraphComponent } from './create-programming-community-graph/create-programming-community-graph.component';
-import { DashboardMockService } from '../../pfm-dashboard-module/services/dashboard.mock.service';
 import { DataGridMessage } from '../../pfm-coreui/models/DataGridMessage';
 import { CreateProgrammingOrganizationGraphComponent } from './create-programming-organization-graph/create-programming-organization-graph.component';
-import { TabDirective, TabsetComponent } from 'ngx-bootstrap';
+import { TabDirective, TabsetComponent } from 'ngx-bootstrap/tabs';
 import { SecondaryButtonComponent } from '../../pfm-coreui/form-inputs/secondary-button-input/secondary-button.component';
 import { NumericCellEditor } from '../../ag-grid/cell-editors/NumericCellEditor';
 import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
@@ -90,24 +88,27 @@ export class CreateProgrammingComponent implements OnInit {
       },
       error => {
         console.log('Error while getting Organizations...');
-      });
+      }
+    );
   }
 
   yearSelected(year: string): void {
     this.selectedYear = year;
     this.loadBaseline = false;
     if (this.programYearSelected !== 'undefined') {
-      this.dialogService
-        .displayConfirmation('You are about to replace the baseline with different values.' +
+      this.dialogService.displayConfirmation(
+        'You are about to replace the baseline with different values.' +
           'All values in the community and organization grid will be reset.  Do you want to continue?',
-          'Caution',
-          () => {
-            this.loadBaseline = true;
-            this.onSelectBaseLine();
-          }, () => {
-            this.loadBaseline = false;
-            this.yearDropDown.selectedItem = this.programYearSelected;
-          });
+        'Caution',
+        () => {
+          this.loadBaseline = true;
+          this.onSelectBaseLine();
+        },
+        () => {
+          this.loadBaseline = false;
+          this.yearDropDown.selectedItem = this.programYearSelected;
+        }
+      );
     } else {
       this.loadBaseline = true;
     }
@@ -115,15 +116,17 @@ export class CreateProgrammingComponent implements OnInit {
     if (this.loadBaseline) {
       this.onSelectBaseLine();
     }
-
   }
 
   onSelectBaseLine() {
-    this.programYearSelected = Object.keys(this.selectedYear).map(key => this.selectedYear[key]).slice(0, 1);
+    this.programYearSelected = Object.keys(this.selectedYear)
+      .map(key => this.selectedYear[key])
+      .slice(0, 1);
 
     if (this.programYearSelected === 'Spreadsheet') {
       this.showUploadDialog = true;
-    } else { // if it is PBYear
+    } else {
+      // if it is PBYear
       this.showUploadDialog = false;
       this.programBudgetData = true;
 
@@ -162,7 +165,8 @@ export class CreateProgrammingComponent implements OnInit {
       error => {
         this.busy = false;
         console.log('Error in getting community and org toas...');
-      });
+      }
+    );
   }
 
   buildCommunityToaRows(fy: number) {
@@ -276,12 +280,12 @@ export class CreateProgrammingComponent implements OnInit {
 
   getOrgName(orgId: string): string {
     const matchingOrg: Organization = this.orgs.find(org => org.id === orgId);
-    return (matchingOrg) ? matchingOrg.abbreviation : 'Unknown Organization';
+    return matchingOrg ? matchingOrg.abbreviation : 'Unknown Organization';
   }
 
   getOrgId(orgName: string): string {
     const matchingOrg: Organization = this.orgs.find(org => org.abbreviation === orgName);
-    return (matchingOrg) ? matchingOrg.id : 'Unknown Organization';
+    return matchingOrg ? matchingOrg.id : 'Unknown Organization';
   }
 
   handlePOMFile(newFile: FileMetaData): void {
@@ -328,10 +332,9 @@ export class CreateProgrammingComponent implements OnInit {
         const response: any = resp;
 
         this.busy = false;
-        const pyear = 'PB' + FormatterUtil.pad((pbYear - 2000), 2);
+        const pyear = 'PB' + FormatterUtil.pad(pbYear - 2000, 2);
         const years: string[] = [pyear, 'Spreadsheet'];
         this.availableYears = this.toListItem(years);
-
       },
       error => {
         const response: any = error;
@@ -339,7 +342,8 @@ export class CreateProgrammingComponent implements OnInit {
         const years: string[] = ['Spreadsheet'];
         this.availableYears = this.toListItem(years);
         console.log(response.error);
-      });
+      }
+    );
   }
 
   private toListItem(years: string[]): ListItem[] {
@@ -356,63 +360,57 @@ export class CreateProgrammingComponent implements OnInit {
 
   private setAgGridColDefs(column1Name: string, fy: number): any {
     const colDefs = [];
-    colDefs.push(
-      {
-        headerName: column1Name,
-        suppressMenu: true,
-        field: 'orgid',
-        minWidth: 140,
-        editable: false,
-        pinned: 'left',
-        // rowDrag: true,
-        // rowDragManaged: true,
-        colSpan(params) {
-          return (params.value === '1') ? 7 : 1;
-        },
-        cellRenderer: params => params.value,
-        cellClass: 'text-class',
-        cellStyle: params => this.getOrgColorStyle(params),
-
-      });
+    colDefs.push({
+      headerName: column1Name,
+      suppressMenu: true,
+      field: 'orgid',
+      minWidth: 140,
+      editable: false,
+      pinned: 'left',
+      // rowDrag: true,
+      // rowDragManaged: true,
+      colSpan(params) {
+        return params.value === '1' ? 7 : 1;
+      },
+      cellRenderer: params => params.value,
+      cellClass: 'text-class',
+      cellStyle: params => this.getOrgColorStyle(params)
+    });
 
     for (let i = 0; i < 5; i++) {
-      colDefs.push(
-        {
-          headerName: 'FY' + (fy + i - 2000),
-          type: 'numericColumn',
-          minWidth: 110,
-          suppressMenu: true,
-          field: (fy + i).toString(),
-          cellEditor: NumericCellEditor.create({ returnUndefinedOnZero: false }),
-          cellRenderer: params => this.negativeNumberRenderer(params),
-          editable: true,
-          cellClass: 'pfm-datagrid-numeric-class',
-          cellStyle: { display: 'flex' }
-        });
-    }
-    colDefs.push(
-      {
-        headerName: 'FY' + (fy - 2000) + '-' + 'FY' + (fy + 4 - 2000),
+      colDefs.push({
+        headerName: 'FY' + (fy + i - 2000),
         type: 'numericColumn',
-        suppressMenu: true,
-        field: 'total',
         minWidth: 110,
-        editable: false,
-        valueGetter: params => this.rowTotal(params.data, fy),
+        suppressMenu: true,
+        field: (fy + i).toString(),
+        cellEditor: NumericCellEditor.create({ returnUndefinedOnZero: false }),
         cellRenderer: params => this.negativeNumberRenderer(params),
+        editable: true,
         cellClass: 'pfm-datagrid-numeric-class',
         cellStyle: { display: 'flex' }
       });
+    }
+    colDefs.push({
+      headerName: 'FY' + (fy - 2000) + '-' + 'FY' + (fy + 4 - 2000),
+      type: 'numericColumn',
+      suppressMenu: true,
+      field: 'total',
+      minWidth: 110,
+      editable: false,
+      valueGetter: params => this.rowTotal(params.data, fy),
+      cellRenderer: params => this.negativeNumberRenderer(params),
+      cellClass: 'pfm-datagrid-numeric-class',
+      cellStyle: { display: 'flex' }
+    });
 
-    colDefs.push(
-      {
-        headerName: 'Actions',
-        field: column1Name + 'actions',
-        mWidth: 100,
-        maxWidth: 100,
-        cellRendererFramework: ActionCellRendererComponent
-      }
-    );
+    colDefs.push({
+      headerName: 'Actions',
+      field: column1Name + 'actions',
+      mWidth: 100,
+      maxWidth: 100,
+      cellRendererFramework: ActionCellRendererComponent
+    });
 
     return colDefs;
   }
@@ -420,7 +418,7 @@ export class CreateProgrammingComponent implements OnInit {
   // updates the community graph from grid data
   private updateCommunityGraphData(startYear: number) {
     // populate griddata
-    this.communityGraphData = [['Fiscal Year', 'Community TOA', 'Average',]];
+    this.communityGraphData = [['Fiscal Year', 'Community TOA', 'Average']];
     for (let row = 0; row < 5; row++) {
       const year = 'FY' + (startYear + row - 2000);
       let amount = 0;
@@ -431,7 +429,7 @@ export class CreateProgrammingComponent implements OnInit {
       }
       if (this.communityData[1][startYear + row - 1]) {
         const pastAmount = this.communityData[1][startYear + row - 1];
-        change = ((amount - pastAmount) / pastAmount);
+        change = (amount - pastAmount) / pastAmount;
       }
       this.communityGraphData[row + 1] = [year, amount, change];
     }
@@ -461,8 +459,10 @@ export class CreateProgrammingComponent implements OnInit {
         const organization: string = this.orgData[numberOfColumns - column - 1]['orgid'];
         this.organizationGraphData[0][column] = organization.substring(14, organization.length - 16);
         for (let rowIndex = 0; rowIndex < 5; rowIndex++) {
-          this.organizationGraphData[rowIndex + 1][column] =
-            parseInt(this.orgData[numberOfColumns - column - 1][startYear + rowIndex], 10);
+          this.organizationGraphData[rowIndex + 1][column] = parseInt(
+            this.orgData[numberOfColumns - column - 1][startYear + rowIndex],
+            10
+          );
         }
       }
     }
@@ -494,7 +494,6 @@ export class CreateProgrammingComponent implements OnInit {
 
   // a simple CellRenderer for negative numbers
   private negativeNumberRenderer(params) {
-
     if (params.value === '') {
       return params.value;
     }
@@ -560,7 +559,6 @@ export class CreateProgrammingComponent implements OnInit {
   }
 
   onCellAction(cellAction: DataGridMessage, gridType: any): void {
-
     switch (cellAction.message) {
       case 'save': {
         this.onSaveRow(cellAction.rowIndex, gridType);
@@ -574,7 +572,6 @@ export class CreateProgrammingComponent implements OnInit {
   }
 
   onSaveRow(rowId, gridType): void {
-
     const editAction = this.onSaveAction(rowId, gridType);
     if (gridType === 'org') {
       const fy = this.byYear;
@@ -602,7 +599,6 @@ export class CreateProgrammingComponent implements OnInit {
   }
 
   onEditRow(rowId, gridType): void {
-
     const editAction = this.onEditAction(rowId, gridType);
 
     if (gridType === 'org') {
@@ -648,7 +644,6 @@ export class CreateProgrammingComponent implements OnInit {
   }
 
   onEditAction(rowId: number, gridId): any {
-
     let actions = new Action();
 
     if (gridId === 'org') {
@@ -666,7 +661,6 @@ export class CreateProgrammingComponent implements OnInit {
   }
 
   onSaveAction(rowId: number, gridId: string): any {
-
     let actions = new Action();
     if (gridId === 'org') {
       actions = this.orgData[rowId]['Organizationactions'];
@@ -738,7 +732,6 @@ export class CreateProgrammingComponent implements OnInit {
   }
 
   calculateDeltaRow(totalsrow: any, subtoasrow: any): any {
-
     const toaDeltarow = {};
 
     const fy = this.byYear;
@@ -783,11 +776,10 @@ export class CreateProgrammingComponent implements OnInit {
     const rowIndex = params.previousCellPosition.rowIndex;
     let nextCell: CellPosition = params.nextCellPosition;
 
-    const firstColumn = (this.byYear).toString();
+    const firstColumn = this.byYear.toString();
     const lastColumn = (this.byYear + 4).toString();
 
     if (params.previousCellPosition.column.colId === lastColumn) {
-
       const nextColumn: Column = this.commColumnApi.getColumn(firstColumn);
       nextCell = {
         rowIndex,
@@ -826,7 +818,7 @@ export class CreateProgrammingComponent implements OnInit {
             break;
         }*/
 
-        if ((cellVal < 0) && (row['orgid'] === 'Delta')) {
+        if (cellVal < 0 && row['orgid'] === 'Delta') {
           isDelataRowValid = false;
           break;
         }
@@ -840,7 +832,8 @@ export class CreateProgrammingComponent implements OnInit {
     if (!isDelataRowValid) {
       this.dialogService.displayInfo(
         'The Delta row in the Organization TOA grid has at least one negative value.' +
-        'All values must be zero or positive');
+          'All values must be zero or positive'
+      );
       return;
     }
 
@@ -851,15 +844,15 @@ export class CreateProgrammingComponent implements OnInit {
     const communityToas: TOA[] = [];
     const commToaRow = this.communityData[1];
     for (let i = 0; i < 5; i++) {
-      communityToas.push({ year: (this.byYear + i), amount: commToaRow[this.byYear + i] });
+      communityToas.push({ year: this.byYear + i, amount: commToaRow[this.byYear + i] });
     }
 
-    const orgToas: { [key: string]: TOA[]; } = {};
-    for (let rowIndx = 0; rowIndx < (this.orgData.length - 3); rowIndx++) {
+    const orgToas: { [key: string]: TOA[] } = {};
+    for (let rowIndx = 0; rowIndx < this.orgData.length - 3; rowIndx++) {
       const otoa: TOA[] = [];
       const orgRow = this.orgData[rowIndx];
       for (let i = 0; i < 5; i++) {
-        otoa.push({ year: (this.byYear + i), amount: orgRow[this.byYear + i] });
+        otoa.push({ year: this.byYear + i, amount: orgRow[this.byYear + i] });
       }
 
       let orgName = orgRow['orgid'];
@@ -880,6 +873,7 @@ export class CreateProgrammingComponent implements OnInit {
       },
       error => {
         this.dialogService.displayInfo(error.error.error);
-      });
+      }
+    );
   }
 }
