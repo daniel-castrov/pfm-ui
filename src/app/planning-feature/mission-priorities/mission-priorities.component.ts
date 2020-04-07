@@ -34,6 +34,13 @@ export class MissionPrioritiesComponent implements OnInit {
       canUpload: false,
       hideCheckmark: false
     },
+    USER_VIEW: {
+      canSave: false,
+      canEdit: false,
+      canDelete: false,
+      canUpload: false,
+      hideCheckmark: true
+    },
     PLANNING_CREATED_VIEW: {
       canSave: false,
       canEdit: true,
@@ -41,12 +48,19 @@ export class MissionPrioritiesComponent implements OnInit {
       canUpload: false,
       hideCheckmark: true
     },
-    PLANNING_OPEN_VIEW: {
+    PLANNING_OPEN_VIEW_PLANNER: {
       canSave: false,
       canEdit: true,
-      canDelete: true,
+      canDelete: false,
       canUpload: false,
       hideCheckmark: true
+    },
+    PLANNING_OPEN_VIEW_PLANNER_MANAGER: {
+      canSave: false,
+      canEdit: true,
+      canDelete: false,
+      canUpload: false,
+      hideCheckmark: false
     },
     PLANNING_LOCKED_VIEW: {
       canSave: false,
@@ -109,8 +123,11 @@ export class MissionPrioritiesComponent implements OnInit {
   selectedYear: string;
   selectedPlanningPhase: PlanningPhase;
   missionData: MissionPriority[];
-  isPlannerManager: boolean;
-  isPlanner: boolean;
+  canPerformCreatePlanning: boolean;
+  canPerformOpenPlanning: boolean;
+  canPerformLockPlanning: boolean;
+  canPerformClosePlanning: boolean;
+  canPerformActions: boolean;
   showUploadDialog: boolean;
   selectedRowId: number;
   selectedRow: MissionPriority;
@@ -135,9 +152,13 @@ export class MissionPrioritiesComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.isPlannerManager =
-      this.appModel.userDetails.userRole.isPOMManager || this.appModel.userDetails.userRole.isPlanningManager;
-    this.isPlanner = this.appModel.userDetails.userRole.isPlanner;
+    if (this.appModel.visibilityDef['planning-phase-component']) {
+      this.canPerformCreatePlanning = this.appModel.visibilityDef['planning-phase-component'].createPlanningPhase;
+      this.canPerformOpenPlanning = this.appModel.visibilityDef['planning-phase-component'].openPlanningPhase;
+      this.canPerformLockPlanning = this.appModel.visibilityDef['planning-phase-component'].lockPlanningPhase;
+      this.canPerformClosePlanning = this.appModel.visibilityDef['planning-phase-component'].closePlanningPhase;
+      this.canPerformActions = this.appModel.visibilityDef['planning-phase-component'].performAction;
+    }
     this.setupGrid();
     // POM Manager is here for demo purpose
     const years: string[] = [];
@@ -160,7 +181,9 @@ export class MissionPrioritiesComponent implements OnInit {
       this.yearSelected({ name: this.selectedYear });
       if (this.selectedYear) {
         this.canAddNewRow =
-          (this.isPlannerManager || this.isPlanner) && this.selectedPlanningPhase.state !== PlanningStatus.LOCKED;
+          this.selectedPlanningPhase.state !== PlanningStatus.LOCKED &&
+          this.selectedPlanningPhase.state !== PlanningStatus.CLOSED &&
+          this.canPerformActions;
         const isOpenPhase = !!this.route.snapshot.paramMap.get('openPhase');
         const isLockPhase = !!this.route.snapshot.paramMap.get('lockPhase');
         const isClosePhase = !!this.route.snapshot.paramMap.get('closePhase');
@@ -380,6 +403,7 @@ export class MissionPrioritiesComponent implements OnInit {
   }
 
   yearSelected(year: any): void {
+    this.canShowOpenCTA = false;
     this.canShowLockCTA = false;
     this.canShowCloseCTA = false;
     this.selectedYear = year ? year.name : undefined;
@@ -387,7 +411,9 @@ export class MissionPrioritiesComponent implements OnInit {
       this.busy = true;
       this.selectedPlanningPhase = this.appModel.planningData.find(obj => obj.id === this.selectedYear + '_id');
       this.canAddNewRow =
-        (this.isPlannerManager || this.isPlanner) && this.selectedPlanningPhase.state !== PlanningStatus.LOCKED;
+        this.selectedPlanningPhase.state !== PlanningStatus.LOCKED &&
+        this.selectedPlanningPhase.state !== PlanningStatus.CLOSED &&
+        this.canPerformActions;
       if (this.selectedPlanningPhase.state === PlanningStatus.OPEN) {
         this.ctaOptions = [...this.missionPriorityOptions].splice(0, 1);
       } else {
@@ -758,24 +784,41 @@ export class MissionPrioritiesComponent implements OnInit {
   }
 
   private actionViewSetup() {
-    if (this.selectedPlanningPhase.state === PlanningStatus.CREATED) {
-      return this.actionState.PLANNING_CREATED_VIEW;
-    } else if (this.selectedPlanningPhase.state === PlanningStatus.OPEN && !this.isPlannerManager && this.isPlanner) {
-      return this.actionState.PLANNING_OPEN_VIEW;
-    } else if (this.selectedPlanningPhase.state === PlanningStatus.LOCKED && this.isPlannerManager) {
-      return this.actionState.PLANNING_LOCKED_VIEW;
-    } else if (this.selectedPlanningPhase.state === PlanningStatus.LOCKED && !this.isPlannerManager) {
-      return null;
-    } else if (this.selectedPlanningPhase.state === PlanningStatus.CLOSED) {
-      return this.actionState.PLANNING_CLOSED_VIEW;
+    if (this.canPerformActions) {
+      if (this.selectedPlanningPhase.state === PlanningStatus.CREATED) {
+        return this.actionState.PLANNING_CREATED_VIEW;
+      } else if (this.selectedPlanningPhase.state === PlanningStatus.OPEN && !this.canPerformOpenPlanning) {
+        return this.actionState.PLANNING_OPEN_VIEW_PLANNER;
+      } else if (this.selectedPlanningPhase.state === PlanningStatus.OPEN && this.canPerformOpenPlanning) {
+        return this.actionState.PLANNING_OPEN_VIEW_PLANNER_MANAGER;
+      } else if (this.selectedPlanningPhase.state === PlanningStatus.LOCKED && this.canPerformLockPlanning) {
+        return this.actionState.PLANNING_LOCKED_VIEW;
+      } else if (this.selectedPlanningPhase.state === PlanningStatus.LOCKED && !this.canPerformLockPlanning) {
+        return null;
+      } else if (this.selectedPlanningPhase.state === PlanningStatus.CLOSED) {
+        return this.actionState.PLANNING_CLOSED_VIEW;
+      }
     }
-    return this.isPlanner || this.isPlannerManager ? this.actionState.VIEW : null;
+    return this.canPerformActions ||
+      this.canPerformCreatePlanning ||
+      this.canPerformOpenPlanning ||
+      this.canPerformLockPlanning ||
+      this.canPerformClosePlanning
+      ? this.actionState.VIEW
+      : this.actionState.USER_VIEW;
   }
 
   private actionEditSetup() {
     if (this.selectedPlanningPhase.state === PlanningStatus.OPEN) {
       return this.actionState.PLANNING_OPEN_EDIT;
     }
-    return this.isPlanner || this.isPlannerManager ? this.actionState.EDIT : null;
+    return this.canPerformActions ||
+      this.canPerformActions ||
+      this.canPerformCreatePlanning ||
+      this.canPerformOpenPlanning ||
+      this.canPerformLockPlanning ||
+      this.canPerformClosePlanning
+      ? this.actionState.EDIT
+      : null;
   }
 }

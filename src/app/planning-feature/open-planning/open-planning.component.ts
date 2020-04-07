@@ -1,8 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { PlanningService } from '../services/planning-service';
 import { ListItem } from '../../pfm-common-models/ListItem';
 import { DropdownComponent } from '../../pfm-coreui/form-inputs/dropdown/dropdown.component';
-import { DialogService } from '../../pfm-coreui/services/dialog.service';
 import { Router } from '@angular/router';
 import { AppModel } from '../../pfm-common-models/AppModel';
 import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
@@ -20,19 +18,10 @@ export class OpenPlanningComponent implements OnInit {
   busy: boolean;
   availableYears: ListItem[];
   selectedYear: string;
-  isPlannerManager: boolean;
 
-  constructor(
-    private appModel: AppModel,
-    private planningService: PlanningService,
-    private dialogService: DialogService,
-    private router: Router,
-    private toastService: ToastService
-  ) {}
+  constructor(private appModel: AppModel, private router: Router, private toastService: ToastService) {}
 
   ngOnInit() {
-    this.isPlannerManager =
-      this.appModel.userDetails.userRole.isPOMManager || this.appModel.userDetails.userRole.isPlanningManager;
     const years: string[] = [];
     for (const item of this.appModel.planningData) {
       if (item.state === PlanningStatus.CREATED) {
