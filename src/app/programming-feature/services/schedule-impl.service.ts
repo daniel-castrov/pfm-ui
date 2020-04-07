@@ -10,8 +10,8 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class ScheduleServiceImpl extends ScheduleService {
-  getByFundingLineId(fundingLineId: string): Observable<object> {
-    return this.get('schedules/funding-line/' + fundingLineId).pipe(
+  getByProgramId(programId: string): Observable<object> {
+    return this.get('schedules/program/' + programId).pipe(
       map((res: RestResponse<any>) => this.convertDateArrayFromServer(res))
     );
   }

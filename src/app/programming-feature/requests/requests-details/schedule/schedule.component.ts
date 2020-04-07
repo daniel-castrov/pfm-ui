@@ -134,27 +134,28 @@ export class ScheduleComponent implements OnInit {
         for (const fundingLine of fundingLines) {
           this.fundingFilter.push(fundingLine);
           this.fundingGridAssociations.push(fundingLine);
-          this.scheduleService.getByFundingLineId(fundingLine.id).subscribe(schResp => {
-            const schedules = (schResp as any).result;
-            for (let i = 0; i < schedules.length; i++) {
-              const schedule = schedules[i];
-              if (schedule.startDate) {
-                schedule.startDate = schedule.startDate.format('MM/DD/YYYY');
-              }
-              if (schedule.endDate) {
-                schedule.endDate = schedule.endDate.format('MM/DD/YYYY');
-              }
-              this.scheduleGridRows.push(schedule);
-            }
-            this.scheduleGridRows.sort((a, b) => a.order - b.order);
-            for (let i = 0; i < this.scheduleGridRows.length; i++) {
-              this.viewMode(i);
-            }
-            this.gridApi.setRowData(this.scheduleGridRows);
-            this.updateGanttChart();
-          });
         }
       });
+
+    this.scheduleService.getByProgramId(this.program.id).subscribe(schResp => {
+      const schedules = (schResp as any).result;
+      for (let i = 0; i < schedules.length; i++) {
+        const schedule = schedules[i];
+        if (schedule.startDate) {
+          schedule.startDate = schedule.startDate.format('MM/DD/YYYY');
+        }
+        if (schedule.endDate) {
+          schedule.endDate = schedule.endDate.format('MM/DD/YYYY');
+        }
+        this.scheduleGridRows.push(schedule);
+      }
+      this.scheduleGridRows.sort((a, b) => a.order - b.order);
+      for (let i = 0; i < this.scheduleGridRows.length; i++) {
+        this.viewMode(i);
+      }
+      this.gridApi.setRowData(this.scheduleGridRows);
+      this.updateGanttChart();
+    });
   }
 
   onScheduleRowAdd(event: any) {
@@ -287,14 +288,19 @@ export class ScheduleComponent implements OnInit {
         cellEditor: 'agSelectCellEditor',
         valueFormatter: params => {
           if (params.value) {
-            return this.fundingGridAssociations.find(x => x.id === params.value).name;
+            const find = this.fundingGridAssociations.find(x => x.id === params.value);
+            if (find) {
+              return find.name;
+            } else {
+              return params.value;
+            }
           }
           return '';
         },
         cellEditorParams: params => {
           return {
             cellHeight: 50,
-            values: [...this.fundingGridAssociations.map(x => x.id)]
+            values: ['Select', ...this.fundingGridAssociations.map(x => x.id)]
           };
         }
       },
@@ -391,6 +397,10 @@ export class ScheduleComponent implements OnInit {
     const row: ScheduleDataMockInterface = this.scheduleGridRows[rowIndex];
     const canSave = this.validateRowData(row);
     if (canSave) {
+      row.programId = this.program.id;
+      if (row.fundingLineId.toLowerCase() === 'select') {
+        row.fundingLineId = null;
+      }
       if (row.startDate) {
         row.startDate = moment(row.startDate, 'MM/DD/YYYY');
       }
@@ -402,7 +412,6 @@ export class ScheduleComponent implements OnInit {
           resp => {
             const dbSchedule = resp.result as Schedule;
             row.id = dbSchedule.id;
-            debugger;
             if (row.startDate) {
               row.startDate = row.startDate.format('MM/DD/YYYY');
             }
@@ -455,8 +464,6 @@ export class ScheduleComponent implements OnInit {
       errorMessage = 'Task Description cannot be empty.';
     } else if (row.taskDescription.length > 45) {
       errorMessage = 'Task Description cannot have more than 45 characters.';
-    } else if (!this.fundingGridAssociations.some(fund => fund.id === row.fundingLineId)) {
-      errorMessage = 'Please, select a valid Funding Line Association.';
     } else if (!this.validateDate(row.startDate)) {
       errorMessage = 'Make sure Start Date is a valid date in the format (Month/Day/Year).';
     } else if (!this.validateDate(row.endDate)) {
@@ -569,6 +576,7 @@ export class ScheduleComponent implements OnInit {
 
 export interface ScheduleDataMockInterface {
   id?: string;
+  programId?: string;
   taskDescription?: string;
   fundingLineId?: string;
   startDate?: any;
