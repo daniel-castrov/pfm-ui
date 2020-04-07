@@ -27,7 +27,6 @@
     "@angular/core": "^8.2.14",
     "@angular/forms": "^8.2.14",
     "@angular/http": "^7.2.0",
-    "@angular/material/theming": "^8.2.3",
     "@angular/platform-browser": "^8.2.14",
     "@angular/platform-browser-dynamic": "^8.2.14",
     "@angular/platform-server": "^8.2.14",
