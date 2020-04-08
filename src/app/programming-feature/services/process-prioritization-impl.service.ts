@@ -6,26 +6,27 @@ import { DATE_FORMAT } from '../../util/constants/input.constants';
 import { ProcessPrioritization } from '../models/process-prioritization.model';
 import * as moment from 'moment';
 import { map } from 'rxjs/operators';
+import { RestResponse } from 'src/app/util/rest-response';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProcessPrioritizationServiceImpl extends ProcessPrioritizationService {
-
   constructor(protected httpClient: HttpClient) {
     super(httpClient);
   }
 
   getByProgram(programId: string): Observable<object> {
-    return this.get('processPrioritization/programId/' + programId)
-      .pipe(map((res: RestResponse<any>) => this.convertDateArrayFromServer(res)));
-
+    return this.get('processPrioritization/programId/' + programId).pipe(
+      map((res: RestResponse<any>) => this.convertDateArrayFromServer(res))
+    );
   }
 
   createProcessPrioritization(data: any): Observable<object> {
     const copy = this.convertDateFromClient(data);
-    return this.post('processPrioritization', data)
-      .pipe(map((res: RestResponse<any>) => this.convertDateFromServer(res)));
+    return this.post('processPrioritization', data).pipe(
+      map((res: RestResponse<any>) => this.convertDateFromServer(res))
+    );
   }
 
   updateProcessPrioritization(data: any): Observable<object> {
@@ -39,17 +40,18 @@ export class ProcessPrioritizationServiceImpl extends ProcessPrioritizationServi
 
   protected convertDateFromClient(processPrioritization: ProcessPrioritization): ProcessPrioritization {
     const copy: ProcessPrioritization = Object.assign({}, processPrioritization, {
-      estimatedCompletionDate: processPrioritization.estimatedCompletionDate != null
-      && processPrioritization.estimatedCompletionDate.isValid()
-        ? processPrioritization.estimatedCompletionDate.format(DATE_FORMAT) : null
+      estimatedCompletionDate:
+        processPrioritization.estimatedCompletionDate != null && processPrioritization.estimatedCompletionDate.isValid()
+          ? processPrioritization.estimatedCompletionDate.format(DATE_FORMAT)
+          : null
     });
     return copy;
   }
 
   protected convertDateFromServer(res: RestResponse<any>): RestResponse<any> {
     if (res.result) {
-      res.result.estimatedCompletionDate = res.result.estimatedCompletionDate != null ?
-        moment(res.result.estimatedCompletionDate) : null;
+      res.result.estimatedCompletionDate =
+        res.result.estimatedCompletionDate != null ? moment(res.result.estimatedCompletionDate) : null;
     }
     return res;
   }
@@ -57,8 +59,10 @@ export class ProcessPrioritizationServiceImpl extends ProcessPrioritizationServi
   protected convertDateArrayFromServer(res: RestResponse<any>): RestResponse<any> {
     if (res.result) {
       res.result.forEach((processPrioritization: ProcessPrioritization) => {
-        processPrioritization.estimatedCompletionDate = processPrioritization.estimatedCompletionDate != null ?
-          moment(processPrioritization.estimatedCompletionDate) : null;
+        processPrioritization.estimatedCompletionDate =
+          processPrioritization.estimatedCompletionDate != null
+            ? moment(processPrioritization.estimatedCompletionDate)
+            : null;
       });
     }
     return res;

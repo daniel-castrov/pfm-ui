@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProgrammingModel } from '../../models/ProgrammingModel';
 import { RequestSummaryNavigationHistoryService } from '../requests-summary/requests-summary-navigation-history.service';
 import { ScheduleComponent } from './schedule/schedule.component';
-import { TabDirective } from 'ngx-bootstrap';
+import { TabDirective } from 'ngx-bootstrap/tabs';
 import { ProgrammingService } from '../../services/programming-service';
 import { Program } from '../../models/Program';
 import { RequestsDetailsFormComponent } from './requests-details-form/requests-details-form.component';
@@ -17,9 +17,7 @@ import { AssetsComponent } from './assets/assets.component';
   templateUrl: './requests-details.component.html',
   styleUrls: ['./requests-details.component.scss']
 })
-
 export class RequestsDetailsComponent implements OnInit {
-
   @ViewChild('pfmSchedule')
   pfmSchedule: ScheduleComponent;
   @ViewChild('detailsForm')
@@ -42,8 +40,7 @@ export class RequestsDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private requestSummaryNavigationHistoryService: RequestSummaryNavigationHistoryService
-  ) {
-  }
+  ) {}
 
   goBack(): void {
     this.requestSummaryNavigationHistoryService.prepareNavigationHistory();
@@ -52,10 +49,11 @@ export class RequestsDetailsComponent implements OnInit {
 
   async ngOnInit() {
     this.programmingModel.selectedProgramId = this.route.snapshot.paramMap.get('id');
-    await this.programmingService.getProgramById(this.programmingModel.selectedProgramId)
+    await this.programmingService
+      .getProgramById(this.programmingModel.selectedProgramId)
       .toPromise()
       .then(resp => {
-        this.program = (resp.result) as Program;
+        this.program = resp.result as Program;
       });
     this.pomYear = Number(this.route.snapshot.paramMap.get('pomYear'));
   }

@@ -18,6 +18,7 @@ import { BaBlin } from '../../../models/ba-blin.model';
 import { SAG } from '../../../models/sag.model';
 import { ExpenditureType } from '../../../models/expenditure-type.model';
 import { WorkUnitCode } from '../../../models/work-unit-code.model';
+import { RestResponse } from 'src/app/util/rest-response';
 
 @Component({
   selector: 'pfm-requests-funding-line-grid',
@@ -217,10 +218,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
           : i > this.pomYear
           ? 'BY' + (i === this.pomYear + 1 ? '' : '+' + (i - this.pomYear - 1))
           : 'CY';
-      const fieldPrefix = headerName
-        .toLowerCase()
-        .replace('+', '')
-        .replace('-', '');
+      const fieldPrefix = headerName.toLowerCase().replace('+', '').replace('-', '');
       columnGroups.push({
         groupId: 'main-header',
         headerName,
@@ -483,10 +481,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
           : i > this.pomYear
           ? 'BY' + (i === this.pomYear + 1 ? '' : '+' + (i - this.pomYear - 1))
           : 'CY';
-      const fieldPrefix = headerName
-        .toLowerCase()
-        .replace('+', '')
-        .replace('-', '');
+      const fieldPrefix = headerName.toLowerCase().replace('+', '').replace('-', '');
       columnGroups.push({
         groupId: 'main-header',
         headerName,
@@ -827,7 +822,6 @@ export class RequestsFundingLineGridComponent implements OnInit {
         );
       })
     ) {
-      debugger;
       errorMessage = 'You have repeated an existing funding line.  Please delete this row and edit the existing line.';
     }
     if (errorMessage.length) {

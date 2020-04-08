@@ -1,5 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { GoogleChartInterface } from 'ng2-google-charts/google-charts-interfaces';
+import { Component, Input, OnInit } from '@angular/core';
 import { ProgramSummary } from '../../../models/ProgramSummary';
 import { ListItem } from '../../../../pfm-common-models/ListItem';
 import { RequestSummaryNavigationHistoryService } from '../requests-summary-navigation-history.service';
@@ -12,7 +11,6 @@ import { AppModel } from '../../../../pfm-common-models/AppModel';
   styleUrls: ['./requests-summary-toa-widget.component.scss']
 })
 export class RequestsSummaryToaWidgetComponent implements OnInit {
-
   @Input() griddata: ProgramSummary[];
   @Input() availableCharts: ListItem[];
   @Input() pomYear: number;
@@ -41,9 +39,9 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
   };
 
   constructor(
-      private appModel: AppModel,
-      private requestSummaryNavigationHistoryService: RequestSummaryNavigationHistoryService
-  ) { }
+    private appModel: AppModel,
+    private requestSummaryNavigationHistoryService: RequestSummaryNavigationHistoryService
+  ) {}
 
   onResize(width: number, height: number): void {
     this.chartReady = false;
@@ -54,7 +52,6 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
     setTimeout(() => {
       this.chartReady = true;
     }, 200);
-
   }
 
   ngOnInit() {
@@ -73,15 +70,15 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
   loadPreviousSelection() {
     const previousTOAWidget = this.requestSummaryNavigationHistoryService.getSelectedTOAWidget();
     if (previousTOAWidget) {
-      const currentTOAWidget = this.availableCharts
-        .find(chart => chart.id === previousTOAWidget);
+      const currentTOAWidget = this.availableCharts.find(chart => chart.id === previousTOAWidget);
       if (currentTOAWidget) {
         this.defaultChart = currentTOAWidget;
         this.onChartSelected(this.defaultChart);
       }
     }
-    this.requestSummaryNavigationHistoryService.updateRequestSummaryNavigationHistory(
-        { selectedTOAWidget: this.defaultChart.id });
+    this.requestSummaryNavigationHistoryService.updateRequestSummaryNavigationHistory({
+      selectedTOAWidget: this.defaultChart.id
+    });
   }
 
   private toListItem(years: string[]): ListItem[] {
@@ -96,7 +93,7 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
     return items;
   }
 
-  onChartSelected( chartType: any) {
+  onChartSelected(chartType: any) {
     if (chartType) {
       this.defaultChart = chartType;
       if (chartType.name === 'Community Status') {
@@ -111,7 +108,9 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
         this.toaChartFundingLineStatus();
       }
     }
-    this.requestSummaryNavigationHistoryService.updateRequestSummaryNavigationHistory({ selectedTOAWidget: this.defaultChart.id });
+    this.requestSummaryNavigationHistoryService.updateRequestSummaryNavigationHistory({
+      selectedTOAWidget: this.defaultChart.id
+    });
   }
 
   toaChartCommunityStatus() {
@@ -123,7 +122,7 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
     const rows: any = this.calculateSummary();
     // Set data header
     const data: any[] = [
-      ['Fiscal Year', 'TOA', 'Approved by Me', 'Rejected by Me', 'Saved by Me', 'Outstanding for Me', 'Not in My Queue'],
+      ['Fiscal Year', 'TOA', 'Approved by Me', 'Rejected by Me', 'Saved by Me', 'Outstanding for Me', 'Not in My Queue']
     ];
     for (let i = 0; i < 5; i++) {
       const year: string = 'FY' + (this.pomYear + i - 2000);
@@ -149,9 +148,7 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
     // Calculate totals
     const totals: any[] = this.calculateTotals();
     // Set data header
-    const data: any = [
-      ['Fiscal Year', 'TOA Difference'],
-    ];
+    const data: any = [['Fiscal Year', 'TOA Difference']];
     // Add difference to data
     for (let i = 0; i < 5; i++) {
       const year: string = 'FY' + (totals[i].year - 2000);
@@ -173,7 +170,7 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
     const rows: any = this.calculateSummary();
     // set data header
     const data: any[] = [
-      ['Fiscal Year', 'TOA', 'Approved by Me', 'Rejected by Me', 'Saved by Me', 'Outstanding for Me', 'Not in My Queue'],
+      ['Fiscal Year', 'TOA', 'Approved by Me', 'Rejected by Me', 'Saved by Me', 'Outstanding for Me', 'Not in My Queue']
     ];
     for (let i = 0; i < 5; i++) {
       const year: string = 'FY' + (this.pomYear + i - 2000);
@@ -199,9 +196,7 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
     // Calculate totals
     const totals: any[] = this.calculateTotals();
     // Set data header
-    const data: any = [
-      ['Fiscal Year', 'TOA Difference'],
-    ];
+    const data: any = [['Fiscal Year', 'TOA Difference']];
     // Add difference to data
     for (let i = 0; i < 5; i++) {
       const year: string = 'FY' + (totals[i].year - 2000);
@@ -225,7 +220,7 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
       for (let i = 0; i < 5; i++) {
         const year = this.pomYear + i;
         if (!totals[i]) {
-          totals[i] = { year: (year), amount: 0 };
+          totals[i] = { year, amount: 0 };
         }
         if (row.funds[this.pomYear + i]) {
           totals[i].amount = totals[i].amount + row.funds[year];
@@ -247,13 +242,13 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
         const programTotal: number = row.funds[year];
         // place total in correct value.
         if (this.appModel.userDetails.roles.includes(row.assignedTo)) {
-          if (row.status == 'APPROVED') {
+          if (row.status === 'APPROVED') {
             rows[year].approved = rows[year].approved + programTotal;
-          } else if (row.status == 'REJECTED') {
+          } else if (row.status === 'REJECTED') {
             rows[year].rejected = rows[year].rejected + programTotal;
-          } else if (row.status == 'SAVED') {
+          } else if (row.status === 'SAVED') {
             rows[year].saved = rows[year].saved + programTotal;
-          } else if (row.status == 'OUTSTANDING') {
+          } else if (row.status === 'OUTSTANDING') {
             rows[year].outstanding = rows[year].outstanding + programTotal;
           }
         } else {
@@ -296,7 +291,7 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
       isStacked: true,
       width,
       height,
-      chartArea: {left: 80, top: 30, bottom: 20, right: 170, width: '100%', height: '100%'},
+      chartArea: { left: 80, top: 30, bottom: 20, right: 170, width: '100%', height: '100%' },
       seriesType: 'bars',
       series: { 0: { type: 'line' } },
       colors: ['#00008B', '#008000', '#FF0000', '#FFA500', '#FFFA5C', '#88B8B4'],

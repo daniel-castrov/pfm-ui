@@ -13,7 +13,8 @@
     "serve:ssr": "node dist/server",
     "build:ssr": "npm run build:client-and-server-bundles && npm run compile:server",
     "build:client-and-server-bundles": "ng build --prod && ng run angular-plugin-architecture:server:production",
-    "build:planning-create": "ng build --project plugins --prod --modulePath=./app/planning/create-planning/create-planning.module#CreatePlanningModule --pluginName=planning-create --outputPath=./src/assets/plugins"
+    "build:planning-create": "ng build --project plugins --prod --modulePath=./app/planning/create-planning/create-planning.module#CreatePlanningModule --pluginName=planning-create --outputPath=./src/assets/plugins",
+    "postinstall": "ngcc"
   },
   "private": true,
   "dependencies": {
@@ -26,6 +27,7 @@
     "@angular/compiler": "^9.1.0",
     "@angular/core": "^9.1.0",
     "@angular/forms": "^9.1.0",
+    "@angular/localize": "^9.1.0",
     "@angular/platform-browser": "^9.1.0",
     "@angular/platform-browser-dynamic": "^9.1.0",
     "@angular/platform-server": "^9.1.0",
@@ -34,6 +36,7 @@
     "@ckeditor/ckeditor5-build-classic": "^18.0.0",
     "@fortawesome/angular-fontawesome": "^0.6.1",
     "@fortawesome/fontawesome-svg-core": "^1.2.28",
+    "@fortawesome/free-regular-svg-icons": "^5.13.0",
     "@fortawesome/free-solid-svg-icons": "^5.13.0",
     "@ng-bootstrap/ng-bootstrap": "^6.0.2",
     "@nguniversal/express-engine": "^9.1.0",

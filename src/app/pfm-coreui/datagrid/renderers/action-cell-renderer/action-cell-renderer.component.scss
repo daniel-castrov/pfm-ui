@@ -8,13 +8,14 @@ div {
   margin-left: 15px;
 }
 
-fa:hover {
+fa-icon:hover {
   cursor: pointer;
   color: red;
 }
 
-fa {
+fa-icon {
   font-size: x-large;
+  line-height: 36px;
 }
 
 .disabled {

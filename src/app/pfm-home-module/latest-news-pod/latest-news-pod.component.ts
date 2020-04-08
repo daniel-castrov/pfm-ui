@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, HostListener, Sanitizer, SecurityContext } from '@angular/core';
+import { Component, Input, OnInit, HostListener } from '@angular/core';
 import { NewsItem } from '../models/NewsItem';
 import { Router } from '@angular/router';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
@@ -9,10 +9,8 @@ import { Action } from '../../pfm-common-models/Action';
 import { AppModel } from 'src/app/pfm-common-models/AppModel';
 import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
 import { PfmHomeService } from '../services/pfm-home-service';
-import { formatDate } from '@angular/common';
 import { DeleteDialogInterface } from 'src/app/programming-feature/requests/requests-details/requests-funding-line-grid/requests-funding-line-grid.component';
 import { DomSanitizer } from '@angular/platform-browser';
-import { debug } from 'ng-packagr/lib/util/log';
 
 @Component({
   selector: 'pfm-latest-news-pod',
@@ -20,7 +18,6 @@ import { debug } from 'ng-packagr/lib/util/log';
   styleUrls: ['./latest-news-pod.component.scss']
 })
 export class LatestNewsPodComponent implements OnInit {
-
   @Input() newsList: NewsItem[];
 
   showDeleteRowDialog: boolean;
@@ -82,7 +79,8 @@ export class LatestNewsPodComponent implements OnInit {
     private appModel: AppModel,
     private homeService: PfmHomeService,
     private dialogService: DialogService,
-    private router: Router) { }
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.loadLastNews();
@@ -94,7 +92,9 @@ export class LatestNewsPodComponent implements OnInit {
         maxWidth: 75,
         minWidth: 75,
         rowDrag: true,
-        valueGetter(params) { return params.node.rowIndex + 1; },
+        valueGetter(params) {
+          return params.node.rowIndex + 1;
+        },
         cellClass: 'numeric-class',
         cellStyle: { display: 'flex', 'align-items': 'right' }
       },
@@ -121,7 +121,7 @@ export class LatestNewsPodComponent implements OnInit {
           const { begin } = node.data;
           return begin ? new Date(begin) : '';
         },
-        minWidth: 145,
+        minWidth: 145
       },
       {
         headerName: 'End Date',
@@ -137,7 +137,7 @@ export class LatestNewsPodComponent implements OnInit {
           const { end } = node.data;
           return end ? new Date(end) : '';
         },
-        minWidth: 145,
+        minWidth: 145
       },
       {
         headerName: 'Active',
@@ -188,8 +188,8 @@ export class LatestNewsPodComponent implements OnInit {
       error => {
         this.busy = false;
         this.dialogService.displayDebug(error);
-      });
-
+      }
+    );
   }
 
   @HostListener('document:mouseup', ['$event'])
@@ -277,7 +277,6 @@ export class LatestNewsPodComponent implements OnInit {
   }
 
   save(): void {
-
     this.showNewsItemDlg = false;
     const idx = this.newsItems.findIndex(x => this.newsItem.order === x.order);
 
@@ -356,15 +355,12 @@ export class LatestNewsPodComponent implements OnInit {
   }
 
   private editMode(rowIdx: number) {
-
     this.currentRowDataState.currentEditingRowIndex = rowIdx;
     this.currentRowDataState.isEditMode = true;
     this.showNewsItemDlg = true;
-
   }
 
   private viewMode(rowIdx: number) {
-
     this.currentRowDataState.currentEditingRowIndex = 0;
     this.currentRowDataState.isEditMode = false;
     this.currentRowDataState.isAddMode = false;
@@ -404,7 +400,8 @@ export class LatestNewsPodComponent implements OnInit {
           error => {
             this.busy = false;
             this.dialogService.displayDebug(error);
-          });
+          }
+        );
       } else {
         // Ensure creation information is preserved
         this.homeService.updateNewsItem([serverNI]).subscribe(
@@ -417,7 +414,8 @@ export class LatestNewsPodComponent implements OnInit {
           error => {
             this.busy = false;
             this.dialogService.displayDebug(error);
-          });
+          }
+        );
       }
     } else {
       if (row.title.length === 0) {
@@ -462,7 +460,8 @@ export class LatestNewsPodComponent implements OnInit {
         error => {
           this.busy = false;
           this.dialogService.displayDebug(error);
-        });
+        }
+      );
     }
   }
 
@@ -482,7 +481,6 @@ export class LatestNewsPodComponent implements OnInit {
 
   private deleteRow(rowIndex: number) {
     if (this.currentRowDataState.isAddMode && !this.currentRowDataState.isEditMode) {
-
       this.newsItems.splice(rowIndex, 1);
       this.newsItems.forEach(row => {
         row.order--;
@@ -542,7 +540,8 @@ export class LatestNewsPodComponent implements OnInit {
       error => {
         this.busy = false;
         this.dialogService.displayDebug(error);
-      });
+      }
+    );
 
     this.showDeleteRowDialog = false;
   }
@@ -584,12 +583,10 @@ export class LatestNewsPodComponent implements OnInit {
 
   contentSanitize(text) {
     return this.sanitizer.bypassSecurityTrustHtml(text);
-
   }
 }
 
 export interface LatestNewsRowDataStateInterface {
-
   currentEditingRowIndex?: number;
   isAddMode?: boolean;
   isEditMode?: boolean;

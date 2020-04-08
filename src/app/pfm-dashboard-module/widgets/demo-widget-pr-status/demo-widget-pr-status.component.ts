@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { GoogleChartInterface } from 'ng2-google-charts/google-charts-interfaces';
+import { GoogleChartInterface } from 'ng2-google-charts/ng2-google-charts';
 
 @Component({
   selector: 'app-demo-widget-pr-status',
@@ -7,8 +7,7 @@ import { GoogleChartInterface } from 'ng2-google-charts/google-charts-interfaces
   styleUrls: ['./demo-widget-pr-status.component.scss']
 })
 export class DemoWidgetPrStatusComponent implements OnInit {
-
-  public columnChart2: GoogleChartInterface =  {
+  columnChart2: GoogleChartInterface = {
     chartType: 'ColumnChart',
     dataTable: [
       ['Country', 'Performance', 'Profits'],
@@ -29,9 +28,7 @@ export class DemoWidgetPrStatusComponent implements OnInit {
     }
   };
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

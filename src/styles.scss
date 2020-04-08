@@ -458,7 +458,8 @@ gridster .gridster-row {
 
 .ag-header-cell-resize {
   background-color: white;
-  width: 5px;
+  width: 1px;
+  right: 0 !important;
 }
 
 .ag-header-cell-resize:hover {

@@ -584,7 +584,7 @@ export class AssetsComponent implements OnInit {
             },
             maxWidth: 280,
             minWidth: 280,
-            cellEditor: 'select',
+            cellEditor: 'agSelectCellEditor',
             cellEditorParams: {
               cellHeight: 100,
               values: this.contractorOrManufacturerOptions.map(tag => tag.name)
@@ -608,7 +608,7 @@ export class AssetsComponent implements OnInit {
             },
             maxWidth: 120,
             minWidth: 120,
-            cellEditor: 'select',
+            cellEditor: 'agSelectCellEditor',
             cellEditorParams: {
               cellHeight: 100,
               values: this.toBeUsedByOptions.map(tag => tag.name)

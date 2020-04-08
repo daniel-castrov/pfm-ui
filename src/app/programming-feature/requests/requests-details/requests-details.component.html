@@ -1,7 +1,7 @@
 <pfm-cancel-cta [label]="'Back'" (onCancelClicked)="goBack()"></pfm-cancel-cta>
 
 <div class="title-line">
-  <div style="float:left;width:80%">
+  <div style="float: left; width: 80%;">
     <h3 *ngIf="program">
       POM{{ pomYear % 100 }} Program Request Details:
       {{ program.shortName === 'undefined' ? '' : program.shortName }}
@@ -18,13 +18,13 @@
     </div>
     <div class="div-button-approve">
       <button (click)="onApprove()" class="btn btn-success">
-        <fa name="check"></fa>
+        <i class="fa fa-check"></i>
         Approve
       </button>
     </div>
     <div class="div-button-reject">
       <button (click)="onReject()" class="btn btn-danger">
-        <fa name="arrow-left"></fa>
+        <i class="fa fa-arrow-left"></i>
         Reject
       </button>
     </div>
@@ -32,32 +32,32 @@
 </div>
 
 <tabset class="program-tab-style" *ngIf="program" destroyOnHide="true">
-  <tab heading="Program" style="width:100%;height:100%" (selectTab)="onSelectTab($event)">
+  <tab heading="Program" style="width: 100%; height: 100%;" (selectTab)="onSelectTab($event)">
     <div class="section-tab">
       <pfm-requests-details-form #detailsForm [pomYear]="pomYear" [program]="program"></pfm-requests-details-form>
     </div>
   </tab>
-  <tab heading="Funds" active="true" style="width:100%;height:100%" (selectTab)="onSelectTab($event)">
+  <tab heading="Funds" active="true" style="width: 100%; height: 100%;" (selectTab)="onSelectTab($event)">
     <div class="section-tab">
       <pfm-requests-funding-line-grid [pomYear]="pomYear" [program]="program"> </pfm-requests-funding-line-grid>
     </div>
   </tab>
-  <tab heading="Schedule" style="width:100%;height:100%" (selectTab)="onSelectTab($event)">
+  <tab heading="Schedule" style="width: 100%; height: 100%;" (selectTab)="onSelectTab($event)">
     <div class="section-tab">
       <pfm-schedule #pfmSchedule *ngIf="currentSelectedTab === 2" [program]="program"></pfm-schedule>
     </div>
   </tab>
-  <tab heading="Scope" style="width:100%;height:100%" (selectTab)="onSelectTab($event)">
+  <tab heading="Scope" style="width: 100%; height: 100%;" (selectTab)="onSelectTab($event)">
     <div class="section-tab">
       <pfm-scope #scope [program]="program"></pfm-scope>
     </div>
   </tab>
-  <tab heading="Assets" style="width:100%;height:100%" (selectTab)="onSelectTab($event)">
+  <tab heading="Assets" style="width: 100%; height: 100%;" (selectTab)="onSelectTab($event)">
     <div class="section-tab">
       <pfm-assets #assets [pomYear]="pomYear" [program]="program"></pfm-assets>
     </div>
   </tab>
-  <tab heading="Justification" style="width:100%;height:100%" (selectTab)="onSelectTab($event)">
+  <tab heading="Justification" style="width: 100%; height: 100%;" (selectTab)="onSelectTab($event)">
     <div class="section-tab">
       <pfm-justification #justification [pomYear]="pomYear" [program]="program"> </pfm-justification>
     </div>

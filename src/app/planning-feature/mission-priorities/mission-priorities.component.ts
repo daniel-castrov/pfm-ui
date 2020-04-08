@@ -152,13 +152,13 @@ export class MissionPrioritiesComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    if (this.appModel.visibilityDef['planning-phase-component']) {
-      this.canPerformCreatePlanning = this.appModel.visibilityDef['planning-phase-component'].createPlanningPhase;
-      this.canPerformOpenPlanning = this.appModel.visibilityDef['planning-phase-component'].openPlanningPhase;
-      this.canPerformLockPlanning = this.appModel.visibilityDef['planning-phase-component'].lockPlanningPhase;
-      this.canPerformClosePlanning = this.appModel.visibilityDef['planning-phase-component'].closePlanningPhase;
-      this.canPerformActions = this.appModel.visibilityDef['planning-phase-component'].performAction;
-    }
+    // if (this.appModel.visibilityDef['planning-phase-component']) {
+    this.canPerformCreatePlanning = !!this.appModel.visibilityDef['planning-phase-component']?.createPlanningPhase;
+    this.canPerformOpenPlanning = !!this.appModel.visibilityDef['planning-phase-component']?.openPlanningPhase;
+    this.canPerformLockPlanning = !!this.appModel.visibilityDef['planning-phase-component']?.lockPlanningPhase;
+    this.canPerformClosePlanning = !!this.appModel.visibilityDef['planning-phase-component']?.closePlanningPhase;
+    this.canPerformActions = !!this.appModel.visibilityDef['planning-phase-component']?.performAction;
+    // }
     this.setupGrid();
     // POM Manager is here for demo purpose
     const years: string[] = [];

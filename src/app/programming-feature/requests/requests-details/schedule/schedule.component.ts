@@ -4,7 +4,7 @@ import { formatDate } from '@angular/common';
 import { DataGridMessage } from 'src/app/pfm-coreui/models/DataGridMessage';
 import { Action } from 'src/app/pfm-common-models/Action';
 import { ActionCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/action-cell-renderer/action-cell-renderer.component';
-import { GoogleChartInterface } from 'ng2-google-charts/google-charts-interfaces';
+import { GoogleChartInterface } from 'ng2-google-charts/ng2-google-charts';
 import { GoogleChartComponent } from 'ng2-google-charts';
 import { DatePickerCellEditorComponent } from 'src/app/pfm-coreui/datagrid/renderers/date-picker-cell-editor/date-picker-cell-editor.component';
 import { DatePickerCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/date-picker-cell-renderer/date-picker-cell-renderer.component';
@@ -139,8 +139,7 @@ export class ScheduleComponent implements OnInit {
 
     this.scheduleService.getByProgramId(this.program.id).subscribe(schResp => {
       const schedules = (schResp as any).result;
-      for (let i = 0; i < schedules.length; i++) {
-        const schedule = schedules[i];
+      for (const schedule of schedules) {
         if (schedule.startDate) {
           schedule.startDate = schedule.startDate.format('MM/DD/YYYY');
         }
@@ -224,9 +223,12 @@ export class ScheduleComponent implements OnInit {
   }
 
   drawTitleOnTop() {
-    const g = document.getElementsByTagName('svg')[0].getElementsByTagName('g')[1];
-    document.getElementsByTagName('svg')[0].parentElement.style.top = '40px';
-    document.getElementsByTagName('svg')[0].style.overflow = 'visible';
+    const g = document
+      .getElementsByTagName('google-chart')[0]
+      .getElementsByTagName('svg')[0]
+      .getElementsByTagName('g')[1];
+    document.getElementsByTagName('google-chart')[0].getElementsByTagName('svg')[0].parentElement.style.top = '40px';
+    document.getElementsByTagName('google-chart')[0].getElementsByTagName('svg')[0].style.overflow = 'visible';
     const height = Number(g.getElementsByTagName('text')[0].getAttribute('y')) + 19;
     g.setAttribute('transform', 'translate(0,-' + height + ')');
   }

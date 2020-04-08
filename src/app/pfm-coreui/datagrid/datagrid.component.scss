@@ -1,18 +1,18 @@
-fa {
+fa-icon {
   font-size: x-large;
 }
 
-fa:hover {
+fa-icon:hover {
   cursor: pointer;
   color: red;
 }
 
-.pfm-datagrid{
+.pfm-datagrid {
   width: 100%;
   height: 100%;
 }
 
-.pfm-datagrid-extras{
+.pfm-datagrid-extras {
   display: flex;
   justify-content: space-between;
   height: 30px;
@@ -28,7 +28,7 @@ fa:hover {
   align-self: center;
 }
 
-.pagination{
+.pagination {
   display: flex;
 }
 
@@ -41,7 +41,7 @@ fa:hover {
   height: 100%;
 }
 
-fa{
+fa-icon {
   padding-left: 8px;
 }
 
