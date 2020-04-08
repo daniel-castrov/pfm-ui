@@ -8,7 +8,6 @@ import { Program } from '../models/Program';
   providedIn: 'root'
 })
 export class ProgrammingServiceImpl extends ProgrammingService {
-
   constructor(protected httpClient: HttpClient) {
     super(httpClient);
   }
@@ -18,11 +17,16 @@ export class ProgrammingServiceImpl extends ProgrammingService {
     return this.get('program/container/' + containerId, new HttpParams().set('organizationId', organizationId));
   }
 
+  getBaBlinSummary(containerId: string, organizationId?: string): Observable<object> {
+    return this.get(
+      'program/ba-blin-summary/container/' + containerId,
+      organizationId != null ? new HttpParams().set('organizationId', organizationId) : null
+    );
+  }
+
   processPRsForContainer(containerId: string, action: string, organizationId?: string) {
     organizationId = organizationId ? organizationId : '';
-    const params: HttpParams = new HttpParams()
-      .set('action', action)
-      .set('organizationId', organizationId);
+    const params: HttpParams = new HttpParams().set('action', action).set('organizationId', organizationId);
     return this.put('program/container/' + containerId + '/process', null, params);
   }
 
@@ -31,8 +35,7 @@ export class ProgrammingServiceImpl extends ProgrammingService {
   }
 
   getPRForYearAndShortName(year: number, shortName: string) {
-    const params: HttpParams = new HttpParams()
-      .set('shortName', shortName);
+    const params: HttpParams = new HttpParams().set('shortName', shortName);
     return this.get('program/year/' + year + '/program', params);
   }
 
@@ -43,5 +46,4 @@ export class ProgrammingServiceImpl extends ProgrammingService {
   updateProgram(program: Program) {
     return this.put('program/', program);
   }
-
 }
