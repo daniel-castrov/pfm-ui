@@ -26,9 +26,18 @@
       </div>
     </div>
   </div>
-  <pfm-dropdown *ngIf="availableOrgs" (selectionChanged)="organizationSelected($event)" [type]="'labelDropdown'"
-    [label]="'Select Organization to View:'" [required]="true" [id]="'availableOrgsDropDown'"
-    [defaultOption]="dropdownDefault" [fieldName]="'name'" [fieldLabel]="'name'" [options]="availableOrgs">
+  <pfm-dropdown
+    *ngIf="availableOrgs"
+    (selectionChanged)="organizationSelected($event)"
+    [type]="'labelDropdown'"
+    [label]="'Select Organization to View:'"
+    [required]="true"
+    [id]="'availableOrgsDropDown'"
+    [defaultOption]="dropdownDefault"
+    [fieldName]="'name'"
+    [fieldLabel]="'name'"
+    [options]="availableOrgs"
+  >
   </pfm-dropdown>
 </div>
 
@@ -36,16 +45,27 @@
   <gridster [options]="options">
     <gridster-item #orgWidetItem [item]="dashboard[0]">
       <div class="gridster-item-content">
-        <pfm-requests-summary-org-widget #orgWidget [griddata]="griddata" [orgs]="orgs"
-          [roles]="programmingModel.roles">
+        <pfm-requests-summary-org-widget
+          #orgWidget
+          [griddata]="griddata"
+          [orgs]="orgs"
+          [roles]="programmingModel.roles"
+          [baBlinSummary]="baBlinSummary"
+        >
         </pfm-requests-summary-org-widget>
       </div>
     </gridster-item>
 
     <gridster-item #toaWidetItem [item]="dashboard[1]">
       <div class="gridster-item-content">
-        <pfm-requests-summary-toa-widget #toaWidget [availableCharts]="availableToaCharts" [pomYear]="pomYear"
-          [selectedOrg]="selectedOrg" [programmingModel]="programmingModel" [griddata]="griddata">
+        <pfm-requests-summary-toa-widget
+          #toaWidget
+          [availableCharts]="availableToaCharts"
+          [pomYear]="pomYear"
+          [selectedOrg]="selectedOrg"
+          [programmingModel]="programmingModel"
+          [griddata]="griddata"
+        >
         </pfm-requests-summary-toa-widget>
       </div>
     </gridster-item>
@@ -54,27 +74,47 @@
 
 <div *ngIf="programmingModelReady" class="section-datagrid">
   <div class="datagrid">
-    <pfm-requests-summary-grid (addCtaEvent)="handleAdd($event)" (gridDataChange)="onGridDataChange($event)"
-      [dropdownOptions]="addOptions" [pomYear]="pomYear"></pfm-requests-summary-grid>
+    <pfm-requests-summary-grid
+      (addCtaEvent)="handleAdd($event)"
+      (gridDataChange)="onGridDataChange($event)"
+      [dropdownOptions]="addOptions"
+      [pomYear]="pomYear"
+    ></pfm-requests-summary-grid>
   </div>
 </div>
 
 <ng-container *ngIf="showPreviousFundedProgramDialog">
-  <pfm-custom-dialog [title]="'Select a Program'" [body]="importPreviousFundedProgramBody"
-    [actions]="importPreviousFundedProgramActions" (onCancelDialog)="showPreviousFundedProgramDialog = false">
+  <pfm-custom-dialog
+    [title]="'Select a Program'"
+    [body]="importPreviousFundedProgramBody"
+    [actions]="importPreviousFundedProgramActions"
+    (onCancelDialog)="showPreviousFundedProgramDialog = false"
+  >
   </pfm-custom-dialog>
 
   <ng-template #importPreviousFundedProgramBody>
-    <pfm-dropdown (selectionChanged)="importProgramSelected($event)" [type]="'labelDropdown'" [label]="''"
-      [required]="true" [id]="'id'" [fieldName]="'name'" [fieldLabel]="'name'" [options]="availablePrograms">
+    <pfm-dropdown
+      (selectionChanged)="importProgramSelected($event)"
+      [type]="'labelDropdown'"
+      [label]="''"
+      [required]="true"
+      [id]="'id'"
+      [fieldName]="'name'"
+      [fieldLabel]="'name'"
+      [options]="availablePrograms"
+    >
     </pfm-dropdown>
   </ng-template>
 
   <ng-template #importPreviousFundedProgramActions>
     <div class="button-container">
       <div class="confirm">
-        <button type="button" class="btn btn-primary" data-dismiss="modal"
-          (click)="showPreviousFundedProgramDialog = false; onImportProgram()">
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-dismiss="modal"
+          (click)="showPreviousFundedProgramDialog = false; onImportProgram()"
+        >
           OK
         </button>
       </div>

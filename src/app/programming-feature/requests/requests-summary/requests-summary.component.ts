@@ -21,6 +21,7 @@ import { Router } from '@angular/router';
 import { AppModel } from '../../../pfm-common-models/AppModel';
 import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
 import { PlanningStatus } from 'src/app/planning-feature/models/enumerators/planning-status.model';
+import { IntMap } from '../../../generated';
 
 @Component({
   selector: 'pfm-requests-summary',
@@ -57,6 +58,7 @@ export class RequestsSummaryComponent implements OnInit {
   orgs: Organization[];
   availableToaCharts: ListItem[];
   dropdownDefault: ListItem;
+  baBlinSummary: IntMap;
 
   constructor(
     private programmingModel: ProgrammingModel,
@@ -298,6 +300,12 @@ export class RequestsSummaryComponent implements OnInit {
       .toPromise()
       .then(resp => {
         this.programmingModel.programs = (resp as any).result;
+      });
+    await this.programmingService
+      .getBaBlinSummary(containerId, organizationId)
+      .toPromise()
+      .then(resp => {
+        this.baBlinSummary = (resp as any).result;
       });
     this.programmingModelReady = true;
     this.busy = false;
