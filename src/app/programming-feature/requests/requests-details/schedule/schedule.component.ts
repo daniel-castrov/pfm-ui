@@ -90,6 +90,7 @@ export class ScheduleComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    console.log('on init schedule');
     this.loadFundingLines();
     this.loadSchedulesGrid();
     this.drawGanttChart();
@@ -130,13 +131,21 @@ export class ScheduleComponent implements OnInit {
           });
         })
       )
-      .subscribe(fundingLines => {
-        for (const fundingLine of fundingLines) {
-          this.fundingFilter.push(fundingLine);
-          this.fundingGridAssociations.push(fundingLine);
+      .subscribe(
+        fundingLines => {
+          for (const fundingLine of fundingLines) {
+            this.fundingFilter.push(fundingLine);
+            this.fundingGridAssociations.push(fundingLine);
+          }
+        },
+        error => console.error(error),
+        () => {
+          this.loadSchedules();
         }
-      });
+      );
+  }
 
+  private loadSchedules() {
     this.scheduleService.getByProgramId(this.program.id).subscribe(schResp => {
       const schedules = (schResp as any).result;
       for (let i = 0; i < schedules.length; i++) {
