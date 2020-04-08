@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import {AllCommunityModules, ColumnApi, GridApi, Module} from '@ag-grid-community/all-modules';
+import { Component, EventEmitter, Input, OnInit, Output, HostListener } from '@angular/core';
+import { AllCommunityModules, ColumnApi, GridApi, Module } from '@ag-grid-community/all-modules';
 
 import { DatagridMbService } from '../../services/datagrid-mb.service';
 import { DataGridMessage } from '../../models/DataGridMessage';
@@ -11,24 +11,23 @@ import { ListItem } from '../../../pfm-common-models/ListItem';
   styleUrls: ['./displaydatagrid.component.scss']
 })
 export class DisplaydatagridComponent implements OnInit {
-
-  @Input() columns:any;
-  @Input() rows:any;
-  @Input() showAddRow:boolean;
+  @Input() columns: any;
+  @Input() rows: any;
+  @Input() showAddRow: boolean;
   @Input() tabToNextCell;
-  @Output() onCellAction:EventEmitter<DataGridMessage> = new EventEmitter<DataGridMessage>();
-  @Output() onAddNewRowEvent:EventEmitter<any> = new EventEmitter<any>();
-  @Output() onGridIsReady:EventEmitter<GridApi> = new EventEmitter<GridApi>();
-  @Output() onRowDragEndEvent:EventEmitter<any> = new EventEmitter<any>();
-  @Output() onColumnIsReady:EventEmitter<ColumnApi> = new EventEmitter<ColumnApi>();
+  @Output() onCellAction: EventEmitter<DataGridMessage> = new EventEmitter<DataGridMessage>();
+  @Output() onAddNewRowEvent: EventEmitter<any> = new EventEmitter<any>();
+  @Output() onGridIsReady: EventEmitter<GridApi> = new EventEmitter<GridApi>();
+  @Output() onRowDragEndEvent: EventEmitter<any> = new EventEmitter<any>();
+  @Output() onColumnIsReady: EventEmitter<ColumnApi> = new EventEmitter<ColumnApi>();
 
   public defaultColDef: any;
   public modules: Module[] = AllCommunityModules;
   public api: GridApi;
   public columnApi: ColumnApi;
-  public options:ListItem[];
+  public options: ListItem[];
 
-  constructor(private datagridMBService:DatagridMbService) {
+  constructor(private datagridMBService: DatagridMbService) {
     datagridMBService.messageBus$.subscribe(message => {
       this.onCellAction.emit(message);
     });
@@ -36,21 +35,20 @@ export class DisplaydatagridComponent implements OnInit {
     this.defaultColDef = {
       resizable: true,
       sortable: true,
-      filter: true,
+      filter: true
     };
   }
 
-  public addNewRow():void{
-    this.onAddNewRowEvent.emit({gridApi: this.api, action: 'add-single-row'});
+  public addNewRow(): void {
+    this.onAddNewRowEvent.emit({ gridApi: this.api, action: 'add-single-row' });
   }
 
-  public handleAdd(item:ListItem):void{
-    if(item){
-      if(item.id === "add-row"){
-        this.onAddNewRowEvent.emit({gridApi: this.api, action: 'add-single-row'});
-      }
-      else if (item.id === "add-year"){
-        this.onAddNewRowEvent.emit({gridApi: this.api, action: 'add-rows-from-year'});
+  public handleAdd(item: ListItem): void {
+    if (item) {
+      if (item.id === 'add-row') {
+        this.onAddNewRowEvent.emit({ gridApi: this.api, action: 'add-single-row' });
+      } else if (item.id === 'add-year') {
+        this.onAddNewRowEvent.emit({ gridApi: this.api, action: 'add-rows-from-year' });
       }
     }
   }
@@ -59,19 +57,19 @@ export class DisplaydatagridComponent implements OnInit {
     console.log('onModelUpdated');
   }
 
-  onRowDragEnd(event:any):void{
+  onRowDragEnd(event: any): void {
     this.onRowDragEndEvent.emit(event);
   }
 
-  onCellClicked(event:any):void{
+  onCellClicked(event: any): void {
     console.info(event);
-    let message:DataGridMessage = new DataGridMessage();
+    let message: DataGridMessage = new DataGridMessage();
 
     message.rowIndex = event.rowIndex;
     message.columnId = event.column.colId;
-    message.message = "cellClicked";
+    message.message = 'cellClicked';
     message.rowData = event.data;
-    message.messageType = "grid-cell";
+    message.messageType = 'grid-cell';
 
     this.onCellAction.emit(message);
   }
@@ -85,17 +83,34 @@ export class DisplaydatagridComponent implements OnInit {
     this.onColumnIsReady.emit(this.columnApi);
   }
 
-  ngOnInit() {
-    // Populate dropdown options
-    let item:ListItem = new ListItem();
-    item.name = "Add a new row";
-    item.value = "add-row";
-    item.id = "add-row";
-    let item2:ListItem = new ListItem();
-    item2.name = "Add all rows from another year";
-    item2.value = "add-year";
-    item2.id = "add-year";
-    this.options = [item, item2];
+  onGridSizeChanged() {
+    this.api.sizeColumnsToFit();
+    console.log('onGridSizeChanged as ');
   }
 
+  onColumnResized(params) {
+    if (params.source === 'columnResized' && params.finished) {
+      this.api.sizeColumnsToFit();
+    }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onWindowResize(event: any) {
+    if (this.api) {
+      this.api.sizeColumnsToFit();
+    }
+  }
+
+  ngOnInit() {
+    // Populate dropdown options
+    let item: ListItem = new ListItem();
+    item.name = 'Add a new row';
+    item.value = 'add-row';
+    item.id = 'add-row';
+    let item2: ListItem = new ListItem();
+    item2.name = 'Add all rows from another year';
+    item2.value = 'add-year';
+    item2.id = 'add-year';
+    this.options = [item, item2];
+  }
 }
