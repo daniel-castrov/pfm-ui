@@ -409,9 +409,8 @@ export class CreateProgrammingComponent implements OnInit {
     colDefs.push({
       headerName: 'Actions',
       field: column1Name + 'actions',
-      mWidth: 100,
+      minWidth: 100,
       maxWidth: 100,
-      suppressSizeToFit: true,
       cellRendererFramework: ActionCellRendererComponent
     });
 
