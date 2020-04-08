@@ -415,4 +415,45 @@ export class RequestsSummaryComponent implements OnInit {
   onGridDataChange(data: any): void {
     this.griddata = data;
   }
+
+  validateToa(): boolean {
+    if (!this.selectedOrg.id) {
+      for (const org of this.orgs) {
+        const validOrg = this.validateOrganizationToa(org.id);
+        if (!validOrg) {
+          return false;
+        }
+      }
+    } else {
+      return this.validateOrganizationToa(this.selectedOrg.id);
+    }
+  }
+
+  private validateOrganizationToa(organizationId: string): boolean {
+    const totals = this.calculateTotals();
+    // Add difference to data
+    for (let i = 0; i < 5; i++) {
+      const difference: number = totals[i].amount - this.programmingModel.pom.orgToas[organizationId][i].amount;
+      if (difference < 0) {
+      }
+    }
+    return true;
+  }
+
+  // Used to calculate total funds per year
+  private calculateTotals(): any[] {
+    const totals: any[] = [];
+    for (const row of this.griddata) {
+      for (let i = 0; i < 5; i++) {
+        const year = this.pomYear + i;
+        if (!totals[i]) {
+          totals[i] = { year: year, amount: 0 };
+        }
+        if (row.funds[this.pomYear + i]) {
+          totals[i].amount = totals[i].amount + row.funds[year];
+        }
+      }
+    }
+    return totals;
+  }
 }
