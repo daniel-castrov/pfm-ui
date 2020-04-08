@@ -17,9 +17,7 @@ import { AssetsComponent } from './assets/assets.component';
   templateUrl: './requests-details.component.html',
   styleUrls: ['./requests-details.component.scss']
 })
-
 export class RequestsDetailsComponent implements OnInit {
-
   @ViewChild('pfmSchedule', { static: false })
   pfmSchedule: ScheduleComponent;
   @ViewChild('detailsForm', { static: false })
@@ -42,8 +40,7 @@ export class RequestsDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private requestSummaryNavigationHistoryService: RequestSummaryNavigationHistoryService
-  ) {
-  }
+  ) {}
 
   goBack(): void {
     this.requestSummaryNavigationHistoryService.prepareNavigationHistory();
@@ -52,10 +49,11 @@ export class RequestsDetailsComponent implements OnInit {
 
   async ngOnInit() {
     this.programmingModel.selectedProgramId = this.route.snapshot.paramMap.get('id');
-    await this.programmingService.getProgramById(this.programmingModel.selectedProgramId)
+    await this.programmingService
+      .getProgramById(this.programmingModel.selectedProgramId)
       .toPromise()
       .then(resp => {
-        this.program = (resp.result) as Program;
+        this.program = resp.result as Program;
       });
     this.pomYear = Number(this.route.snapshot.paramMap.get('pomYear'));
   }
