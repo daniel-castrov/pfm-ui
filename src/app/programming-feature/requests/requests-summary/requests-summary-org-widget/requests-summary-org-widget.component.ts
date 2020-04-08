@@ -4,9 +4,7 @@ import { ListItem } from '../../../../pfm-common-models/ListItem';
 import { Organization } from 'src/app/pfm-common-models/Organization';
 import { Role } from 'src/app/pfm-common-models/Role';
 import { RequestSummaryNavigationHistoryService } from '../requests-summary-navigation-history.service';
-import { IntMap } from '../../../../generated';
-
-// import { runInThisContext } from 'vm';
+import { IntIntMap } from '../../../models/IntIntMap';
 
 @Component({
   selector: 'pfm-requests-summary-org-widget',
@@ -17,7 +15,7 @@ export class RequestsSummaryOrgWidgetComponent implements OnInit {
   @Input() griddata: ProgramSummary[];
   @Input() orgs: Organization[];
   @Input() roles: Role[];
-  @Input() baBlinSummary: IntMap;
+  @Input() baBlinSummary: IntIntMap;
 
   chartReady: boolean;
   availableCharts: ListItem[];
