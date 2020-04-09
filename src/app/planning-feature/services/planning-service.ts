@@ -3,7 +3,6 @@ import { BaseRestService } from '../../services/base-rest.service';
 import { HttpClient } from '@angular/common/http';
 
 export abstract class PlanningService extends BaseRestService {
-
   constructor(protected httpClient: HttpClient) {
     super(httpClient);
   }
@@ -17,7 +16,7 @@ export abstract class PlanningService extends BaseRestService {
   abstract updateMissionPriority(data: any): Observable<object>;
   abstract deleteMissionPriority(data: any): Observable<object>;
   abstract getMissionPriorities(phaseId: string): Observable<any>;
+  abstract getMissionPrioritiesForPOM(phaseId: string): Observable<any>;
   abstract cloneMissionPriorities(phaseId: string): Observable<object>;
   abstract getPlanningByYear(year: number): Observable<any>;
-
 }
