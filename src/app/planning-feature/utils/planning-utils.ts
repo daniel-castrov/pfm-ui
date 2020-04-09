@@ -1,7 +1,6 @@
 import { PlanningPhase } from '../models/PlanningPhase';
 
 export class PlanningUtils {
-
   private static MAX_YEAR_OPTIONS = 11;
 
   static processPlanningPhase(list: PlanningPhase[]): PlanningPhase[] {
@@ -30,5 +29,4 @@ export class PlanningUtils {
     }
     return list;
   }
-
 }

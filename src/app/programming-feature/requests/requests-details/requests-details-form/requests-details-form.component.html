@@ -1,5 +1,4 @@
 <div class="section-main">
-
   <div class="section-form">
     <form *ngIf="form" [formGroup]="form">
       <fieldset class="match-height">
@@ -53,13 +52,24 @@
 
         <fieldset>
           <legend>Priorities</legend>
-          <div class="row">
+          <div class="row" *ngIf="showMissionPriority">
             <label class="col-2">*Mission Priority</label>
             <span class="col-10">
-              <select class="form-control-sm" formControlName="missionPriorityId">
-                <option [ngValue]="null" disabled>Select...</option>
-                <option [ngValue]="item.id" *ngFor="let item of missionPriorities">{{ item.title }}</option>
-              </select>
+              <ng-container *ngIf="!showMissionPriorityMessage">
+                <select
+                  class="form-control-sm"
+                  formControlName="missionPriorityId"
+                  (change)="onChangeMissionPriority($event)"
+                >
+                  <option [ngValue]="null">Select...</option>
+                  <option [ngValue]="item.id" *ngFor="let item of missionPriorities">{{ item.title }}</option>
+                </select>
+              </ng-container>
+              <ng-container *ngIf="showMissionPriorityMessage">
+                <span class="col-10">
+                  <input type="text" formControlName="missionPrioritiesMessage" />
+                </span>
+              </ng-container>
             </span>
           </div>
           <div class="row">
@@ -76,7 +86,7 @@
             <span class="col-10">
               <select class="form-control-sm" formControlName="directoratePriority">
                 <option [ngValue]="null" disabled>Select...</option>
-                <option [ngValue]="item"  *ngFor="let item of directoratePriorities">{{ item }}</option>
+                <option [ngValue]="item" *ngFor="let item of directoratePriorities">{{ item }}</option>
               </select>
             </span>
           </div>
@@ -118,7 +128,6 @@
             <label class="col-12">All program information can be customized to your needs.</label>
           </div>
         </fieldset>
-
       </fieldset>
       <!-- <pre>{{form.getRawValue() | json}}</pre> -->
     </form>
@@ -127,9 +136,13 @@
   <div class="section-attachments">
     <fieldset class="match-height">
       <legend>Attach File</legend>
-      <file-upload [isImageThumbnail]="true" [area]="fileArea" [imagePath]="imagePath" (uploading)="onUploading($event)"
-        (fileUploadEvent)="onFileUploaded($event)"></file-upload>
+      <file-upload
+        [isImageThumbnail]="true"
+        [area]="fileArea"
+        [imagePath]="imagePath"
+        (uploading)="onUploading($event)"
+        (fileUploadEvent)="onFileUploaded($event)"
+      ></file-upload>
     </fieldset>
   </div>
-
 </div>

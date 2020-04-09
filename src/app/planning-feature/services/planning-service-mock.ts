@@ -4,7 +4,6 @@ import { MissionPriority } from '../models/MissionPriority';
 import { Action } from '../../pfm-common-models/Action';
 
 export class PlanningServiceMock extends PlanningService {
-
   sampleData =
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero.' +
     'Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum.' +
@@ -28,8 +27,7 @@ export class PlanningServiceMock extends PlanningService {
     'Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;' +
     'Morbi lacinia molestie dui.' +
     'Praesent blandit dolor. Sed non quam. In vel mi sit amet augue congue elementum.' +
-    'Morbi in ipsum sit amet pede facilisis laoreet. Donec lacus nunc, viverra nec.'
-      .split('.');
+    'Morbi in ipsum sit amet pede facilisis laoreet. Donec lacus nunc, viverra nec.'.split('.');
   constructor() {
     super(null);
   }
@@ -37,7 +35,6 @@ export class PlanningServiceMock extends PlanningService {
   getAllPlanning(): Observable<object> {
     return this.get('planning');
   }
-
 
   createPlanningPhase(data: any): Observable<object> {
     return this.post('planning', data);
@@ -113,6 +110,10 @@ export class PlanningServiceMock extends PlanningService {
     }
 
     return of(list);
+  }
+
+  getMissionPrioritiesForPOM(year: string): Observable<object> {
+    return null;
   }
 
   cloneMissionPriorities(phaseId: string): Observable<object> {
