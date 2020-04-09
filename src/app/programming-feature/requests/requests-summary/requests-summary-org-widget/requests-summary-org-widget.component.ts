@@ -5,6 +5,7 @@ import { Organization } from 'src/app/pfm-common-models/Organization';
 import { Role } from 'src/app/pfm-common-models/Role';
 import { RequestSummaryNavigationHistoryService } from '../requests-summary-navigation-history.service';
 import { IntIntMap } from '../../../models/IntIntMap';
+import { FormatterUtil } from '../../../../util/formatterUtil';
 
 @Component({
   selector: 'pfm-requests-summary-org-widget',
@@ -147,6 +148,7 @@ export class RequestsSummaryOrgWidgetComponent implements OnInit {
       });
       // set data to chart
       this.treeMapChart.dataTable = orgDataTable; // organizationTable;
+      delete this.treeMapChart.options.generateTooltip;
       this.treeMapChart = Object.assign({}, this.treeMapChart);
       // this.treeMapChart.component.draw();
     }
@@ -158,7 +160,6 @@ export class RequestsSummaryOrgWidgetComponent implements OnInit {
       ['BaBlin', 'Parent', 'Total', 'Total (color)'],
       ['BA/BLIN', null, 0, 0]
     ];
-
     // load data into chart
     for (const baBlin of Object.keys(this.baBlinSummary)) {
       lineTable.push([baBlin, 'BA/BLIN', this.baBlinSummary[baBlin], this.baBlinSummary[baBlin]]);
@@ -166,6 +167,15 @@ export class RequestsSummaryOrgWidgetComponent implements OnInit {
 
     // set data to chart
     this.treeMapChart.dataTable = lineTable;
+    const options = Object.assign({}, this.treeMapChart.options);
+    options.generateTooltip = (row, value, size) => {
+      return (
+        '<div style="background:#fd9; padding:10px; border-style:solid">' +
+        `${FormatterUtil.formatCurrency(value)}</div>`
+      );
+    };
+    this.treeMapChart.options = options;
+
     setTimeout(() => {
       // this.treeMapChart.component.draw();
       this.treeMapChart = Object.assign({}, this.treeMapChart);
@@ -233,6 +243,7 @@ export class RequestsSummaryOrgWidgetComponent implements OnInit {
 
     // set data to chart
     this.treeMapChart.dataTable = statusTable;
+    delete this.treeMapChart.options.generateTooltip;
     this.treeMapChart = Object.assign({}, this.treeMapChart);
     // this.treeMapChart.component.draw();
     // this.treeMapChart.goUpAndDraw();

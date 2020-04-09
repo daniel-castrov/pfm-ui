@@ -11,20 +11,20 @@
             <div *ngIf="addMode" class="col-2">
               <label>*Program ID</label>
             </div>
-            <span class="col-10"><input type="text" formControlName="shortName" /></span>
+            <span class="col-10"><input type="text" formControlName="shortName"/></span>
           </div>
           <div class="row">
             <label class="col-2">*Program Name</label>
-            <span class="col-10"><input type="text" formControlName="longName" /></span>
+            <span class="col-10"><input type="text" formControlName="longName"/></span>
           </div>
           <div class="row">
             <label class="col-2">Program Type</label>
-            <span class="col-10"><input type="text" formControlName="type" /></span>
+            <span class="col-10"><input type="text" formControlName="type"/></span>
           </div>
           <div class="row">
             <label class="col-2">Organization</label>
             <div *ngIf="!addMode">
-              <span class="col-10"><input type="text" formControlName="organizationId" /></span>
+              <span class="col-10"><input type="text" formControlName="organizationId"/></span>
             </div>
             <div *ngIf="addMode">
               <span class="col-10">
