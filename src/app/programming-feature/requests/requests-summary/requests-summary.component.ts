@@ -416,44 +416,62 @@ export class RequestsSummaryComponent implements OnInit {
     this.griddata = data;
   }
 
-  validateToa(): boolean {
+  validateToa(): TOAValidationStatus {
+    let validationStatus = TOAValidationStatus.PASSED;
+
     if (!this.selectedOrg.id) {
       for (const org of this.orgs) {
         const validOrg = this.validateOrganizationToa(org.id);
-        if (!validOrg) {
-          return false;
+        if (validOrg !== TOAValidationStatus.PASSED) {
+          validationStatus = validOrg;
+        }
+        if (validationStatus === TOAValidationStatus.POSITIVE) {
+          break;
         }
       }
     } else {
       return this.validateOrganizationToa(this.selectedOrg.id);
     }
+    return validationStatus;
   }
 
-  private validateOrganizationToa(organizationId: string): boolean {
-    const totals = this.calculateTotals();
+  private validateOrganizationToa(organizationId: string): TOAValidationStatus {
+    const totals = this.calculateTotals(organizationId);
+    let validationStatus = TOAValidationStatus.PASSED;
     // Add difference to data
     for (let i = 0; i < 5; i++) {
       const difference: number = totals[i].amount - this.programmingModel.pom.orgToas[organizationId][i].amount;
       if (difference < 0) {
+        validationStatus = TOAValidationStatus.NEGATIVE;
+      } else if (difference > 0) {
+        validationStatus = TOAValidationStatus.POSITIVE;
+        break;
       }
     }
-    return true;
+    return validationStatus;
   }
 
   // Used to calculate total funds per year
-  private calculateTotals(): any[] {
+  private calculateTotals(organizationId: string): any[] {
     const totals: any[] = [];
-    for (const row of this.griddata) {
+    const orgPrs = this.griddata.filter(x => x.organizationId === organizationId);
+    for (const row of orgPrs) {
       for (let i = 0; i < 5; i++) {
         const year = this.pomYear + i;
         if (!totals[i]) {
-          totals[i] = { year: year, amount: 0 };
+          totals[i] = { year, amount: 0 };
         }
         if (row.funds[this.pomYear + i]) {
-          totals[i].amount = totals[i].amount + row.funds[year];
+          totals[i].amount += row.funds[year];
         }
       }
     }
     return totals;
   }
+}
+
+const enum TOAValidationStatus {
+  PASSED = 'PASSED',
+  POSITIVE = 'POSITIVE',
+  NEGATIVE = 'NEGATIVE'
 }

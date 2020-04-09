@@ -135,7 +135,7 @@ export class RequestsSummaryOrgWidgetComponent implements OnInit {
       });
 
       this.griddata.forEach(ps => {
-        const orgName = this.getOrgName(ps.organiztionId);
+        const orgName = this.getOrgName(ps.organizationId);
         if (orgName) {
           orgDataTable.push([
             ps.programName,
@@ -265,7 +265,7 @@ export class RequestsSummaryOrgWidgetComponent implements OnInit {
     let hasData = false;
     if (this.griddata) {
       for (const ps of this.griddata) {
-        if (ps.organiztionId === orgId) {
+        if (ps.organizationId === orgId) {
           hasData = true;
           break;
         }
