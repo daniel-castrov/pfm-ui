@@ -90,7 +90,6 @@ export class ScheduleComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    console.log('on init schedule');
     this.loadFundingLines();
     this.loadSchedulesGrid();
     this.drawGanttChart();
@@ -138,7 +137,7 @@ export class ScheduleComponent implements OnInit {
             this.fundingGridAssociations.push(fundingLine);
           }
         },
-        error => console.error(error),
+        error => null,
         () => {
           this.loadSchedules();
         }
