@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ColumnApi, GridApi } from '@ag-grid-community/all-modules';
 import { DataGridMessage } from '../../../../pfm-coreui/models/DataGridMessage';
 import { ProgrammingModel } from '../../../models/ProgrammingModel';
@@ -205,7 +205,7 @@ export class RequestsSummaryGridComponent implements OnInit {
     for (const program of this.programmingModel.programs) {
       const ps = new ProgramSummary();
       ps.id = program.id;
-      ps.organiztionId = program.organizationId;
+      ps.organizationId = program.organizationId;
       ps.programName = program.shortName;
       ps.assignedTo = this.getRoleName(program.responsibleRoleId);
       ps.status = program.programStatus;
