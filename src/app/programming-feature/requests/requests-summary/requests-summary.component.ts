@@ -59,6 +59,12 @@ export class RequestsSummaryComponent implements OnInit {
   availableToaCharts: ListItem[];
   dropdownDefault: ListItem;
   baBlinSummary: IntIntMap;
+  negativeValidationDialog = {
+    title: 'Caution',
+    bodyText: `At least one year's PR Totals are below the organization TOAs. Do you want to continue?`,
+    continueAction: null,
+    display: false
+  };
 
   constructor(
     private programmingModel: ProgrammingModel,
@@ -339,11 +345,23 @@ export class RequestsSummaryComponent implements OnInit {
 
   onImportProgram() {}
 
-  onApprove(): void {
-    this.approveAllPRs();
+  onApproveOrganization(): void {
+    const validation = this.validateToa();
+
+    if (validation === TOAValidationStatus.POSITIVE) {
+      this.toastService.displayError(
+        'No program requests were approved. Some requests caused organization TOAs to be exceeded.'
+      );
+      return;
+    } else if (validation === TOAValidationStatus.NEGATIVE) {
+      this.negativeValidationDialog.display = true;
+      this.negativeValidationDialog.continueAction = this.approveOrganization.bind(this);
+      return;
+    }
+    this.approveOrganization();
   }
 
-  onApproveOrganization(): void {
+  approveOrganization() {
     this.programmingService
       .processPRsForContainer(this.programmingModel.pom.workspaceId, 'Approve Organization', this.selectedOrg.value)
       .subscribe(
@@ -354,7 +372,8 @@ export class RequestsSummaryComponent implements OnInit {
         error => {
           const err = (error as any).error;
           this.toastService.displayError(err.error);
-        }
+        },
+        () => (this.negativeValidationDialog.display = false)
       );
   }
 
@@ -374,6 +393,22 @@ export class RequestsSummaryComponent implements OnInit {
   }
 
   onAdvanceOrganization() {
+    const validation = this.validateToa();
+
+    if (validation === TOAValidationStatus.POSITIVE) {
+      this.toastService.displayError(
+        'No program requests were advanced. Some requests caused organization TOAs to be exceeded.'
+      );
+      return;
+    } else if (validation === TOAValidationStatus.NEGATIVE) {
+      this.negativeValidationDialog.display = true;
+      this.negativeValidationDialog.continueAction = this.advanceOrganization.bind(this);
+      return;
+    }
+    this.advanceOrganization();
+  }
+
+  advanceOrganization() {
     this.programmingService
       .processPRsForContainer(this.programmingModel.pom.workspaceId, 'Advance Organization', this.selectedOrg.value)
       .subscribe(
@@ -384,8 +419,23 @@ export class RequestsSummaryComponent implements OnInit {
         error => {
           const err = (error as any).error;
           this.toastService.displayError(err.error);
-        }
+        },
+        () => (this.negativeValidationDialog.display = false)
       );
+  }
+
+  onApproveAllPrs(): void {
+    const validation = this.validateToa();
+    if (validation === TOAValidationStatus.POSITIVE) {
+      this.toastService.displayError(
+        'No program requests were approved. Some requests caused organization TOAs to be exceeded.'
+      );
+    } else if (validation === TOAValidationStatus.NEGATIVE) {
+      this.negativeValidationDialog.display = true;
+      this.negativeValidationDialog.continueAction = this.approveAllPRs.bind(this);
+      return;
+    }
+    this.approveAllPRs();
   }
 
   approveAllPRs(): void {
@@ -397,7 +447,8 @@ export class RequestsSummaryComponent implements OnInit {
       error => {
         const err = (error as any).error;
         this.toastService.displayError(err.error);
-      }
+      },
+      () => (this.negativeValidationDialog.display = false)
     );
   }
 
@@ -419,7 +470,7 @@ export class RequestsSummaryComponent implements OnInit {
   validateToa(): TOAValidationStatus {
     let validationStatus = TOAValidationStatus.PASSED;
 
-    if (!this.selectedOrg.id) {
+    if (!this.selectedOrg.value) {
       for (const org of this.orgs) {
         const validOrg = this.validateOrganizationToa(org.id);
         if (validOrg !== TOAValidationStatus.PASSED) {
@@ -430,7 +481,7 @@ export class RequestsSummaryComponent implements OnInit {
         }
       }
     } else {
-      return this.validateOrganizationToa(this.selectedOrg.id);
+      validationStatus = this.validateOrganizationToa(this.selectedOrg.value);
     }
     return validationStatus;
   }
@@ -467,6 +518,10 @@ export class RequestsSummaryComponent implements OnInit {
       }
     }
     return totals;
+  }
+
+  onCancelNegativeValidationDialog() {
+    this.negativeValidationDialog.display = false;
   }
 }
 
