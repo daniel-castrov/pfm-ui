@@ -11,6 +11,8 @@ import { ProgramStatus } from '../../models/enumerations/program-status.model';
 import { ScopeComponent } from './scope/scope.component';
 import { JustificationComponent } from './justification/justification.component';
 import { AssetsComponent } from './assets/assets.component';
+import { VisibilityService } from 'src/app/services/visibility-service';
+import { AppModel } from 'src/app/pfm-common-models/AppModel';
 
 @Component({
   selector: 'pfm-requests-details',
@@ -39,7 +41,9 @@ export class RequestsDetailsComponent implements OnInit {
     private programmingService: ProgrammingService,
     private route: ActivatedRoute,
     private router: Router,
-    private requestSummaryNavigationHistoryService: RequestSummaryNavigationHistoryService
+    private requestSummaryNavigationHistoryService: RequestSummaryNavigationHistoryService,
+    private visibilityService: VisibilityService,
+    private appModel: AppModel
   ) {}
 
   goBack(): void {
@@ -47,20 +51,32 @@ export class RequestsDetailsComponent implements OnInit {
     this.router.navigate(['/programming/requests']);
   }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.programmingModel.selectedProgramId = this.route.snapshot.paramMap.get('id');
+    this.pomYear = Number(this.route.snapshot.paramMap.get('pomYear'));
+    this.loadProgram();
+    this.setupVisibility();
+  }
+
+  async loadProgram() {
     await this.programmingService
       .getProgramById(this.programmingModel.selectedProgramId)
       .toPromise()
       .then(resp => {
         this.program = resp.result as Program;
       });
-    this.pomYear = Number(this.route.snapshot.paramMap.get('pomYear'));
   }
 
-  onApprove(): void {
-    console.log('Approve Organization');
+  async setupVisibility() {
+    await this.visibilityService
+      .isCurrentlyVisible('programming-detail-component')
+      .toPromise()
+      .then(response => {
+        this.appModel['visibilityDef']['programming-detail-component'] = (response as any).result;
+      });
   }
+
+  onApprove(): void {}
 
   onSave(): void {
     this.busy = true;
@@ -71,6 +87,9 @@ export class RequestsDetailsComponent implements OnInit {
     if (this.scopeComponent) {
       pro = this.getFromScopeForm(pro);
     }
+    if (this.assetsComponent) {
+      pro = this.getFromAssets(pro);
+    }
     if (this.justificationComponent) {
       pro = this.getFromJustificationForm(pro);
     }
@@ -80,13 +99,9 @@ export class RequestsDetailsComponent implements OnInit {
     });
   }
 
-  onReject(): void {
-    console.log('Reject Organization');
-  }
+  onReject(): void {}
 
-  onValidate(): void {
-    console.log('Validate Organization');
-  }
+  onValidate(): void {}
 
   onSelectTab(event: TabDirective) {
     switch (event.heading.toLowerCase()) {
@@ -143,6 +158,13 @@ export class RequestsDetailsComponent implements OnInit {
       ...program,
       justification: this.justificationComponent.form.get(['justification']).value,
       impactN: this.justificationComponent.form.get(['impactN']).value
+    };
+  }
+
+  private getFromAssets(program: Program): Program {
+    return {
+      ...program,
+      assets: this.assetsComponent.getProgramAssets()
     };
   }
 }
