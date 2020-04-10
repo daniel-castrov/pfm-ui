@@ -8,7 +8,6 @@ import { Pom } from '../models/Pom';
   providedIn: 'root'
 })
 export class PomServiceImpl extends PomService {
-
   constructor(protected httpClient: HttpClient) {
     super(httpClient);
   }
@@ -35,5 +34,9 @@ export class PomServiceImpl extends PomService {
 
   getPomForYear(year: number): Observable<object> {
     return this.get('pom/year/' + year);
+  }
+
+  getPomYearsByStatus(status: string[]): Observable<object> {
+    return this.get('pom/years/by-status/' + status);
   }
 }
