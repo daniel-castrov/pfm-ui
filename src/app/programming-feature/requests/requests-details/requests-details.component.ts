@@ -47,7 +47,7 @@ export class RequestsDetailsComponent implements OnInit {
     private router: Router,
     private requestSummaryNavigationHistoryService: RequestSummaryNavigationHistoryService,
     private visibilityService: VisibilityService,
-    private appModel: AppModel,
+    public appModel: AppModel,
     private toastService: ToastService
   ) {}
 
