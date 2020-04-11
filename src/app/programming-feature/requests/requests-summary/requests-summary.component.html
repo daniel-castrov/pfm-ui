@@ -20,7 +20,7 @@
         </button>
       </div>
       <div *pfmIsVisible="'requests-summary-component.approveAllPRs'" class="div-button-approve-all">
-        <button type="button" class="btn btn-primary" (click)="onApprove()">
+        <button type="button" class="btn btn-primary" (click)="onApproveAllPrs()">
           Approve All PRs - Demo only
         </button>
       </div>
@@ -121,6 +121,36 @@
       <div class="cancel">
         <pfm-cancel-cta (onCancelClicked)="showPreviousFundedProgramDialog = false"></pfm-cancel-cta>
       </div>
+    </div>
+  </ng-template>
+</ng-container>
+
+<ng-container *ngIf="negativeValidationDialog.display">
+  <pfm-custom-dialog
+    [title]="negativeValidationDialog.title"
+    [body]="yearSkipBody"
+    [actions]="yearSkipActions"
+    (onCancelDialog)="onCancelNegativeValidationDialog()"
+  ></pfm-custom-dialog>
+
+  <ng-template #yearSkipBody>
+    <span>{{ negativeValidationDialog.bodyText }}</span>
+  </ng-template>
+
+  <ng-template #yearSkipActions>
+    <div class="pull-left">
+      <button
+        type="button"
+        class="btn btn-primary"
+        data-dismiss="modal"
+        (click)="negativeValidationDialog.continueAction()"
+      >
+        Continue
+      </button>
+    </div>
+
+    <div class="pull-right">
+      <pfm-cancel-cta (onCancelClicked)="onCancelNegativeValidationDialog()"></pfm-cancel-cta>
     </div>
   </ng-template>
 </ng-container>
