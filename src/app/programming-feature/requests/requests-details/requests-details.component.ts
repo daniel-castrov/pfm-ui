@@ -86,53 +86,12 @@ export class RequestsDetailsComponent implements OnInit {
   onSave(): void {
     this.busy = true;
     let pro = this.program;
-    let canSave = true;
-    if (this.requestDetailsFormComponent) {
-      pro = this.getFromDetailForm(pro);
-    }
-    if (this.scopeComponent) {
-      let editing = 0;
-      editing += this.scopeComponent.evaluationMeasureGridApi.getEditingCells().length;
-      editing += this.scopeComponent.teamLeadGridApi.getEditingCells().length;
-      editing += this.scopeComponent.processPriorizationGridApi.getEditingCells().length;
-      if (editing) {
-        canSave = false;
-        this.toastService.displayError('Please save all rows in grids before saving the page.', 'Scope');
-      }
-      pro = this.getFromScopeForm(pro);
-    }
-    if (this.fundingLinesComponent) {
-      let editing = 0;
-      if (this.fundingLinesComponent.summaryFundingLineGridApi) {
-        editing += this.fundingLinesComponent.summaryFundingLineGridApi.getEditingCells().length;
-      }
-      if (this.fundingLinesComponent.nonSummaryFundingLineGridApi) {
-        editing += this.fundingLinesComponent.nonSummaryFundingLineGridApi.getEditingCells().length;
-      }
-      if (editing) {
-        canSave = false;
-        this.toastService.displayError('Please save all rows in grids before saving the page.', 'Funds');
-      }
-    }
-    if (this.pfmSchedule) {
-      if (this.pfmSchedule.gridApi.getEditingCells().length) {
-        canSave = false;
-        this.toastService.displayError('Please save all rows in grids before saving the page.', 'Schedule');
-      }
-    }
-    if (this.assetsComponent) {
-      if (this.assetsComponent.assetGridApi) {
-        if (this.assetsComponent.assetGridApi.getEditingCells().length) {
-          canSave = false;
-          this.toastService.displayError('Please save all rows in grids before saving the page.', 'Assets');
-        }
-      }
-      pro = this.getFromAssets(pro);
-    }
-    if (this.justificationComponent) {
-      pro = this.getFromJustificationForm(pro);
-    }
+    const canSave = this.canSaveProgram(true);
     if (canSave) {
+      pro = this.getFromDetailForm(pro);
+      pro = this.getFromScopeForm(pro);
+      pro = this.getFromAssets(pro);
+      pro = this.getFromJustificationForm(pro);
       this.programmingService.save(pro).subscribe(
         resp => {
           this.busy = false;
@@ -145,9 +104,89 @@ export class RequestsDetailsComponent implements OnInit {
     }
   }
 
+  private canSaveProgram(isSave: boolean) {
+    const errorMessage = isSave
+      ? 'Please save all rows in grids before saving the page.'
+      : 'Please save row(s) currently open for editing.';
+    let canSave = true;
+    if (this.scopeComponent) {
+      let editing = 0;
+      editing += this.scopeComponent.evaluationMeasureGridApi.getEditingCells().length;
+      editing += this.scopeComponent.teamLeadGridApi.getEditingCells().length;
+      editing += this.scopeComponent.processPriorizationGridApi.getEditingCells().length;
+      if (editing) {
+        canSave = false;
+        this.toastService.displayError(errorMessage, 'Scope');
+      }
+    }
+    if (this.fundingLinesComponent) {
+      let editing = 0;
+      if (this.fundingLinesComponent.summaryFundingLineGridApi) {
+        editing += this.fundingLinesComponent.summaryFundingLineGridApi.getEditingCells().length;
+      }
+      if (this.fundingLinesComponent.nonSummaryFundingLineGridApi) {
+        editing += this.fundingLinesComponent.nonSummaryFundingLineGridApi.getEditingCells().length;
+      }
+      if (editing) {
+        canSave = false;
+        this.toastService.displayError(errorMessage, 'Funds');
+      }
+    }
+    if (this.pfmSchedule) {
+      if (this.pfmSchedule.gridApi.getEditingCells().length) {
+        canSave = false;
+        this.toastService.displayError(errorMessage, 'Schedule');
+      }
+    }
+    if (this.assetsComponent) {
+      if (this.assetsComponent.assetGridApi) {
+        if (this.assetsComponent.assetGridApi.getEditingCells().length) {
+          canSave = false;
+          this.toastService.displayError(errorMessage, 'Assets');
+        }
+      }
+    }
+    return canSave;
+  }
+
   onReject(): void {}
 
-  onValidate(): void {}
+  onValidate() {
+    let passedValidation = true;
+    let program = { ...this.program };
+    passedValidation = this.canSaveProgram(false);
+    if (this.requestDetailsFormComponent) {
+      program = this.getFromDetailForm(program);
+      if (!program.shortName) {
+        passedValidation = false;
+        this.toastService.displayError('Program ID field must not be empty.', 'Program');
+      }
+      if (!program.longName) {
+        passedValidation = false;
+        this.toastService.displayError('Program Name field must not be empty.', 'Program');
+      }
+      if (!program.type) {
+        passedValidation = false;
+        this.toastService.displayError('Program Type field must not be empty.', 'Program');
+      }
+      if (!program.organizationId) {
+        passedValidation = false;
+        this.toastService.displayError('Organization field must not be empty.', 'Program');
+      }
+      if (
+        this.requestDetailsFormComponent.showMissionPriority &&
+        !this.requestDetailsFormComponent.showMissionPriorityMessage
+      ) {
+        if (!program.missionPriorityId) {
+          passedValidation = false;
+          this.toastService.displayError('Mission Priority field must not be empty.', 'Program');
+        }
+      }
+    }
+    if (passedValidation) {
+      this.toastService.displaySuccess('All validations passed.');
+    }
+  }
 
   onSelectTab(event: TabDirective) {
     switch (event.heading.toLowerCase()) {
@@ -178,9 +217,22 @@ export class RequestsDetailsComponent implements OnInit {
   private getFromDetailForm(program: Program): Program {
     return {
       ...program,
+      shortName: this.requestDetailsFormComponent.addMode
+        ? this.requestDetailsFormComponent.form.get(['shortName']).value
+        : program.shortName,
       longName: this.requestDetailsFormComponent.form.get(['longName']).value,
+      type: this.requestDetailsFormComponent.addMode
+        ? this.requestDetailsFormComponent.form.get(['type']).value
+        : program.type,
+      organizationId: this.requestDetailsFormComponent.addMode
+        ? this.requestDetailsFormComponent.form.get(['organizationId']).value
+        : program.organizationId,
       divisionId: this.requestDetailsFormComponent.form.get(['divisionId']).value,
-      missionPriorityId: this.requestDetailsFormComponent.form.get(['missionPriorityId']).value,
+      missionPriorityId:
+        this.requestDetailsFormComponent.showMissionPriority &&
+        !this.requestDetailsFormComponent.showMissionPriorityMessage
+          ? this.requestDetailsFormComponent.form.get(['missionPriorityId']).value
+          : null,
       agencyPriority: this.requestDetailsFormComponent.form.get(['agencyPriority']).value,
       directoratePriority: this.requestDetailsFormComponent.form.get(['directoratePriority']).value,
       secDefLOEId: this.requestDetailsFormComponent.form.get(['secDefLOEId']).value,
