@@ -5,10 +5,7 @@ import { MessageService } from 'primeng/api';
   providedIn: 'root'
 })
 export class ToastService {
-
-  constructor(
-    private messageService: MessageService
-  ) { }
+  constructor(private messageService: MessageService) {}
 
   displaySuccess(text: string): void {
     this.messageService.add({
@@ -37,13 +34,12 @@ export class ToastService {
     });
   }
 
-  displayError(text: string): void {
+  displayError(text: string, summary?: string): void {
     this.messageService.add({
       severity: 'error',
-      summary: '',
+      summary: summary ? summary : '',
       detail: text,
       life: 10000
     });
   }
-
 }

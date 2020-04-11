@@ -7,10 +7,13 @@ import { TabDirective } from 'ngx-bootstrap';
 import { ProgrammingService } from '../../services/programming-service';
 import { Program } from '../../models/Program';
 import { RequestsDetailsFormComponent } from './requests-details-form/requests-details-form.component';
-import { ProgramStatus } from '../../models/enumerations/program-status.model';
 import { ScopeComponent } from './scope/scope.component';
 import { JustificationComponent } from './justification/justification.component';
 import { AssetsComponent } from './assets/assets.component';
+import { VisibilityService } from 'src/app/services/visibility-service';
+import { AppModel } from 'src/app/pfm-common-models/AppModel';
+import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
+import { RequestsFundingLineGridComponent } from './requests-funding-line-grid/requests-funding-line-grid.component';
 
 @Component({
   selector: 'pfm-requests-details',
@@ -18,28 +21,34 @@ import { AssetsComponent } from './assets/assets.component';
   styleUrls: ['./requests-details.component.scss']
 })
 export class RequestsDetailsComponent implements OnInit {
-  @ViewChild('pfmSchedule', { static: false })
-  pfmSchedule: ScheduleComponent;
   @ViewChild('detailsForm', { static: false })
   requestDetailsFormComponent: RequestsDetailsFormComponent;
+  @ViewChild('fundingLines', { static: false })
+  fundingLinesComponent: RequestsFundingLineGridComponent;
+  @ViewChild('pfmSchedule', { static: false })
+  pfmSchedule: ScheduleComponent;
   @ViewChild('scope', { static: false })
   scopeComponent: ScopeComponent;
-  @ViewChild('justification', { static: false })
-  justificationComponent: JustificationComponent;
   @ViewChild('assets', { static: false })
   assetsComponent: AssetsComponent;
+  @ViewChild('justification', { static: false })
+  justificationComponent: JustificationComponent;
 
   currentSelectedTab = 1;
   pomYear: number;
   program: Program;
   busy: boolean;
+  disableSchedule = false;
 
   constructor(
     public programmingModel: ProgrammingModel,
     private programmingService: ProgrammingService,
     private route: ActivatedRoute,
     private router: Router,
-    private requestSummaryNavigationHistoryService: RequestSummaryNavigationHistoryService
+    private requestSummaryNavigationHistoryService: RequestSummaryNavigationHistoryService,
+    private visibilityService: VisibilityService,
+    private appModel: AppModel,
+    private toastService: ToastService
   ) {}
 
   goBack(): void {
@@ -47,46 +56,98 @@ export class RequestsDetailsComponent implements OnInit {
     this.router.navigate(['/programming/requests']);
   }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.programmingModel.selectedProgramId = this.route.snapshot.paramMap.get('id');
+    this.pomYear = Number(this.route.snapshot.paramMap.get('pomYear'));
+    this.loadProgram();
+    this.setupVisibility();
+  }
+
+  async loadProgram() {
     await this.programmingService
       .getProgramById(this.programmingModel.selectedProgramId)
       .toPromise()
       .then(resp => {
         this.program = resp.result as Program;
       });
-    this.pomYear = Number(this.route.snapshot.paramMap.get('pomYear'));
   }
 
-  onApprove(): void {
-    console.log('Approve Organization');
+  async setupVisibility() {
+    await this.visibilityService
+      .isCurrentlyVisible('programming-detail-component')
+      .toPromise()
+      .then(response => {
+        this.appModel['visibilityDef']['programming-detail-component'] = (response as any).result;
+      });
   }
+
+  onApprove(): void {}
 
   onSave(): void {
     this.busy = true;
     let pro = this.program;
+    let canSave = true;
     if (this.requestDetailsFormComponent) {
       pro = this.getFromDetailForm(pro);
     }
     if (this.scopeComponent) {
+      let editing = 0;
+      editing += this.scopeComponent.evaluationMeasureGridApi.getEditingCells().length;
+      editing += this.scopeComponent.teamLeadGridApi.getEditingCells().length;
+      editing += this.scopeComponent.processPriorizationGridApi.getEditingCells().length;
+      if (editing) {
+        canSave = false;
+        this.toastService.displayError('Please save all rows in grids before saving the page.', 'Scope');
+      }
       pro = this.getFromScopeForm(pro);
+    }
+    if (this.fundingLinesComponent) {
+      let editing = 0;
+      if (this.fundingLinesComponent.summaryFundingLineGridApi) {
+        editing += this.fundingLinesComponent.summaryFundingLineGridApi.getEditingCells().length;
+      }
+      if (this.fundingLinesComponent.nonSummaryFundingLineGridApi) {
+        editing += this.fundingLinesComponent.nonSummaryFundingLineGridApi.getEditingCells().length;
+      }
+      if (editing) {
+        canSave = false;
+        this.toastService.displayError('Please save all rows in grids before saving the page.', 'Funds');
+      }
+    }
+    if (this.pfmSchedule) {
+      if (this.pfmSchedule.gridApi.getEditingCells().length) {
+        canSave = false;
+        this.toastService.displayError('Please save all rows in grids before saving the page.', 'Schedule');
+      }
+    }
+    if (this.assetsComponent) {
+      if (this.assetsComponent.assetGridApi) {
+        if (this.assetsComponent.assetGridApi.getEditingCells().length) {
+          canSave = false;
+          this.toastService.displayError('Please save all rows in grids before saving the page.', 'Assets');
+        }
+      }
+      pro = this.getFromAssets(pro);
     }
     if (this.justificationComponent) {
       pro = this.getFromJustificationForm(pro);
     }
-    pro.programStatus = ProgramStatus.SAVED;
-    this.programmingService.updateProgram(pro).subscribe(resp => {
-      this.busy = false;
-    });
+    if (canSave) {
+      this.programmingService.save(pro).subscribe(
+        resp => {
+          this.busy = false;
+          this.toastService.displaySuccess('Program request saved successfully.');
+        },
+        error => {
+          this.toastService.displayError('An error has ocurred while attempting to save program.');
+        }
+      );
+    }
   }
 
-  onReject(): void {
-    console.log('Reject Organization');
-  }
+  onReject(): void {}
 
-  onValidate(): void {
-    console.log('Validate Organization');
-  }
+  onValidate(): void {}
 
   onSelectTab(event: TabDirective) {
     switch (event.heading.toLowerCase()) {
@@ -97,6 +158,7 @@ export class RequestsDetailsComponent implements OnInit {
         this.currentSelectedTab = 1;
         break;
       case 'schedule':
+        setTimeout(() => this.pfmSchedule.drawGanttChart(true), 0);
         this.currentSelectedTab = 2;
         break;
       case 'scope':
@@ -143,6 +205,13 @@ export class RequestsDetailsComponent implements OnInit {
       ...program,
       justification: this.justificationComponent.form.get(['justification']).value,
       impactN: this.justificationComponent.form.get(['impactN']).value
+    };
+  }
+
+  private getFromAssets(program: Program): Program {
+    return {
+      ...program,
+      assets: this.assetsComponent.getProgramAssets()
     };
   }
 }

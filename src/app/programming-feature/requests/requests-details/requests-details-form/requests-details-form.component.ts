@@ -57,6 +57,7 @@ export class RequestsDetailsFormComponent implements OnInit {
       this.addMode = true;
       this.program = new Program();
     }
+    this.loadImage();
     this.loadForm();
     this.updateForm(this.program);
   }
@@ -173,14 +174,20 @@ export class RequestsDetailsFormComponent implements OnInit {
   onFileUploaded(fileResponse: FileMetaData) {
     this.program.imageName = fileResponse.id;
     this.program.imageArea = this.fileArea;
-    this.fileDownloadService.downloadSecureResource(this.program.imageName).then(blob => {
-      const reader = new FileReader();
-      reader.readAsDataURL(blob);
-      reader.onloadend = () => {
-        const base64data = reader.result;
-        this.imagePath = base64data.toString();
-      };
-    });
+    this.loadImage();
+  }
+
+  loadImage() {
+    if (this.program.imageName) {
+      this.fileDownloadService.downloadSecureResource(this.program.imageName).then(blob => {
+        const reader = new FileReader();
+        reader.readAsDataURL(blob);
+        reader.onloadend = () => {
+          const base64data = reader.result;
+          this.imagePath = base64data.toString();
+        };
+      });
+    }
   }
 
   formValidator: ValidatorFn = (control: FormGroup): ValidationErrors | null => {
