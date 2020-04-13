@@ -34,11 +34,8 @@
   <ng-container *ngIf="selectedCardType === 'assigned'">
     <div class="card border-assigned">
       <div class="card-body">
-        <h5 class="card-title">Assigned to you:</h5>
-        <p class="card-text">These pop-ups can be done with a nicer, animated style via css tweaks</p>
-        <p class="card-text">We can also change the 'arrow' icon above to point downward when this is open.</p>
-        <p class="card-text">We can also make them lay over other components or push them down like this.</p>
-        <p class="card-text">We can also consider making these open a modal instead.</p>
+        <h5 class="card-title text-success">Assigned to me:</h5>
+        <pfm-assigned-to-me></pfm-assigned-to-me>
       </div>
     </div>
   </ng-container>
