@@ -21,4 +21,5 @@ export abstract class ProgrammingService extends BaseRestService {
   abstract getPRForYearAndShortName(year: number, shortName: string): Observable<any>;
   abstract getProgramById(id: string): Observable<any>;
   abstract updateProgram(program: Program): Observable<any>;
+  abstract save(program: Program): Observable<any>;
 }

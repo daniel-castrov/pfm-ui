@@ -95,6 +95,10 @@ export class AssetsComponent implements OnInit {
       remarks: new FormControl('')
     });
     this.form.controls.fundingLineSelect.patchValue(0);
+    this.form.controls.remarks.valueChanges.subscribe(val => {
+      const asset = this.program.assets && this.program.assets.find(a => a.id === this.selectedAsset.id);
+      asset.remarks = val;
+    });
   }
 
   private async loadToBeUsedBy() {
@@ -733,6 +737,10 @@ export class AssetsComponent implements OnInit {
     };
 
     return nextCell;
+  }
+
+  getProgramAssets() {
+    return this.program.assets;
   }
 }
 

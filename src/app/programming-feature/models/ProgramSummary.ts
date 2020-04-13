@@ -1,6 +1,6 @@
 export class ProgramSummary {
   id: string;
-  organiztionId: string;
+  organizationId: string;
   programName: string;
   assignedTo: string;
   status: string;

@@ -25,6 +25,7 @@ import { Schedule } from '../../../models/schedule.model';
 })
 export class ScheduleComponent implements OnInit {
   @Input() program: Program;
+  @Input() pomYear: number;
 
   @ViewChild('googleChart', { static: false })
   chart: GoogleChartComponent;
@@ -80,7 +81,6 @@ export class ScheduleComponent implements OnInit {
   scheduleGridRows: ScheduleDataMockInterface[];
 
   busy: boolean;
-  firstTimeLoading: boolean;
   currentRowDataState: ScheduleRowDataStateInterface = {};
 
   constructor(
@@ -92,7 +92,6 @@ export class ScheduleComponent implements OnInit {
   ngOnInit() {
     this.loadFundingLines();
     this.loadSchedulesGrid();
-    this.drawGanttChart();
   }
 
   loadFundingLines() {
@@ -147,8 +146,7 @@ export class ScheduleComponent implements OnInit {
   private loadSchedules() {
     this.scheduleService.getByProgramId(this.program.id).subscribe(schResp => {
       const schedules = (schResp as any).result;
-      for (let i = 0; i < schedules.length; i++) {
-        const schedule = schedules[i];
+      for (const schedule of schedules) {
         if (schedule.startDate) {
           schedule.startDate = schedule.startDate.format('MM/DD/YYYY');
         }
@@ -162,7 +160,7 @@ export class ScheduleComponent implements OnInit {
         this.viewMode(i);
       }
       this.gridApi.setRowData(this.scheduleGridRows);
-      this.updateGanttChart();
+      this.drawGanttChart(true);
     });
   }
 
@@ -224,10 +222,12 @@ export class ScheduleComponent implements OnInit {
         ''
       ]);
     }
+
     this.chartData.dataTable = data;
-    if ((this.chart && !this.firstTimeLoading) || redraw) {
-      this.firstTimeLoading = true;
-      this.chart.draw();
+    if (this.chart || redraw) {
+      if (this.chart.wrapper) {
+        this.chart.draw();
+      }
     }
   }
 
@@ -252,6 +252,9 @@ export class ScheduleComponent implements OnInit {
 
   onGridIsReady(gridApi: GridApi) {
     this.gridApi = gridApi;
+    if (this.chart) {
+      this.drawGanttChart(true);
+    }
   }
 
   private loadSchedulesGrid() {

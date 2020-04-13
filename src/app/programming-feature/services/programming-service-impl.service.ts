@@ -46,4 +46,8 @@ export class ProgrammingServiceImpl extends ProgrammingService {
   updateProgram(program: Program) {
     return this.put('program/', program);
   }
+
+  save(program: Program) {
+    return this.put('program/save', program);
+  }
 }
