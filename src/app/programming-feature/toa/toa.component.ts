@@ -26,10 +26,6 @@ export class ToaComponent implements OnInit {
     this.pomService.getPomYearsByStatus(['OPEN', 'LOCKED', 'CLOSED']).subscribe(
       resp => {
         const years: string[] = (resp as any).result.map(String);
-        const currentYear = years.find(element => element === this.byYear.toString());
-        if (!currentYear) {
-          years.push(this.byYear.toString());
-        }
         this.pomYears = ListItemHelper.generateListItemFromArray(years);
       },
       error => {
