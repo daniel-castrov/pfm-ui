@@ -1083,17 +1083,19 @@ export class RequestsFundingLineGridComponent implements OnInit {
       columns: [baBlinCell.column]
     })[0] as any;
 
-    appnCellEditor.addDestroyableEventListener(appnCellEditor.eSelect, 'change', () => {
-      bablinCellEditor.eSelect.options.length = 0;
-      let params: any;
-      params = {};
-      params.column = baBlinCell.column;
-      params.values = [
-        'Select',
-        ...this.allBaBlins.filter(x => x.appropriation === appnCellEditor.getValue()).map(x => x.code)
-      ];
-      bablinCellEditor.init(params);
-    });
+    if (appnCellEditor.destroyFunctions) {
+      appnCellEditor.addDestroyableEventListener(appnCellEditor.eSelect, 'change', () => {
+        bablinCellEditor.eSelect.options.length = 0;
+        let params: any;
+        params = {};
+        params.column = baBlinCell.column;
+        params.values = [
+          'Select',
+          ...this.allBaBlins.filter(x => x.appropriation === appnCellEditor.getValue()).map(x => x.code)
+        ];
+        bablinCellEditor.init(params);
+      });
+    }
   }
 }
 
