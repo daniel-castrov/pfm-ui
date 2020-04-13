@@ -343,7 +343,6 @@ export class CreateProgrammingComponent implements OnInit {
         this.busy = false;
         const years: string[] = ['Spreadsheet'];
         this.availableYears = this.toListItem(years);
-        console.log(response.error);
       }
     );
   }

@@ -1,1 +1,28 @@
-<p>toa works!</p>
+<div class="section-banner">
+  <div class="table w-100">
+    <div class="table-row w-100">
+      <div>
+        <h3>TOAs</h3>
+      </div>
+    </div>
+    <div class="table mt-2">
+      <div class="table-row">
+        <div class="rTableCell">
+          <ng-container>
+            <pfm-dropdown
+              *ngIf="pomYears"
+              [type]="'labelDropdown'"
+              [label]="'For:'"
+              [required]="true"
+              [id]="'pomYearByStatus'"
+              [fieldName]="'name'"
+              [fieldLabel]="'name'"
+              [options]="pomYears"
+              [defaultOption]="defaultYear"
+            ></pfm-dropdown>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
