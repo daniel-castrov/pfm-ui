@@ -42,6 +42,7 @@ import { MessageService } from 'primeng/api';
 import { DropdownCellRendererComponent } from './datagrid/renderers/dropdown-cell-renderer/dropdown-cell-renderer.component';
 import { MpActionCellRendererComponent } from './datagrid/renderers/mp-action-cell-renderer/mp-action-cell-renderer.component';
 import { AgGridPaginationComponent } from './datagrid/ag-grid-pagination/ag-grid-pagination.component';
+import { AtmActionCellRendererComponent } from './datagrid/renderers/atm-action-cell-renderer/atm-action-cell-renderer.component';
 
 @NgModule({
   entryComponents: [DropdownCellRendererComponent],
@@ -77,7 +78,8 @@ import { AgGridPaginationComponent } from './datagrid/ag-grid-pagination/ag-grid
     IsVisibleDirective,
     ToggleInputComponent,
     MpActionCellRendererComponent,
-    AgGridPaginationComponent
+    AgGridPaginationComponent,
+    AtmActionCellRendererComponent
   ],
   imports: [
     ToastModule,
@@ -96,7 +98,8 @@ import { AgGridPaginationComponent } from './datagrid/ag-grid-pagination/ag-grid
       TextCellRendererComponent,
       DisabledActionCellRendererComponent,
       DatePickerCellEditorComponent,
-      DatePickerCellRendererComponent
+      DatePickerCellRendererComponent,
+      AtmActionCellRendererComponent
     ]),
     BsDatepickerModule.forRoot()
   ],

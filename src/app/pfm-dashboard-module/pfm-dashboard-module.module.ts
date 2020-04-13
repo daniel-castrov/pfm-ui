@@ -13,6 +13,7 @@ import { DashboardMockService } from './services/dashboard.mock.service';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { GridsterModule } from 'angular-gridster2';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { AssignedToMeComponent } from './assigned-to-me/assigned-to-me.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
     DemoWidgetMissionFundingPriorityComponent,
     DemoWidgetMissionFundingMoneyComponent,
     DemoWidgetPOMPhaseFundingComponent,
-    DemoWidgetPrStatusComponent
+    DemoWidgetPrStatusComponent,
+    AssignedToMeComponent
   ],
   imports: [
     CommonModule,
