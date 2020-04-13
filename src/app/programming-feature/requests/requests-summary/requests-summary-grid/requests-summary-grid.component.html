@@ -1,6 +1,15 @@
 <div class="grid-container">
-    <pfm-datagrid (gridIsReady)="onGridIsReady($event)" (columnIsReady)="onColumnIsReady($event)" (cellAction)="handleCellAction($event)"
-                  (addCtaEvent)="onAddProgram($event)" [showAddDropdownCta]="true" [addDropdownCtaOptions]="dropdownOptions"
-                  [addDropdownCtaTooltip]="'Add Programming Request for'" [columns]="columns" [rows]="gridData"
-                  [isExternalFilterPresent]="isExternalFilterPresent" [doesExternalFilterPass]="doesExternalFilterPass"></pfm-datagrid>
+  <pfm-datagrid
+    (gridIsReady)="onGridIsReady($event)"
+    (columnIsReady)="onColumnIsReady($event)"
+    (cellAction)="handleCellAction($event)"
+    (addCtaEvent)="onAddProgram($event)"
+    [showAddDropdownCta]="true"
+    [addDropdownCtaOptions]="dropdownOptions"
+    [addDropdownCtaTooltip]="'Add Programming Request for'"
+    [columns]="columns"
+    [rows]="gridData"
+    [isExternalFilterPresent]="isExternalFilterPresent"
+    [doesExternalFilterPass]="doesExternalFilterPass"
+  ></pfm-datagrid>
 </div>

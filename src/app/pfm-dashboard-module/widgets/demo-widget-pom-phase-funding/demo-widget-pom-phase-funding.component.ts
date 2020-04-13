@@ -6,8 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./demo-widget-pom-phase-funding.component.scss']
 })
 export class DemoWidgetPOMPhaseFundingComponent implements OnInit {
-
-  public barChart = {
+  barChart = {
     chartType: 'Bar',
     dataTable: [
       ['Year', 'Sales', 'Expenses', 'Profit'],
@@ -24,10 +23,7 @@ export class DemoWidgetPOMPhaseFundingComponent implements OnInit {
     }
   };
 
+  constructor() {}
 
-  constructor() { }
-
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

@@ -8,9 +8,8 @@ describe('DemoWidgetPrStatusComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DemoWidgetPrStatusComponent ]
-    })
-    .compileComponents();
+      declarations: [DemoWidgetPrStatusComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

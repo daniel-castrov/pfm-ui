@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { PfmHomeService } from './pfm-home-service';
 import { NewsItem } from '../models/NewsItem';
@@ -9,7 +9,6 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class PfmHomeServicesImpl extends PfmHomeService {
-
   constructor(protected httpClient: HttpClient) {
     super(httpClient);
   }
@@ -20,9 +19,7 @@ export class PfmHomeServicesImpl extends PfmHomeService {
 
   createNewsItem(data: any): Observable<object> {
     data = this.convertDateFromClient(data);
-    return this.post('newsItem', data)
-      .pipe(map((res) => this.convertDateFromServer(res)));
-    ;
+    return this.post('newsItem', data).pipe(map(res => this.convertDateFromServer(res)));
   }
 
   updateNewsItem(data: any): Observable<object> {
@@ -34,8 +31,7 @@ export class PfmHomeServicesImpl extends PfmHomeService {
   }
 
   getNewsItems(): Observable<object> {
-    return this.get('newsItem')
-      .pipe(map((res) => this.convertDateArrayFromServer(res)));
+    return this.get('newsItem').pipe(map(res => this.convertDateArrayFromServer(res)));
   }
 
   protected convertDateFromClient(newsItem: NewsItem): NewsItem {
@@ -47,12 +43,9 @@ export class PfmHomeServicesImpl extends PfmHomeService {
   }
 
   protected convertDateArrayFromServer(res) {
-    res.result.forEach((newsItem) => {
-
-      newsItem.begin = newsItem.begin != null ?
-        new Date(newsItem.begin) : null;
-      newsItem.end = newsItem.end != null ?
-        new Date(newsItem.end) : null;
+    res.result.forEach(newsItem => {
+      newsItem.begin = newsItem.begin != null ? new Date(newsItem.begin) : null;
+      newsItem.end = newsItem.end != null ? new Date(newsItem.end) : null;
     });
 
     return res;
@@ -61,12 +54,9 @@ export class PfmHomeServicesImpl extends PfmHomeService {
   protected convertDateFromServer(res) {
     if (res.result) {
       const newsItem = res.result;
-      newsItem.begin = newsItem.begin != null ?
-        new Date(newsItem.begin) : null;
-      newsItem.end = newsItem.end != null ?
-        new Date(newsItem.end) : null;
+      newsItem.begin = newsItem.begin != null ? new Date(newsItem.begin) : null;
+      newsItem.end = newsItem.end != null ? new Date(newsItem.end) : null;
     }
     return res;
   }
-
 }

@@ -17,9 +17,6 @@
 }
 
 /*Tabs and tab contents*/
-.section-tabs {
-  /*placeholder in case we need styles to add to this area it seems to work without any css*/
-}
 
 /*A Single Tab*/
 .section-tab {
@@ -104,7 +101,6 @@
   display: table-cell;
   text-align: center;
   width: 20px;
-  align: center;
 }
 
 .edit-year-blue-link {

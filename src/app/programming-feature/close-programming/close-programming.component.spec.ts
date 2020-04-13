@@ -8,9 +8,8 @@ describe('CloseProgrammingComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CloseProgrammingComponent ]
-    })
-    .compileComponents();
+      declarations: [CloseProgrammingComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

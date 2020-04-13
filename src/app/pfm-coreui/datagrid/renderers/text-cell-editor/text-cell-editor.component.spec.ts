@@ -8,9 +8,8 @@ describe('TextCellEditorComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TextCellEditorComponent ]
-    })
-    .compileComponents();
+      declarations: [TextCellEditorComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

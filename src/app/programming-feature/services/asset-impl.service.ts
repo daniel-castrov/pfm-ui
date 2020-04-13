@@ -7,7 +7,6 @@ import { AssetService } from './asset.service';
   providedIn: 'root'
 })
 export class AssetServiceImpl extends AssetService {
-
   obtainAssetByFundingLineId(fundingLineId: string): Observable<any> {
     return this.get('assets/funding-line/' + fundingLineId);
   }
@@ -23,5 +22,4 @@ export class AssetServiceImpl extends AssetService {
   removeAssetById(assetId: string): Observable<any> {
     return this.delete('assets/' + assetId);
   }
-
 }

@@ -10,4 +10,4 @@ const routes: Routes = [{ path: '', component: PfmUserNotificationsModuleCompone
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class PfmUserNotificationsModuleRoutingModule { }
+export class PfmUserNotificationsModuleRoutingModule {}

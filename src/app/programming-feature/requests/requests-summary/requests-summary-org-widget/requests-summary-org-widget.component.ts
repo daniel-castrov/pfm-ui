@@ -237,8 +237,6 @@ export class RequestsSummaryOrgWidgetComponent implements OnInit {
       statusTable.push([roleacrynm + ' : Approved', 'Program Status', approved, 70]);
       statusTable.push([roleacrynm + ' : Rejected', 'Program Status', rejected, 10]);
     }
-
-    console.log(JSON.stringify(statusTable));
     // load data into chart
 
     // set data to chart
@@ -314,7 +312,6 @@ export class RequestsSummaryOrgWidgetComponent implements OnInit {
         }
       });
     }
-    console.log(role + ' : ' + acrynm);
     return acrynm;
   }
 }

@@ -7,7 +7,6 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class TagServiceImpl extends TagService {
-
   constructor(protected httpClient: HttpClient) {
     super(httpClient);
   }
@@ -15,5 +14,4 @@ export class TagServiceImpl extends TagService {
   getByType(type: string): Observable<object> {
     return this.get('tags/type/' + type);
   }
-
 }

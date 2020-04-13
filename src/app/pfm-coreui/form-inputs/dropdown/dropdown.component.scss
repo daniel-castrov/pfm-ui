@@ -1,4 +1,4 @@
-.pfm-dropdown-section{
+.pfm-dropdown-section {
   display: flex;
   flex-direction: row;
 }
@@ -6,46 +6,44 @@
 .pfm-label {
   display: flex;
   padding-right: 5px;
-
 }
 
-label{
+label {
   display: flex;
   align-items: center;
   height: 100%;
 }
 
-.pfm-dropdown{
+.pfm-dropdown {
   display: flex;
   width: 200px;
 }
 
-.pfm-dropdown-long{
+.pfm-dropdown-long {
   display: flex;
   width: 400px;
 }
 
-option{
+option {
   background-color: #bbced7;
 }
 
-.icon-dropown{
+.icon-dropown {
   cursor: pointer;
 }
 
-.icon-dropown:hover{
+.icon-dropown:hover {
   color: red;
 }
 
-fa{
+fa {
   font-size: x-large;
 }
 
-.icon-select{
-
+.icon-select {
 }
 
-.icon-option:hover{
+.icon-option:hover {
   color: white;
-  background-color: #1E90FF;
+  background-color: #1e90ff;
 }

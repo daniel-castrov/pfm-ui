@@ -7,10 +7,8 @@ import { PfmCoreuiModule } from '../pfm-coreui/pfm-coreui.module';
 
 @NgModule({
   declarations: [SecureUploadComponent],
-  imports: [
-    CommonModule, FileUploadModule, AngularFontAwesomeModule, PfmCoreuiModule
-  ],
+  imports: [CommonModule, FileUploadModule, AngularFontAwesomeModule, PfmCoreuiModule],
   exports: [SecureUploadComponent],
   providers: []
 })
-export class PfmSecureFileuploadModule { }
+export class PfmSecureFileuploadModule {}

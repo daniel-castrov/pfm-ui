@@ -10,6 +10,5 @@ export class Role {
   communityId: string;
   resourceType: string;
 
-  constructor() {
-  }
+  constructor() {}
 }

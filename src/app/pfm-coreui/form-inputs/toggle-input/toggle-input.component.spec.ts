@@ -7,9 +7,8 @@ describe('ToggleInputComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ToggleInputComponent ]
-    })
-    .compileComponents();
+      declarations: [ToggleInputComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

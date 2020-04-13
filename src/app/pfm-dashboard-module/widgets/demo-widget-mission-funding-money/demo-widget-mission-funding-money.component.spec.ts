@@ -8,9 +8,8 @@ describe('DemoWidgetMissionFundingMoneyComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DemoWidgetMissionFundingMoneyComponent ]
-    })
-    .compileComponents();
+      declarations: [DemoWidgetMissionFundingMoneyComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

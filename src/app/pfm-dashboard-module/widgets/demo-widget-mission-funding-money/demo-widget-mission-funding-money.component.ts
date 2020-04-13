@@ -7,8 +7,7 @@ import { GoogleChartInterface } from 'ng2-google-charts/google-charts-interfaces
   styleUrls: ['./demo-widget-mission-funding-money.component.scss']
 })
 export class DemoWidgetMissionFundingMoneyComponent implements OnInit {
-
-  public columnChart: GoogleChartInterface = {
+  columnChart: GoogleChartInterface = {
     chartType: 'ColumnChart',
     dataTable: [
       ['Country', 'Performance', 'Profits'],
@@ -21,9 +20,7 @@ export class DemoWidgetMissionFundingMoneyComponent implements OnInit {
     ]
   };
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

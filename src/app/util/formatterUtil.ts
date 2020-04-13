@@ -8,8 +8,8 @@ export class FormatterUtil {
   }
 
   static getCurrentFiscalYear(): number {
-    let today = new Date();
-    let curMonth = today.getMonth();
+    const today = new Date();
+    const curMonth = today.getMonth();
     let fiscalYr;
     if (curMonth > 9) {
       fiscalYr = new Date().getFullYear() + 1;

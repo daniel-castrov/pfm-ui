@@ -10,4 +10,4 @@ const routes: Routes = [{ path: '', component: BudgetFeatureComponent, canActiva
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class BudgetFeatureRoutingModule { }
+export class BudgetFeatureRoutingModule {}

@@ -8,9 +8,8 @@ describe('PfmUserNotificationsModuleComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PfmUserNotificationsModuleComponent ]
-    })
-    .compileComponents();
+      declarations: [PfmUserNotificationsModuleComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

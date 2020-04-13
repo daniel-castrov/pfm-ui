@@ -7,6 +7,7 @@ import { RequestsDetailsComponent } from '../../../../../../app/programming-feat
 import { ProgrammingService } from '../../../../../../app/programming-feature/services/programming-service';
 import { Program } from '../../../../../../app/programming-feature/models/Program';
 import { ProgramStatus } from '../../../../../../app/programming-feature/models/enumerations/program-status.model';
+import { Type } from '@angular/core';
 
 describe('Component Tests', () => {
   describe('Requests Details Management Component', () => {
@@ -25,17 +26,17 @@ describe('Component Tests', () => {
 
       fixture = TestBed.createComponent(RequestsDetailsComponent);
       comp = fixture.componentInstance;
-      service = fixture.debugElement.injector.get(ProgrammingService);
+      service = fixture.debugElement.injector.get<ProgrammingServiceImpl>(
+        ProgrammingService as Type<ProgrammingServiceImpl>
+      );
     });
 
     it('Should load Program on init', fakeAsync(() => {
       // GIVEN
       spyOn(service, 'getProgramById').and.returnValue(
-        of(
-          {
-            result: { id: '123' }
-          }
-        )
+        of({
+          result: { id: '123' }
+        })
       );
 
       // WHEN
@@ -64,7 +65,6 @@ describe('Component Tests', () => {
         expect(service.updateProgram).toHaveBeenCalledWith(entityToBeSaved);
         expect(comp.busy).toEqual(false);
       }));
-
     });
   });
 });

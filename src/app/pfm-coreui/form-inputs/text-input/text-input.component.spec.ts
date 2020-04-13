@@ -1,16 +1,14 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { TextInputComponent } from './text-input.component';
 
-
 describe('TextInputComponent', () => {
   let component: TextInputComponent;
   let fixture: ComponentFixture<TextInputComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TextInputComponent ]
-    })
-    .compileComponents();
+      declarations: [TextInputComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

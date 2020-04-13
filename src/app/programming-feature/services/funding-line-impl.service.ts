@@ -7,7 +7,6 @@ import { FundingLine } from '../models/funding-line.model';
   providedIn: 'root'
 })
 export class FundingLineServiceImpl extends FundingLineService {
-
   obtainFundingLinesByProgramId(programId: string): Observable<any> {
     return this.get('funding-line/program/' + programId);
   }
@@ -23,5 +22,4 @@ export class FundingLineServiceImpl extends FundingLineService {
   removeFundingLineById(fundingLineId: string): Observable<any> {
     return this.delete('funding-line/' + fundingLineId);
   }
-
 }

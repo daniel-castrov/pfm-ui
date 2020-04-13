@@ -10,16 +10,10 @@ import { PfmCoreuiModule } from '../pfm-coreui/pfm-coreui.module';
 import { CommunityService } from '../services/community-service';
 import { CommunityServiceImpl } from '../services/community-service-impl.service';
 
-
 @NgModule({
   declarations: [SigninComponent, ChooseCommunityComponent, SignOutComponent],
-  imports: [
-    CommonModule,
-    PfmAuthModuleRoutingModule,
-    PfmCoreuiModule
-  ],
+  imports: [CommonModule, PfmAuthModuleRoutingModule, PfmCoreuiModule],
   exports: [],
-  providers: [SigninService, {provide: CommunityService, useClass: CommunityServiceImpl}]
-
+  providers: [SigninService, { provide: CommunityService, useClass: CommunityServiceImpl }]
 })
-export class PfmAuthModuleModule { }
+export class PfmAuthModuleModule {}

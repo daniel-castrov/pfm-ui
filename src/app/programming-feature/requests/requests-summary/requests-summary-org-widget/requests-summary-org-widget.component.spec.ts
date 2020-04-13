@@ -8,9 +8,8 @@ describe('RequestsSummaryOrgWidgetComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RequestsSummaryOrgWidgetComponent ]
-    })
-    .compileComponents();
+      declarations: [RequestsSummaryOrgWidgetComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

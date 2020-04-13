@@ -8,9 +8,8 @@ describe('RadioButtonWrapperComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RadioButtonWrapperComponent ]
-    })
-    .compileComponents();
+      declarations: [RadioButtonWrapperComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

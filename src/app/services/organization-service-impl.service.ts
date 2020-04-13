@@ -1,15 +1,14 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable, of} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
-import {OrganizationService} from './organization-service';
-import {Organization} from '../pfm-common-models/Organization';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { OrganizationService } from './organization-service';
+import { Organization } from '../pfm-common-models/Organization';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrganizationServiceImpl extends OrganizationService {
-
   constructor(protected httpClient: HttpClient) {
     super(httpClient);
   }
@@ -28,8 +27,6 @@ export class OrganizationServiceImpl extends OrganizationService {
         return orgs;
       }),
       catchError(err => {
-        console.log('error while getting organization map: ');
-        console.warn(err);
         return of(orgs);
       })
     );

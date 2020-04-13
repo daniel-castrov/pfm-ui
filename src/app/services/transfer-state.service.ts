@@ -12,20 +12,14 @@ let transferState: TransferState;
   providedIn: 'root'
 })
 export class TransferStateService {
-  constructor(
-    private state: TransferState,
-    @Inject(PLATFORM_ID) private platformId: any
-  ) {
+  constructor(private state: TransferState, @Inject(PLATFORM_ID) private platformId: any) {
     transferState = state;
     isBrowser = isPlatformBrowser(this.platformId);
     isServer = isPlatformServer(this.platformId);
   }
 }
 
-export const preserveServerState = (
-  keyName: string,
-  emptyResult: any = null
-) => {
+export const preserveServerState = (keyName: string, emptyResult: any = null) => {
   const key = makeStateKey(keyName);
   return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
     const method = descriptor.value;

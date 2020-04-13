@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { ElementRef, NgModule, Renderer } from '@angular/core';
+import { ElementRef, NgModule, Renderer2 } from '@angular/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TabDirective, TabsetComponent } from 'ngx-bootstrap';
 import { GoogleChartComponent } from 'ng2-google-charts';
@@ -27,7 +27,7 @@ import { RequestSummaryNavigationHistoryService } from '../../app/programming-fe
       useValue: null
     },
     {
-      provide: Renderer,
+      provide: Renderer2,
       useValue: null
     },
     {
@@ -54,9 +54,7 @@ import { RequestSummaryNavigationHistoryService } from '../../app/programming-fe
       provide: RequestSummaryNavigationHistoryService,
       useValue: null
     }
-
   ],
   imports: [HttpClientTestingModule]
 })
-export class PfmTestModule {
-}
+export class PfmTestModule {}

@@ -21,11 +21,11 @@ export class DisplaydatagridComponent implements OnInit {
   @Output() onRowDragEndEvent: EventEmitter<any> = new EventEmitter<any>();
   @Output() onColumnIsReady: EventEmitter<ColumnApi> = new EventEmitter<ColumnApi>();
 
-  public defaultColDef: any;
-  public modules: Module[] = AllCommunityModules;
-  public api: GridApi;
-  public columnApi: ColumnApi;
-  public options: ListItem[];
+  defaultColDef: any;
+  modules: Module[] = AllCommunityModules;
+  api: GridApi;
+  columnApi: ColumnApi;
+  options: ListItem[];
 
   constructor(private datagridMBService: DatagridMbService) {
     datagridMBService.messageBus$.subscribe(message => {
@@ -39,11 +39,11 @@ export class DisplaydatagridComponent implements OnInit {
     };
   }
 
-  public addNewRow(): void {
+  addNewRow(): void {
     this.onAddNewRowEvent.emit({ gridApi: this.api, action: 'add-single-row' });
   }
 
-  public handleAdd(item: ListItem): void {
+  handleAdd(item: ListItem): void {
     if (item) {
       if (item.id === 'add-row') {
         this.onAddNewRowEvent.emit({ gridApi: this.api, action: 'add-single-row' });
@@ -53,17 +53,14 @@ export class DisplaydatagridComponent implements OnInit {
     }
   }
 
-  public onModelUpdated() {
-    console.log('onModelUpdated');
-  }
+  onModelUpdated() {}
 
   onRowDragEnd(event: any): void {
     this.onRowDragEndEvent.emit(event);
   }
 
   onCellClicked(event: any): void {
-    console.info(event);
-    let message: DataGridMessage = new DataGridMessage();
+    const message: DataGridMessage = new DataGridMessage();
 
     message.rowIndex = event.rowIndex;
     message.columnId = event.column.colId;
@@ -74,8 +71,7 @@ export class DisplaydatagridComponent implements OnInit {
     this.onCellAction.emit(message);
   }
 
-  public onGridReady(params) {
-    console.log('onGridReady');
+  onGridReady(params) {
     this.api = params.api;
     this.columnApi = params.columnApi;
     this.api.sizeColumnsToFit();
@@ -85,7 +81,6 @@ export class DisplaydatagridComponent implements OnInit {
 
   onGridSizeChanged() {
     this.api.sizeColumnsToFit();
-    console.log('onGridSizeChanged as ');
   }
 
   onColumnResized(params) {
@@ -103,11 +98,11 @@ export class DisplaydatagridComponent implements OnInit {
 
   ngOnInit() {
     // Populate dropdown options
-    let item: ListItem = new ListItem();
+    const item: ListItem = new ListItem();
     item.name = 'Add a new row';
     item.value = 'add-row';
     item.id = 'add-row';
-    let item2: ListItem = new ListItem();
+    const item2: ListItem = new ListItem();
     item2.name = 'Add all rows from another year';
     item2.value = 'add-year';
     item2.id = 'add-year';

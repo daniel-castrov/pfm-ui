@@ -7,9 +7,8 @@ describe('JustificationComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ JustificationComponent ]
-    })
-    .compileComponents();
+      declarations: [JustificationComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

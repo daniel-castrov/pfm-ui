@@ -58,6 +58,5 @@ export class Program {
 
   attachments: Attachment[];
 
-  constructor() {
-  }
+  constructor() {}
 }

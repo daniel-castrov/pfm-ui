@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output, ViewChild, Input } from '@angular/core';
+import { Component, EventEmitter, Output, Input } from '@angular/core';
 
 @Component({
   selector: 'pfm-primary-button',
@@ -6,18 +6,16 @@ import { Component, OnInit, EventEmitter, Output, ViewChild, Input } from '@angu
   styleUrls: ['./primary-button.component.scss']
 })
 export class PrimaryButtonComponent {
-  
-  @Input() id:string;
-  @Input() label:string = "Primary";
-  @Input() name:string = "primary";
-  @Input() disabled:boolean;
+  @Input() id: string;
+  @Input() label = 'Primary';
+  @Input() name = 'primary';
+  @Input() disabled: boolean;
 
   @Output() onClick = new EventEmitter<MouseEvent>();
 
-  constructor() { }
+  constructor() {}
 
-  handleClick(event: MouseEvent){
+  handleClick(event: MouseEvent) {
     this.onClick.emit(event);
   }
 }
-

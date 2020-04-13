@@ -7,15 +7,14 @@ import { TextInputComponent } from '../../../form-inputs/text-input/text-input.c
   templateUrl: './text-cell-editor.component.html',
   styleUrls: ['./text-cell-editor.component.scss']
 })
-export class TextCellEditorComponent implements ICellEditorAngularComp, AfterViewInit{
-  @ViewChild(TextInputComponent, {static: false}) input: TextInputComponent;
-  public params: any;
-  public id:string;
+export class TextCellEditorComponent implements ICellEditorAngularComp, AfterViewInit {
+  @ViewChild(TextInputComponent, { static: false }) input: TextInputComponent;
+  params: any;
+  id: string;
 
   agInit(params: any): void {
     this.params = params;
-    this.id = "TextCellEditorComponent_" + this.params.rowIndex;
-    console.info('agInit: ' + this.params.rowIndex);
+    this.id = 'TextCellEditorComponent_' + this.params.rowIndex;
   }
 
   getValue(): any {
@@ -24,7 +23,7 @@ export class TextCellEditorComponent implements ICellEditorAngularComp, AfterVie
 
   ngAfterViewInit() {
     setTimeout(() => {
-      if(this.params.focusOnEditMode){
+      if (this.params.focusOnEditMode) {
         this.input.setFocus();
       }
     });

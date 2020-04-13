@@ -13,7 +13,7 @@
   color: #25527a;
   font-size: 18px;
   margin-left: 4px;
-  cursor: pointer!important;
+  cursor: pointer !important;
 }
 
 ul {
@@ -21,7 +21,6 @@ ul {
   flex-direction: column;
   align-items: center;
   padding: 0;
-
 }
 
 li {
@@ -34,7 +33,8 @@ li {
   align-items: center;
 }
 
-li.menu-item:hover > fa, .semi-active > span {
+li.menu-item:hover > fa,
+.semi-active > span {
   color: white;
 }
 
@@ -44,7 +44,7 @@ li.menu-item:hover > fa, .semi-active > span {
 }
 
 li:hover {
-  cursor: pointer!important;
+  cursor: pointer !important;
   background-color: #2e719e;
   color: white;
   opacity: 0.8;
@@ -83,7 +83,7 @@ li:hover {
 
 span {
   padding-left: 8px;
-  width:120px;
+  width: 120px;
   padding-top: 2px;
 }
 
@@ -93,8 +93,9 @@ fa {
   margin-left: 4px;
 }
 
-.menu-item.active > fa, .menu-item.semi-active > fa {
-  color:white;
+.menu-item.active > fa,
+.menu-item.semi-active > fa {
+  color: white;
 }
 
 span {
@@ -127,15 +128,18 @@ span {
   padding: 0;
 }
 
-
 /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
 #main {
-  transition: margin-left .5s;
+  transition: margin-left 0.5s;
   padding: 20px;
 }
 
 /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
 @media screen and (max-height: 450px) {
-  .sidenav {padding-top: 15px;}
-  .sidenav a {font-size: 18px;}
+  .sidenav {
+    padding-top: 15px;
+  }
+  .sidenav a {
+    font-size: 18px;
+  }
 }

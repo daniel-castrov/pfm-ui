@@ -1,37 +1,37 @@
-:host{
+:host {
   height: 100vh;
 }
 
-.title-line{
+.title-line {
   display: flex;
   width: 100%;
 }
 
-.button-container{
+.button-container {
   display: flex;
   width: 100%;
 }
 
-.div-button-reject{
-  float:right; 
-  padding-right:3px;
+.div-button-reject {
+  float: right;
+  padding-right: 3px;
 }
 
-.div-button-approve{
-  float:right; 
-  padding-right:3px;
+.div-button-approve {
+  float: right;
+  padding-right: 3px;
 }
-.div-button-save{
-  float:right; 
-  padding-right:3px;
+.div-button-save {
+  float: right;
+  padding-right: 3px;
 }
-.div-button-validate{
-  float:right; 
-  padding-right:3px;
+.div-button-validate {
+  float: right;
+  padding-right: 3px;
 }
-.div-buttons{
-  float:right !important;  
-  width:47%;
+.div-buttons {
+  float: right !important;
+  width: 47%;
 }
 
 .button-reject {
@@ -43,12 +43,12 @@
   text-decoration: none;
   display: inline-block;
   font-size: 14px;
-  font-weight:bold;
+  font-weight: bold;
   width: 100% !important;
   height: 100% !important;
 }
 .button-approve {
-  background-color: #4CAF50; /* Green */
+  background-color: #4caf50; /* Green */
   border: none;
   color: white;
   padding: 8px 8px;
@@ -56,7 +56,7 @@
   text-decoration: none;
   display: inline-block;
   font-size: 14px;
-  font-weight:bold;
+  font-weight: bold;
   width: 100% !important;
   height: 100% !important;
 }
@@ -69,7 +69,7 @@
   text-decoration: none;
   display: inline-block;
   font-size: 14px;
-  font-weight:bold;
+  font-weight: bold;
   width: 100% !important;
   height: 100% !important;
 }
@@ -82,8 +82,7 @@
   text-decoration: none;
   display: inline-block;
   font-size: 14px;
-  font-weight:bold;
+  font-weight: bold;
   width: 100% !important;
   height: 100% !important;
 }
-

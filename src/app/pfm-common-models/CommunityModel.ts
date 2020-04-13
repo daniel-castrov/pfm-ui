@@ -1,5 +1,5 @@
 export class CommunityModel {
-  public id: string;
-  public name: string;
-  public abbreviation: string;
+  id: string;
+  name: string;
+  abbreviation: string;
 }

@@ -6,19 +6,17 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
   styleUrls: ['./cancel-cta.component.scss']
 })
 export class CancelCtaComponent implements OnInit {
-  @Output() onCancelClicked:EventEmitter<any> = new EventEmitter<any>();
-  @Input() label:string = 'cancel';
-  @Input() disabled:boolean;
+  @Output() onCancelClicked: EventEmitter<any> = new EventEmitter<any>();
+  @Input() label = 'cancel';
+  @Input() disabled: boolean;
 
-  constructor() { }
+  constructor() {}
 
-  handleCancel(){
-    if(!this.disabled){
-      this.onCancelClicked.emit("cancel");
+  handleCancel() {
+    if (!this.disabled) {
+      this.onCancelClicked.emit('cancel');
     }
   }
 
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

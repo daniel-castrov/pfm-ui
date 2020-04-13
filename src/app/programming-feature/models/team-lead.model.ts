@@ -1,4 +1,3 @@
-
 export class TeamLead {
   id: string;
   name: string;

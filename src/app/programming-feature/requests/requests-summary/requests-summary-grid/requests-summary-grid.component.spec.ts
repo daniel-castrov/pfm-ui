@@ -8,9 +8,8 @@ describe('RequestsSummaryGridComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RequestsSummaryGridComponent ]
-    })
-    .compileComponents();
+      declarations: [RequestsSummaryGridComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

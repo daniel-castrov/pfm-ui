@@ -10,12 +10,10 @@ export class FileUploadService {
   protected headers: HttpHeaders;
 
   constructor(protected httpClient: HttpClient) {
-
     let headers = new HttpHeaders();
     headers = headers.set('Content-Type', 'application/json; charset=utf-8');
     this.headers = headers;
     this.baseURL = environment.apiUrl + '/library/uploadFile';
-
   }
 
   async uploadSecureResource(file: File) {

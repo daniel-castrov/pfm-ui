@@ -1,9 +1,16 @@
 <div class="form-group">
-  <label for="{{id}}">{{inputLabel}}</label>
-  <div *ngFor="let option of radioOptions">    
-    <input type="radio" value="{{option}}" required id="{{option}}" name="{{option}}" [(ngModel)]="dataModel[fieldName]">{{option}}<br>
+  <label for="{{ id }}">{{ inputLabel }}</label>
+  <div *ngFor="let option of radioOptions">
+    <input
+      type="radio"
+      value="{{ option }}"
+      required
+      id="{{ option }}"
+      name="{{ option }}"
+      [(ngModel)]="dataModel[fieldName]"
+    />{{ option }}<br />
   </div>
   <div *ngIf="errorExists()" aria-required="true" class="form-alert alert-danger">
-    {{errorMessage}}
+    {{ errorMessage }}
   </div>
 </div>

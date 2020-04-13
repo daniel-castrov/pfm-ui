@@ -8,9 +8,8 @@ describe('DemoWidgetMissionFundingPriorityComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DemoWidgetMissionFundingPriorityComponent ]
-    })
-    .compileComponents();
+      declarations: [DemoWidgetMissionFundingPriorityComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

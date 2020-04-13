@@ -1,32 +1,60 @@
 <ng-container *ngIf="!isCellRenderer">
-    <div class="form-group">
-        <label for="{{id}}">{{label}}<span *ngIf="required">*</span></label>
-        <input #input  type="text" class="input-text form-control" placeholder="{{fieldName}}" [required]="required" id="{{id}}" name="{{fieldName}}" [(ngModel)]="dataModel[fieldName]">
-        <div *ngIf="getErroMessage()" aria-required="true" class="form-alert alert-danger">
-            {{getErroMessage()}}
-        </div>
+  <div class="form-group">
+    <label for="{{ id }}">{{ label }}<span *ngIf="required">*</span></label>
+    <input
+      #input
+      type="text"
+      class="input-text form-control"
+      placeholder="{{ fieldName }}"
+      [required]="required"
+      id="{{ id }}"
+      name="{{ fieldName }}"
+      [(ngModel)]="dataModel[fieldName]"
+    />
+    <div *ngIf="getErroMessage()" aria-required="true" class="form-alert alert-danger">
+      {{ getErroMessage() }}
     </div>
+  </div>
 </ng-container>
 
 <ng-container *ngIf="isCellRenderer">
-    <div class="text-wrap" [class.ag-input-wrapper]="getErroMessage() === undefined" [class.ag-input-wrapper-error]="getErroMessage() !== undefined" role="presentation">
-        <ng-container *ngIf="isReadOnly">
+  <div
+    class="text-wrap"
+    [class.ag-input-wrapper]="getErroMessage() === undefined"
+    [class.ag-input-wrapper-error]="getErroMessage() !== undefined"
+    role="presentation"
+  >
+    <ng-container *ngIf="isReadOnly">
+      <ng-container *ngIf="getErroMessage()">
+        <span
+          tooltipClass="custom-tooltip-error"
+          placement="top"
+          ngbTooltip="{{ getErroMessage() }}"
+          container="body"
+          id="{{ id }}"
+          [class.alert-danger]="getErroMessage() !== undefined"
+          >{{ dataModel[fieldName] }}</span
+        >
+      </ng-container>
 
-            <ng-container *ngIf="getErroMessage()">
-                <span  tooltipClass="custom-tooltip-error" placement="top" ngbTooltip="{{getErroMessage()}}" container="body"  id="{{id}}" [class.alert-danger]="getErroMessage() !== undefined">{{dataModel[fieldName]}}</span>
-            </ng-container>
+      <ng-container *ngIf="!getErroMessage()">
+        <span id="{{ id }}" [class.alert-danger]="getErroMessage() !== undefined">{{ dataModel[fieldName] }}</span>
+      </ng-container>
+    </ng-container>
 
-            <ng-container *ngIf="!getErroMessage()">
-                <span id="{{id}}" [class.alert-danger]="getErroMessage() !== undefined">{{dataModel[fieldName]}}</span>
-            </ng-container>
-
-
-        </ng-container>
-
-        <ng-container *ngIf=!isReadOnly>
-            <input (ngModelChange)="handleChange($event)" #input onfocus="this.select()" type="text" class="cell_input input-text form-control" placeholder="{{fieldName}}" [required]="required" id="{{id}}" name="{{fieldName}}" [(ngModel)]="dataModel[fieldName]">
-        </ng-container>
-
-    </div>
+    <ng-container *ngIf="!isReadOnly">
+      <input
+        (ngModelChange)="handleChange($event)"
+        #input
+        onfocus="this.select()"
+        type="text"
+        class="cell_input input-text form-control"
+        placeholder="{{ fieldName }}"
+        [required]="required"
+        id="{{ id }}"
+        name="{{ fieldName }}"
+        [(ngModel)]="dataModel[fieldName]"
+      />
+    </ng-container>
+  </div>
 </ng-container>
-

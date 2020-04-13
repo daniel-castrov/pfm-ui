@@ -1,3 +1,3 @@
 export interface IntIntMap {
-    [key: number]: number;
+  [key: number]: number;
 }

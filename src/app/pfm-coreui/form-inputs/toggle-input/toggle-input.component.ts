@@ -6,18 +6,15 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
   styleUrls: ['./toggle-input.component.scss']
 })
 export class ToggleInputComponent implements OnInit {
-
   @Input() label: string;
   @Input() checked: boolean;
   @Output() valueChanged = new EventEmitter<boolean>();
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   onChange(value: any) {
     this.valueChanged.emit(value);
   }
-
 }

@@ -14,9 +14,9 @@ export class DisabledActionCellRendererComponent implements OnInit {
   constructor(private datagridMBService: DatagridMbService) {}
 
   onSelected(action: string): void {
-    let message: DataGridMessage = new DataGridMessage();
+    const message: DataGridMessage = new DataGridMessage();
     message.rowIndex = this.params.rowIndex;
-    message.columnIndex = -1; //not used - we know the column based on the action
+    message.columnIndex = -1; // not used - we know the column based on the action
     message.message = action;
     message.rendererName = 'DisabledActionCellRendererComponent';
     message.rowData = this.data;
