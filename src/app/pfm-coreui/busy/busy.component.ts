@@ -1,12 +1,10 @@
-import {Component, Input} from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'pfm-busy',
   templateUrl: 'busy.component.html',
-  styleUrls: ['busy.component.css'],
+  styleUrls: ['busy.component.css']
 })
 export class BusyComponent {
-
-  @Input() busy:boolean;
-
+  @Input() busy: boolean;
 }

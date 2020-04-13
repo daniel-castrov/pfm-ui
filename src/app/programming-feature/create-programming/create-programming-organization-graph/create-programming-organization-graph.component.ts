@@ -1,14 +1,14 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'pfm-programming-organization-graph',
   templateUrl: './create-programming-organization-graph.component.html',
   styleUrls: ['./create-programming-organization-graph.component.scss']
 })
-export class CreateProgrammingOrganizationGraphComponent{
-  chartReady:boolean;
+export class CreateProgrammingOrganizationGraphComponent implements OnInit {
+  chartReady: boolean;
 
-  public columnChart: any =  {
+  columnChart: any = {
     chartType: 'ColumnChart',
     dataTable: [],
     options: {
@@ -16,7 +16,7 @@ export class CreateProgrammingOrganizationGraphComponent{
       width: 1400,
       height: 325,
       isStacked: true,
-      vAxis: {format: 'currency'},
+      vAxis: { format: 'currency' },
       animation: {
         duration: 500,
         easing: 'out',
@@ -25,20 +25,18 @@ export class CreateProgrammingOrganizationGraphComponent{
     }
   };
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
-  onResize(width:number, height:number):void{
+  onResize(width: number, height: number): void {
     this.chartReady = false;
 
     this.columnChart.options.width = width;
     this.columnChart.options.height = height;
 
-    setTimeout(()=>{
+    setTimeout(() => {
       this.chartReady = true;
-
     }, 200);
   }
 }

@@ -1,58 +1,71 @@
-
 <ng-container *ngIf="type === assigned">
-    <div class="card mb-3" border-assigned style="max-width: 20rem;">
-        <div class="card-body bg-assigned text-white">
-            <i class="fa fa-clipboard fa-4x"  title="Assigned" aria-hidden="true"></i>
-            <div style="float: right; text-align: right">
-                <h2 class="card-title">{{cardTitle}}</h2>
-                <p class="card-text">{{cardText}}</p>
-            </div>
-        </div>
-        <div class="card-footer bg-transparent border-assigned" style="cursor: pointer;" (click)="toggle()">
-            {{cardActionText}}
-            <div style="display: table-cell; vertical-align: middle; align-items: center; float: right; text-align: right;">
-                <i *ngIf="!expanded" class="fa fa-arrow-circle-right fa-lg color-assigned" title="Arrow" aria-hidden="true"></i>
-                <i *ngIf="expanded" class="fa fa-arrow-circle-down fa-lg color-assigned" title="Arrow" aria-hidden="true"></i>
-            </div>
-        </div>
+  <div class="card mb-3" border-assigned style="max-width: 20rem;">
+    <div class="card-body bg-assigned text-white">
+      <i class="fa fa-clipboard fa-4x" title="Assigned" aria-hidden="true"></i>
+      <div style="float: right; text-align: right">
+        <h2 class="card-title">{{ cardTitle }}</h2>
+        <p class="card-text">{{ cardText }}</p>
+      </div>
     </div>
+    <div class="card-footer bg-transparent border-assigned" style="cursor: pointer;" (click)="toggle()">
+      {{ cardActionText }}
+      <div style="display: table-cell; vertical-align: middle; align-items: center; float: right; text-align: right;">
+        <i *ngIf="!expanded" class="fa fa-arrow-circle-right fa-lg color-assigned" title="Arrow" aria-hidden="true"></i>
+        <i *ngIf="expanded" class="fa fa-arrow-circle-down fa-lg color-assigned" title="Arrow" aria-hidden="true"></i>
+      </div>
+    </div>
+  </div>
 </ng-container>
 
 <ng-container *ngIf="type === outstanding">
-    <div class="card mb-3 border-outstanding" style="max-width: 20rem;">
-        <div class="card-body bg-outstanding text-white">
-            <i class="fa fa-folder-open fa-4x"  title="Assigned" aria-hidden="true"></i>
-            <div style="float: right; text-align: right">
-                <h2 class="card-title">{{cardTitle}}</h2>
-                <p class="card-text">{{cardText}}</p>
-            </div>
-        </div>
-        <div class="card-footer bg-transparent border-outstanding" style="cursor: pointer;" (click)="toggle()">
-            {{cardActionText}}
-            <div style="display: table-cell; vertical-align: middle; align-items: center; float: right; text-align: right;">
-                <i *ngIf="!expanded" class="fa fa-arrow-circle-right fa-lg color-outstanding" title="Arrow" aria-hidden="true"></i>
-                <i *ngIf="expanded" class="fa fa-arrow-circle-down fa-lg color-outstanding" title="Arrow" aria-hidden="true"></i>
-            </div>
-        </div>
+  <div class="card mb-3 border-outstanding" style="max-width: 20rem;">
+    <div class="card-body bg-outstanding text-white">
+      <i class="fa fa-folder-open fa-4x" title="Assigned" aria-hidden="true"></i>
+      <div style="float: right; text-align: right">
+        <h2 class="card-title">{{ cardTitle }}</h2>
+        <p class="card-text">{{ cardText }}</p>
+      </div>
     </div>
+    <div class="card-footer bg-transparent border-outstanding" style="cursor: pointer;" (click)="toggle()">
+      {{ cardActionText }}
+      <div style="display: table-cell; vertical-align: middle; align-items: center; float: right; text-align: right;">
+        <i
+          *ngIf="!expanded"
+          class="fa fa-arrow-circle-right fa-lg color-outstanding"
+          title="Arrow"
+          aria-hidden="true"
+        ></i>
+        <i
+          *ngIf="expanded"
+          class="fa fa-arrow-circle-down fa-lg color-outstanding"
+          title="Arrow"
+          aria-hidden="true"
+        ></i>
+      </div>
+    </div>
+  </div>
 </ng-container>
 
 <ng-container *ngIf="type === completed">
-    <div class="card mb-3 border-completed" style="max-width: 20rem;">
-        <div class="card-body bg-completed text-white">
-            <i class="fa fa-check-square fa-4x"  title="Completed" aria-hidden="true"></i>
-            <div style="float: right; text-align: right">
-                <h2 class="card-title">{{cardTitle}}</h2>
-                <p class="card-text">{{cardText}}</p>
-            </div>
-        </div>
-        <div class="card-footer bg-transparent border-completed" style="cursor: pointer;" (click)="toggle()">
-            {{cardActionText}}
-            <div style="display: table-cell; vertical-align: middle; align-items: center; float: right; text-align: right;">
-                <i *ngIf="!expanded" class="fa fa-arrow-circle-right fa-lg color-completed" title="Arrow" aria-hidden="true"></i>
-                <i *ngIf="expanded" class="fa fa-arrow-circle-down fa-lg color-completed" title="Arrow" aria-hidden="true"></i>
-            </div>
-        </div>
+  <div class="card mb-3 border-completed" style="max-width: 20rem;">
+    <div class="card-body bg-completed text-white">
+      <i class="fa fa-check-square fa-4x" title="Completed" aria-hidden="true"></i>
+      <div style="float: right; text-align: right">
+        <h2 class="card-title">{{ cardTitle }}</h2>
+        <p class="card-text">{{ cardText }}</p>
+      </div>
     </div>
+    <div class="card-footer bg-transparent border-completed" style="cursor: pointer;" (click)="toggle()">
+      {{ cardActionText }}
+      <div style="display: table-cell; vertical-align: middle; align-items: center; float: right; text-align: right;">
+        <i
+          *ngIf="!expanded"
+          class="fa fa-arrow-circle-right fa-lg color-completed"
+          title="Arrow"
+          aria-hidden="true"
+        ></i>
+        <i *ngIf="expanded" class="fa fa-arrow-circle-down fa-lg color-completed" title="Arrow" aria-hidden="true"></i>
+      </div>
+    </div>
+  </div>
 </ng-container>
-

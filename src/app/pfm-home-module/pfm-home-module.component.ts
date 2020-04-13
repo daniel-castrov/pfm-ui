@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AppModel } from '../pfm-common-models/AppModel';
 import { DialogService } from '../pfm-coreui/services/dialog.service';
-import { PfmHomeService } from './services/pfm-home-service';
 import { PfmHomeMockService } from './services/pfm-home-mock.service';
 import { UserTask } from './models/UserTask';
 import { NewsItem } from './models/NewsItem';
@@ -12,12 +11,15 @@ import { NewsItem } from './models/NewsItem';
   styleUrls: ['./pfm-home-module.component.scss']
 })
 export class PfmHomeModuleComponent implements OnInit {
+  busy: boolean;
+  userTasks: UserTask[];
+  lastestNews: NewsItem[];
 
-  busy:boolean;
-  userTasks:UserTask[];
-  lastestNews:NewsItem[];
-
-  constructor(public appModel:AppModel, private dialogService:DialogService, private homeService:PfmHomeMockService) { }
+  constructor(
+    public appModel: AppModel,
+    private dialogService: DialogService,
+    private homeService: PfmHomeMockService
+  ) {}
 
   ngOnInit() {
     this.busy = true;
@@ -32,5 +34,4 @@ export class PfmHomeModuleComponent implements OnInit {
       }
     );
   }
-
 }

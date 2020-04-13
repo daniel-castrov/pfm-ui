@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { SigninComponent } from './signin/signin.component';
 import { SignOutComponent } from './sign-out/sign-out.component';
 import { ChooseCommunityComponent } from './choose-community/choose-community.component';
@@ -15,4 +15,4 @@ import { AuthGuard } from './services/auth-guard';
   ],
   exports: [RouterModule]
 })
-export class PfmAuthModuleRoutingModule { }
+export class PfmAuthModuleRoutingModule {}

@@ -827,7 +827,6 @@ export class RequestsFundingLineGridComponent implements OnInit {
         );
       })
     ) {
-      debugger;
       errorMessage = 'You have repeated an existing funding line.  Please delete this row and edit the existing line.';
     }
     if (errorMessage.length) {

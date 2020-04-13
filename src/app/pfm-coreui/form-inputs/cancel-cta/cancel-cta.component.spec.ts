@@ -8,9 +8,8 @@ describe('CancelCtaComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CancelCtaComponent ]
-    })
-    .compileComponents();
+      declarations: [CancelCtaComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

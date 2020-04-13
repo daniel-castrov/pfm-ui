@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PrimaryButtonComponent } from './primary-button-input.component';
+import { PrimaryButtonComponent } from './primary-button.component';
 
 describe('PrimaryButtonComponent', () => {
   let component: PrimaryButtonComponent;
@@ -8,9 +8,8 @@ describe('PrimaryButtonComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PrimaryButtonComponent ]
-    })
-    .compileComponents();
+      declarations: [PrimaryButtonComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

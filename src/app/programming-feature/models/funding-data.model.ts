@@ -1,5 +1,4 @@
 export class FundingData {
-
   id?: string;
   programId?: string;
   appropriation: string;
@@ -22,5 +21,4 @@ export class FundingData {
 
   action: any;
   isDisabled?: boolean;
-
 }

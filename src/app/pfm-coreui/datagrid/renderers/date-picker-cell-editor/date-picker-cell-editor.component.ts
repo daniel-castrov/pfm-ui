@@ -8,7 +8,6 @@ import { formatDate } from '@angular/common';
   styleUrls: ['./date-picker-cell-editor.component.scss']
 })
 export class DatePickerCellEditorComponent implements ICellEditorAngularComp, AfterViewInit {
-
   params: any;
   value: Date;
   id: string;
@@ -31,8 +30,7 @@ export class DatePickerCellEditorComponent implements ICellEditorAngularComp, Af
     return this.stringValue;
   }
 
-  ngAfterViewInit() {
-  }
+  ngAfterViewInit() {}
 
   private validateDateRange() {
     if (this.params.column && this.params.data) {
@@ -57,11 +55,13 @@ export class DatePickerCellEditorComponent implements ICellEditorAngularComp, Af
 
   onKeyPress(event: KeyboardEvent) {
     const keyCode = event.code;
-    if (!(
-      keyCode.toLowerCase().indexOf('numpad') > -1 ||
-      keyCode.toLowerCase().indexOf('digit') > -1 ||
-      keyCode.toLowerCase().indexOf('slash') > -1
-    )) {
+    if (
+      !(
+        keyCode.toLowerCase().indexOf('numpad') > -1 ||
+        keyCode.toLowerCase().indexOf('digit') > -1 ||
+        keyCode.toLowerCase().indexOf('slash') > -1
+      )
+    ) {
       event.preventDefault();
       return;
     }
@@ -90,9 +90,11 @@ export class DatePickerCellEditorComponent implements ICellEditorAngularComp, Af
       try {
         const date = new Date(dateString);
         const dateSplit = formatDate(dateString, 'MM/dd/yyyy', 'en-US').split('/');
-        if (date.getFullYear() === Number(dateSplit[2]) &&
+        if (
+          date.getFullYear() === Number(dateSplit[2]) &&
           date.getMonth() === Number(dateSplit[0]) - 1 &&
-          date.getDate() === Number(dateSplit[1])) {
+          date.getDate() === Number(dateSplit[1])
+        ) {
           return true;
         }
       } catch (err) {
@@ -101,5 +103,4 @@ export class DatePickerCellEditorComponent implements ICellEditorAngularComp, Af
     }
     return false;
   }
-
 }

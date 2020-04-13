@@ -25,6 +25,5 @@ export class FundingLine {
   ctc?: number;
   variants?: Array<Variant>;
 
-  constructor() {
-  }
+  constructor() {}
 }

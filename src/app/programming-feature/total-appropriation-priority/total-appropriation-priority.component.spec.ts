@@ -8,9 +8,8 @@ describe('TotalAppropriationPriorityComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TotalAppropriationPriorityComponent ]
-    })
-    .compileComponents();
+      declarations: [TotalAppropriationPriorityComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

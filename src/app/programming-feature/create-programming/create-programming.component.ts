@@ -8,7 +8,6 @@ import { FormatterUtil } from '../../util/formatterUtil';
 import { FileMetaData } from '../../pfm-common-models/FileMetaData';
 import { Attachment } from '../../pfm-common-models/Attachment';
 import { CellPosition, Column, ColumnApi, GridApi } from '@ag-grid-community/all-modules';
-import { AppModel } from '../../pfm-common-models/AppModel';
 import { ActionCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/action-cell-renderer/action-cell-renderer.component';
 import { Action } from '../../pfm-common-models/Action';
 import { TOA } from '../models/TOA';
@@ -16,7 +15,6 @@ import { Pom } from '../models/Pom';
 import { Organization } from '../../pfm-common-models/Organization';
 import { OrganizationService } from '../../services/organization-service';
 import { CreateProgrammingCommunityGraphComponent } from './create-programming-community-graph/create-programming-community-graph.component';
-import { DashboardMockService } from '../../pfm-dashboard-module/services/dashboard.mock.service';
 import { DataGridMessage } from '../../pfm-coreui/models/DataGridMessage';
 import { CreateProgrammingOrganizationGraphComponent } from './create-programming-organization-graph/create-programming-organization-graph.component';
 import { TabDirective, TabsetComponent } from 'ngx-bootstrap';
@@ -88,9 +86,7 @@ export class CreateProgrammingComponent implements OnInit {
       resp => {
         this.orgs = (resp as any).result;
       },
-      error => {
-        console.log('Error while getting Organizations...');
-      }
+      error => {}
     );
   }
 
@@ -166,7 +162,6 @@ export class CreateProgrammingComponent implements OnInit {
       },
       error => {
         this.busy = false;
-        console.log('Error in getting community and org toas...');
       }
     );
   }
@@ -318,7 +313,6 @@ export class CreateProgrammingComponent implements OnInit {
       },
       error => {
         this.busy = false;
-        console.log(error);
       }
     );
   }

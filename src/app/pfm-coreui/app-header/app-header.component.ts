@@ -9,12 +9,8 @@ import { MessageService } from 'primeng/api';
   providers: [MessageService]
 })
 export class AppHeaderComponent implements OnInit {
-
-  constructor(public appModel: AppModel, private messageService: MessageService) {
-  }
+  constructor(public appModel: AppModel, private messageService: MessageService) {}
 
   // TODO - fix the menu drop down on the header - conflict with materail vs bootstrap
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

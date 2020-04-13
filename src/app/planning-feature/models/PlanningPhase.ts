@@ -1,13 +1,11 @@
 export class PlanningPhase {
-
-  public created:Date;
-  public modified:Date;
-  public modifiedBy:string;
-  public createdBy:string;
-  public id:string;
-  public communityId:string;
-  public year:number;
-  public name:string;
-  public state:string;//CREATED, OPEN, LOCKED, CLOSED
-
+  created: Date;
+  modified: Date;
+  modifiedBy: string;
+  createdBy: string;
+  id: string;
+  communityId: string;
+  year: number;
+  name: string;
+  state: string; // CREATED, OPEN, LOCKED, CLOSED
 }

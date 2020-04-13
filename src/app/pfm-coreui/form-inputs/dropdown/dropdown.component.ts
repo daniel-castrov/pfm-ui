@@ -8,7 +8,6 @@ import { ListItem } from '../../../pfm-common-models/ListItem';
   styleUrls: ['./dropdown.component.scss']
 })
 export class DropdownComponent implements ValidatedComponent, OnInit {
-
   @Input() id: string; // id and name of the select element
   @Input() disabled: boolean;
   @Input() label: string;
@@ -17,7 +16,7 @@ export class DropdownComponent implements ValidatedComponent, OnInit {
   @Input() fieldLabel: string;
   @Input() options: ListItem[];
   @Input() prompt = 'Please select';
-  @Input() type = 'labelDropdown';// default
+  @Input() type = 'labelDropdown'; // default
   @Input() iconName: string;
   @Input() title: string;
   @Input() attachmentsDisabled: boolean;
@@ -29,7 +28,7 @@ export class DropdownComponent implements ValidatedComponent, OnInit {
   isValidFlag: boolean;
   errorMessage: string;
 
-  constructor() { }
+  constructor() {}
 
   handleSelectionChanged(selectedItem): void {
     this.selectedItem = selectedItem;
@@ -85,5 +84,4 @@ export class DropdownComponent implements ValidatedComponent, OnInit {
     }
     return item;
   }
-
 }

@@ -9,15 +9,13 @@ import { DataGridMessage } from '../../../models/DataGridMessage';
   styleUrls: ['./dropdown-cell-renderer.component.scss']
 })
 export class DropdownCellRendererComponent implements OnInit {
-
   @Input()
   list: ListItem[];
   data: any;
   params: any;
   selectedValue: any;
 
-  constructor(private datagridMBService: DatagridMbService) {
-  }
+  constructor(private datagridMBService: DatagridMbService) {}
 
   handleSelectionChanged(data: any): void {
     const message: DataGridMessage = new DataGridMessage();
@@ -53,7 +51,5 @@ export class DropdownCellRendererComponent implements OnInit {
     // this.attachmentsDisabled = this.params.data.attachmentsDisabled;
   }
 
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

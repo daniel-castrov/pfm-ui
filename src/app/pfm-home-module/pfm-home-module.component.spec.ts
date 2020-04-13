@@ -8,9 +8,8 @@ describe('PfmHomeModuleComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PfmHomeModuleComponent ]
-    })
-    .compileComponents();
+      declarations: [PfmHomeModuleComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

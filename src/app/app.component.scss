@@ -1,6 +1,6 @@
 $primary-color: #25527a;
-$dark-grey:     #848282;
-$light-grey:    #eae9e9;
+$dark-grey: #848282;
+$light-grey: #eae9e9;
 
 :host {
   display: block;
@@ -14,20 +14,20 @@ $light-grey:    #eae9e9;
   width: 74px;
 }
 
-.main_content{
+.main_content {
   height: 100%;
   width: 93%;
   margin-left: 74px; /* Same as the width of the sidenav + 10px for gutter*/
-  transition: margin-left .5s;
+  transition: margin-left 0.5s;
   margin-top: 10px;
 }
 
-.side_menu_open{
+.side_menu_open {
   margin-left: 210px;
 }
 
 @media (max-width: 1200px) {
-  :host  {
+  :host {
     max-width: none;
     margin: 0 25px;
   }
@@ -40,7 +40,7 @@ $light-grey:    #eae9e9;
 
   ::ng-deep {
     > * {
-      width: calc((100% - 80px)/2);
+      width: calc((100% - 80px) / 2);
       margin: 0 10px 20px 10px;
       padding: 20px;
       border-radius: 6px;
@@ -50,4 +50,3 @@ $light-grey:    #eae9e9;
     }
   }
 }
-

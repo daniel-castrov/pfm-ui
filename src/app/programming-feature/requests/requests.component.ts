@@ -8,9 +8,7 @@ import { Component, OnInit } from '@angular/core';
 export class RequestsComponent implements OnInit {
   busy: boolean;
 
-  constructor() {
-  }
+  constructor() {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 }

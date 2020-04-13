@@ -12,9 +12,7 @@ export class SecureDownloadComponent {
 
   linkeURL: string;
 
-  constructor(
-    private fileDownloadService: FileDownloadService
-  ) { }
+  constructor(private fileDownloadService: FileDownloadService) {}
 
   async downloadFile(item: FileMetaData): Promise<void> {
     const blob = await this.fileDownloadService.downloadSecureResource(item.id);
@@ -26,5 +24,4 @@ export class SecureDownloadComponent {
     link.click();
     window.URL.revokeObjectURL(url);
   }
-
 }

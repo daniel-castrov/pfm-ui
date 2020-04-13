@@ -1,6 +1,6 @@
-import {Injectable} from '@angular/core';
-import {UserDetailsModel} from './UserDetailsModel';
-import {PlanningPhase} from '../planning-feature/models/PlanningPhase';
+import { Injectable } from '@angular/core';
+import { UserDetailsModel } from './UserDetailsModel';
+import { PlanningPhase } from '../planning-feature/models/PlanningPhase';
 
 @Injectable({
   providedIn: 'root'

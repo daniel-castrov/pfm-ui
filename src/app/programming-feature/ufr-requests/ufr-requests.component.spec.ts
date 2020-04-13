@@ -8,9 +8,8 @@ describe('UfrRequestsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ UfrRequestsComponent ]
-    })
-    .compileComponents();
+      declarations: [UfrRequestsComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

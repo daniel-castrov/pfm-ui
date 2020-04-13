@@ -1,7 +1,7 @@
 export class WidgetPreference {
-  public x: number;
-  public y: number;
-  public rows: number;
-  public cols: number;
-  public id:string;
+  x: number;
+  y: number;
+  rows: number;
+  cols: number;
+  id: string;
 }

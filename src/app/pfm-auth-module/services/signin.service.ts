@@ -9,30 +9,26 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class SigninService extends BaseRestService {
-
   constructor(protected httpClient: HttpClient) {
     super(httpClient);
   }
 
-  public signIn(): Observable<object> {
+  signIn(): Observable<object> {
     return this.get('blank');
   }
 
-  public getUserDetails(): Observable<object> {
-    return this.get('mydetails')
-      .pipe(map((res: RestResponse<any>) => this.convertDateFromServer(res)));
+  getUserDetails(): Observable<object> {
+    return this.get('mydetails').pipe(map((res: RestResponse<any>) => this.convertDateFromServer(res)));
   }
 
-  public getUserRoles(): Observable<object> {
+  getUserRoles(): Observable<object> {
     return this.get('getroles');
   }
 
   protected convertDateFromServer(res: RestResponse<any>): RestResponse<any> {
     if (res.result) {
-      res.result.lastLoginDate = res.result.lastLoginDate != null ?
-        moment(res.result.lastLoginDate) : null;
+      res.result.lastLoginDate = res.result.lastLoginDate != null ? moment(res.result.lastLoginDate) : null;
     }
     return res;
   }
-
 }

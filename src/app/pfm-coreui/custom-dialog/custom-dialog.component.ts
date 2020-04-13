@@ -6,17 +6,15 @@ import { Component, Input, Output, OnInit, TemplateRef, EventEmitter } from '@an
   styleUrls: ['./custom-dialog.component.scss']
 })
 export class CustomDialogComponent implements OnInit {
+  @Input() title: string;
+  @Input() body: TemplateRef<any>;
+  @Input() actions: TemplateRef<any>;
+  @Input() templateRef: TemplateRef<any>;
+  @Output() onCancelDialog: EventEmitter<any> = new EventEmitter<any>();
 
-  @Input() title:string;
-  @Input() body:TemplateRef<any>;
-  @Input() actions:TemplateRef<any>;
-  @Input() templateRef:TemplateRef<any>;
-  @Output() onCancelDialog:EventEmitter<any> = new EventEmitter<any>();
+  constructor() {}
 
-  constructor() { }
-
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   cancel() {
     this.onCancelDialog.emit();

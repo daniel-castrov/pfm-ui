@@ -1,15 +1,12 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { TeamLeadService } from './team-lead.service';
-import { NewsItem } from '../../pfm-home-module/models/NewsItem';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TeamLeadServiceImpl extends TeamLeadService {
-
   constructor(protected httpClient: HttpClient) {
     super(httpClient);
   }
@@ -29,5 +26,4 @@ export class TeamLeadServiceImpl extends TeamLeadService {
   deleteTeamLead(id: any): Observable<object> {
     return this.delete('teamLead/' + id);
   }
-
 }

@@ -8,9 +8,8 @@ describe('DisplaydatagridComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DisplaydatagridComponent ]
-    })
-    .compileComponents();
+      declarations: [DisplaydatagridComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

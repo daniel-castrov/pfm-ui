@@ -1,4 +1,3 @@
-
 export class ExpenditureType {
   type: string;
   code: string;

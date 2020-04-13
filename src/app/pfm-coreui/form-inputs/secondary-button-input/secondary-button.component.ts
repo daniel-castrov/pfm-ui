@@ -1,12 +1,11 @@
 import { Component, ViewChild, Input, EventEmitter, Output } from '@angular/core';
 
-@Component( {
+@Component({
   selector: 'pfm-secondary-button',
   templateUrl: './secondary-button.component.html',
-  styleUrls: [ './secondary-button.component.scss' ]
-} )
+  styleUrls: ['./secondary-button.component.scss']
+})
 export class SecondaryButtonComponent {
-
   @Input() id: string;
   @Input() label = 'Secondary';
   @Input() icon: string;
@@ -15,13 +14,12 @@ export class SecondaryButtonComponent {
 
   @Output() click = new EventEmitter<MouseEvent>();
 
-  @ViewChild( 'buttonElement', { static: false } ) buttonElement;
+  @ViewChild('buttonElement', { static: false }) buttonElement;
 
-  constructor() {
-  }
+  constructor() {}
 
-  handleClick( event: MouseEvent ) {
-    this.click.emit( event );
+  handleClick(event: MouseEvent) {
+    this.click.emit(event);
   }
 
   blur() {

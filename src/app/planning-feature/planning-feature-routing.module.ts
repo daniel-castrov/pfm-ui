@@ -11,22 +11,35 @@ import { MissionPrioritiesComponent } from './mission-priorities/mission-priorit
 
 const routes: Routes = [
   {
-    path: '', component: PlanningFeatureComponent, canActivate: [AuthGuard], children: [
+    path: '',
+    component: PlanningFeatureComponent,
+    canActivate: [AuthGuard],
+    children: [
       {
-        path: 'create-planning', component: CreatePlanningComponent, canActivate: [AuthGuard]
+        path: 'create-planning',
+        component: CreatePlanningComponent,
+        canActivate: [AuthGuard]
       },
       {
-        path: 'open-planning', component: OpenPlanningComponent, canActivate: [AuthGuard]
+        path: 'open-planning',
+        component: OpenPlanningComponent,
+        canActivate: [AuthGuard]
       },
       {
-        path: 'lock-planning', component: LockPlanningComponent, canActivate: [AuthGuard]
+        path: 'lock-planning',
+        component: LockPlanningComponent,
+        canActivate: [AuthGuard]
       },
       {
-        path: 'close-planning', component: ClosePlanningComponent, canActivate: [AuthGuard]
+        path: 'close-planning',
+        component: ClosePlanningComponent,
+        canActivate: [AuthGuard]
       },
       {
-        path: 'mission-priorities', component: MissionPrioritiesComponent, canActivate: [AuthGuard]
-      },
+        path: 'mission-priorities',
+        component: MissionPrioritiesComponent,
+        canActivate: [AuthGuard]
+      }
     ]
   }
 ];
@@ -35,4 +48,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class PlanningFeatureRoutingModule { }
+export class PlanningFeatureRoutingModule {}

@@ -8,9 +8,8 @@ describe('RequestsFundingLineGridComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RequestsFundingLineGridComponent ]
-    })
-    .compileComponents();
+      declarations: [RequestsFundingLineGridComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

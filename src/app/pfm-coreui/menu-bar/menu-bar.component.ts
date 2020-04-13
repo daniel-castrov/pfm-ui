@@ -11,7 +11,6 @@ import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
   animations: [animateText]
 })
 export class MenuBarComponent implements OnInit {
-
   @Input() linkText: boolean;
   @Input() role: UserRole;
   @Input() elevatedBoolean;
@@ -31,9 +30,7 @@ export class MenuBarComponent implements OnInit {
   selectedItem: string;
   ignoreSelectedScreen: boolean;
 
-  constructor(private router: Router) {
-
-  }
+  constructor(private router: Router) {}
 
   onHide(screen: string) {
     if (!this.ignoreSelectedScreen) {
@@ -119,17 +116,15 @@ export class MenuBarComponent implements OnInit {
   toogleMenu() {
     this.isOpen = !this.isOpen;
     this.onMenuToogle.emit(this.isOpen);
-
   }
 
   ngOnInit() {
-    this.router.events.forEach((event) => {
+    this.router.events.forEach(event => {
       if (event instanceof NavigationStart) {
         if (event.url.startsWith('/planning')) {
           this.isDashboardSelected = false;
           this.isPlanningSelected = true;
-        }
-        else if (event.url.startsWith('/home')) {
+        } else if (event.url.startsWith('/home')) {
           this.isPlanningSelected = false;
           this.isDashboardSelected = true;
         }
@@ -140,16 +135,15 @@ export class MenuBarComponent implements OnInit {
   isParentSelected(url: string): boolean {
     return this.router.url.includes(url);
   }
-
 }
 
 enum Screen {
-  DASHBOARD = "dashboard",
-  PLANNING = "planning",
-  PROGRAMMING = "programming",
-  BUDGET = "budget",
-  EXECUTION = "execution",
-  MANAGE = "manage",
-  REPORTS = "reports",
-  ADMIN = "admin"
+  DASHBOARD = 'dashboard',
+  PLANNING = 'planning',
+  PROGRAMMING = 'programming',
+  BUDGET = 'budget',
+  EXECUTION = 'execution',
+  MANAGE = 'manage',
+  REPORTS = 'reports',
+  ADMIN = 'admin'
 }

@@ -15,12 +15,28 @@ import { GridsterModule } from 'angular-gridster2';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 
 @NgModule({
-  declarations: [DashboardComponent, DemoWidgetMissionFundingPriorityComponent, DemoWidgetMissionFundingMoneyComponent, DemoWidgetPOMPhaseFundingComponent, DemoWidgetPrStatusComponent],
+  declarations: [
+    DashboardComponent,
+    DemoWidgetMissionFundingPriorityComponent,
+    DemoWidgetMissionFundingMoneyComponent,
+    DemoWidgetPOMPhaseFundingComponent,
+    DemoWidgetPrStatusComponent
+  ],
   imports: [
-    CommonModule, FormsModule, Ng2GoogleChartsModule, AngularFontAwesomeModule, DragDropModule, GridsterModule, PfmCoreuiModule
+    CommonModule,
+    FormsModule,
+    Ng2GoogleChartsModule,
+    AngularFontAwesomeModule,
+    DragDropModule,
+    GridsterModule,
+    PfmCoreuiModule
   ],
   exports: [DashboardComponent],
-  entryComponents: [DashboardComponent, DemoWidgetMissionFundingPriorityComponent, DemoWidgetMissionFundingMoneyComponent],
-  providers: [DashboardService, DashboardMockService]//TODO - see notes in DashboardMockService
+  entryComponents: [
+    DashboardComponent,
+    DemoWidgetMissionFundingPriorityComponent,
+    DemoWidgetMissionFundingMoneyComponent
+  ],
+  providers: [DashboardService, DashboardMockService] // TODO - see notes in DashboardMockService
 })
-export class PfmDashabordModuleModule { }
+export class PfmDashabordModuleModule {}

@@ -11,7 +11,6 @@ import { FormControl, FormGroup } from '@angular/forms';
   styleUrls: ['./justification.component.scss']
 })
 export class JustificationComponent implements OnInit {
-
   static MAX_YEAR = 5;
 
   @ViewChild('googleChart', { static: false })
@@ -63,10 +62,7 @@ export class JustificationComponent implements OnInit {
 
   programmingCurrentYear = [];
 
-  constructor(
-    private programmingService: ProgrammingService
-  ) {
-  }
+  constructor(private programmingService: ProgrammingService) {}
 
   async ngOnInit() {
     this.loadForm();
@@ -74,7 +70,6 @@ export class JustificationComponent implements OnInit {
     this.drawLineChart(true);
 
     this.updateForm(this.program);
-
   }
 
   loadForm() {
@@ -82,7 +77,6 @@ export class JustificationComponent implements OnInit {
       justification: new FormControl(''),
       impactN: new FormControl('')
     });
-
   }
 
   updateForm(program: Program) {
@@ -99,22 +93,14 @@ export class JustificationComponent implements OnInit {
     }
   }
 
-  onChartReady(event: any) {
-  }
+  onChartReady(event: any) {}
 
   drawLineChart(redraw?: boolean) {
-    const data: any[] = [
-      [
-        'Fiscal Year',
-        'POM' + (this.pomYear % 100 - 1),
-        'POM' + (this.pomYear % 100),
-        ''
-      ]
-    ];
+    const data: any[] = [['Fiscal Year', 'POM' + ((this.pomYear % 100) - 1), 'POM' + (this.pomYear % 100), '']];
     this.fillBoundData();
     for (let i = 0; i < JustificationComponent.MAX_YEAR; i++) {
       data.push([
-        'FY' + (this.pomYear % 100 + i),
+        'FY' + ((this.pomYear % 100) + i),
         i === JustificationComponent.MAX_YEAR - 1 ? null : this.programmingPreviousYear[i] || 0,
         this.programmingCurrentYear[i] || 0,
         this.boundData[i]
@@ -132,14 +118,26 @@ export class JustificationComponent implements OnInit {
     let maxPrev = 0;
     let minPrev = 0;
     if (this.programmingPreviousYear.length) {
-      maxPrev = Math.max.apply(Math, this.programmingPreviousYear.map(fund => fund));
-      minPrev = Math.min.apply(Math, this.programmingPreviousYear.map(fund => fund));
+      maxPrev = Math.max.apply(
+        Math,
+        this.programmingPreviousYear.map(fund => fund)
+      );
+      minPrev = Math.min.apply(
+        Math,
+        this.programmingPreviousYear.map(fund => fund)
+      );
     }
     let maxCurr = 0;
     let minCurr = 0;
     if (this.programmingCurrentYear.length) {
-      maxCurr = Math.max.apply(Math, this.programmingCurrentYear.map(fund => fund));
-      minCurr = Math.min.apply(Math, this.programmingCurrentYear.map(fund => fund));
+      maxCurr = Math.max.apply(
+        Math,
+        this.programmingCurrentYear.map(fund => fund)
+      );
+      minCurr = Math.min.apply(
+        Math,
+        this.programmingCurrentYear.map(fund => fund)
+      );
     }
     const max = (maxPrev > maxCurr ? maxPrev : maxCurr) + 10000;
     const min = (minPrev > minCurr ? minPrev : minCurr) - 10000;
@@ -151,14 +149,17 @@ export class JustificationComponent implements OnInit {
   }
 
   async loadPom() {
-    await this.programmingService.getPRForYearAndShortName(this.pomYear - 1, this.program.shortName)
+    await this.programmingService
+      .getPRForYearAndShortName(this.pomYear - 1, this.program.shortName)
       .toPromise()
       .then(
         resp => {
           this.loadFundingData(resp.result.fundingLines, this.programmingPreviousYear);
-        }, err => {
+        },
+        err => {
           this.programmingPreviousYear = [];
-        });
+        }
+      );
     this.programmingCurrentYear = [];
     this.loadFundingData(this.program.fundingLines, this.programmingCurrentYear);
   }
@@ -172,5 +173,4 @@ export class JustificationComponent implements OnInit {
       programmingYear[programmingYear.length] = funds;
     }
   }
-
 }

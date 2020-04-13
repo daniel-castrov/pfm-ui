@@ -8,9 +8,8 @@ describe('WorkSpaceManagementComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ WorkSpaceManagementComponent ]
-    })
-    .compileComponents();
+      declarations: [WorkSpaceManagementComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

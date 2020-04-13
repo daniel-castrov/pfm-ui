@@ -1,5 +1,5 @@
 export class MenuBarSubItem {
-  public title:string;
-  public routerLink:string;
-  public forRoles:string[];
+  title: string;
+  routerLink: string;
+  forRoles: string[];
 }

@@ -5,12 +5,11 @@ import { Observable } from 'rxjs';
 
 /** single place for all services calls to funnel thru
  *   from here we can easily add in metrics/error-handling ect..without using interceptors.
- * **/
+ */
 @Injectable({
   providedIn: 'root'
 })
 export class BaseRestService {
-
   protected baseURL: string;
   protected headers: HttpHeaders;
 

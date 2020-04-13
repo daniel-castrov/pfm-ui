@@ -32,4 +32,4 @@ import { PfmHomeMockService } from './services/pfm-home-mock.service';
   ],
   providers: [{ provide: PfmHomeService, useClass: PfmHomeServicesImpl }, PfmHomeMockService]
 })
-export class PfmHomeModuleModule { }
+export class PfmHomeModuleModule {}

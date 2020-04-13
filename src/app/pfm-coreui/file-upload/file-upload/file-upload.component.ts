@@ -9,9 +9,7 @@ declare const $: any;
   templateUrl: './file-upload.component.html',
   styleUrls: ['./file-upload.component.scss']
 })
-
 export class FileUploadComponent implements OnInit {
-
   @Output() fileUploadEvent: EventEmitter<FileMetaData> = new EventEmitter();
   @Output() uploading: EventEmitter<boolean> = new EventEmitter();
   @Input() area: string;
@@ -23,12 +21,9 @@ export class FileUploadComponent implements OnInit {
 
   fileName: string;
 
-  constructor(
-    private fileUploadService: FileUploadService
-  ) { }
+  constructor(private fileUploadService: FileUploadService) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   onImageClick() {
     $('#hidden-input-file').trigger('click');
@@ -38,7 +33,7 @@ export class FileUploadComponent implements OnInit {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
       this.fileUploadService.uploadSecureResource(file).then(resp => {
-        this.fileUploadEvent.emit((resp.result) as FileMetaData);
+        this.fileUploadEvent.emit(resp.result as FileMetaData);
       });
     }
   }

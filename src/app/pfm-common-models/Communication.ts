@@ -1,4 +1,4 @@
 export class Communication {
-  public primaryEmail:string;
-  public primaryPhone:string;
+  primaryEmail: string;
+  primaryPhone: string;
 }
