@@ -14,12 +14,11 @@ export class ListItemHelper {
 
   private static getItemsFromStringArray(items: string[]): ListItem[] {
     const li: ListItem[] = new Array<ListItem>();
-    for (const elem of Object.entries(items)) {
+    for (const elem of items) {
       const item: ListItem = new ListItem();
-
-      item.id = elem[1].toString();
-      item.name = elem[1].toString();
-      item.value = elem[1].toString();
+      item.id = elem;
+      item.name = elem;
+      item.value = elem;
       li.push(item);
     }
     return li;
@@ -27,15 +26,15 @@ export class ListItemHelper {
 
   private static getItemsFromMultDimArray(items: string[][]): ListItem[] {
     const li: ListItem[] = new Array<ListItem>();
-    for (const elem of Object.entries(items)) {
+    for (const elem of items) {
       const item: ListItem = new ListItem();
       if (elem.length > 2) {
-        item.name = elem[1][0];
-        item.value = elem[1][1];
-        item.id = elem[1][2];
+        item.name = elem[0];
+        item.value = elem[1];
+        item.id = elem[2];
       } else {
-        item.name = elem[1][0];
-        item.value = elem[1][1];
+        item.name = elem[0];
+        item.value = elem[1];
       }
       li.push(item);
     }
