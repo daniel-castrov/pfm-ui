@@ -31,10 +31,10 @@ export class AssignedToMeComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {}
 
   ngOnInit(): void {
-    this.setupEvaluationMeasureGrid();
+    this.setupGrid();
   }
 
-  setupEvaluationMeasureGrid() {
+  setupGrid() {
     this.columnDefinitions = [
       {
         headerName: 'Created Date',
