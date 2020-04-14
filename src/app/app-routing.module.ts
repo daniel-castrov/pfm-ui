@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { SigninComponent } from './pfm-auth-module/signin/signin.component';
 import { AuthGuard } from './pfm-auth-module/services/auth-guard';
 
@@ -24,6 +24,12 @@ const routes: Routes = [
     path: 'home',
     canActivate: [AuthGuard],
     loadChildren: () => import('./pfm-home-module/pfm-home-module.module').then(m => m.PfmHomeModuleModule)
+  },
+  {
+    path: 'user',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('./pfm-user-profile-module/pfm-user-profile-module.module').then(m => m.PfmUserProfileModuleModule)
   }
 ];
 
