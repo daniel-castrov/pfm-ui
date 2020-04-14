@@ -55,8 +55,8 @@ export class SigninComponent implements OnInit {
           .toPromise()
           .then(communityResp => {
             this.appModel.userDetails.currentCommunity = (communityResp as any).result;
-          });
-        this.getUserRoles();
+          })
+          .finally(() => this.getUserRoles());
       },
       error => {
         this.busy = false;
