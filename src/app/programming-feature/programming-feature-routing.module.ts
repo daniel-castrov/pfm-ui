@@ -19,21 +19,33 @@ import { RequestsDetailsComponent } from './requests/requests-details/requests-d
 
 const routes: Routes = [
   {
-    path: '', component: ProgrammingFeatureComponent, canActivate: [AuthGuard], children: [
-      {path: 'create-programming', component: CreateProgrammingComponent, canActivate: [AuthGuard]},
-      {path: 'close-programming', component: CloseProgrammingComponent, canActivate: [AuthGuard]},
-      {path: 'lock-programming', component: LockProgrammingComponent, canActivate: [AuthGuard]},
-      {path: 'open-programming', component: OpenProgrammingComponent, canActivate: [AuthGuard]},
-      {path: 'requests', component: RequestsComponent, canActivate: [AuthGuard], children: [
-          {path: '', component: RequestsSummaryComponent, canActivate: [AuthGuard]},
-          {path: 'details/:id', component: RequestsDetailsComponent, canActivate: [AuthGuard]},
-        ]},
-      {path: 'requests-approval', component: RequestsApprovalComponent, canActivate: [AuthGuard]},
-      {path: 'ufr-requests', component: UfrRequestsComponent, canActivate: [AuthGuard]},
-      {path: 'ufr-requests-approval', component: UfrRequestsApprovalComponent, canActivate: [AuthGuard]},
-      {path: 'toa', component: ToaComponent, canActivate: [AuthGuard]},
-      {path: 'total-appropriation-priority', component: TotalAppropriationPriorityComponent, canActivate: [AuthGuard]},
-      {path: 'work-space-management', component: WorkSpaceManagementComponent, canActivate: [AuthGuard]}
+    path: '',
+    component: ProgrammingFeatureComponent,
+    canActivate: [AuthGuard],
+    children: [
+      { path: 'create-programming', component: CreateProgrammingComponent, canActivate: [AuthGuard] },
+      { path: 'close-programming', component: CloseProgrammingComponent, canActivate: [AuthGuard] },
+      { path: 'lock-programming', component: LockProgrammingComponent, canActivate: [AuthGuard] },
+      { path: 'open-programming', component: OpenProgrammingComponent, canActivate: [AuthGuard] },
+      {
+        path: 'requests',
+        component: RequestsComponent,
+        canActivate: [AuthGuard],
+        children: [
+          { path: '', component: RequestsSummaryComponent, canActivate: [AuthGuard] },
+          { path: 'details/:id', component: RequestsDetailsComponent, canActivate: [AuthGuard] }
+        ]
+      },
+      { path: 'requests-approval', component: RequestsApprovalComponent, canActivate: [AuthGuard] },
+      { path: 'ufr-requests', component: UfrRequestsComponent, canActivate: [AuthGuard] },
+      { path: 'ufr-requests-approval', component: UfrRequestsApprovalComponent, canActivate: [AuthGuard] },
+      { path: 'toa', component: ToaComponent, canActivate: [AuthGuard] },
+      {
+        path: 'total-appropriation-priority',
+        component: TotalAppropriationPriorityComponent,
+        canActivate: [AuthGuard]
+      },
+      { path: 'work-space-management', component: WorkSpaceManagementComponent, canActivate: [AuthGuard] }
     ]
   }
 ];
@@ -41,4 +53,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class ProgrammingFeatureRoutingModule { }
+export class ProgrammingFeatureRoutingModule {}

@@ -1,7 +1,6 @@
 import { AssetDetail } from './asset-detail.model';
 
 export class AssetSummary {
-
   id?: string;
   assetId?: string;
   description?: string;
@@ -11,5 +10,4 @@ export class AssetSummary {
 
   action: any;
   isDisabled?: boolean;
-
 }

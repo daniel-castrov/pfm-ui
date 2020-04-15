@@ -209,9 +209,7 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
     this.chartReady = true;
   }
 
-  toaChartFundingLineStatus() {
-    console.log('Funding Line Status');
-  }
+  toaChartFundingLineStatus() {}
 
   // Used to calculate total funds per year
   private calculateTotals(): any[] {

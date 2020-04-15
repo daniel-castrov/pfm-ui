@@ -70,3 +70,7 @@ p {
 :host ::ng-deep .ag-cell-wrapper.ag-row-group {
   padding-left: 0;
 }
+
+.ag-grid::ng-deep .ag-root.ag-layout-auto-height {
+  padding-bottom: 10px;
+}

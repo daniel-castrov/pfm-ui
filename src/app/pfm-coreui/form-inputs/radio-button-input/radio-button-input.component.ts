@@ -7,36 +7,31 @@ import { RadioButtonWrapperComponent } from '../radio-button-wrapper/radio-butto
   styleUrls: ['./radio-button-input.component.scss']
 })
 export class RadioButtonInputComponent implements OnInit {
-
   @ViewChild(RadioButtonWrapperComponent) inputComponent: RadioButtonWrapperComponent;
 
-  @Input() dataModel:any;
-  @Input() id:string;
-  @Input() fieldName:string;
-  @Input() enabled:boolean = true;
-  @Input() inputLabel:string;
-  @Input() radioOptions:Array<any>;
+  @Input() dataModel: any;
+  @Input() id: string;
+  @Input() fieldName: string;
+  @Input() enabled = true;
+  @Input() inputLabel: string;
+  @Input() radioOptions: Array<any>;
 
   errorMessage: string;
-  isValidFlag:boolean;
+  isValidFlag: boolean;
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   isValid(): boolean {
+    this.isValidFlag = this.inputComponent.isValid();
+    this.errorMessage = '';
 
-      this.isValidFlag = this.inputComponent.isValid();
-      this.errorMessage = "";
+    if (!this.dataModel[this.fieldName]) {
+      this.isValidFlag = false;
+      this.errorMessage = 'Please select an option from the radio buttons';
+    }
 
-      if(!this.dataModel[this.fieldName]){
-          this.isValidFlag = false;
-          this.errorMessage = "Please select an option from the radio buttons"
-      }
-
-
-      return this.isValidFlag;
+    return this.isValidFlag;
   }
-
 }

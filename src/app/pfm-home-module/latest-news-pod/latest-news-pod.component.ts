@@ -84,7 +84,6 @@ export class LatestNewsPodComponent implements OnInit {
 
   ngOnInit() {
     this.loadLastNews();
-    console.log(this.Editor.builtinPlugins.map(x => x.pluginName));
     this.columns = [
       {
         headerName: 'Order',

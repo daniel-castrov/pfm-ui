@@ -8,9 +8,8 @@ describe('RequestsSummaryToaWidgetComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RequestsSummaryToaWidgetComponent ]
-    })
-    .compileComponents();
+      declarations: [RequestsSummaryToaWidgetComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

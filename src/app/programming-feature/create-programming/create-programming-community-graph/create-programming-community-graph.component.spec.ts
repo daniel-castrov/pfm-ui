@@ -8,9 +8,8 @@ describe('CreateProgrammingCommunityGraphComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CreateProgrammingCommunityGraphComponent ]
-    })
-    .compileComponents();
+      declarations: [CreateProgrammingCommunityGraphComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

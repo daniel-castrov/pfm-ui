@@ -1,0 +1,24 @@
+<pfm-action-cell-renderer
+  [data]="data"
+  [params]="params"
+  [columnApi]="columnApi"
+  [options]="options"
+  [disabled]="disabled"
+  [extraActions]="extraActions"
+>
+</pfm-action-cell-renderer>
+
+<ng-container></ng-container>
+
+<ng-template #extraActions>
+  <div class="action">
+    <span [title]="title">
+      <ng-container *ngIf="data.canView">
+        <fa name="eye"></fa>
+      </ng-container>
+      <ng-container *ngIf="!data.canView">
+        <fa name="lock"></fa>
+      </ng-container>
+    </span>
+  </div>
+</ng-template>

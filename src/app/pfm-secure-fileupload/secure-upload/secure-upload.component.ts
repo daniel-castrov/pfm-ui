@@ -50,25 +50,25 @@ export class SecureUploadComponent implements OnInit {
       url: this.url,
       headers: [{ name: 'Authorization', value: 'Bearer ' + token }]
     });
-    this.uploader.onAfterAddingFile = (file) => {
+    this.uploader.onAfterAddingFile = file => {
       this.uploader.queue = [file];
       file.withCredentials = false;
     };
 
     this.hasBaseDropZoneOver = false;
     this.response = '';
-    this.uploader.response.subscribe(res => this.response = res);
-    this.uploader.onSuccessItem = (item, response, status, headers) => {
+    this.uploader.response.subscribe(res => (this.response = res));
+    (this.uploader.onSuccessItem = (item, response, status, headers) => {
       const data = JSON.parse(response); // success server response
       this.fileMetaData = new FileMetaData();
       this.fileMetaData = data.result;
-    },
-      this.uploader.onCompleteAll = () => {
+    }),
+      (this.uploader.onCompleteAll = () => {
         this.onFilesUploaded.emit(this.fileMetaData);
         setTimeout(() => {
           this.init();
         });
-      };
+      });
   }
 
   uploadFile() {
@@ -77,5 +77,4 @@ export class SecureUploadComponent implements OnInit {
       this.uploader.uploadAll();
     }
   }
-
 }

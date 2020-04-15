@@ -8,12 +8,9 @@ Injectable({
 });
 @Injectable()
 export class PfmHomeMockService {
+  constructor() {}
 
-  constructor() {
-  }
-
-  getUserTasks(): Observable<Object> {
-
+  getUserTasks(): Observable<object> {
     const t1: UserTask = new UserTask();
     t1.assignedDate = new Date();
     t1.dueDate = new Date();
@@ -31,7 +28,8 @@ export class PfmHomeMockService {
     return of([t1, t2]);
   }
 
-  getNewsItems(): Observable<Object> {// return a list of news items
+  getNewsItems(): Observable<object> {
+    // return a list of news items
     const n1: NewsItem = new NewsItem();
     n1.createDate = new Date();
     n1.text = 'details from mock service';

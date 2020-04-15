@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ProcessPrioritizationService } from './process-prioritization.service';
 import { DATE_FORMAT } from '../../util/constants/input.constants';

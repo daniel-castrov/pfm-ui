@@ -7,11 +7,9 @@ import Spy = jasmine.Spy;
 export class MockActivatedRoute extends ActivatedRoute {
   constructor(parameters?: any) {
     super();
-    this.snapshot = (({
-      paramMap: new Map([
-        ['id', '123']
-      ])
-    }) as any) as ActivatedRouteSnapshot;
+    this.snapshot = ({
+      paramMap: new Map([['id', '123']])
+    } as any) as ActivatedRouteSnapshot;
     this.queryParams = of(parameters);
     this.params = of(parameters);
   }

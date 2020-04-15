@@ -8,9 +8,8 @@ describe('OpenProgrammingComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ OpenProgrammingComponent ]
-    })
-    .compileComponents();
+      declarations: [OpenProgrammingComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

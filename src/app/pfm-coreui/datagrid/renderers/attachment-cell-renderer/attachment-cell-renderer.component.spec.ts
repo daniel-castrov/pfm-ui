@@ -8,9 +8,8 @@ describe('AttachmentCellRendererComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AttachmentCellRendererComponent ]
-    })
-    .compileComponents();
+      declarations: [AttachmentCellRendererComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

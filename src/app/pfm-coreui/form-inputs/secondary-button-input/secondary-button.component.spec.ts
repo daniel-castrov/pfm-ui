@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SecondaryButtonComponent } from './secondary-button-input.component';
+import { SecondaryButtonComponent } from './secondary-button.component';
 
 describe('SecondaryButtonComponent', () => {
   let component: SecondaryButtonComponent;
@@ -8,9 +8,8 @@ describe('SecondaryButtonComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SecondaryButtonComponent ]
-    })
-    .compileComponents();
+      declarations: [SecondaryButtonComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

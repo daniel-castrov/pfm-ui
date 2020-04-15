@@ -9,13 +9,12 @@ import { DataGridMessage } from '../../../models/DataGridMessage';
   styleUrls: ['./attachment-cell-renderer.component.scss']
 })
 export class AttachmentCellRendererComponent implements OnInit {
-
   data: any;
   params: any;
   list: ListItem[];
   attachmentsDisabled: boolean;
 
-  constructor(private datagridMBService: DatagridMbService) { }
+  constructor(private datagridMBService: DatagridMbService) {}
 
   handleSelectionChanged(data: any): void {
     const message: DataGridMessage = new DataGridMessage();
@@ -46,6 +45,5 @@ export class AttachmentCellRendererComponent implements OnInit {
     this.attachmentsDisabled = this.params.data.attachmentsDisabled;
   }
 
-  ngOnInit() { }
-
+  ngOnInit() {}
 }

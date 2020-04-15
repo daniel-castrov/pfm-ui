@@ -8,9 +8,8 @@ describe('MissionPrioritiesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MissionPrioritiesComponent ]
-    })
-    .compileComponents();
+      declarations: [MissionPrioritiesComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

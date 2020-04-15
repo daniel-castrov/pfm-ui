@@ -14,15 +14,15 @@ export class SigninService extends BaseRestService {
     super(httpClient);
   }
 
-  public signIn(): Observable<object> {
+  signIn(): Observable<object> {
     return this.get('blank');
   }
 
-  public getUserDetails(): Observable<object> {
+  getUserDetails(): Observable<object> {
     return this.get('mydetails').pipe(map((res: RestResponse<any>) => this.convertDateFromServer(res)));
   }
 
-  public getUserRoles(): Observable<object> {
+  getUserRoles(): Observable<object> {
     return this.get('getroles');
   }
 

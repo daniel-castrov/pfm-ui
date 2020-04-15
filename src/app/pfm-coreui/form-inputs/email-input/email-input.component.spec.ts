@@ -8,9 +8,8 @@ describe('EmailInputComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EmailInputComponent ]
-    })
-    .compileComponents();
+      declarations: [EmailInputComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

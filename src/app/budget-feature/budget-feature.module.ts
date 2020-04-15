@@ -4,12 +4,8 @@ import { CommonModule } from '@angular/common';
 import { BudgetFeatureRoutingModule } from './budget-feature-routing.module';
 import { BudgetFeatureComponent } from './budget-feature.component';
 
-
 @NgModule({
   declarations: [BudgetFeatureComponent],
-  imports: [
-    CommonModule,
-    BudgetFeatureRoutingModule
-  ]
+  imports: [CommonModule, BudgetFeatureRoutingModule]
 })
-export class BudgetFeatureModule { }
+export class BudgetFeatureModule {}

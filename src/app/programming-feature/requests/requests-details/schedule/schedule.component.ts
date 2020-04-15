@@ -17,6 +17,7 @@ import { Program } from '../../../models/Program';
 import { ScheduleService } from '../../../services/schedule.service';
 import * as moment from 'moment';
 import { Schedule } from '../../../models/schedule.model';
+import { DropdownCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/dropdown-cell-renderer/dropdown-cell-renderer.component';
 
 @Component({
   selector: 'pfm-schedule',
@@ -25,6 +26,7 @@ import { Schedule } from '../../../models/schedule.model';
 })
 export class ScheduleComponent implements OnInit {
   @Input() program: Program;
+  @Input() pomYear: number;
 
   @ViewChild('googleChart')
   chart: GoogleChartComponent;
@@ -77,10 +79,9 @@ export class ScheduleComponent implements OnInit {
   gridApi: GridApi;
   components: any;
   fundingGridColumnDefinitions: ColDef[] = [];
-  scheduleGridRows: ScheduleDataMockInterface[];
+  scheduleGridRows: ScheduleDataInterface[] = [];
 
   busy: boolean;
-  firstTimeLoading: boolean;
   currentRowDataState: ScheduleRowDataStateInterface = {};
 
   constructor(
@@ -92,7 +93,6 @@ export class ScheduleComponent implements OnInit {
   ngOnInit() {
     this.loadFundingLines();
     this.loadSchedulesGrid();
-    this.drawGanttChart();
   }
 
   loadFundingLines() {
@@ -130,13 +130,21 @@ export class ScheduleComponent implements OnInit {
           });
         })
       )
-      .subscribe(fundingLines => {
-        for (const fundingLine of fundingLines) {
-          this.fundingFilter.push(fundingLine);
-          this.fundingGridAssociations.push(fundingLine);
+      .subscribe(
+        fundingLines => {
+          for (const fundingLine of fundingLines) {
+            this.fundingFilter.push(fundingLine);
+            this.fundingGridAssociations.push(fundingLine);
+          }
+        },
+        error => null,
+        () => {
+          this.loadSchedules();
         }
-      });
+      );
+  }
 
+  private loadSchedules() {
     this.scheduleService.getByProgramId(this.program.id).subscribe(schResp => {
       const schedules = (schResp as any).result;
       for (const schedule of schedules) {
@@ -153,7 +161,7 @@ export class ScheduleComponent implements OnInit {
         this.viewMode(i);
       }
       this.gridApi.setRowData(this.scheduleGridRows);
-      this.updateGanttChart();
+      this.drawGanttChart(true);
     });
   }
 
@@ -215,10 +223,12 @@ export class ScheduleComponent implements OnInit {
         ''
       ]);
     }
+
     this.chartData.dataTable = data;
-    if ((this.chart && !this.firstTimeLoading) || redraw) {
-      this.firstTimeLoading = true;
-      this.chart.draw();
+    if (this.chart || redraw) {
+      if (this.chart.wrapper) {
+        this.chart.draw();
+      }
     }
   }
 
@@ -246,6 +256,9 @@ export class ScheduleComponent implements OnInit {
 
   onGridIsReady(gridApi: GridApi) {
     this.gridApi = gridApi;
+    if (this.chart) {
+      this.drawGanttChart(true);
+    }
   }
 
   private loadSchedulesGrid() {
@@ -287,7 +300,7 @@ export class ScheduleComponent implements OnInit {
         suppressMenu: true,
         cellClass: 'text-class',
         cellStyle: { display: 'flex', 'align-items': 'center', 'white-space': 'normal' },
-        cellEditor: 'agSelectCellEditor',
+        cellEditorFramework: DropdownCellRendererComponent,
         valueFormatter: params => {
           if (params.value) {
             const find = this.fundingGridAssociations.find(x => x.id === params.value);
@@ -302,7 +315,7 @@ export class ScheduleComponent implements OnInit {
         cellEditorParams: params => {
           return {
             cellHeight: 50,
-            values: ['Select', ...this.fundingGridAssociations.map(x => x.id)]
+            values: ['Select', ...this.fundingGridAssociations.map(x => x.name)]
           };
         }
       },
@@ -396,11 +409,11 @@ export class ScheduleComponent implements OnInit {
 
   private saveRow(rowIndex: number) {
     this.gridApi.stopEditing();
-    const row: ScheduleDataMockInterface = this.scheduleGridRows[rowIndex];
+    const row: ScheduleDataInterface = this.scheduleGridRows[rowIndex];
     const canSave = this.validateRowData(row);
     if (canSave) {
       row.programId = this.program.id;
-      if (row.fundingLineId.toLowerCase() === 'select') {
+      if (row.fundingLineId?.toLowerCase() === 'select') {
         row.fundingLineId = null;
       }
       if (row.startDate) {
@@ -460,9 +473,9 @@ export class ScheduleComponent implements OnInit {
     this.busy = false;
   }
 
-  private validateRowData(row: ScheduleDataMockInterface) {
+  private validateRowData(row: ScheduleDataInterface) {
     let errorMessage = '';
-    if (!row.taskDescription.length) {
+    if (!row.taskDescription?.length) {
       errorMessage = 'Task Description cannot be empty.';
     } else if (row.taskDescription.length > 45) {
       errorMessage = 'Task Description cannot have more than 45 characters.';
@@ -551,12 +564,14 @@ export class ScheduleComponent implements OnInit {
     this.currentRowDataState.currentEditingRowIndex = 0;
     this.currentRowDataState.isEditMode = false;
     this.currentRowDataState.isAddMode = false;
-    this.gridApi.stopEditing();
     this.scheduleGridRows[rowIndex].action = this.fundingGridActionState.VIEW;
     this.scheduleGridRows.forEach(row => {
       row.isDisabled = false;
     });
-    this.gridApi.setRowData(this.scheduleGridRows);
+    if (this.gridApi) {
+      this.gridApi.stopEditing();
+      this.gridApi.setRowData(this.scheduleGridRows);
+    }
   }
 
   private editMode(rowIndex: number) {
@@ -576,7 +591,7 @@ export class ScheduleComponent implements OnInit {
   }
 }
 
-export interface ScheduleDataMockInterface {
+export interface ScheduleDataInterface {
   id?: string;
   programId?: string;
   taskDescription?: string;
@@ -592,5 +607,5 @@ export interface ScheduleRowDataStateInterface {
   currentEditingRowIndex?: number;
   isAddMode?: boolean;
   isEditMode?: boolean;
-  currentEditingRowData?: ScheduleDataMockInterface;
+  currentEditingRowData?: ScheduleDataInterface;
 }

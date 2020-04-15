@@ -6,12 +6,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./dashboard-pod.component.scss']
 })
 export class DashboardPodComponent implements OnInit {
+  showDialog: boolean;
 
-  showDialog:boolean;
+  constructor() {}
 
-  constructor() { }
-
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

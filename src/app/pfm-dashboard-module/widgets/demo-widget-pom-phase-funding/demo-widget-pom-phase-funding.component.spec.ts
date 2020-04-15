@@ -8,9 +8,8 @@ describe('DemoWidgetPOMPhaseFundingComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DemoWidgetPOMPhaseFundingComponent ]
-    })
-    .compileComponents();
+      declarations: [DemoWidgetPOMPhaseFundingComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

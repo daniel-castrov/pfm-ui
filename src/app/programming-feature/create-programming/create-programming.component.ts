@@ -86,9 +86,7 @@ export class CreateProgrammingComponent implements OnInit {
       resp => {
         this.orgs = (resp as any).result;
       },
-      error => {
-        console.log('Error while getting Organizations...');
-      }
+      error => {}
     );
   }
 
@@ -164,7 +162,6 @@ export class CreateProgrammingComponent implements OnInit {
       },
       error => {
         this.busy = false;
-        console.log('Error in getting community and org toas...');
       }
     );
   }
@@ -316,7 +313,6 @@ export class CreateProgrammingComponent implements OnInit {
       },
       error => {
         this.busy = false;
-        console.log(error);
       }
     );
   }
@@ -341,7 +337,6 @@ export class CreateProgrammingComponent implements OnInit {
         this.busy = false;
         const years: string[] = ['Spreadsheet'];
         this.availableYears = this.toListItem(years);
-        console.log(response.error);
       }
     );
   }
@@ -407,7 +402,7 @@ export class CreateProgrammingComponent implements OnInit {
     colDefs.push({
       headerName: 'Actions',
       field: column1Name + 'actions',
-      mWidth: 100,
+      minWidth: 100,
       maxWidth: 100,
       cellRendererFramework: ActionCellRendererComponent
     });

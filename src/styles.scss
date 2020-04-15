@@ -446,14 +446,23 @@ gridster .gridster-row {
   border-right: 1px solid #7b8389 !important;
   border-left: 1px solid #7b8389 !important;
 }
+
 .ag-header-container {
   background: #24527b;
   color: white;
   text-align: center !important;
 }
 
+.ag-header-container .ag-header-cell {
+  background: #24527b;
+}
+
 .ag-header-cell:hover {
   cursor: default;
+}
+
+.ag-pinned-right-header .ag-header-cell-resize {
+  left: -2px;
 }
 
 .ag-header-cell-resize {

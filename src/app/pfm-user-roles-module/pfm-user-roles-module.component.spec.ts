@@ -8,9 +8,8 @@ describe('PfmUserRolesModuleComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PfmUserRolesModuleComponent ]
-    })
-    .compileComponents();
+      declarations: [PfmUserRolesModuleComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

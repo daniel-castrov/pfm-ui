@@ -19,6 +19,7 @@ import { SAG } from '../../../models/sag.model';
 import { ExpenditureType } from '../../../models/expenditure-type.model';
 import { WorkUnitCode } from '../../../models/work-unit-code.model';
 import { RestResponse } from 'src/app/util/rest-response';
+import { DropdownCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/dropdown-cell-renderer/dropdown-cell-renderer.component';
 
 @Component({
   selector: 'pfm-requests-funding-line-grid',
@@ -218,7 +219,10 @@ export class RequestsFundingLineGridComponent implements OnInit {
           : i > this.pomYear
           ? 'BY' + (i === this.pomYear + 1 ? '' : '+' + (i - this.pomYear - 1))
           : 'CY';
-      const fieldPrefix = headerName.toLowerCase().replace('+', '').replace('-', '');
+      const fieldPrefix = headerName
+        .toLowerCase()
+        .replace('+', '')
+        .replace('-', '');
       columnGroups.push({
         groupId: 'main-header',
         headerName,
@@ -481,7 +485,10 @@ export class RequestsFundingLineGridComponent implements OnInit {
           : i > this.pomYear
           ? 'BY' + (i === this.pomYear + 1 ? '' : '+' + (i - this.pomYear - 1))
           : 'CY';
-      const fieldPrefix = headerName.toLowerCase().replace('+', '').replace('-', '');
+      const fieldPrefix = headerName
+        .toLowerCase()
+        .replace('+', '')
+        .replace('-', '');
       columnGroups.push({
         groupId: 'main-header',
         headerName,
@@ -526,7 +533,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
             cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-start' },
             maxWidth: 110,
             minWidth: 110,
-            cellEditor: 'agSelectCellEditor',
+            cellEditorFramework: DropdownCellRendererComponent,
             cellEditorParams: params => {
               return {
                 values: ['Select', ...this.appnOptions]
@@ -551,7 +558,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
             },
             maxWidth: 110,
             minWidth: 110,
-            cellEditor: 'agSelectCellEditor',
+            cellEditorFramework: DropdownCellRendererComponent,
             cellEditorParams: params => {
               return {
                 values: [
@@ -574,7 +581,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
             cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-start' },
             maxWidth: 110,
             minWidth: 110,
-            cellEditor: 'agSelectCellEditor',
+            cellEditorFramework: DropdownCellRendererComponent,
             cellEditorParams: params => {
               return {
                 values: ['Select', ...new Set(this.sagOptions)]
@@ -594,7 +601,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
             cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-start' },
             maxWidth: 110,
             minWidth: 110,
-            cellEditor: 'agSelectCellEditor',
+            cellEditorFramework: DropdownCellRendererComponent,
             cellEditorParams: params => {
               return {
                 values: ['Select', ...this.wucdOptions]
@@ -614,7 +621,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
             cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-start' },
             maxWidth: 110,
             minWidth: 110,
-            cellEditor: 'agSelectCellEditor',
+            cellEditorFramework: DropdownCellRendererComponent,
             cellEditorParams: params => {
               return {
                 values: ['Select', ...this.expTypeOptions]
@@ -1023,6 +1030,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
         rowIndex: this.currentNonSummaryRowDataState.currentEditingRowIndex,
         colKey: '0'
       });
+      this.setupAppnDependency();
     }
   }
 
@@ -1078,17 +1086,18 @@ export class RequestsFundingLineGridComponent implements OnInit {
       columns: [baBlinCell.column]
     })[0] as any;
 
-    appnCellEditor.addDestroyableEventListener(appnCellEditor.eSelect, 'change', () => {
-      bablinCellEditor.eSelect.options.length = 0;
-      let params: any;
-      params = {};
-      params.column = baBlinCell.column;
-      params.values = [
-        'Select',
-        ...this.allBaBlins.filter(x => x.appropriation === appnCellEditor.getValue()).map(x => x.code)
-      ];
-      bablinCellEditor.init(params);
-    });
+    const appnDropdownComponent = appnCellEditor._frameworkComponentInstance as DropdownCellRendererComponent;
+    if (appnDropdownComponent) {
+      const baBlinDropdownComponent = bablinCellEditor._frameworkComponentInstance as DropdownCellRendererComponent;
+
+      appnDropdownComponent.change.subscribe(() => {
+        const list = [
+          'Select',
+          ...this.allBaBlins.filter(x => appnDropdownComponent.selectedValue === x.appropriation).map(x => x.code)
+        ];
+        baBlinDropdownComponent.updateList(list);
+      });
+    }
   }
 }
 

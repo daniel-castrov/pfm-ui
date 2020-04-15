@@ -8,9 +8,8 @@ describe('ActionCellRendererComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ActionCellRendererComponent ]
-    })
-    .compileComponents();
+      declarations: [ActionCellRendererComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

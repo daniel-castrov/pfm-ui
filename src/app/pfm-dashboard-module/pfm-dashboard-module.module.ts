@@ -13,6 +13,7 @@ import { DashboardMockService } from './services/dashboard.mock.service';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { GridsterModule } from 'angular-gridster2';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { AssignedToMeComponent } from './assigned-to-me/assigned-to-me.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     DemoWidgetMissionFundingPriorityComponent,
     DemoWidgetMissionFundingMoneyComponent,
     DemoWidgetPOMPhaseFundingComponent,
-    DemoWidgetPrStatusComponent
+    DemoWidgetPrStatusComponent,
+    AssignedToMeComponent
   ],
   imports: [
     CommonModule,
@@ -32,11 +34,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     PfmCoreuiModule
   ],
   exports: [DashboardComponent],
-  entryComponents: [
-    DashboardComponent,
-    DemoWidgetMissionFundingPriorityComponent,
-    DemoWidgetMissionFundingMoneyComponent
-  ],
-  providers: [DashboardService, DashboardMockService] //TODO - see notes in DashboardMockService
+  providers: [DashboardService, DashboardMockService] // TODO - see notes in DashboardMockService
 })
 export class PfmDashabordModuleModule {}

@@ -7,7 +7,6 @@ import { AssetSummaryService } from './asset-summary.service';
   providedIn: 'root'
 })
 export class AssetSummaryServiceImpl extends AssetSummaryService {
-
   obtainAssetSummariesByAssetId(assetId: string): Observable<any> {
     return this.get('asset-summary/asset/' + assetId);
   }
@@ -23,5 +22,4 @@ export class AssetSummaryServiceImpl extends AssetSummaryService {
   removeAssetSummaryById(assetSummaryId: string): Observable<any> {
     return this.delete('asset-summary/' + assetSummaryId);
   }
-
 }

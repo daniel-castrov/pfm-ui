@@ -41,9 +41,10 @@ import { ToggleInputComponent } from './form-inputs/toggle-input/toggle-input.co
 import { MessageService } from 'primeng/api';
 import { DropdownCellRendererComponent } from './datagrid/renderers/dropdown-cell-renderer/dropdown-cell-renderer.component';
 import { MpActionCellRendererComponent } from './datagrid/renderers/mp-action-cell-renderer/mp-action-cell-renderer.component';
+import { AgGridPaginationComponent } from './datagrid/ag-grid-pagination/ag-grid-pagination.component';
+import { AtmActionCellRendererComponent } from './datagrid/renderers/atm-action-cell-renderer/atm-action-cell-renderer.component';
 
 @NgModule({
-  entryComponents: [DropdownCellRendererComponent],
   declarations: [
     RadioButtonWrapperComponent,
     AppHeaderComponent,
@@ -73,9 +74,12 @@ import { MpActionCellRendererComponent } from './datagrid/renderers/mp-action-ce
     FileUploadComponent,
     DatePickerCellEditorComponent,
     DatePickerCellRendererComponent,
+    DropdownCellRendererComponent,
     IsVisibleDirective,
     ToggleInputComponent,
-    MpActionCellRendererComponent
+    MpActionCellRendererComponent,
+    AgGridPaginationComponent,
+    AtmActionCellRendererComponent
   ],
   imports: [
     ToastModule,
@@ -94,7 +98,9 @@ import { MpActionCellRendererComponent } from './datagrid/renderers/mp-action-ce
       TextCellRendererComponent,
       DisabledActionCellRendererComponent,
       DatePickerCellEditorComponent,
-      DatePickerCellRendererComponent
+      DatePickerCellRendererComponent,
+      AtmActionCellRendererComponent,
+      DropdownCellRendererComponent
     ]),
     BsDatepickerModule.forRoot()
   ],
@@ -126,6 +132,7 @@ import { MpActionCellRendererComponent } from './datagrid/renderers/mp-action-ce
     FileUploadComponent,
     DatePickerCellEditorComponent,
     DatePickerCellRendererComponent,
+    DropdownCellRendererComponent,
     IsVisibleDirective,
     ToggleInputComponent,
     MpActionCellRendererComponent

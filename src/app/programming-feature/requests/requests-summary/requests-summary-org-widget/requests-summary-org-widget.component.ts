@@ -4,8 +4,8 @@ import { ListItem } from '../../../../pfm-common-models/ListItem';
 import { Organization } from 'src/app/pfm-common-models/Organization';
 import { Role } from 'src/app/pfm-common-models/Role';
 import { RequestSummaryNavigationHistoryService } from '../requests-summary-navigation-history.service';
-
-// import { runInThisContext } from 'vm';
+import { IntIntMap } from '../../../models/IntIntMap';
+import { FormatterUtil } from '../../../../util/formatterUtil';
 
 @Component({
   selector: 'pfm-requests-summary-org-widget',
@@ -16,6 +16,7 @@ export class RequestsSummaryOrgWidgetComponent implements OnInit {
   @Input() griddata: ProgramSummary[];
   @Input() orgs: Organization[];
   @Input() roles: Role[];
+  @Input() baBlinSummary: IntIntMap;
 
   chartReady: boolean;
   availableCharts: ListItem[];
@@ -101,7 +102,7 @@ export class RequestsSummaryOrgWidgetComponent implements OnInit {
       this.defaultChart = this.availableCharts[0];
       this.chartOrganization();
     } else if (chartType.id === 'BA/BLIN') {
-      // change to ba line
+      // change to BA/BLIN
       this.defaultChart = this.availableCharts[1];
       this.chartBABlin();
     } else if (chartType.id === 'Program Status') {
@@ -135,7 +136,7 @@ export class RequestsSummaryOrgWidgetComponent implements OnInit {
       });
 
       this.griddata.forEach(ps => {
-        const orgName = this.getOrgName(ps.organiztionId);
+        const orgName = this.getOrgName(ps.organizationId);
         if (orgName) {
           orgDataTable.push([
             ps.programName,
@@ -147,39 +148,34 @@ export class RequestsSummaryOrgWidgetComponent implements OnInit {
       });
       // set data to chart
       this.treeMapChart.dataTable = orgDataTable; // organizationTable;
+      delete this.treeMapChart.options.generateTooltip;
       this.treeMapChart = Object.assign({}, this.treeMapChart);
       // this.treeMapChart.component.draw();
     }
   }
 
   private chartBABlin() {
-    // set up BA Line tree structure
+    // set up BA/BLIN tree structure
     const lineTable = [
-      ['Program', 'Organization', 'Health', 'Demands'],
-      ['BA/BLIN', null, 0, 0],
-      ['SA0001', 'BA Line', 0, 0],
-      ['BA2', 'BA Line', 0, 0],
-      ['BA5', 'BA Line', 0, 0],
-      ['PHM001', 'BA Line', 0, 0],
-      ['BA4', 'BA Line', 0, 0],
-      ['BA1', 'BA Line', 0, 0],
-      ['BA3', 'BA Line', 0, 0],
-      ['BA6', 'BA Line', 0, 0],
-      ['Test1', 'SA0001', 10, 100],
-      ['Test2', 'BA1', 20, 50],
-      ['Test3', 'BA2', 30, 10],
-      ['Test33', 'BA2', 30, 10],
-      ['Test4', 'BA3', 40, 0],
-      ['Test5', 'BA4', 50, 40],
-      ['Test6', 'BA5', 5, 10],
-      ['Test7', 'BA6', 5, 10],
-      ['Test8', 'PHM001', 50, 10]
+      ['BaBlin', 'Parent', 'Total', 'Total (color)'],
+      ['BA/BLIN', null, 0, 0]
     ];
-
     // load data into chart
+    for (const baBlin of Object.keys(this.baBlinSummary)) {
+      lineTable.push([baBlin, 'BA/BLIN', this.baBlinSummary[baBlin], this.baBlinSummary[baBlin]]);
+    }
 
     // set data to chart
     this.treeMapChart.dataTable = lineTable;
+    const options = Object.assign({}, this.treeMapChart.options);
+    options.generateTooltip = (row, value, size) => {
+      return (
+        '<div style="background:#fd9; padding:10px; border-style:solid">' +
+        `${FormatterUtil.formatCurrency(value)}</div>`
+      );
+    };
+    this.treeMapChart.options = options;
+
     setTimeout(() => {
       // this.treeMapChart.component.draw();
       this.treeMapChart = Object.assign({}, this.treeMapChart);
@@ -241,12 +237,11 @@ export class RequestsSummaryOrgWidgetComponent implements OnInit {
       statusTable.push([roleacrynm + ' : Approved', 'Program Status', approved, 70]);
       statusTable.push([roleacrynm + ' : Rejected', 'Program Status', rejected, 10]);
     }
-
-    console.log(JSON.stringify(statusTable));
     // load data into chart
 
     // set data to chart
     this.treeMapChart.dataTable = statusTable;
+    delete this.treeMapChart.options.generateTooltip;
     this.treeMapChart = Object.assign({}, this.treeMapChart);
     // this.treeMapChart.component.draw();
     // this.treeMapChart.goUpAndDraw();
@@ -279,7 +274,7 @@ export class RequestsSummaryOrgWidgetComponent implements OnInit {
     let hasData = false;
     if (this.griddata) {
       for (const ps of this.griddata) {
-        if (ps.organiztionId === orgId) {
+        if (ps.organizationId === orgId) {
           hasData = true;
           break;
         }
@@ -317,7 +312,6 @@ export class RequestsSummaryOrgWidgetComponent implements OnInit {
         }
       });
     }
-    console.log(role + ' : ' + acrynm);
     return acrynm;
   }
 }

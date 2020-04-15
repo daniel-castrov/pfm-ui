@@ -8,9 +8,8 @@ describe('LatestNewsPodComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LatestNewsPodComponent ]
-    })
-    .compileComponents();
+      declarations: [LatestNewsPodComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

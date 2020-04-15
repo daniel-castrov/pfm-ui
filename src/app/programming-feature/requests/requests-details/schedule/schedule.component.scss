@@ -2,6 +2,12 @@
   height: 100vh !important;
 }
 
+:host ::ng-deep google-chart svg > g:nth-child(8) > path:nth-child(1),
+:host ::ng-deep google-chart svg > g:nth-child(7) > rect:nth-child(1),
+:host ::ng-deep google-chart svg > g:nth-child(6) {
+  display: none;
+}
+
 .gantt-chart {
   white-space: nowrap;
   margin-top: 10.5%;
@@ -12,7 +18,7 @@ gantt-bar-body > div {
 }
 
 .gantt-bar {
-  background-color: maroon
+  background-color: maroon;
 }
 
 .gantt-bar-body > div {

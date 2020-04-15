@@ -1,3 +1,3 @@
 export interface ValidatedComponent {
-    isValid():boolean;
+  isValid(): boolean;
 }

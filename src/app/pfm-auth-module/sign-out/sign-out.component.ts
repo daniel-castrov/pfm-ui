@@ -8,18 +8,14 @@ import { Router } from '@angular/router';
   styleUrls: ['./sign-out.component.css']
 })
 export class SignOutComponent implements OnInit {
-
-  constructor(private appModel:AppModel, private router:Router) { }
+  constructor(private appModel: AppModel, private router: Router) {}
 
   ngOnInit() {
-
-    setTimeout(()=>{
+    setTimeout(() => {
       this.appModel.isUserSignedIn = undefined;
-      sessionStorage.removeItem("auth_token");
-      sessionStorage.removeItem("app_model");
+      sessionStorage.removeItem('auth_token');
+      sessionStorage.removeItem('app_model');
       this.router.navigate(['/signin']);
     });
-
   }
-
 }

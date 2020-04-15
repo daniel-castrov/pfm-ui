@@ -7,36 +7,36 @@ import { ValidatedComponent } from '../../models/validated-component';
   styleUrls: ['./radio-button-wrapper.component.scss']
 })
 export class RadioButtonWrapperComponent implements OnInit, ValidatedComponent {
+  @Input() dataModel: any;
+  @Input() id: string;
+  @Input() fieldName: string;
+  @Input() inputLabel: string;
+  @Input() enabled = true;
+  @Input() errorMessage: string;
+  @Input() radioOptions: Array<any>;
 
-  @Input() dataModel:any;
-  @Input() id:string;
-  @Input() fieldName:string;
-  @Input() inputLabel:string;
-  @Input() enabled:boolean = true;
-  @Input() errorMessage:string;
-  @Input() radioOptions:Array<any>;
-
-  isValidFlag:boolean;
+  isValidFlag: boolean;
 
   constructor() {}
 
+  ngOnInit() {}
 
-    ngOnInit() {
+  // If the input is enabled, check if it is empty. If it is not empty, return true
+  isValid(): boolean {
+    this.isValidFlag = true;
+
+    if (
+      !this.dataModel[this.fieldName] ||
+      this.dataModel[this.fieldName].length === 0 ||
+      this.radioOptions.length === 0
+    ) {
+      this.isValidFlag = false;
     }
 
-    //If the input is enabled, check if it is empty. If it is not empty, return true
-    isValid(): boolean{
-        this.isValidFlag = true;
-
-        if(!this.dataModel[this.fieldName] || this.dataModel[this.fieldName].length == 0 || this.radioOptions.length == 0){
-            this.isValidFlag = false;
-        }
-
-        return this.isValidFlag;
+    return this.isValidFlag;
   }
 
-  errorExists(){
-    return (this.errorMessage == undefined ? false : true );
+  errorExists() {
+    return this.errorMessage === undefined ? false : true;
   }
-
 }

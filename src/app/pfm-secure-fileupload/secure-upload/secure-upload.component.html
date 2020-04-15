@@ -1,37 +1,41 @@
 <ng-container *ngIf="!uploadInprogressFlag">
-    <pfm-custom-dialog (onCancelDialog)="cancel()" [title]="'Upload'" [body]="bodyPart" [actions]="actionsPart">
-    </pfm-custom-dialog>
+  <pfm-custom-dialog (onCancelDialog)="cancel()" [title]="'Upload'" [body]="bodyPart" [actions]="actionsPart">
+  </pfm-custom-dialog>
 </ng-container>
 <pfm-busy [busy]="uploadInprogressFlag"></pfm-busy>
 
 <ng-template #bodyPart>
-    <div class="container">
-        <div class="mydropbox">
-            <span>Specify location of document:</span>
-            <div class="mybox">
-                <ng-container *ngIf="isFileSelected()">
-                    <input type="text" value="{{uploader.queue[0].file.name}}" disabled>
-                    <label for="file">Browse</label>
-                    <input id="file" class="fileupload-input-hidden" type="file" ng2FileSelect
-                        [uploader]="uploader" /><br />
-                </ng-container>
-                <ng-container *ngIf="!isFileSelected()">
-                    <input type="text" disabled>
-                    <label for="file">Browse</label>
-                    <input id="file" class="fileupload-input-hidden" type="file" ng2FileSelect
-                        [uploader]="uploader" /><br />
-                </ng-container>
-            </div>
-        </div>
+  <div class="container">
+    <div class="mydropbox">
+      <span>Specify location of document:</span>
+      <div class="mybox">
+        <ng-container *ngIf="isFileSelected()">
+          <input type="text" value="{{ uploader.queue[0].file.name }}" disabled />
+          <label for="file">Browse</label>
+          <input id="file" class="fileupload-input-hidden" type="file" ng2FileSelect [uploader]="uploader" /><br />
+        </ng-container>
+        <ng-container *ngIf="!isFileSelected()">
+          <input type="text" disabled />
+          <label for="file">Browse</label>
+          <input id="file" class="fileupload-input-hidden" type="file" ng2FileSelect [uploader]="uploader" /><br />
+        </ng-container>
+      </div>
     </div>
+  </div>
 </ng-template>
 
 <ng-template #actionsPart>
-    <div class="action-buttons">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal"
-            (click)="uploadFile()"
-            [disabled]="!uploader.getNotUploadedItems().length">Upload</button>
-        <pfm-cancel-cta id="btn-close-dialog" (onCancelClicked)="cancel()" [disabled]="uploadInprogressFlag">
-        </pfm-cancel-cta>
-    </div>
+  <div class="action-buttons">
+    <button
+      type="button"
+      class="btn btn-secondary"
+      data-dismiss="modal"
+      (click)="uploadFile()"
+      [disabled]="!uploader.getNotUploadedItems().length"
+    >
+      Upload
+    </button>
+    <pfm-cancel-cta id="btn-close-dialog" (onCancelClicked)="cancel()" [disabled]="uploadInprogressFlag">
+    </pfm-cancel-cta>
+  </div>
 </ng-template>

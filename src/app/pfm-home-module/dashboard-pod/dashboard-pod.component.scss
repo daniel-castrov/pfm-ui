@@ -9,9 +9,9 @@ $dark-grey: #777777;
 $color-black: #000;
 $charcoal: #333;
 
-$assigned-color: #6FB567;
-$outstanding-color: #E5AE60;
-$completed-color: #4A77B1;
+$assigned-color: #6fb567;
+$outstanding-color: #e5ae60;
+$completed-color: #4a77b1;
 
 .bg-assigned {
   background-color: $assigned-color;
@@ -41,7 +41,7 @@ $completed-color: #4A77B1;
   color: $completed-color;
 }
 
-.fa:hover{
+.fa:hover {
   cursor: pointer;
 }
 
@@ -53,7 +53,7 @@ label {
   border-radius: 4px;
   margin-bottom: 20px;
   overflow: hidden;
-  box-shadow: 0 1px 2px rgba(0,0,0,.05), 0 0 0 1px rgba(63,63,68,.1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(63, 63, 68, 0.1);
   padding: 10px;
   border: none;
 
@@ -128,23 +128,23 @@ label {
     }
   }
 
-  .footer{
+  .footer {
     padding: 0;
     background-color: transparent;
     font-size: 12px;
     line-height: 20px;
 
-    .legend{
+    .legend {
       padding: 5px 0;
     }
 
-    hr{
+    hr {
       margin-top: 5px;
       margin-bottom: 5px;
     }
   }
 
-  .stats{
+  .stats {
     color: #a9a9a9;
   }
 
@@ -152,14 +152,14 @@ label {
     display: inline-block;
   }
 
-  .author{
+  .author {
     font-size: 12px;
     font-weight: bold;
     text-transform: uppercase;
   }
 
-  .author i{
-    font-size: 1rem;;
+  .author i {
+    font-size: 1rem;
   }
 
   .framework {
@@ -169,7 +169,7 @@ label {
     font-weight: 400;
 
     li:first-child {
-      font-weight:700;
+      font-weight: 700;
     }
 
     li:last-child {
@@ -178,9 +178,8 @@ label {
   }
 
   .table {
-
     .radio,
-    .checkbox{
+    .checkbox {
       position: relative;
       height: 40px;
       display: block;
@@ -190,21 +189,21 @@ label {
       margin: 0;
       text-align: center;
 
-      .icons{
+      .icons {
         left: 5px;
       }
     }
 
     .text-info {
       color: $primary-color !important;
-      opacity: .8;
+      opacity: 0.8;
       &:hover {
         opacity: 1;
       }
     }
     .text-danger {
       color: red;
-      opacity: .8;
+      opacity: 0.8;
       &:hover {
         opacity: 1;
       }
@@ -212,7 +211,6 @@ label {
       .fa {
         font-size: 14px;
         margin-bottom: 3px;
-
       }
     }
     > thead > tr > th,
@@ -220,34 +218,34 @@ label {
     > tfoot > tr > th,
     > thead > tr > td,
     > tbody > tr > td,
-    > tfoot > tr > td{
+    > tfoot > tr > td {
       padding: 12px 8px;
       vertical-align: middle;
     }
 
-    > thead > tr > th{
+    > thead > tr > th {
       font-size: 12px;
       font-weight: normal;
       padding-bottom: 5px;
     }
 
     .td-actions .btn {
-      opacity: .7;
+      opacity: 0.7;
       border-radius: 20px !important;
 
-      &.btn-xs{
+      &.btn-xs {
         padding-left: 3px;
         padding-right: 3px;
       }
     }
-    .td-actions{
+    .td-actions {
       min-width: 90px;
     }
 
     > tbody > tr {
       position: relative;
 
-      &:hover{
+      &:hover {
         .td-actions .btn {
           opacity: 1;
         }
@@ -280,4 +278,3 @@ label {
     color: #a9a9a9;
   }
 }
-

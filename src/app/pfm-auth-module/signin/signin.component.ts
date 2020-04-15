@@ -13,7 +13,6 @@ import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
   styleUrls: ['./signin.component.css']
 })
 export class SigninComponent implements OnInit {
-
   busy: boolean;
 
   constructor(
@@ -23,8 +22,7 @@ export class SigninComponent implements OnInit {
     private signInService: SigninService,
     private router: Router,
     private toastService: ToastService
-  ) {
-  }
+  ) {}
 
   onLoginClick(): void {
     this.busy = true;
@@ -44,17 +42,21 @@ export class SigninComponent implements OnInit {
     this.signInService.getUserDetails().subscribe(
       resp => {
         this.appModel.userDetails = (resp as any).result;
-        this.appModel.userDetails.fullName = this.appModel.userDetails.firstName + ' ' +
-          this.appModel.userDetails.lastName;
+        this.appModel.userDetails.fullName =
+          this.appModel.userDetails.firstName + ' ' + this.appModel.userDetails.lastName;
 
-        this.toastService.displayInfo(`Welcome back ${this.appModel.userDetails.fullName}`,
-          `Last Login at: ${this.appModel.userDetails.lastLoginDate.format('llll')}`);
+        this.toastService.displayInfo(
+          `Welcome back ${this.appModel.userDetails.fullName}`,
+          `Last Login at: ${this.appModel.userDetails.lastLoginDate.format('llll')}`
+        );
 
-        this.communityService.getCommunity(this.appModel.userDetails.currentCommunityId).toPromise().then(
-          communityResp => {
+        this.communityService
+          .getCommunity(this.appModel.userDetails.currentCommunityId)
+          .toPromise()
+          .then(communityResp => {
             this.appModel.userDetails.currentCommunity = (communityResp as any).result;
-          });
-        this.getUserRoles();
+          })
+          .finally(() => this.getUserRoles());
       },
       error => {
         this.busy = false;
@@ -82,7 +84,5 @@ export class SigninComponent implements OnInit {
     );
   }
 
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

@@ -7,13 +7,10 @@ import { MessageService } from 'primeng/api';
   providedIn: 'root'
 })
 export class DialogService {
-
   protected messageBussSource = new Subject<DialogMessage>();
   messageBus$: Observable<DialogMessage> = this.messageBussSource.asObservable();
 
-  constructor(
-    private messageService: MessageService
-  ) { }
+  constructor(private messageService: MessageService) {}
 
   sendMessage(message: DialogMessage): void {
     this.messageBussSource.next(message);

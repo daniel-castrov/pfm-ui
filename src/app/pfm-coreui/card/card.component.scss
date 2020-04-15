@@ -1,6 +1,6 @@
-$assigned-color: #6FB567;
-$outstanding-color: #E5AE60;
-$completed-color: #4A77B1;
+$assigned-color: #6fb567;
+$outstanding-color: #e5ae60;
+$completed-color: #4a77b1;
 
 .bg-assigned {
   background-color: $assigned-color;
@@ -30,6 +30,6 @@ $completed-color: #4A77B1;
   color: $completed-color;
 }
 
-.card{
+.card {
   width: 20rem;
 }

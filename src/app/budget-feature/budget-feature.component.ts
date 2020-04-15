@@ -7,11 +7,7 @@ import { AppModel } from '../pfm-common-models/AppModel';
   styleUrls: ['./budget-feature.component.css']
 })
 export class BudgetFeatureComponent implements OnInit {
+  constructor() {}
 
-  constructor() {
-  }
-
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

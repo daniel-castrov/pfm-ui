@@ -7,7 +7,6 @@ import { PlanningService } from './planning-service';
   providedIn: 'root'
 })
 export class PlanningServicesImpl extends PlanningService {
-
   constructor(protected httpClient: HttpClient) {
     super(httpClient);
   }
@@ -46,6 +45,10 @@ export class PlanningServicesImpl extends PlanningService {
 
   getMissionPriorities(phaseId: string): Observable<object> {
     return this.get('missionPriority/planningPhase/' + phaseId);
+  }
+
+  getMissionPrioritiesForPOM(phaseId: string): Observable<object> {
+    return this.get('missionPriority/pom/planningPhase/' + phaseId);
   }
 
   cloneMissionPriorities(phaseId: string): Observable<object> {

@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { ICellRendererAngularComp } from '@ag-grid-community/angular';
-import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'date-picker-cell-renderer',
@@ -8,7 +7,6 @@ import { formatDate } from '@angular/common';
   styleUrls: ['./date-picker-cell-renderer.component.scss']
 })
 export class DatePickerCellRendererComponent implements ICellRendererAngularComp {
-
   params: any;
   value: string;
 
@@ -22,5 +20,4 @@ export class DatePickerCellRendererComponent implements ICellRendererAngularComp
     this.value = params.value;
     return true;
   }
-
 }

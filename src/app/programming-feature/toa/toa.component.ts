@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { ListItem } from '../../pfm-common-models/ListItem';
+import { ListItemHelper } from 'src/app/util/ListItemHelper';
+import { PomService } from '../services/pom-service';
+import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
+import { FormatterUtil } from 'src/app/util/formatterUtil';
 
 @Component({
   selector: 'pfm-programming',
@@ -6,10 +11,26 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./toa.component.scss']
 })
 export class ToaComponent implements OnInit {
+  pomYears: ListItem[];
+  defaultYear: ListItem;
+  byYear: number;
 
-  constructor() { }
+  constructor(private pomService: PomService, private dialogService: DialogService) {}
 
   ngOnInit() {
+    this.byYear = FormatterUtil.getCurrentFiscalYear() + 2;
+    this.defaultYear = new ListItem();
+    this.defaultYear.id = this.byYear.toString();
+    this.defaultYear.name = this.byYear.toString();
+    this.defaultYear.value = this.byYear.toString();
+    this.pomService.getPomYearsByStatus(['OPEN', 'LOCKED', 'CLOSED']).subscribe(
+      resp => {
+        const years: string[] = (resp as any).result.map(String);
+        this.pomYears = ListItemHelper.generateListItemFromArray(years);
+      },
+      error => {
+        this.dialogService.displayInfo(error.error.error);
+      }
+    );
   }
-
 }

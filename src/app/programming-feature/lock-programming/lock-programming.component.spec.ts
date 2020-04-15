@@ -8,9 +8,8 @@ describe('LockProgrammingComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LockProgrammingComponent ]
-    })
-    .compileComponents();
+      declarations: [LockProgrammingComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

@@ -10,4 +10,4 @@ const routes: Routes = [{ path: '', component: PfmUserCommunitiesModuleComponent
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class PfmUserCommunitiesModuleRoutingModule { }
+export class PfmUserCommunitiesModuleRoutingModule {}
