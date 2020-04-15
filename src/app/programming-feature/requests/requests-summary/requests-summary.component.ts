@@ -430,6 +430,7 @@ export class RequestsSummaryComponent implements OnInit {
       this.toastService.displayError(
         'No program requests were approved. Some requests caused organization TOAs to be exceeded.'
       );
+      return;
     } else if (validation === TOAValidationStatus.NEGATIVE) {
       this.negativeValidationDialog.display = true;
       this.negativeValidationDialog.continueAction = this.approveAllPRs.bind(this);

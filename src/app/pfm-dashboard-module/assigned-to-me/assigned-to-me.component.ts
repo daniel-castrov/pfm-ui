@@ -127,7 +127,7 @@ export class AssignedToMeComponent implements OnInit, OnDestroy {
         cellStyle: { display: 'flex', 'align-items': 'center', 'white-space': 'normal' }
       },
       {
-        headerName: 'Due date',
+        headerName: 'Due Date',
         field: 'dueDate',
         editable: true,
         suppressMovable: true,
@@ -227,7 +227,7 @@ export class AssignedToMeComponent implements OnInit, OnDestroy {
         type: 'Action Item',
         assignment: 'Create March Employee Status Report',
         assignedTo: this.appModel.userDetails.fullName,
-        from: 'Nary All_Managers',
+        from: 'Mary All_Managers',
         status: 'In progress',
         inUseBy: '',
         lastEditedBy: this.appModel.userDetails.fullName,
