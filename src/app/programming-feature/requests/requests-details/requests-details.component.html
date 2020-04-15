@@ -9,7 +9,7 @@
   </div>
   <div class="div-buttons" *ngIf="appModel.visibilityDef['programming-detail-component']">
     <div class="div-button-validate">
-      <button (click)="onValidate()" type="button" class="btn btn-outline-dark">
+      <button (click)="onValidate(true)" type="button" class="btn btn-outline-dark">
         Validate
       </button>
     </div>
@@ -19,7 +19,11 @@
       </button>
     </div>
     <div class="div-button-approve">
-      <button (click)="onApprove()" class="btn btn-success">
+      <button
+        (click)="onApprove()"
+        class="btn btn-success"
+        *pfmIsVisible="'programming-detail-component.approveProgram'"
+      >
         <fa name="check"></fa>
         Approve
       </button>

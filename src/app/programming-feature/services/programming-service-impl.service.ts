@@ -50,4 +50,8 @@ export class ProgrammingServiceImpl extends ProgrammingService {
   save(program: Program) {
     return this.put('program/save', program);
   }
+
+  approve(program: Program) {
+    return this.put('program/approve', program);
+  }
 }
