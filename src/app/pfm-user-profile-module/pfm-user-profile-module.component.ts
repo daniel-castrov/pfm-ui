@@ -5,6 +5,8 @@ import { GridApi } from 'ag-grid-community';
 import { AppModel } from '../pfm-common-models/AppModel';
 import { ActionCellRendererComponent } from '../pfm-coreui/datagrid/renderers/action-cell-renderer/action-cell-renderer.component';
 import { UserDetailsModel } from '../pfm-common-models/UserDetailsModel';
+import { FileMetaData } from '../pfm-common-models/FileMetaData';
+import { FileDownloadService } from '../pfm-secure-filedownload/services/file-download-service';
 
 @Component({
   selector: 'app-pfm-user-profile-module',
@@ -13,22 +15,28 @@ import { UserDetailsModel } from '../pfm-common-models/UserDetailsModel';
 })
 export class PfmUserProfileModuleComponent implements OnInit {
   rows: any;
+  userDetails: UserDetailsModel = null;
   columnDefinitions: ColDef[];
   gridApi: GridApi;
   form = this.fb.group({
     firstName: [],
     middleName: [],
     lastName: [],
+    title: [],
     email: [],
     phone: [],
-    active: []
+    active: [],
+    profilePictureId: []
   });
+  private isUploading: any;
+  imagePath: string;
 
-  constructor(private appModel: AppModel, private fb: FormBuilder) {}
+  constructor(private appModel: AppModel, private fileDownloadService: FileDownloadService, private fb: FormBuilder) {}
 
   ngOnInit(): void {
     this.setupGrid();
-    this.updateForm(this.appModel.userDetails);
+    this.userDetails = this.appModel.userDetails;
+    this.updateForm(this.userDetails);
   }
 
   private updateForm(userDetails: UserDetailsModel) {
@@ -36,13 +44,39 @@ export class PfmUserProfileModuleComponent implements OnInit {
       firstName: userDetails.firstName,
       middleName: userDetails.middleInitial,
       lastName: userDetails.lastName,
+      title: userDetails.title,
       email: userDetails.communication.primaryEmail,
       phone: userDetails.communication.primaryPhone,
-
-      active: !userDetails.suspended
+      active: !userDetails.suspended,
+      profilePictureId: userDetails.profilePictureId
     });
+    this.loadImage();
   }
 
+  onUploading(event) {
+    this.isUploading = event;
+  }
+
+  onFileUploaded(fileResponse: FileMetaData) {
+    this.form.patchValue({
+      profilePictureId: fileResponse.id
+    });
+    this.loadImage();
+  }
+
+  loadImage() {
+    const profilePictureId = this.form.get('profilePictureId');
+    if (profilePictureId.value) {
+      this.fileDownloadService.downloadSecureResource(profilePictureId.value).then(blob => {
+        const reader = new FileReader();
+        reader.readAsDataURL(blob);
+        reader.onloadend = () => {
+          const base64data = reader.result;
+          this.imagePath = base64data.toString();
+        };
+      });
+    }
+  }
   setupGrid() {
     this.columnDefinitions = [
       {

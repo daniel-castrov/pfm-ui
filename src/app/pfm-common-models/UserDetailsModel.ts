@@ -24,4 +24,6 @@ export class UserDetailsModel {
   currentCommunity: CommunityModel;
   fullName: string;
   lastLoginDate: Moment;
+  title: string;
+  profilePictureId: string;
 }
