@@ -14,6 +14,7 @@ import { VisibilityService } from 'src/app/services/visibility-service';
 import { AppModel } from 'src/app/pfm-common-models/AppModel';
 import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
 import { RequestsFundingLineGridComponent } from './requests-funding-line-grid/requests-funding-line-grid.component';
+import { ProgramStatus } from '../../models/enumerations/program-status.model';
 
 @Component({
   selector: 'pfm-requests-details',
@@ -81,7 +82,30 @@ export class RequestsDetailsComponent implements OnInit {
       });
   }
 
-  onApprove(): void {}
+  onApprove(): void {
+    this.busy = true;
+    if (this.program.programStatus === ProgramStatus.REJECTED) {
+      this.toastService.displayError(
+        'You cannot approve a PR in rejected state. You must first make edits and save it prior to approving.'
+      );
+    } else if (this.program.programStatus === ProgramStatus.APPROVED) {
+      this.toastService.displayWarning('Already in approved status.');
+    } else {
+      if (this.onValidate(false)) {
+        this.busy = true;
+        this.programmingService.approve(this.program).subscribe(
+          resp => {
+            this.toastService.displaySuccess('PR successfully approved');
+            this.program = (resp as any).result;
+          },
+          error => {
+            this.toastService.displayError('An error has ocurred while attempting to approve this program.');
+          },
+          () => (this.busy = false)
+        );
+      }
+    }
+  }
 
   onSave(): void {
     this.busy = true;
@@ -99,7 +123,8 @@ export class RequestsDetailsComponent implements OnInit {
         },
         error => {
           this.toastService.displayError('An error has ocurred while attempting to save program.');
-        }
+        },
+        () => (this.busy = false)
       );
     }
   }
@@ -151,7 +176,7 @@ export class RequestsDetailsComponent implements OnInit {
 
   onReject(): void {}
 
-  onValidate() {
+  onValidate(showSucessfulMessage: boolean): boolean {
     let passedValidation = true;
     let program = { ...this.program };
     passedValidation = this.canSaveProgram(false);
@@ -183,9 +208,10 @@ export class RequestsDetailsComponent implements OnInit {
         }
       }
     }
-    if (passedValidation) {
+    if (passedValidation && showSucessfulMessage) {
       this.toastService.displaySuccess('All validations passed.');
     }
+    return passedValidation;
   }
 
   onSelectTab(event: TabDirective) {
