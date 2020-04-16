@@ -174,7 +174,31 @@ export class RequestsDetailsComponent implements OnInit {
     return canSave;
   }
 
-  onReject(): void {}
+  onReject(): void {
+    this.busy = true;
+    let pro = this.program;
+    const canSave = this.canSaveProgram(false);
+    if (canSave) {
+      pro = this.getFromDetailForm(pro);
+      pro = this.getFromScopeForm(pro);
+      pro = this.getFromAssets(pro);
+      pro = this.getFromJustificationForm(pro);
+      this.programmingService.reject(pro).subscribe(
+        resp => {
+          this.toastService.displaySuccess('Program request was successfully rejected.');
+          this.program = resp.result as Program;
+        },
+        error => {
+          if (error.status === 400) {
+            this.toastService.displayWarning(error.error.error);
+          } else {
+            this.toastService.displayError(error.error.error);
+          }
+        },
+        () => (this.busy = false)
+      );
+    }
+  }
 
   onValidate(showSucessfulMessage: boolean): boolean {
     let passedValidation = true;
