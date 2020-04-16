@@ -40,7 +40,7 @@ export class OpenPlanningComponent implements OnInit {
             years.push(item.name);
           }
         }
-        this.availableYears = this.toListItem(years);
+        this.availableYears = this.toListItem(years.sort());
       },
       error => {
         this.dialogService.displayDebug(error);
