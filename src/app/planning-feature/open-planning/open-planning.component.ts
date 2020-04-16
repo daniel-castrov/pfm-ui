@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { AppModel } from '../../pfm-common-models/AppModel';
 import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
 import { PlanningStatus } from '../models/enumerators/planning-status.model';
+import { PlanningService } from '../services/planning-service';
+import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
 
 @Component({
   selector: 'pfm-planning',
@@ -19,16 +21,32 @@ export class OpenPlanningComponent implements OnInit {
   availableYears: ListItem[];
   selectedYear: string;
 
-  constructor(private appModel: AppModel, private router: Router, private toastService: ToastService) {}
+  constructor(
+    private appModel: AppModel,
+    private router: Router,
+    private toastService: ToastService,
+    private planningService: PlanningService,
+    private dialogService: DialogService
+  ) {}
 
   ngOnInit() {
     const years: string[] = [];
-    for (const item of this.appModel.planningData) {
-      if (item.state === PlanningStatus.CREATED) {
-        years.push(item.name);
-      }
-    }
-    this.availableYears = this.toListItem(years);
+    this.busy = true;
+    this.planningService.getAllPlanning().subscribe(
+      resp => {
+        const planningData = (resp as any).result;
+        for (const item of planningData) {
+          if (item.state === PlanningStatus.CREATED) {
+            years.push(item.name);
+          }
+        }
+        this.availableYears = this.toListItem(years.sort());
+      },
+      error => {
+        this.dialogService.displayDebug(error);
+      },
+      () => (this.busy = false)
+    );
   }
 
   yearSelected(year: ListItem): void {

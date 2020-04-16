@@ -28,7 +28,7 @@ export class IsVisibleDirective implements OnInit {
     const compositeId: string = visibilityDefIdParts[0];
     const componentId: string = visibilityDefIdParts[1];
     if (this.appModel['visibilityDef'][compositeId]) {
-      showComponent = this.appModel['visibilityDef'][compositeId][componentId] !== false;
+      showComponent = this.appModel['visibilityDef'][compositeId][componentId];
     }
     this.doVisibility(showComponent);
   }
