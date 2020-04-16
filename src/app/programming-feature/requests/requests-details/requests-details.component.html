@@ -29,7 +29,7 @@
       </button>
     </div>
     <div class="div-button-reject">
-      <button (click)="onReject()" class="btn btn-danger">
+      <button (click)="onReject()" class="btn btn-danger" *pfmIsVisible="'programming-detail-component.rejectProgram'">
         <fa name="arrow-left"></fa>
         Reject
       </button>
