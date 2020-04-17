@@ -14,31 +14,31 @@
         <div class="padding">
           <div class="row mt-3 ml-1">
             <div class="col-9">
-              <div class="form-group row">
+              <div class="row">
                 <label class="col-2">First Name</label>
                 <span class="col-10">{{ userDetails?.firstName }}</span>
               </div>
-              <div class="form-group row">
+              <div class="row">
                 <label class="col-2">Middle Name</label>
                 <span class="col-10">{{ userDetails?.middleInitial }}</span>
               </div>
-              <div class="form-group row">
+              <div class="row">
                 <label class="col-2">Last Name</label>
                 <span class="col-10">{{ userDetails?.lastName }}</span>
               </div>
-              <div class="form-group row">
+              <div class="row">
                 <label class="col-2">Title/Rank</label>
                 <span class="col-10">{{ userDetails?.title }}</span>
               </div>
-              <div class="form-group row">
+              <div class="row">
                 <label class="col-2">Email</label>
                 <span class="col-10">{{ userDetails?.communication?.primaryEmail }}</span>
               </div>
-              <div class="form-group row">
+              <div class="row">
                 <label class="col-2">Phone</label>
                 <span class="col-10">{{ userDetails?.communication?.primaryPhone }}</span>
               </div>
-              <div class="form-group row">
+              <div class="row">
                 <label class="col-2">Active</label>
                 <span class="col-10"><input type="checkbox" disabled formControlName="active"/></span>
               </div>
@@ -50,6 +50,7 @@
                 [imagePath]="imagePath"
                 (uploading)="onUploading($event)"
                 (fileUploadEvent)="onFileUploaded($event)"
+                tooltip="Click here to upload an image.  Profile must be in edit mode."
               ></file-upload>
             </div>
           </div>
