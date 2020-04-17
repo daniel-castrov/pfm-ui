@@ -11,12 +11,12 @@ export class AssetSummaryServiceImpl extends AssetSummaryService {
     return this.get('asset-summary/asset/' + assetId);
   }
 
-  createAssetSummary(assetSummary: AssetSummary): Observable<any> {
-    return this.post('asset-summary', assetSummary);
+  createAssetSummary(assetSummary: AssetSummary, pomYear: number): Observable<any> {
+    return this.post('asset-summary/pom-year/' + pomYear, assetSummary);
   }
 
-  updateAssetSummary(assetSummary: AssetSummary): Observable<any> {
-    return this.put('asset-summary', assetSummary);
+  updateAssetSummary(assetSummary: AssetSummary, pomYear: number): Observable<any> {
+    return this.put('asset-summary/pom-year/' + pomYear, assetSummary);
   }
 
   removeAssetSummaryById(assetSummaryId: string): Observable<any> {
