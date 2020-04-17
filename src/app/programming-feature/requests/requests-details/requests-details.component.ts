@@ -118,7 +118,7 @@ export class RequestsDetailsComponent implements OnInit {
       pro = this.getFromJustificationForm(pro);
       this.programmingService.save(pro).subscribe(
         resp => {
-          this.busy = false;
+          this.program = resp.result as Program;
           this.toastService.displaySuccess('Program request saved successfully.');
         },
         error => {
