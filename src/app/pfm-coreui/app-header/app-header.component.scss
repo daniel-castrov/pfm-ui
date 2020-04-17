@@ -239,3 +239,27 @@ a.dropdown-item {
 .disabled-style {
   color: #6994b9;
 }
+
+.dropdown-item {
+  &.active-link {
+    background-color: #23527c;
+    color: white;
+    opacity: 1;
+    &:hover {
+      background-color: #23527c;
+      opacity: 1;
+    }
+  }
+  &:hover {
+    cursor: pointer !important;
+    background-color: #2e719e;
+    color: white;
+    opacity: 0.8;
+  }
+  color: #23527c;
+}
+
+.dropdownMenu {
+  background-color: #bbced7;
+  margin-top: -1px;
+}
