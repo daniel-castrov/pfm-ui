@@ -268,9 +268,11 @@ export class AssetsComponent implements OnInit {
     if (this.currentRowDataState.isEditMode) {
       return;
     }
+    this.resetStyle();
     this.addEmptyRow();
     this.currentRowDataState.isAddMode = true;
     this.assetGridApi.setRowData(this.assetSummaryRows);
+    this.currentRowDataState.currentEditingRowData = null;
     this.editRow(this.assetSummaryRows.length - 1);
   }
 
@@ -329,7 +331,6 @@ export class AssetsComponent implements OnInit {
   }
 
   private saveRow(rowIndex: number) {
-    this.currentRowDataState.currentEditingRowData = { ...JSON.parse(JSON.stringify(this.assetSummaryRows[rowIndex])) };
     this.assetGridApi.stopEditing();
     const row = this.assetSummaryRows[rowIndex];
     const canSave = this.validateRowData(row);
@@ -345,7 +346,6 @@ export class AssetsComponent implements OnInit {
       } else {
         this.performSave(this.assetSummaryService.updateAssetSummary.bind(this.assetSummaryService), row, rowIndex);
       }
-      this.viewMode(rowIndex);
     } else {
       this.editRow(rowIndex);
     }
@@ -356,9 +356,7 @@ export class AssetsComponent implements OnInit {
     assetSummary: AssetSummary,
     rowIndex: number
   ) {
-    if (this.style && this.style.rules.length) {
-      this.style.removeRule(0);
-    }
+    this.resetStyle();
     saveOrUpdate(assetSummary, this.pomYear)
       .pipe(map(resp => resp.result as AssetSummary))
       .subscribe(
@@ -373,7 +371,6 @@ export class AssetsComponent implements OnInit {
           if (error.status === 400) {
             await this.checkAssetExceedBudget();
             this.dialogService.displayError(error.error.error);
-            this.cancelRow(rowIndex);
           } else {
             this.dialogService.displayDebug(error);
           }
@@ -450,7 +447,7 @@ export class AssetsComponent implements OnInit {
   private editRow(rowIndex: number, updatePreviousState?: boolean) {
     if (updatePreviousState) {
       this.currentRowDataState.currentEditingRowData = {
-        ...this.assetSummaryRows[rowIndex]
+        ...JSON.parse(JSON.stringify(this.assetSummaryRows[rowIndex]))
       };
     }
     this.editMode(rowIndex);
@@ -804,6 +801,12 @@ export class AssetsComponent implements OnInit {
 
   getProgramAssets() {
     return this.program.assets;
+  }
+
+  resetStyle() {
+    if (this.style && this.style.rules.length) {
+      this.style.removeRule(0);
+    }
   }
 }
 
