@@ -14,10 +14,10 @@
   <div class="action">
     <span [title]="title">
       <ng-container *ngIf="data.canView">
-        <fa name="eye"></fa>
+        <fa-icon icon="eye"></fa-icon>
       </ng-container>
       <ng-container *ngIf="!data.canView">
-        <fa name="lock"></fa>
+        <fa-icon icon="lock"></fa-icon>
       </ng-container>
     </span>
   </div>
