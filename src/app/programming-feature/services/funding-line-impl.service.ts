@@ -7,6 +7,10 @@ import { FundingLine } from '../models/funding-line.model';
   providedIn: 'root'
 })
 export class FundingLineServiceImpl extends FundingLineService {
+  obtainFundingLineById(fundingLineId: string): Observable<any> {
+    return this.get('funding-line/' + fundingLineId);
+  }
+
   obtainFundingLinesByProgramId(programId: string): Observable<any> {
     return this.get('funding-line/program/' + programId);
   }

@@ -66,6 +66,8 @@ export class AssetsComponent implements OnInit {
   currentRowDataState: RowDataStateInterface = {};
   deleteDialog: DeleteDialogInterface = { title: 'Delete' };
 
+  style: CSSStyleSheet;
+
   constructor(
     private formBuilder: FormBuilder,
     private dialogService: DialogService,
@@ -315,6 +317,9 @@ export class AssetsComponent implements OnInit {
         break;
       case 'cancel':
         if (this.currentRowDataState.isEditMode && !this.currentRowDataState.isAddMode) {
+          if (this.style && this.style.rules.length) {
+            this.style.removeRule(0);
+          }
           this.cancelRow(cellAction.rowIndex);
         } else {
           this.deleteRow(cellAction.rowIndex);
@@ -324,6 +329,7 @@ export class AssetsComponent implements OnInit {
   }
 
   private saveRow(rowIndex: number) {
+    this.currentRowDataState.currentEditingRowData = { ...JSON.parse(JSON.stringify(this.assetSummaryRows[rowIndex])) };
     this.assetGridApi.stopEditing();
     const row = this.assetSummaryRows[rowIndex];
     const canSave = this.validateRowData(row);
@@ -346,11 +352,14 @@ export class AssetsComponent implements OnInit {
   }
 
   private performSave(
-    saveOrUpdate: (assetSummary: AssetSummary) => Observable<any>,
+    saveOrUpdate: (assetSummary: AssetSummary, pomYear: number) => Observable<any>,
     assetSummary: AssetSummary,
     rowIndex: number
   ) {
-    saveOrUpdate(assetSummary)
+    if (this.style && this.style.rules.length) {
+      this.style.removeRule(0);
+    }
+    saveOrUpdate(assetSummary, this.pomYear)
       .pipe(map(resp => resp.result as AssetSummary))
       .subscribe(
         assetResponse => {
@@ -360,9 +369,62 @@ export class AssetsComponent implements OnInit {
             .find(a => a.id === this.selectedAsset.id)
             .assetSummaries.splice(rowIndex, 1, assetResponse);
         },
+        async error => {
+          if (error.status === 400) {
+            await this.checkAssetExceedBudget();
+            this.dialogService.displayError(error.error.error);
+            this.cancelRow(rowIndex);
+          } else {
+            this.dialogService.displayDebug(error);
+          }
+          this.editRow(rowIndex);
+        }
+      );
+  }
+
+  async checkAssetExceedBudget() {
+    await this.fundingLineService
+      .obtainFundingLineById(this.selectedFundingLine)
+      .pipe(map(resp => resp.result as FundingLine))
+      .toPromise()
+      .then(
+        fundingLine => {
+          const errorFields = [];
+          for (let i = this.pomYear; i < this.pomYear + 6; i++) {
+            const totalCost = fundingLine.funds[i] || 0;
+            let totalAssetCost = 0;
+            this.assetSummaryRows.forEach(summary => {
+              totalAssetCost += summary.details[i].totalCost;
+            });
+            if (totalAssetCost > totalCost) {
+              const index = i - this.pomYear;
+              errorFields.push(11 + 3 * index);
+            }
+          }
+
+          if (!this.style) {
+            const styleSheetElement = document.createElement('style');
+            document.getElementsByTagName('head')[0].appendChild(styleSheetElement);
+            this.style = styleSheetElement.sheet as CSSStyleSheet;
+          }
+          const selector = [];
+          errorFields.forEach(colId => {
+            selector.push('.ag-cell-inline-editing[col-id="' + colId + '"] > input');
+          });
+          const selectorText = selector.join(',');
+          const rules: CSSRuleList =
+            this.style.cssRules.length > 0 || this.style.rules.length === 0 ? this.style.cssRules : this.style.rules;
+          let rule: CSSStyleRule = Array.from(rules).find(
+            r => r instanceof CSSStyleRule && r.selectorText.toLowerCase() === selectorText.toLowerCase()
+          ) as CSSStyleRule;
+          if (!rule) {
+            const ruleIndex = this.style.insertRule(selectorText + '{ }', rules.length);
+            rule = rules[ruleIndex] as CSSStyleRule;
+          }
+          rule.style['background-color'] = '#f8b7bd';
+        },
         error => {
           this.dialogService.displayDebug(error);
-          this.editRow(rowIndex);
         }
       );
   }

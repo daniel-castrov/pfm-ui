@@ -54,28 +54,32 @@
           </span>
 
           <!-- User Menu -->
-          <span class="dropdown">
+          <span ngbDropdown class="dropdown">
             <a
-              class="super-user dropdown-toggle"
-              href="#"
+              class="float-right border-0 user-menu-button"
               role="button"
               id="dropdownMenuLink2"
               inumberOfNotificationsd="dropdownMenuLink4"
               data-toggle="dropdown"
               aria-haspopup="true"
               aria-expanded="false"
+              ngbDropdownToggle
             >
               <div class="icon-wrapper" *ngIf="appModel.userDetails.userRole.isUser">
                 {{ appModel.userDetails.fullName }}
                 <i class="fa fa-bell" aria-hidden="true"></i>
 
                 <!-- TODO
-                          <span *roles="'User_Approver,Funds_Requestor'">
-                            <span class="badge" *ngIf="(requests?.length + prChangeNotifications?.length) > 0">{{requests?.length + prChangeNotifications?.length}}</span>
-                          </span>
-                          -->
+                        <span *roles="'User_Approver,Funds_Requestor'">
+                          <span class="badge" *ngIf="(requests?.length + prChangeNotifications?.length) > 0">{{requests?.length + prChangeNotifications?.length}}</span>
+                        </span>
+                        -->
               </div>
             </a>
+            <div ngbDropdownMenu aria-labelledby="dropdownMenuButton" class="dropdownMenu">
+              <button ngbDropdownItem routerLink="/user" routerLinkActive="active-link">My profile</button>
+              <button ngbDropdownItem>Log out</button>
+            </div>
             <div *ngIf="appModel.userDetails.userRole.isUser" class="dropdown-menu" aria-labelledby="dropdownMenuLink2">
               <a class="dropdown-item" routerLink="/user/self">My Profile</a>
               <a class="dropdown-item" href="#" routerLink="/my-community">My Communities</a>

@@ -54,4 +54,8 @@ export class ProgrammingServiceImpl extends ProgrammingService {
   approve(program: Program) {
     return this.put('program/approve', program);
   }
+
+  reject(program: Program) {
+    return this.put('program/reject', program);
+  }
 }

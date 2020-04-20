@@ -143,6 +143,8 @@ export class MissionPrioritiesComponent implements OnInit {
   rowDragLeaveEvent: any;
   missionDataFromServer: MissionPriority[];
 
+  planningData: any[];
+
   constructor(
     private appModel: AppModel,
     private planningService: PlanningService,
@@ -168,37 +170,46 @@ export class MissionPrioritiesComponent implements OnInit {
       PlanningStatus.LOCKED,
       PlanningStatus.CLOSED
     ];
-    for (const item of this.appModel.planningData) {
-      // Opened, Locked or Closed.
-      if (status.indexOf(item.state) !== -1) {
-        years.push(item.name);
-      }
-    }
-    // trigger a default selection
-    if (this.appModel.selectedYear) {
-      this.selectedYear = this.appModel.selectedYear;
-      this.appModel.selectedYear = undefined;
-      this.yearSelected({ name: this.selectedYear });
-      if (this.selectedYear) {
-        this.canAddNewRow =
-          this.selectedPlanningPhase.state !== PlanningStatus.LOCKED &&
-          this.selectedPlanningPhase.state !== PlanningStatus.CLOSED &&
-          this.canPerformActions;
-        const isOpenPhase = !!this.route.snapshot.paramMap.get('openPhase');
-        const isLockPhase = !!this.route.snapshot.paramMap.get('lockPhase');
-        const isClosePhase = !!this.route.snapshot.paramMap.get('closePhase');
-        if (this.selectedPlanningPhase.state === PlanningStatus.CREATED && isOpenPhase) {
-          this.canShowOpenCTA = true;
-        } else if (this.selectedPlanningPhase.state === PlanningStatus.OPEN && !isLockPhase) {
-          this.ctaOptions.splice(1, 1);
-        } else if (this.selectedPlanningPhase.state === PlanningStatus.OPEN && isLockPhase) {
-          this.canShowLockCTA = true;
-        } else if (this.selectedPlanningPhase.state === PlanningStatus.LOCKED && isClosePhase) {
-          this.canShowCloseCTA = true;
+    this.busy = true;
+    this.planningService.getAllPlanning().subscribe(
+      resp => {
+        this.planningData = (resp as any).result;
+        for (const item of this.planningData) {
+          if (status.indexOf(item.state) !== -1) {
+            years.push(item.name);
+          }
         }
-      }
-    }
-    this.availableYears = this.toListItem(years);
+        // trigger a default selection
+        if (this.appModel.selectedYear) {
+          this.selectedYear = this.appModel.selectedYear;
+          this.appModel.selectedYear = undefined;
+          this.yearSelected({ name: this.selectedYear });
+          if (this.selectedYear) {
+            this.canAddNewRow =
+              this.selectedPlanningPhase.state !== PlanningStatus.LOCKED &&
+              this.selectedPlanningPhase.state !== PlanningStatus.CLOSED &&
+              this.canPerformActions;
+            const isOpenPhase = !!this.route.snapshot.paramMap.get('openPhase');
+            const isLockPhase = !!this.route.snapshot.paramMap.get('lockPhase');
+            const isClosePhase = !!this.route.snapshot.paramMap.get('closePhase');
+            if (this.selectedPlanningPhase.state === PlanningStatus.CREATED && isOpenPhase) {
+              this.canShowOpenCTA = true;
+            } else if (this.selectedPlanningPhase.state === PlanningStatus.OPEN && !isLockPhase) {
+              this.ctaOptions.splice(1, 1);
+            } else if (this.selectedPlanningPhase.state === PlanningStatus.OPEN && isLockPhase) {
+              this.canShowLockCTA = true;
+            } else if (this.selectedPlanningPhase.state === PlanningStatus.LOCKED && isClosePhase) {
+              this.canShowCloseCTA = true;
+            }
+          }
+        }
+        this.availableYears = this.toListItem(years);
+      },
+      error => {
+        this.dialogService.displayDebug(error);
+      },
+      () => (this.busy = false)
+    );
   }
 
   private setupGrid() {
@@ -409,7 +420,7 @@ export class MissionPrioritiesComponent implements OnInit {
     this.selectedYear = year ? year.name : undefined;
     if (this.selectedYear) {
       this.busy = true;
-      this.selectedPlanningPhase = this.appModel.planningData.find(obj => obj.id === this.selectedYear + '_id');
+      this.selectedPlanningPhase = this.planningData.find(obj => obj.id === this.selectedYear + '_id');
       this.canAddNewRow =
         this.selectedPlanningPhase.state !== PlanningStatus.LOCKED &&
         this.selectedPlanningPhase.state !== PlanningStatus.CLOSED &&
