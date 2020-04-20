@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PfmUserProfileModuleComponent } from './pfm-user-profile-module.component';
+import { PfmUserProfileComponent } from './pfm-user-profile-module.component';
 
 describe('PfmUserProfileModuleComponent', () => {
-  let component: PfmUserProfileModuleComponent;
-  let fixture: ComponentFixture<PfmUserProfileModuleComponent>;
+  let component: PfmUserProfileComponent;
+  let fixture: ComponentFixture<PfmUserProfileComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [PfmUserProfileModuleComponent]
+      declarations: [PfmUserProfileComponent]
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PfmUserProfileModuleComponent);
+    fixture = TestBed.createComponent(PfmUserProfileComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

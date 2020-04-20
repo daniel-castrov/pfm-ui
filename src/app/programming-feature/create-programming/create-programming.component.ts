@@ -432,6 +432,9 @@ export class CreateProgrammingComponent implements OnInit {
     this.communityGraph.columnChart.dataTable = this.communityGraphData;
     this.communityGraph.columnChart = Object.assign({}, this.communityGraph.columnChart);
     this.communityGraph.chartReady = true;
+    if (this.communityGraph.columnChart.component) {
+      this.communityGraph.columnChart.component.draw();
+    }
   }
 
   // Update the Organization graph from grid data
@@ -485,6 +488,9 @@ export class CreateProgrammingComponent implements OnInit {
     // Let the graph know all data is ready
 
     this.organizationGraph.chartReady = true;
+    if (this.organizationGraph.columnChart.component) {
+      this.organizationGraph.columnChart.component.draw();
+    }
   }
 
   // a simple CellRenderer for negative numbers
