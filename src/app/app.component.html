@@ -1,7 +1,7 @@
 <p-toast></p-toast>
 <pfm-app-header></pfm-app-header>
 <div id="navbar" class="left-nav">
-  <pfm-menu-bar (onMenuToogle)="onMenuToogle($event)"></pfm-menu-bar>
+  <pfm-menu-bar (menuToogle)="onMenuToogle($event)"></pfm-menu-bar>
 </div>
 <div id="main_content" class="main_content side_menu" [class.side_menu_open]="isSideMenuOpen">
   <pfm-dialog-manager></pfm-dialog-manager>

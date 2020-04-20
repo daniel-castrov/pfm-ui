@@ -6,6 +6,7 @@ import { NewsItem } from '../models/NewsItem';
 Injectable({
   providedIn: 'root'
 });
+@Injectable()
 export class PfmHomeMockService {
   constructor() {}
 

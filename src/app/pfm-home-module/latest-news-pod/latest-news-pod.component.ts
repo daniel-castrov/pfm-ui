@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, HostListener, Sanitizer, SecurityContext } from '@angular/core';
+import { Component, Input, OnInit, HostListener } from '@angular/core';
 import { NewsItem } from '../models/NewsItem';
 import { Router } from '@angular/router';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';

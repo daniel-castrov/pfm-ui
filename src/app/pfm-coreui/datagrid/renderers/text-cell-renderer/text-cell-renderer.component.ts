@@ -8,7 +8,7 @@ import { ICellEditorAngularComp } from '@ag-grid-community/angular';
   styleUrls: ['./text-cell-renderer.component.scss']
 })
 export class TextCellRendererComponent implements ICellEditorAngularComp, AfterViewInit {
-  @ViewChild(TextInputComponent, { static: false }) input: TextInputComponent;
+  @ViewChild(TextInputComponent) input: TextInputComponent;
   params: any;
   value: string;
   id: string;

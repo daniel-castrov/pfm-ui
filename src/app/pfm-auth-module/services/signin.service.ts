@@ -4,6 +4,7 @@ import { BaseRestService } from '../../services/base-rest.service';
 import { Observable } from 'rxjs';
 import * as moment from 'moment';
 import { map } from 'rxjs/operators';
+import { RestResponse } from 'src/app/util/rest-response';
 
 @Injectable({
   providedIn: 'root'

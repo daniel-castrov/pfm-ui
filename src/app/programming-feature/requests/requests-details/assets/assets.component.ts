@@ -18,6 +18,7 @@ import { TagService } from 'src/app/programming-feature/services/tag.service';
 import { Tag } from 'src/app/programming-feature/models/Tag';
 import { AssetSummary } from 'src/app/programming-feature/models/asset-summary.model';
 import { AssetSummaryService } from 'src/app/programming-feature/services/asset-summary.service';
+import { DropdownCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/dropdown-cell-renderer/dropdown-cell-renderer.component';
 
 @Component({
   selector: 'pfm-assets',
@@ -333,10 +334,10 @@ export class AssetsComponent implements OnInit {
     const row = this.assetSummaryRows[rowIndex];
     const canSave = this.validateRowData(row);
     if (canSave) {
-      if (row.contractorOrManufacturer.toLowerCase() === 'select') {
+      if (row.contractorOrManufacturer?.toLowerCase() === 'select') {
         row.contractorOrManufacturer = '';
       }
-      if (row.toBeUsedBy.toLowerCase() === 'select') {
+      if (row.toBeUsedBy?.toLowerCase() === 'select') {
         row.toBeUsedBy = '';
       }
       if (this.currentRowDataState.isAddMode || !row.id) {
@@ -430,7 +431,7 @@ export class AssetsComponent implements OnInit {
 
   private validateRowData(row: AssetSummary) {
     let errorMessage = '';
-    if (!row.description.length) {
+    if (!row.description?.length) {
       errorMessage = 'Asset Description cannot be empty.';
     } else if (row.description.length > 45) {
       errorMessage = 'Asset Description cannot have more than 45 characters.';
@@ -650,7 +651,7 @@ export class AssetsComponent implements OnInit {
             },
             maxWidth: 280,
             minWidth: 280,
-            cellEditor: 'select',
+            cellEditorFramework: DropdownCellRendererComponent,
             cellEditorParams: {
               cellHeight: 100,
               values: this.contractorOrManufacturerOptions.map(tag => tag.name)
@@ -674,7 +675,7 @@ export class AssetsComponent implements OnInit {
             },
             maxWidth: 120,
             minWidth: 120,
-            cellEditor: 'select',
+            cellEditorFramework: DropdownCellRendererComponent,
             cellEditorParams: {
               cellHeight: 100,
               values: this.toBeUsedByOptions.map(tag => tag.name)

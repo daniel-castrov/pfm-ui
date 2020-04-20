@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProgrammingModel } from '../../models/ProgrammingModel';
 import { RequestSummaryNavigationHistoryService } from '../requests-summary/requests-summary-navigation-history.service';
 import { ScheduleComponent } from './schedule/schedule.component';
-import { TabDirective } from 'ngx-bootstrap';
+import { TabDirective } from 'ngx-bootstrap/tabs';
 import { ProgrammingService } from '../../services/programming-service';
 import { Program } from '../../models/Program';
 import { RequestsDetailsFormComponent } from './requests-details-form/requests-details-form.component';
@@ -22,17 +22,17 @@ import { ProgramStatus } from '../../models/enumerations/program-status.model';
   styleUrls: ['./requests-details.component.scss']
 })
 export class RequestsDetailsComponent implements OnInit {
-  @ViewChild('detailsForm', { static: false })
+  @ViewChild('detailsForm')
   requestDetailsFormComponent: RequestsDetailsFormComponent;
-  @ViewChild('fundingLines', { static: false })
+  @ViewChild('fundingLines')
   fundingLinesComponent: RequestsFundingLineGridComponent;
-  @ViewChild('pfmSchedule', { static: false })
+  @ViewChild('pfmSchedule')
   pfmSchedule: ScheduleComponent;
-  @ViewChild('scope', { static: false })
+  @ViewChild('scope')
   scopeComponent: ScopeComponent;
-  @ViewChild('assets', { static: false })
+  @ViewChild('assets')
   assetsComponent: AssetsComponent;
-  @ViewChild('justification', { static: false })
+  @ViewChild('justification')
   justificationComponent: JustificationComponent;
 
   currentSelectedTab = 1;

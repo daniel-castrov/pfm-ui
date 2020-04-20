@@ -6,8 +6,7 @@ import { CreatePlanningComponent } from './create-planning.component';
 
 @NgModule({
   imports: [CommonModule, PfmCoreuiModule],
-  declarations: [CreatePlanningComponent],
-  entryComponents: [CreatePlanningComponent]
+  declarations: [CreatePlanningComponent]
 })
 export class CreatePlanningModule {
   static entry = CreatePlanningComponent;

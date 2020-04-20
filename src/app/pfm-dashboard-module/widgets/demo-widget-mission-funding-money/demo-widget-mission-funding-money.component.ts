@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { GoogleChartInterface } from 'ng2-google-charts/google-charts-interfaces';
+import { GoogleChartInterface } from 'ng2-google-charts/ng2-google-charts';
 
 @Component({
   selector: 'app-demo-widget-mission-funding-money',

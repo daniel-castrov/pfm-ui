@@ -6,6 +6,7 @@ import { EvaluationMeasureService } from './evaluation-measure.service';
 import { EvaluationMeasure } from '../models/evaluation-measure.model';
 import { DATE_FORMAT } from '../../util/constants/input.constants';
 import * as moment from 'moment';
+import { RestResponse } from 'src/app/util/rest-response';
 
 @Injectable({
   providedIn: 'root'

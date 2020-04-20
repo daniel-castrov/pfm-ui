@@ -21,10 +21,10 @@
   >
     <span [title]="title">
       <ng-container *ngIf="switchCheckmark && !params.data.selected">
-        <fa name="times-circle"></fa>
+        <fa-icon [icon]="'times-circle'"></fa-icon>
       </ng-container>
       <ng-container *ngIf="!switchCheckmark || params.data.selected">
-        <fa name="check-circle"></fa>
+        <fa-icon [icon]="'check-circle'"></fa-icon>
       </ng-container>
     </span>
   </div>

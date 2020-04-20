@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { FormsModule } from '@angular/forms';
 import { AgGridModule } from '@ag-grid-community/angular';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { BsDatepickerModule } from 'ngx-bootstrap';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { ToastModule } from 'primeng/toast';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { CardComponent } from './card/card.component';
@@ -45,7 +45,6 @@ import { AgGridPaginationComponent } from './datagrid/ag-grid-pagination/ag-grid
 import { AtmActionCellRendererComponent } from './datagrid/renderers/atm-action-cell-renderer/atm-action-cell-renderer.component';
 
 @NgModule({
-  entryComponents: [DropdownCellRendererComponent],
   declarations: [
     RadioButtonWrapperComponent,
     AppHeaderComponent,
@@ -75,6 +74,7 @@ import { AtmActionCellRendererComponent } from './datagrid/renderers/atm-action-
     FileUploadComponent,
     DatePickerCellEditorComponent,
     DatePickerCellRendererComponent,
+    DropdownCellRendererComponent,
     IsVisibleDirective,
     ToggleInputComponent,
     MpActionCellRendererComponent,
@@ -85,7 +85,7 @@ import { AtmActionCellRendererComponent } from './datagrid/renderers/atm-action-
     ToastModule,
     CommonModule,
     RouterModule,
-    AngularFontAwesomeModule,
+    FontAwesomeModule,
     FormsModule,
     NgbModule,
     CKEditorModule,
@@ -99,7 +99,8 @@ import { AtmActionCellRendererComponent } from './datagrid/renderers/atm-action-
       DisabledActionCellRendererComponent,
       DatePickerCellEditorComponent,
       DatePickerCellRendererComponent,
-      AtmActionCellRendererComponent
+      AtmActionCellRendererComponent,
+      DropdownCellRendererComponent
     ]),
     BsDatepickerModule.forRoot()
   ],
@@ -131,6 +132,7 @@ import { AtmActionCellRendererComponent } from './datagrid/renderers/atm-action-
     FileUploadComponent,
     DatePickerCellEditorComponent,
     DatePickerCellRendererComponent,
+    DropdownCellRendererComponent,
     IsVisibleDirective,
     ToggleInputComponent,
     MpActionCellRendererComponent

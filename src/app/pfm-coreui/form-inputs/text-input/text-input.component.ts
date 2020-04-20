@@ -7,7 +7,7 @@ import { ValidatedComponent } from '../../models/validated-component';
   styleUrls: ['./text-input.component.scss']
 })
 export class TextInputComponent implements OnInit, ValidatedComponent {
-  @ViewChild('input', { read: ViewContainerRef, static: false })
+  @ViewChild('input', { read: ViewContainerRef })
   input;
   @Input() id: string;
   @Input() type = 'text'; // email/password/number/etc..

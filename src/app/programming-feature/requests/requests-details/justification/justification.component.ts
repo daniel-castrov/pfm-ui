@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, HostListener, Input } from '@angular/core';
 import { GoogleChartComponent } from 'ng2-google-charts';
-import { GoogleChartInterface } from 'ng2-google-charts/google-charts-interfaces';
+import { GoogleChartInterface } from 'ng2-google-charts/ng2-google-charts';
 import { ProgrammingService } from 'src/app/programming-feature/services/programming-service';
 import { Program } from 'src/app/programming-feature/models/Program';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -13,7 +13,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 export class JustificationComponent implements OnInit {
   static MAX_YEAR = 5;
 
-  @ViewChild('googleChart', { static: false })
+  @ViewChild('googleChart')
   chart: GoogleChartComponent;
 
   @Input() pomYear: number;

@@ -21,6 +21,7 @@ export class DropdownComponent implements ValidatedComponent, OnInit {
   @Input() title: string;
   @Input() attachmentsDisabled: boolean;
   @Input() defaultOption: ListItem;
+  @Input() showPrompt = true;
   @Output() selectionChanged = new EventEmitter<any>();
 
   selectedItem: string;
@@ -68,7 +69,11 @@ export class DropdownComponent implements ValidatedComponent, OnInit {
         if (this.defaultOption) {
           this.selectedItem = this.defaultOption[this.fieldName];
         } else {
-          this.selectedItem = this.prompt;
+          if (!this.showPrompt) {
+            this.selectedItem = this.options[0][this.fieldName];
+          } else {
+            this.selectedItem = this.prompt;
+          }
         }
       }
     }

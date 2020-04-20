@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UserRole } from '../../pfm-common-models/UserRole';
 import { animateText } from './animation';
 import { MenuBarItem } from '../models/MenuBarItem';
-import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
+import { NavigationStart, Router } from '@angular/router';
 
 @Component({
   selector: 'pfm-menu-bar',
@@ -16,7 +16,7 @@ export class MenuBarComponent implements OnInit {
   @Input() elevatedBoolean;
   @Input() isUserSignedIn: boolean;
   @Input() menuBarItems: MenuBarItem[];
-  @Output() onMenuToogle: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() menuToogle = new EventEmitter<boolean>();
 
   isOpen: boolean;
   isDashboardSelected: boolean;
@@ -115,7 +115,7 @@ export class MenuBarComponent implements OnInit {
 
   toogleMenu() {
     this.isOpen = !this.isOpen;
-    this.onMenuToogle.emit(this.isOpen);
+    this.menuToogle.emit(this.isOpen);
   }
 
   ngOnInit() {
