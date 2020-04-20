@@ -7,7 +7,7 @@ import { RadioButtonWrapperComponent } from '../radio-button-wrapper/radio-butto
   styleUrls: ['./radio-button-input.component.scss']
 })
 export class RadioButtonInputComponent implements OnInit {
-  @ViewChild(RadioButtonWrapperComponent, { static: false }) inputComponent: RadioButtonWrapperComponent;
+  @ViewChild(RadioButtonWrapperComponent) inputComponent: RadioButtonWrapperComponent;
 
   @Input() dataModel: any;
   @Input() id: string;

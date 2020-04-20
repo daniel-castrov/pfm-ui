@@ -4,7 +4,7 @@ import { formatDate } from '@angular/common';
 import { DataGridMessage } from 'src/app/pfm-coreui/models/DataGridMessage';
 import { Action } from 'src/app/pfm-common-models/Action';
 import { ActionCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/action-cell-renderer/action-cell-renderer.component';
-import { GoogleChartInterface } from 'ng2-google-charts/google-charts-interfaces';
+import { GoogleChartInterface } from 'ng2-google-charts/ng2-google-charts';
 import { GoogleChartComponent } from 'ng2-google-charts';
 import { DatePickerCellEditorComponent } from 'src/app/pfm-coreui/datagrid/renderers/date-picker-cell-editor/date-picker-cell-editor.component';
 import { DatePickerCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/date-picker-cell-renderer/date-picker-cell-renderer.component';
@@ -17,6 +17,7 @@ import { Program } from '../../../models/Program';
 import { ScheduleService } from '../../../services/schedule.service';
 import * as moment from 'moment';
 import { Schedule } from '../../../models/schedule.model';
+import { DropdownCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/dropdown-cell-renderer/dropdown-cell-renderer.component';
 
 @Component({
   selector: 'pfm-schedule',
@@ -27,7 +28,7 @@ export class ScheduleComponent implements OnInit {
   @Input() program: Program;
   @Input() pomYear: number;
 
-  @ViewChild('googleChart', { static: false })
+  @ViewChild('googleChart')
   chart: GoogleChartComponent;
 
   currentFiscalYear = 2019;
@@ -78,7 +79,7 @@ export class ScheduleComponent implements OnInit {
   gridApi: GridApi;
   components: any;
   fundingGridColumnDefinitions: ColDef[] = [];
-  scheduleGridRows: ScheduleDataMockInterface[];
+  scheduleGridRows: ScheduleDataInterface[] = [];
 
   busy: boolean;
   currentRowDataState: ScheduleRowDataStateInterface = {};
@@ -232,9 +233,12 @@ export class ScheduleComponent implements OnInit {
   }
 
   drawTitleOnTop() {
-    const g = document.getElementsByTagName('svg')[0].getElementsByTagName('g')[1];
-    document.getElementsByTagName('svg')[0].parentElement.style.top = '40px';
-    document.getElementsByTagName('svg')[0].style.overflow = 'visible';
+    const g = document
+      .getElementsByTagName('google-chart')[0]
+      .getElementsByTagName('svg')[0]
+      .getElementsByTagName('g')[1];
+    document.getElementsByTagName('google-chart')[0].getElementsByTagName('svg')[0].parentElement.style.top = '40px';
+    document.getElementsByTagName('google-chart')[0].getElementsByTagName('svg')[0].style.overflow = 'visible';
     const height = Number(g.getElementsByTagName('text')[0].getAttribute('y')) + 19;
     g.setAttribute('transform', 'translate(0,-' + height + ')');
   }
@@ -296,7 +300,7 @@ export class ScheduleComponent implements OnInit {
         suppressMenu: true,
         cellClass: 'text-class',
         cellStyle: { display: 'flex', 'align-items': 'center', 'white-space': 'normal' },
-        cellEditor: 'agSelectCellEditor',
+        cellEditorFramework: DropdownCellRendererComponent,
         valueFormatter: params => {
           if (params.value) {
             const find = this.fundingGridAssociations.find(x => x.id === params.value);
@@ -311,7 +315,7 @@ export class ScheduleComponent implements OnInit {
         cellEditorParams: params => {
           return {
             cellHeight: 50,
-            values: ['Select', ...this.fundingGridAssociations.map(x => x.id)]
+            values: ['Select', ...this.fundingGridAssociations.map(x => x.name)]
           };
         }
       },
@@ -405,11 +409,11 @@ export class ScheduleComponent implements OnInit {
 
   private saveRow(rowIndex: number) {
     this.gridApi.stopEditing();
-    const row: ScheduleDataMockInterface = this.scheduleGridRows[rowIndex];
+    const row: ScheduleDataInterface = this.scheduleGridRows[rowIndex];
     const canSave = this.validateRowData(row);
     if (canSave) {
       row.programId = this.program.id;
-      if (row.fundingLineId.toLowerCase() === 'select') {
+      if (row.fundingLineId?.toLowerCase() === 'select') {
         row.fundingLineId = null;
       }
       if (row.startDate) {
@@ -469,9 +473,9 @@ export class ScheduleComponent implements OnInit {
     this.busy = false;
   }
 
-  private validateRowData(row: ScheduleDataMockInterface) {
+  private validateRowData(row: ScheduleDataInterface) {
     let errorMessage = '';
-    if (!row.taskDescription.length) {
+    if (!row.taskDescription?.length) {
       errorMessage = 'Task Description cannot be empty.';
     } else if (row.taskDescription.length > 45) {
       errorMessage = 'Task Description cannot have more than 45 characters.';
@@ -560,12 +564,14 @@ export class ScheduleComponent implements OnInit {
     this.currentRowDataState.currentEditingRowIndex = 0;
     this.currentRowDataState.isEditMode = false;
     this.currentRowDataState.isAddMode = false;
-    this.gridApi.stopEditing();
     this.scheduleGridRows[rowIndex].action = this.fundingGridActionState.VIEW;
     this.scheduleGridRows.forEach(row => {
       row.isDisabled = false;
     });
-    this.gridApi.setRowData(this.scheduleGridRows);
+    if (this.gridApi) {
+      this.gridApi.stopEditing();
+      this.gridApi.setRowData(this.scheduleGridRows);
+    }
   }
 
   private editMode(rowIndex: number) {
@@ -585,7 +591,7 @@ export class ScheduleComponent implements OnInit {
   }
 }
 
-export interface ScheduleDataMockInterface {
+export interface ScheduleDataInterface {
   id?: string;
   programId?: string;
   taskDescription?: string;
@@ -601,5 +607,5 @@ export interface ScheduleRowDataStateInterface {
   currentEditingRowIndex?: number;
   isAddMode?: boolean;
   isEditMode?: boolean;
-  currentEditingRowData?: ScheduleDataMockInterface;
+  currentEditingRowData?: ScheduleDataInterface;
 }

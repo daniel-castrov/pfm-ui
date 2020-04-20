@@ -17,7 +17,7 @@ import { OrganizationService } from '../../services/organization-service';
 import { CreateProgrammingCommunityGraphComponent } from './create-programming-community-graph/create-programming-community-graph.component';
 import { DataGridMessage } from '../../pfm-coreui/models/DataGridMessage';
 import { CreateProgrammingOrganizationGraphComponent } from './create-programming-organization-graph/create-programming-organization-graph.component';
-import { TabDirective, TabsetComponent } from 'ngx-bootstrap';
+import { TabDirective, TabsetComponent } from 'ngx-bootstrap/tabs';
 import { SecondaryButtonComponent } from '../../pfm-coreui/form-inputs/secondary-button-input/secondary-button.component';
 import { NumericCellEditor } from '../../ag-grid/cell-editors/NumericCellEditor';
 import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
@@ -28,15 +28,15 @@ import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
   styleUrls: ['./create-programming.component.css']
 })
 export class CreateProgrammingComponent implements OnInit {
-  @ViewChild(DropdownComponent, { static: false })
+  @ViewChild(DropdownComponent)
   yearDropDown: DropdownComponent;
-  @ViewChild(TabsetComponent, { static: false })
+  @ViewChild(TabsetComponent)
   tabset: TabsetComponent;
-  @ViewChild(SecondaryButtonComponent, { static: false })
+  @ViewChild(SecondaryButtonComponent)
   resetButton: SecondaryButtonComponent;
-  @ViewChild(CreateProgrammingCommunityGraphComponent, { static: false })
+  @ViewChild(CreateProgrammingCommunityGraphComponent)
   communityGraph: CreateProgrammingCommunityGraphComponent;
-  @ViewChild(CreateProgrammingOrganizationGraphComponent, { static: false })
+  @ViewChild(CreateProgrammingOrganizationGraphComponent)
   organizationGraph: CreateProgrammingOrganizationGraphComponent;
 
   id = 'create-programming-component';

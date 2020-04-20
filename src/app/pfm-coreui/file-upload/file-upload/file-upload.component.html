@@ -15,7 +15,7 @@
     [disabled]="disabled"
   />
   <div *ngIf="!imagePath" class="card border-light mb-3">
-    <div (click)="onImageClick()" title="Click here to upload an image" class="img-placeholder">
+    <div (click)="onImageClick()" [title]="tooltip" class="img-placeholder">
       <i class="fa fa-picture-o" aria-hidden="true"></i>
     </div>
   </div>

@@ -44,7 +44,7 @@ import { VisibilityService } from '../services/visibility-service';
 import { VisibilityServiceImpl } from '../services/visibility-service-impl.service';
 import { RequestsDetailsFormComponent } from './requests/requests-details/requests-details-form/requests-details-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { JustificationComponent } from './requests/requests-details/justification/justification.component';
 import { ScopeComponent } from './requests/requests-details/scope/scope.component';
 import { AssetsComponent } from './requests/requests-details/assets/assets.component';
@@ -109,7 +109,7 @@ import { ScheduleServiceImpl } from './services/schedule-impl.service';
     PfmSecureFiledownloadModule,
     TabsModule.forRoot(),
     ProgrammingFeatureRoutingModule,
-    AngularFontAwesomeModule
+    FontAwesomeModule
   ],
   providers: [
     { provide: ProgrammingService, useClass: ProgrammingServiceImpl },

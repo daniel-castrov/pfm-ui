@@ -1,9 +1,9 @@
 import { DatePipe } from '@angular/common';
 import { ElementRef, NgModule, Renderer2 } from '@angular/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { TabDirective, TabsetComponent } from 'ngx-bootstrap';
+import { TabDirective, TabsetComponent } from 'ngx-bootstrap/tabs';
 import { GoogleChartComponent } from 'ng2-google-charts';
-import { AngularFontAwesomeComponent } from 'angular-font-awesome';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MockActivatedRoute, MockRouter } from './helpers/mock-route.service';
 import { ProgrammingService } from '../../app/programming-feature/services/programming-service';
@@ -43,7 +43,7 @@ import { RequestSummaryNavigationHistoryService } from '../../app/programming-fe
       useValue: null
     },
     {
-      provide: AngularFontAwesomeComponent,
+      provide: FontAwesomeModule,
       useValue: null
     },
     {

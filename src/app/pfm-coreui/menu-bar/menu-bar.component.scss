@@ -87,14 +87,14 @@ span {
   padding-top: 2px;
 }
 
-fa {
+fa-icon {
   color: #25527a;
   font-size: 18px;
   margin-left: 4px;
 }
 
-.menu-item.active > fa,
-.menu-item.semi-active > fa {
+.menu-item.active > fa-icon,
+.menu-item.semi-active > fa-icon {
   color: white;
 }
 

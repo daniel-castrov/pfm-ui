@@ -1,6 +1,7 @@
 import { ActivatedRoute, ActivatedRouteSnapshot, Router } from '@angular/router';
 import { SpyObject } from './spyobject';
 import { Observable, of } from 'rxjs';
+import { Injectable } from "@angular/core";
 import Spy = jasmine.Spy;
 
 export class MockActivatedRoute extends ActivatedRoute {
@@ -14,6 +15,7 @@ export class MockActivatedRoute extends ActivatedRoute {
   }
 }
 
+@Injectable()
 export class MockRouter extends SpyObject {
   navigateSpy: Spy;
   navigateByUrlSpy: Spy;

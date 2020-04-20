@@ -1,6 +1,6 @@
 <ul id="mySidenav" class="sidenav" [class.open]="isOpen">
   <li (click)="onSelect('Dashboard')" [class.active]="isParentSelected('/home')" class="menu-item" routerLink="/home">
-    <fa name="home"></fa>
+    <fa-icon [icon]="'home'"></fa-icon>
     <span>Home</span>
   </li>
 
@@ -15,7 +15,7 @@
     (shown)="onShow('Planning')"
     popoverClass="{{ isOpen ? 'menu-display-container-open' : 'menu-display-container' }}"
   >
-    <fa name="clock-o"></fa>
+    <fa-icon [icon]="'clock'"></fa-icon>
     <span>Planning</span>
     <ng-template #popContentPlanning>
       <div class="inner-menu">
@@ -50,7 +50,7 @@
     (shown)="onShow('Programming')"
     popoverClass="{{ isOpen ? 'menu-display-container-open' : 'menu-display-container' }}"
   >
-    <fa name="hourglass"></fa>
+    <fa-icon [icon]="'hourglass'"></fa-icon>
     <span>Programming</span>
     <ng-template #popContentProgramming>
       <div class="inner-menu">
@@ -96,7 +96,7 @@
   </li>
 
   <li class="menu-item" (click)="onSelect('Budget')" [class.active]="isParentSelected('/budget')" routerLink="/budget">
-    <fa name="money"></fa>
+    <fa-icon [icon]="'money-bill-alt'"></fa-icon>
     <span>Budget</span>
   </li>
 
@@ -112,7 +112,7 @@
     (shown)="onShow('Execution')"
     popoverClass="{{ isOpen ? 'menu-display-container-open' : 'menu-display-container' }}"
   >
-    <fa name="globe"></fa>
+    <fa-icon [icon]="'globe'"></fa-icon>
     <span>Execution</span>
     <ng-template #popContentExecution>
       <div class="inner-menu">
@@ -145,12 +145,12 @@
   </li>
 
   <li class="menu-item" [class.active]="isManageSelected" container="body">
-    <fa name="sitemap"></fa>
+    <fa-icon [icon]="'sitemap'"></fa-icon>
     <span>Manage</span>
   </li>
 
   <li class="menu-item" [class.active]="isReportsSelected" container="body">
-    <fa name="bar-chart"></fa>
+    <fa-icon [icon]="'chart-bar'"></fa-icon>
     <span>Analytics</span>
   </li>
 
@@ -168,7 +168,7 @@
     (shown)="onShow('Admin')"
     popoverClass="{{ isOpen ? 'menu-display-container-open' : 'menu-display-container' }}"
   >
-    <fa name="user-secret"></fa>
+    <fa-icon [icon]="'user-secret'"></fa-icon>
     <span>Admin</span>
     <ng-template #popContentAdmin>
       <div class="inner-menu">
@@ -183,10 +183,10 @@
 
   <li class="menu-toggle menu-item" (click)="toogleMenu()">
     <ng-container *ngIf="isOpen">
-      <fa name="arrow-left"></fa>
+      <fa-icon [icon]="'arrow-left'"></fa-icon>
     </ng-container>
     <ng-container *ngIf="!isOpen">
-      <fa name="arrow-right"></fa>
+      <fa-icon [icon]="'arrow-right'"></fa-icon>
     </ng-container>
   </li>
 </ul>

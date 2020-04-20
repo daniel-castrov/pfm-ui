@@ -150,7 +150,9 @@ export class RequestsSummaryOrgWidgetComponent implements OnInit {
       this.treeMapChart.dataTable = orgDataTable; // organizationTable;
       delete this.treeMapChart.options.generateTooltip;
       this.treeMapChart = Object.assign({}, this.treeMapChart);
-      // this.treeMapChart.component.draw();
+      if (this.treeMapChart.component) {
+        this.treeMapChart.component.draw();
+      }
     }
   }
 
@@ -177,8 +179,10 @@ export class RequestsSummaryOrgWidgetComponent implements OnInit {
     this.treeMapChart.options = options;
 
     setTimeout(() => {
-      // this.treeMapChart.component.draw();
       this.treeMapChart = Object.assign({}, this.treeMapChart);
+      if (this.treeMapChart.component) {
+        this.treeMapChart.component.draw();
+      }
     }, 0);
   }
 
@@ -243,7 +247,9 @@ export class RequestsSummaryOrgWidgetComponent implements OnInit {
     this.treeMapChart.dataTable = statusTable;
     delete this.treeMapChart.options.generateTooltip;
     this.treeMapChart = Object.assign({}, this.treeMapChart);
-    // this.treeMapChart.component.draw();
+    if (this.treeMapChart.component) {
+      this.treeMapChart.component.draw();
+    }
     // this.treeMapChart.goUpAndDraw();
   }
 

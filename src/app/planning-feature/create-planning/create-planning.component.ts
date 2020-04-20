@@ -14,7 +14,7 @@ import { PlanningStatus } from '../models/enumerators/planning-status.model';
   styleUrls: ['./create-planning.component.scss']
 })
 export class CreatePlanningComponent implements OnInit {
-  @ViewChild(DropdownComponent, { static: false }) yearDropDown: DropdownComponent;
+  @ViewChild(DropdownComponent) yearDropDown: DropdownComponent;
 
   id = 'create-planning-component';
   busy: boolean;

@@ -138,6 +138,9 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
     this.columnChart.dataTable = data;
     this.columnChart = Object.assign({}, this.columnChart);
     this.chartReady = true;
+    if (this.columnChart.component) {
+      this.columnChart.component.draw();
+    }
   }
 
   toaChartCommunityToaDifference() {
@@ -159,6 +162,9 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
     this.columnChart.dataTable = data;
     this.columnChart = Object.assign({}, this.columnChart);
     this.chartReady = true;
+    if (this.columnChart.component) {
+      this.columnChart.component.draw();
+    }
   }
 
   toaChartOrganizationStatus() {
@@ -186,6 +192,9 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
     this.columnChart.dataTable = data;
     this.columnChart = Object.assign({}, this.columnChart);
     this.chartReady = true;
+    if (this.columnChart.component) {
+      this.columnChart.component.draw();
+    }
   }
 
   toaChartOrganizationToaDifference() {
@@ -207,6 +216,9 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
     this.columnChart.dataTable = data;
     this.columnChart = Object.assign({}, this.columnChart);
     this.chartReady = true;
+    if (this.columnChart.component) {
+      this.columnChart.component.draw();
+    }
   }
 
   toaChartFundingLineStatus() {}

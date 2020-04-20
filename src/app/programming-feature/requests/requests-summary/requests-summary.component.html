@@ -1,22 +1,22 @@
 <div class="main section-banner">
   <div class="title-line">
-    <div style="float:left;width:70%">
+    <div style="float: left; width: 70%;">
       <h3>POM{{ pomDisplayYear }} Program Request Summary</h3>
     </div>
     <div *ngIf="appModel.visibilityDef" class="button-container">
       <div *pfmIsVisible="'requests-summary-component.returnOrganization'" class="div-button-return">
         <button type="button" class="btn btn-danger" (click)="onReturnOrganization()">
-          <fa name="arrow-left"></fa> Return Organization
+          <fa-icon [icon]="'arrow-left'"></fa-icon> Return Organization
         </button>
       </div>
       <div *pfmIsVisible="'requests-summary-component.approveOrganization'" class="div-button-approve">
         <button type="button" class="btn btn-success" (click)="onApproveOrganization()">
-          <fa name="check"></fa> Approve Organization
+          <fa-icon [icon]="'check'"></fa-icon> Approve Organization
         </button>
       </div>
       <div *pfmIsVisible="'requests-summary-component.advanceOrganization'" class="div-button-advance">
         <button type="button" class="btn btn-primary" (click)="onAdvanceOrganization()">
-          <fa name="arrow-right"></fa> Advance Organization
+          <fa-icon [icon]="'arrow-right'"></fa-icon> Advance Organization
         </button>
       </div>
       <div *pfmIsVisible="'requests-summary-component.approveAllPRs'" class="div-button-approve-all">
@@ -154,7 +154,3 @@
     </div>
   </ng-template>
 </ng-container>
-
-<!--
-<pfm-requests-funding-line-grid></pfm-requests-funding-line-grid>
--->

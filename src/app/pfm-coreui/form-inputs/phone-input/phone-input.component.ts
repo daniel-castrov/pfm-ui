@@ -7,7 +7,7 @@ import { TextInputComponent } from '../text-input/text-input.component';
   styleUrls: ['./phone-input.component.scss']
 })
 export class PhoneInputComponent implements OnInit {
-  @ViewChild(TextInputComponent, { static: false }) textInput: TextInputComponent;
+  @ViewChild(TextInputComponent) textInput: TextInputComponent;
   @Input() id: string;
   @Input() dataModel: any;
   @Input() fieldName: string;

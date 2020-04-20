@@ -6,6 +6,7 @@ import { DATE_FORMAT } from '../../util/constants/input.constants';
 import { ProcessPrioritization } from '../models/process-prioritization.model';
 import * as moment from 'moment';
 import { map } from 'rxjs/operators';
+import { RestResponse } from 'src/app/util/rest-response';
 
 @Injectable({
   providedIn: 'root'

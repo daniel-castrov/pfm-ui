@@ -4,11 +4,11 @@ div {
   justify-content: center;
 }
 
-fa {
+.fa {
   margin-left: 15px;
   color: grey;
 }
 
-fa:hover {
+.fa:hover {
   cursor: pointer;
 }

@@ -5,6 +5,7 @@ import { ScheduleService } from './schedule.service';
 import { DATE_FORMAT } from '../../util/constants/input.constants';
 import * as moment from 'moment';
 import { map } from 'rxjs/operators';
+import { RestResponse } from 'src/app/util/rest-response';
 
 @Injectable({
   providedIn: 'root'

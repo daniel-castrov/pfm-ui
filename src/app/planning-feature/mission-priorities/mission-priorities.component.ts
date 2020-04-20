@@ -23,8 +23,8 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./mission-priorities.component.scss']
 })
 export class MissionPrioritiesComponent implements OnInit {
-  @ViewChild(DropdownComponent, { static: false }) yearDropDown: DropdownComponent;
-  @ViewChild(SecureDownloadComponent, { static: false }) secureDownloadComponent: SecureDownloadComponent;
+  @ViewChild(DropdownComponent) yearDropDown: DropdownComponent;
+  @ViewChild(SecureDownloadComponent) secureDownloadComponent: SecureDownloadComponent;
 
   actionState = {
     VIEW: {
@@ -154,13 +154,13 @@ export class MissionPrioritiesComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    if (this.appModel.visibilityDef['planning-phase-component']) {
-      this.canPerformCreatePlanning = this.appModel.visibilityDef['planning-phase-component'].createPlanningPhase;
-      this.canPerformOpenPlanning = this.appModel.visibilityDef['planning-phase-component'].openPlanningPhase;
-      this.canPerformLockPlanning = this.appModel.visibilityDef['planning-phase-component'].lockPlanningPhase;
-      this.canPerformClosePlanning = this.appModel.visibilityDef['planning-phase-component'].closePlanningPhase;
-      this.canPerformActions = this.appModel.visibilityDef['planning-phase-component'].performAction;
-    }
+    // if (this.appModel.visibilityDef['planning-phase-component']) {
+    this.canPerformCreatePlanning = !!this.appModel.visibilityDef['planning-phase-component']?.createPlanningPhase;
+    this.canPerformOpenPlanning = !!this.appModel.visibilityDef['planning-phase-component']?.openPlanningPhase;
+    this.canPerformLockPlanning = !!this.appModel.visibilityDef['planning-phase-component']?.lockPlanningPhase;
+    this.canPerformClosePlanning = !!this.appModel.visibilityDef['planning-phase-component']?.closePlanningPhase;
+    this.canPerformActions = !!this.appModel.visibilityDef['planning-phase-component']?.performAction;
+    // }
     this.setupGrid();
     // POM Manager is here for demo purpose
     const years: string[] = [];

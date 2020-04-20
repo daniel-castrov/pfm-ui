@@ -1,13 +1,13 @@
 <div *ngIf="!disabled && data">
   <ng-container *ngIf="data.canEdit">
     <div class="action" (click)="onSelected('edit')">
-      <fa name="pencil" title="Edit" [class.disabled]="params.data.isDisabled"></fa>
+      <fa-icon [icon]="'pencil-alt'" title="Edit" [class.disabled]="params.data.isDisabled"></fa-icon>
     </div>
   </ng-container>
 
   <ng-container *ngIf="data.canSave">
     <div class="action" (click)="onSelected('save')">
-      <fa name="save" title="Save"></fa>
+      <fa-icon [icon]="'save'" title="Save"></fa-icon>
     </div>
   </ng-container>
 
@@ -16,7 +16,7 @@
       <pfm-dropdown
         (selectionChanged)="handleDelete($event)"
         [type]="'iconDropdown'"
-        [iconName]="'trash'"
+        [iconName]="'trash-alt'"
         [label]="'Delete'"
         [required]="true"
         [id]="id"
@@ -27,16 +27,16 @@
       </pfm-dropdown>
     </div>
     <div class="action" (click)="onSelected('delete-row')" *ngIf="data.isSingleDelete && data.canEdit">
-      <fa name="trash" title="Delete" [class.disabled]="params.data.isDisabled"></fa>
+      <fa-icon [icon]="'trash-alt'" title="Delete" [class.disabled]="params.data.isDisabled"></fa-icon>
     </div>
     <div class="action" (click)="onSelected('cancel')" *ngIf="data.isSingleDelete && data.canSave">
-      <fa name="ban" title="Cancel" [class.disabled]="params.data.isDisabled"></fa>
+      <fa-icon [icon]="'ban'" title="Cancel" [class.disabled]="params.data.isDisabled"></fa-icon>
     </div>
   </ng-container>
 
   <ng-container *ngIf="data.canUpload">
     <div class="action" (click)="onSelected('upload')">
-      <fa name="upload" title="Add attachment"></fa>
+      <fa-icon [icon]="'upload'" title="Add attachment"></fa-icon>
     </div>
   </ng-container>
 

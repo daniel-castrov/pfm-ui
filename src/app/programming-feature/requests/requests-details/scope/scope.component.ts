@@ -15,6 +15,7 @@ import * as moment from 'moment';
 import { FormControl, FormGroup } from '@angular/forms';
 import { SecureDownloadComponent } from 'src/app/pfm-secure-filedownload/secure-download/secure-download.component';
 import { ListItem } from 'src/app/pfm-common-models/ListItem';
+import { DropdownCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/dropdown-cell-renderer/dropdown-cell-renderer.component';
 
 @Component({
   selector: 'pfm-scope',
@@ -22,7 +23,7 @@ import { ListItem } from 'src/app/pfm-common-models/ListItem';
   styleUrls: ['./scope.component.scss']
 })
 export class ScopeComponent implements OnInit {
-  @ViewChild(SecureDownloadComponent, { static: false })
+  @ViewChild(SecureDownloadComponent)
   secureDownloadComponent: SecureDownloadComponent;
 
   @Input() program: Program;
@@ -335,7 +336,7 @@ export class ScopeComponent implements OnInit {
         suppressMenu: true,
         cellClass: 'text-class',
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
-        cellEditor: 'select',
+        cellEditorFramework: DropdownCellRendererComponent,
         cellEditorParams: {
           cellHeight: 50,
           values: this.priorityRankingOptions
@@ -499,19 +500,19 @@ export class ScopeComponent implements OnInit {
 
   private validateEvaluationMeasureRowData(row: any) {
     let errorMessage = '';
-    if (!row.measureId.length) {
+    if (!row.measureId?.length) {
       errorMessage = 'Measure ID cannot be empty.';
-    } else if (!row.description.length) {
+    } else if (!row.description?.length) {
       errorMessage = 'Description cannot be empty.';
     } else if (row.measureId.length > 45) {
       errorMessage = 'Measure ID cannot have more than 45 characters.';
-    } else if (row.description.length > 45) {
+    } else if (row.description?.length > 45) {
       errorMessage = 'Description cannot have more than 45 characters.';
-    } else if (row.dataSource.length > 45) {
+    } else if (row.dataSource?.length > 45) {
       errorMessage = 'Data Source cannot have more than 45 characters.';
-    } else if (row.targetPerformance.length > 45) {
+    } else if (row.targetPerformance?.length > 45) {
       errorMessage = 'Target Performance cannot have more than 45 characters.';
-    } else if (row.currentPerformance.length > 45) {
+    } else if (row.currentPerformance?.length > 45) {
       errorMessage = 'Current Performance cannot have more than 45 characters.';
     } else if (
       row.currentPerformanceDate !== null &&
@@ -668,15 +669,15 @@ export class ScopeComponent implements OnInit {
 
   private validateTeamLeadRowData(row: any) {
     let errorMessage = '';
-    if (!row.name.length) {
+    if (!row.name?.length) {
       errorMessage = 'Name cannot be empty.';
     } else if (row.name.length > 45) {
       errorMessage = 'Name cannot have more than 45 characters.';
-    } else if (row.title.length > 45) {
+    } else if (row.title?.length > 45) {
       errorMessage = 'Title/Department cannot have more than 45 characters.';
-    } else if (row.role.length > 45) {
+    } else if (row.role?.length > 45) {
       errorMessage = 'Role cannot have more than 45 characters.';
-    } else if (row.responsibilities.length > 45) {
+    } else if (row.responsibilities?.length > 45) {
       errorMessage = 'Responsibilities cannot have more than 45 characters.';
     }
     if (errorMessage.length) {
@@ -834,11 +835,11 @@ export class ScopeComponent implements OnInit {
 
   private validateProcessPriorizationRowData(row: any) {
     let errorMessage = '';
-    if (!row.potentialProcesses.length) {
+    if (!row.potentialProcesses?.length) {
       errorMessage = 'Potential Process cannot be empty.';
     } else if (row.potentialProcesses.length > 45) {
       errorMessage = 'Potential Process have more than 45 characters.';
-    } else if (row.notes.length > 500) {
+    } else if (row.notes?.length > 500) {
       errorMessage = 'Notes cannot have more than 500 characters.';
     } else if (
       row.estimatedCompletionDate !== null &&

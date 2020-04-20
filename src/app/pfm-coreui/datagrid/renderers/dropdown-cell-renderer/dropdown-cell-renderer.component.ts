@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { ListItem } from '../../../../pfm-common-models/ListItem';
 import { DatagridMbService } from '../../../services/datagrid-mb.service';
 import { DataGridMessage } from '../../../models/DataGridMessage';
@@ -8,12 +8,14 @@ import { DataGridMessage } from '../../../models/DataGridMessage';
   templateUrl: './dropdown-cell-renderer.component.html',
   styleUrls: ['./dropdown-cell-renderer.component.scss']
 })
-export class DropdownCellRendererComponent implements OnInit {
+export class DropdownCellRendererComponent {
   @Input()
   list: ListItem[];
   data: any;
   params: any;
   selectedValue: any;
+  @Output()
+  change: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(private datagridMBService: DatagridMbService) {}
 
@@ -29,6 +31,7 @@ export class DropdownCellRendererComponent implements OnInit {
     message.apiCompId = this.params.api.gridCore.compId;
     this.selectedValue = data.rawData;
     this.datagridMBService.sendMessage(message);
+    this.change.emit();
   }
 
   getValue(): string {
@@ -36,20 +39,23 @@ export class DropdownCellRendererComponent implements OnInit {
   }
 
   agInit(params) {
-    // this.params = params;
-    // this.data = params.value;
-    //
-    // this.list = [];
-    // for (const x of this.data) {
-    //   const item: ListItem = new ListItem();
-    //   item.name = x.file.name;
-    //   item.value = x.file.name;
-    //   item.id = x.id;
-    //   item.rawData = x;
-    //   this.list.push(item);
-    // }
-    // this.attachmentsDisabled = this.params.data.attachmentsDisabled;
+    this.selectedValue = params.value;
+    this.params = params;
+    this.data = params.values;
+    this.updateList(this.data);
   }
 
-  ngOnInit() {}
+  updateList(options: string[]) {
+    this.list = [];
+    for (const option of options) {
+      const item: ListItem = new ListItem();
+      item.name = option;
+      item.value = option;
+      item.id = option;
+      item.rawData = option;
+      item.isSelected = option === this.selectedValue;
+      this.list.push(item);
+    }
+    this.change.emit();
+  }
 }

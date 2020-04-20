@@ -29,13 +29,13 @@ import { IntIntMap } from '../../models/IntIntMap';
   styleUrls: ['./requests-summary.component.scss']
 })
 export class RequestsSummaryComponent implements OnInit {
-  @ViewChild('toaWidetItem', { static: false }) toaWidgetItem: ElementRef;
-  @ViewChild(RequestsSummaryToaWidgetComponent, { static: false }) toaWidget: RequestsSummaryToaWidgetComponent;
+  @ViewChild('toaWidetItem') toaWidgetItem: ElementRef;
+  @ViewChild(RequestsSummaryToaWidgetComponent) toaWidget: RequestsSummaryToaWidgetComponent;
 
-  @ViewChild('orgWidetItem', { static: false }) orgWidgetItem: ElementRef;
-  @ViewChild(RequestsSummaryOrgWidgetComponent, { static: false }) orgWidget: RequestsSummaryOrgWidgetComponent;
+  @ViewChild('orgWidetItem') orgWidgetItem: ElementRef;
+  @ViewChild(RequestsSummaryOrgWidgetComponent) orgWidget: RequestsSummaryOrgWidgetComponent;
 
-  @ViewChild(RequestsSummaryGridComponent, { static: false }) requestsSummaryWidget: RequestsSummaryGridComponent;
+  @ViewChild(RequestsSummaryGridComponent) requestsSummaryWidget: RequestsSummaryGridComponent;
 
   griddata: ProgramSummary[];
   availableOrgs: ListItem[];

@@ -87,11 +87,11 @@
       <div class="widget-header">
         <div class="widget-header-left">
           <span (click)="removeWidget(widget)">
-            <fa name="trash" title="Delete"></fa>
+            <fa-icon [icon]="'trash-alt'" title="Delete"></fa-icon>
           </span>
         </div>
         <div class="widget-header-right">
-          <fa name="arrows" title="Move"></fa>
+          <fa-icon [icon]="'arrows-alt'" title="Move"></fa-icon>
         </div>
       </div>
       <div class="gridster-item-content" [ngSwitch]="widget.id">

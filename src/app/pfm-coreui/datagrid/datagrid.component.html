@@ -32,7 +32,7 @@
         </pfm-dropdown>
       </div>
       <div title="Add" *ngIf="showAddSingleRow" (click)="handleAddCta('add-single-row')">
-        <fa name="plus" title="Add" [class.disabled]="api?.getEditingCells().length"></fa>
+        <fa-icon [icon]="'plus'" title="Add" [class.disabled]="api?.getEditingCells().length"></fa-icon>
       </div>
     </div>
   </div>

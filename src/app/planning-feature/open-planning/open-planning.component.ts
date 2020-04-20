@@ -14,7 +14,7 @@ import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
   styleUrls: ['./open-planning.component.scss']
 })
 export class OpenPlanningComponent implements OnInit {
-  @ViewChild(DropdownComponent, { static: false }) yearDropDown: DropdownComponent;
+  @ViewChild(DropdownComponent) yearDropDown: DropdownComponent;
 
   id = 'open-planning-component';
   busy: boolean;

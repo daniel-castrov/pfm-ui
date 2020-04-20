@@ -10,7 +10,7 @@ import { environment } from '../../../environments/environment';
   styleUrls: ['./secure-upload.component.css']
 })
 export class SecureUploadComponent implements OnInit {
-  @ViewChild('secureUploadTemplate', { static: false }) private secureUploadTemplate: TemplateRef<any>;
+  @ViewChild('secureUploadTemplate') private secureUploadTemplate: TemplateRef<any>;
   @Input() uploadTypeDisplay = 'Files';
   @Output() onFilesUploaded: EventEmitter<FileMetaData> = new EventEmitter<FileMetaData>();
 

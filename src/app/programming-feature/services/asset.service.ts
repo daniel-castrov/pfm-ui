@@ -1,7 +1,9 @@
 import { Observable } from 'rxjs';
 import { BaseRestService } from '../../services/base-rest.service';
 import { Asset } from '../models/asset.model';
+import { Injectable } from '@angular/core';
 
+@Injectable()
 export abstract class AssetService extends BaseRestService {
   abstract obtainAssetByFundingLineId(fundingLineId: string): Observable<any>;
   abstract createAsset(asset: Asset): Observable<any>;
