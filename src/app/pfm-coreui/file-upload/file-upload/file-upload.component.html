@@ -16,7 +16,7 @@
   />
   <div *ngIf="!imagePath" class="card border-light mb-3">
     <div (click)="onImageClick()" [title]="tooltip" class="img-placeholder">
-      <i class="fa fa-picture-o" aria-hidden="true"></i>
+      <i class="fa {{ iconThumbnail }}" aria-hidden="true"></i>
     </div>
   </div>
   <img

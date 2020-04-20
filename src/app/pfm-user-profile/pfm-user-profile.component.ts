@@ -9,11 +9,11 @@ import { FileMetaData } from '../pfm-common-models/FileMetaData';
 import { FileDownloadService } from '../pfm-secure-filedownload/services/file-download-service';
 
 @Component({
-  selector: 'app-pfm-user-profile-module',
-  templateUrl: './pfm-user-profile-module.component.html',
-  styleUrls: ['./pfm-user-profile-module.component.scss']
+  selector: 'app-pfm-user-profile',
+  templateUrl: './pfm-user-profile.component.html',
+  styleUrls: ['./pfm-user-profile.component.scss']
 })
-export class PfmUserProfileModuleComponent implements OnInit {
+export class PfmUserProfileComponent implements OnInit {
   rows: any;
   userDetails: UserDetailsModel = null;
   columnDefinitions: ColDef[];
