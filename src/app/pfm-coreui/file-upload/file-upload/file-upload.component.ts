@@ -17,6 +17,7 @@ export class FileUploadComponent implements OnInit {
   @Input() isImageThumbnail: boolean;
   @Input() imagePath: string;
   @Input() tooltip = 'Click here to upload an image';
+  @Input() iconThumbnail = 'fa-picture-o';
 
   processing = false;
   uploadSuccess = false;
