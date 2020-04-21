@@ -278,7 +278,7 @@ export class AssetsComponent implements OnInit {
 
   private addEmptyRow() {
     const assetDetails: { [year: number]: AssetDetail } = {};
-    for (let year = this.pomYear - 2; year < this.pomYear + 6; year++) {
+    for (let year = this.pomYear - 3; year < this.pomYear + 5; year++) {
       assetDetails[year] = {
         unitCost: 0,
         quantity: 0,
@@ -506,12 +506,12 @@ export class AssetsComponent implements OnInit {
 
   private setupAssetGrid() {
     const columnGroups: any[] = [];
-    for (let i = this.pomYear - 2, x = 0; i < this.pomYear + 6; i++, x++) {
+    for (let i = this.pomYear - 3, x = 0; i < this.pomYear + 5; i++, x++) {
       const headerName =
-        i < this.pomYear
-          ? 'PY' + (this.pomYear - i === 1 ? '' : '-' + (this.pomYear - i - 1))
-          : i > this.pomYear
-          ? 'BY' + (i === this.pomYear + 1 ? '' : '+' + (i - this.pomYear - 1))
+        i < this.pomYear - 1
+          ? 'PY' + (this.pomYear - i === 2 ? '' : '-' + (this.pomYear - i - 2))
+          : i >= this.pomYear
+          ? 'BY' + (i === this.pomYear ? '' : '+' + (i - this.pomYear))
           : 'CY';
       columnGroups.push({
         groupId: 'main-header',
@@ -539,15 +539,15 @@ export class AssetsComponent implements OnInit {
                   'justify-content': 'flex-end'
                 },
                 minWidth: 80,
-                valueGetter: params => params.data.details[i].unitCost,
+                valueGetter: params => params.data.details[i + 1].unitCost,
                 valueSetter: params => {
-                  params.data.details[i].unitCost = Number(params.newValue);
+                  params.data.details[i + 1].unitCost = Number(params.newValue);
                   return true;
                 },
                 cellEditor: NumericCellEditor.create({
                   returnUndefinedOnZero: false
                 }),
-                valueFormatter: params => this.currencyFormatter(params.data.details[i].unitCost)
+                valueFormatter: params => this.currencyFormatter(params.data.details[i + 1].unitCost)
               },
               {
                 colId: 2 + x * 3 + 2,
@@ -558,9 +558,9 @@ export class AssetsComponent implements OnInit {
                 filter: false,
                 sortable: false,
                 cellClass: 'numeric-class',
-                valueGetter: params => params.data.details[i].quantity,
+                valueGetter: params => params.data.details[i + 1].quantity,
                 valueSetter: params => {
-                  params.data.details[i].quantity = Number(params.newValue);
+                  params.data.details[i + 1].quantity = Number(params.newValue);
                   return true;
                 },
                 cellStyle: {
@@ -588,15 +588,15 @@ export class AssetsComponent implements OnInit {
                   'justify-content': 'flex-end'
                 },
                 minWidth: 80,
-                valueGetter: params => params.data.details[i].totalCost,
+                valueGetter: params => params.data.details[i + 1].totalCost,
                 valueSetter: params => {
-                  params.data.details[i].totalCost = Number(params.newValue);
+                  params.data.details[i + 1].totalCost = Number(params.newValue);
                   return true;
                 },
                 cellEditor: NumericCellEditor.create({
                   returnUndefinedOnZero: false
                 }),
-                valueFormatter: params => this.currencyFormatter(params.data.details[i].totalCost)
+                valueFormatter: params => this.currencyFormatter(params.data.details[i + 1].totalCost)
               }
             ]
           }

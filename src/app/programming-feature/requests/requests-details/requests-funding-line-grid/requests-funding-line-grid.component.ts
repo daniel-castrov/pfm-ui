@@ -212,7 +212,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
 
   private setupSummaryFundingLineGrid() {
     const columnGroups: any[] = [];
-    for (let i = this.pomYear - 2, x = 0; i < this.pomYear + 6; i++, x++) {
+    for (let i = this.pomYear - 2, x = 0; i < this.pomYear + 5; i++, x++) {
       const headerName =
         i < this.pomYear
           ? 'PY' + (this.pomYear - i === 1 ? '' : '-' + (this.pomYear - i - 1))
@@ -228,7 +228,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
         children: [
           {
             colId: 5 + x,
-            headerName: 'FY' + (i - (1 % 100)),
+            headerName: 'FY' + ((i - 1) % 100),
             field: fieldPrefix,
             editable: i > this.pomYear,
             suppressMovable: true,
@@ -475,7 +475,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
 
   private setupNonSummaryFundingLineGrid() {
     const columnGroups: any[] = [];
-    for (let i = this.pomYear - 2, x = 0; i < this.pomYear + 6; i++, x++) {
+    for (let i = this.pomYear - 2, x = 0; i < this.pomYear + 5; i++, x++) {
       const headerName =
         i < this.pomYear
           ? 'PY' + (this.pomYear - i === 1 ? '' : '-' + (this.pomYear - i - 1))
@@ -491,7 +491,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
         children: [
           {
             colId: 4 + x,
-            headerName: 'FY' + (i - (1 % 100)),
+            headerName: 'FY' + ((i - 1) % 100),
             field: fieldPrefix,
             editable: i > this.pomYear,
             suppressMovable: true,
