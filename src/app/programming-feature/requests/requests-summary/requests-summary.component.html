@@ -3,7 +3,10 @@
     <div class="float-left w-70">
       <h3>POM{{ pomDisplayYear }} Program Request Summary</h3>
     </div>
-    <div *ngIf="appModel.visibilityDef && isVisibilitySetup" class="button-container">
+    <div
+      *ngIf="appModel.visibilityDef && appModel.visibilityDef['requests-summary-component']"
+      class="button-container"
+    >
       <div *pfmIsVisible="'requests-summary-component.returnOrganization'" class="div-button-return">
         <button type="button" class="btn btn-danger" (click)="onReturnOrganization()">
           <fa-icon [icon]="'arrow-left'"></fa-icon> Return Organization
