@@ -65,6 +65,7 @@ export class RequestsSummaryComponent implements OnInit {
     continueAction: null,
     display: false
   };
+  isVisibilitySetup: boolean;
 
   constructor(
     private programmingModel: ProgrammingModel,
@@ -160,14 +161,19 @@ export class RequestsSummaryComponent implements OnInit {
     );
   }
 
-  async setupVisibility() {
-    const response = await this.visibilityService.isCurrentlyVisible('requests-summary-component').toPromise();
-    if ((response as any).result) {
-      if (!this.appModel['visibilityDef']) {
-        this.appModel['visibilityDef'] = {};
-      }
-      this.appModel['visibilityDef']['requests-summary-component'] = (response as any).result;
-    }
+  setupVisibility() {
+    this.visibilityService
+      .isCurrentlyVisible('requests-summary-component')
+      .toPromise()
+      .then(response => {
+        if ((response as any).result) {
+          if (!this.appModel['visibilityDef']) {
+            this.appModel['visibilityDef'] = {};
+          }
+          this.appModel['visibilityDef']['requests-summary-component'] = (response as any).result;
+        }
+        this.isVisibilitySetup = true;
+      });
   }
 
   setupDropDown() {
