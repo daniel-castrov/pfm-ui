@@ -65,7 +65,6 @@ export class RequestsSummaryComponent implements OnInit {
     continueAction: null,
     display: false
   };
-  isVisibilitySetup: boolean;
 
   constructor(
     private programmingModel: ProgrammingModel,
@@ -80,8 +79,7 @@ export class RequestsSummaryComponent implements OnInit {
     private visibilityService: VisibilityService,
     public appModel: AppModel,
     private toastService: ToastService
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
     this.options = {
@@ -172,7 +170,6 @@ export class RequestsSummaryComponent implements OnInit {
           }
           this.appModel['visibilityDef']['requests-summary-component'] = (response as any).result;
         }
-        this.isVisibilitySetup = true;
       });
   }
 
@@ -249,10 +246,8 @@ export class RequestsSummaryComponent implements OnInit {
 
   private saveWidgetLayout(): void {
     this.dashboardService.saveWidgetPreferences('programming-requests-summary', this.dashboard).subscribe(
-      data => {
-      },
-      error => {
-      }
+      data => {},
+      error => {}
     );
   }
 
@@ -345,17 +340,14 @@ export class RequestsSummaryComponent implements OnInit {
           this.busy = false;
           this.showPreviousFundedProgramDialog = true;
         },
-        error => {
-        }
+        error => {}
       );
     }
   }
 
-  importProgramSelected($event: any) {
-  }
+  importProgramSelected($event: any) {}
 
-  onImportProgram() {
-  }
+  onImportProgram() {}
 
   onApproveOrganization(): void {
     this.approveOrganization();
@@ -363,8 +355,12 @@ export class RequestsSummaryComponent implements OnInit {
 
   approveOrganization(skipToaValidation?: boolean) {
     this.programmingService
-      .processPRsForContainer(this.programmingModel.pom.workspaceId, 'Approve Organization',
-        this.selectedOrg.value, skipToaValidation)
+      .processPRsForContainer(
+        this.programmingModel.pom.workspaceId,
+        'Approve Organization',
+        this.selectedOrg.value,
+        skipToaValidation
+      )
       .subscribe(
         resp => {
           this.organizationSelected(this.selectedOrg);
@@ -398,8 +394,12 @@ export class RequestsSummaryComponent implements OnInit {
 
   advanceOrganization(skipToaValidation?: boolean) {
     this.programmingService
-      .processPRsForContainer(this.programmingModel.pom.workspaceId, 'Advance Organization',
-        this.selectedOrg.value, skipToaValidation)
+      .processPRsForContainer(
+        this.programmingModel.pom.workspaceId,
+        'Advance Organization',
+        this.selectedOrg.value,
+        skipToaValidation
+      )
       .subscribe(
         resp => {
           this.organizationSelected(this.selectedOrg);
@@ -417,18 +417,18 @@ export class RequestsSummaryComponent implements OnInit {
   }
 
   approveAllPRs(skipToaValidation?: boolean): void {
-    this.programmingService.processPRsForContainer(this.programmingModel.pom.workspaceId, 'Approve All PRs', undefined,
-      skipToaValidation).subscribe(
-      resp => {
-        this.organizationSelected(this.selectedOrg);
-        this.toastService.displaySuccess('All program requests successfully approved.');
-      },
-      error => {
-        this.handleActionError(error, this.approveAllPRs.bind(this));
-
-      },
-      () => (this.negativeValidationDialog.display = false)
-    );
+    this.programmingService
+      .processPRsForContainer(this.programmingModel.pom.workspaceId, 'Approve All PRs', undefined, skipToaValidation)
+      .subscribe(
+        resp => {
+          this.organizationSelected(this.selectedOrg);
+          this.toastService.displaySuccess('All program requests successfully approved.');
+        },
+        error => {
+          this.handleActionError(error, this.approveAllPRs.bind(this));
+        },
+        () => (this.negativeValidationDialog.display = false)
+      );
   }
 
   handleActionError(error, action) {
