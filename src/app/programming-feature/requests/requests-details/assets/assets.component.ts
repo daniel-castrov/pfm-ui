@@ -539,15 +539,15 @@ export class AssetsComponent implements OnInit {
                   'justify-content': 'flex-end'
                 },
                 minWidth: 80,
-                valueGetter: params => params.data.details[i + 1].unitCost,
+                valueGetter: params => params.data.details[i].unitCost,
                 valueSetter: params => {
-                  params.data.details[i + 1].unitCost = Number(params.newValue);
+                  params.data.details[i].unitCost = Number(params.newValue);
                   return true;
                 },
                 cellEditor: NumericCellEditor.create({
                   returnUndefinedOnZero: false
                 }),
-                valueFormatter: params => this.currencyFormatter(params.data.details[i + 1].unitCost)
+                valueFormatter: params => this.currencyFormatter(params.data.details[i].unitCost)
               },
               {
                 colId: 2 + x * 3 + 2,
@@ -558,9 +558,9 @@ export class AssetsComponent implements OnInit {
                 filter: false,
                 sortable: false,
                 cellClass: 'numeric-class',
-                valueGetter: params => params.data.details[i + 1].quantity,
+                valueGetter: params => params.data.details[i].quantity,
                 valueSetter: params => {
-                  params.data.details[i + 1].quantity = Number(params.newValue);
+                  params.data.details[i].quantity = Number(params.newValue);
                   return true;
                 },
                 cellStyle: {
@@ -588,7 +588,7 @@ export class AssetsComponent implements OnInit {
                   'justify-content': 'flex-end'
                 },
                 minWidth: 80,
-                valueGetter: params => params.data.details[i + 1].totalCost,
+                valueGetter: params => params.data.details[i].totalCost,
                 valueSetter: params => {
                   params.data.details[i + 1].totalCost = Number(params.newValue);
                   return true;
@@ -596,7 +596,7 @@ export class AssetsComponent implements OnInit {
                 cellEditor: NumericCellEditor.create({
                   returnUndefinedOnZero: false
                 }),
-                valueFormatter: params => this.currencyFormatter(params.data.details[i + 1].totalCost)
+                valueFormatter: params => this.currencyFormatter(params.data.details[i].totalCost)
               }
             ]
           }
