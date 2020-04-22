@@ -1,9 +1,9 @@
 <div class="main section-banner">
   <div class="title-line">
-    <div style="float: left; width: 70%;">
+    <div class="float-left w-70">
       <h3>POM{{ pomDisplayYear }} Program Request Summary</h3>
     </div>
-    <div *ngIf="appModel.visibilityDef" class="button-container">
+    <div *ngIf="appModel.visibilityDef && isVisibilitySetup" class="button-container">
       <div *pfmIsVisible="'requests-summary-component.returnOrganization'" class="div-button-return">
         <button type="button" class="btn btn-danger" (click)="onReturnOrganization()">
           <fa-icon [icon]="'arrow-left'"></fa-icon> Return Organization
