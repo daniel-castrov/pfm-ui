@@ -79,7 +79,8 @@ export class RequestsSummaryComponent implements OnInit {
     private visibilityService: VisibilityService,
     public appModel: AppModel,
     private toastService: ToastService
-  ) {}
+  ) {
+  }
 
   ngOnInit() {
     this.options = {
@@ -242,8 +243,10 @@ export class RequestsSummaryComponent implements OnInit {
 
   private saveWidgetLayout(): void {
     this.dashboardService.saveWidgetPreferences('programming-requests-summary', this.dashboard).subscribe(
-      data => {},
-      error => {}
+      data => {
+      },
+      error => {
+      }
     );
   }
 
@@ -336,42 +339,33 @@ export class RequestsSummaryComponent implements OnInit {
           this.busy = false;
           this.showPreviousFundedProgramDialog = true;
         },
-        error => {}
+        error => {
+        }
       );
     }
   }
 
-  importProgramSelected($event: any) {}
+  importProgramSelected($event: any) {
+  }
 
-  onImportProgram() {}
+  onImportProgram() {
+  }
 
   onApproveOrganization(): void {
-    const validation = this.validateToa();
-
-    if (validation === TOAValidationStatus.POSITIVE) {
-      this.toastService.displayError(
-        'No program requests were approved. Some requests caused organization TOAs to be exceeded.'
-      );
-      return;
-    } else if (validation === TOAValidationStatus.NEGATIVE) {
-      this.negativeValidationDialog.display = true;
-      this.negativeValidationDialog.continueAction = this.approveOrganization.bind(this);
-      return;
-    }
     this.approveOrganization();
   }
 
-  approveOrganization() {
+  approveOrganization(skipToaValidation?: boolean) {
     this.programmingService
-      .processPRsForContainer(this.programmingModel.pom.workspaceId, 'Approve Organization', this.selectedOrg.value)
+      .processPRsForContainer(this.programmingModel.pom.workspaceId, 'Approve Organization',
+        this.selectedOrg.value, skipToaValidation)
       .subscribe(
         resp => {
           this.organizationSelected(this.selectedOrg);
           this.toastService.displaySuccess('All program requests have been approved successfully.');
         },
         error => {
-          const err = (error as any).error;
-          this.toastService.displayError(err.error);
+          this.handleActionError(error, this.approveOrganization.bind(this));
         },
         () => (this.negativeValidationDialog.display = false)
       );
@@ -393,64 +387,55 @@ export class RequestsSummaryComponent implements OnInit {
   }
 
   onAdvanceOrganization() {
-    const validation = this.validateToa();
-
-    if (validation === TOAValidationStatus.POSITIVE) {
-      this.toastService.displayError(
-        'No program requests were advanced. Some requests caused organization TOAs to be exceeded.'
-      );
-      return;
-    } else if (validation === TOAValidationStatus.NEGATIVE) {
-      this.negativeValidationDialog.display = true;
-      this.negativeValidationDialog.continueAction = this.advanceOrganization.bind(this);
-      return;
-    }
     this.advanceOrganization();
   }
 
-  advanceOrganization() {
+  advanceOrganization(skipToaValidation?: boolean) {
     this.programmingService
-      .processPRsForContainer(this.programmingModel.pom.workspaceId, 'Advance Organization', this.selectedOrg.value)
+      .processPRsForContainer(this.programmingModel.pom.workspaceId, 'Advance Organization',
+        this.selectedOrg.value, skipToaValidation)
       .subscribe(
         resp => {
           this.organizationSelected(this.selectedOrg);
           this.toastService.displaySuccess('All program requests successfully advanced.');
         },
         error => {
-          const err = (error as any).error;
-          this.toastService.displayError(err.error);
+          this.handleActionError(error, this.advanceOrganization.bind(this));
         },
         () => (this.negativeValidationDialog.display = false)
       );
   }
 
   onApproveAllPrs(): void {
-    const validation = this.validateToa();
-    if (validation === TOAValidationStatus.POSITIVE) {
-      this.toastService.displayError(
-        'No program requests were approved. Some requests caused organization TOAs to be exceeded.'
-      );
-      return;
-    } else if (validation === TOAValidationStatus.NEGATIVE) {
-      this.negativeValidationDialog.display = true;
-      this.negativeValidationDialog.continueAction = this.approveAllPRs.bind(this);
-      return;
-    }
     this.approveAllPRs();
   }
 
-  approveAllPRs(): void {
-    this.programmingService.processPRsForContainer(this.programmingModel.pom.workspaceId, 'Approve All PRs').subscribe(
+  approveAllPRs(skipToaValidation?: boolean): void {
+    this.programmingService.processPRsForContainer(this.programmingModel.pom.workspaceId, 'Approve All PRs', undefined,
+      skipToaValidation).subscribe(
       resp => {
         this.organizationSelected(this.selectedOrg);
         this.toastService.displaySuccess('All program requests successfully approved.');
       },
       error => {
-        const err = (error as any).error;
-        this.toastService.displayError(err.error);
+        this.handleActionError(error, this.approveAllPRs.bind(this));
+
       },
       () => (this.negativeValidationDialog.display = false)
     );
+  }
+
+  handleActionError(error, action) {
+    const err = (error as any).error;
+    const errorStr = err.error;
+    if (errorStr.toLowerCase().includes('below')) {
+      this.negativeValidationDialog.display = true;
+      this.negativeValidationDialog.continueAction = () => {
+        action(true);
+      };
+    } else {
+      this.toastService.displayError(err.error);
+    }
   }
 
   getRespRoleId(roleStr: string): any {
@@ -468,66 +453,7 @@ export class RequestsSummaryComponent implements OnInit {
     this.griddata = data;
   }
 
-  validateToa(): TOAValidationStatus {
-    let validationStatus = TOAValidationStatus.PASSED;
-
-    if (!this.selectedOrg.value) {
-      for (const org of this.orgs) {
-        const validOrg = this.validateOrganizationToa(org.id);
-        if (validOrg !== TOAValidationStatus.PASSED) {
-          validationStatus = validOrg;
-        }
-        if (validationStatus === TOAValidationStatus.POSITIVE) {
-          break;
-        }
-      }
-    } else {
-      validationStatus = this.validateOrganizationToa(this.selectedOrg.value);
-    }
-    return validationStatus;
-  }
-
-  private validateOrganizationToa(organizationId: string): TOAValidationStatus {
-    const totals = this.calculateTotals(organizationId);
-    let validationStatus = TOAValidationStatus.PASSED;
-    // Add difference to data
-    for (let i = 0; i < 5; i++) {
-      const difference: number = totals[i].amount - this.programmingModel.pom.orgToas[organizationId][i].amount;
-      if (difference < 0) {
-        validationStatus = TOAValidationStatus.NEGATIVE;
-      } else if (difference > 0) {
-        validationStatus = TOAValidationStatus.POSITIVE;
-        break;
-      }
-    }
-    return validationStatus;
-  }
-
-  // Used to calculate total funds per year
-  private calculateTotals(organizationId: string): any[] {
-    const totals: any[] = [];
-    const orgPrs = this.griddata.filter(x => x.organizationId === organizationId);
-    for (const row of orgPrs) {
-      for (let i = 0; i < 5; i++) {
-        const year = this.pomYear + i;
-        if (!totals[i]) {
-          totals[i] = { year, amount: 0 };
-        }
-        if (row.funds[this.pomYear + i]) {
-          totals[i].amount += row.funds[year];
-        }
-      }
-    }
-    return totals;
-  }
-
   onCancelNegativeValidationDialog() {
     this.negativeValidationDialog.display = false;
   }
-}
-
-const enum TOAValidationStatus {
-  PASSED = 'PASSED',
-  POSITIVE = 'POSITIVE',
-  NEGATIVE = 'NEGATIVE'
 }
