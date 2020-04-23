@@ -22,6 +22,7 @@ import { AppModel } from '../../../pfm-common-models/AppModel';
 import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
 import { PlanningStatus } from 'src/app/planning-feature/models/enumerators/planning-status.model';
 import { IntIntMap } from '../../models/IntIntMap';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'pfm-requests-summary',
@@ -61,6 +62,19 @@ export class RequestsSummaryComponent implements OnInit {
   baBlinSummary: IntIntMap;
   negativeValidationDialog = {
     title: 'Caution',
+    bodyText: `At least one year's PR Totals are below the organization TOAs. Do you want to continue?`,
+    continueAction: null,
+    display: false
+  };
+
+  createProgramDialog = {
+    title: 'Add New Program',
+    form: new FormGroup({
+      shortName: new FormControl('', [Validators.required]),
+      longName: new FormControl('', [Validators.required]),
+      type: new FormControl('PROGRAM', [Validators.required]),
+      organizationId: new FormControl('', [Validators.required])
+    }),
     bodyText: `At least one year's PR Totals are below the organization TOAs. Do you want to continue?`,
     continueAction: null,
     display: false
@@ -323,7 +337,13 @@ export class RequestsSummaryComponent implements OnInit {
 
   handleAdd(addEvent: any) {
     if (addEvent.action === 'new-program') {
-      this.router.navigate(['/programming/requests/details/' + undefined]);
+      this.createProgramDialog.form.patchValue({
+        shortName: '',
+        longName: '',
+        type: 'PROGRAM',
+        organizationId: this.selectedOrg.value ?? ''
+      });
+      this.createProgramDialog.display = true;
     } else if (addEvent.action === 'previously-funded-program') {
       this.busy = true;
       this.mrdbService.getProgramsMinusPrs(this.selectedOrg.value, this.programmingModel.programs).subscribe(
@@ -461,5 +481,51 @@ export class RequestsSummaryComponent implements OnInit {
 
   onCancelNegativeValidationDialog() {
     this.negativeValidationDialog.display = false;
+  }
+
+  onCancelCreateProgramDialog() {
+    this.createProgramDialog.display = false;
+  }
+
+  onCreateProgramAction() {
+    debugger;
+    const program = {
+      shortName: this.createProgramDialog.form.get(['shortName']).value,
+      longName: this.createProgramDialog.form.get(['longName']).value,
+      type: this.createProgramDialog.form.get(['type']).value,
+      organizationId: this.createProgramDialog.form.get(['organizationId']).value
+    } as Program;
+    const canSave = this.createProgramDialog.form.valid;
+    if (canSave) {
+      this.programmingService.save(program).subscribe(
+        resp => {
+          const resultProgram = resp.result as Program;
+          this.toastService.displaySuccess('Program Request saved successfully.');
+          this.router.navigate([
+            '/programming/requests/details/' + resultProgram.id,
+            {
+              pomYear: this.pomYear
+            }
+          ]);
+        },
+        error => {
+          this.toastService.displayError('An error has occurred while attempting to save program.');
+        },
+        () => (this.busy = false)
+      );
+    } else {
+      if (this.createProgramDialog.form.get('shortName').errors?.required) {
+        this.toastService.displayError('Program ID field must not be empty.');
+      }
+      if (this.createProgramDialog.form.get('longName').errors?.required) {
+        this.toastService.displayError('Program Name field must not be empty.');
+      }
+      if (this.createProgramDialog.form.get('type').errors?.required) {
+        this.toastService.displayError('Program Type field must not be empty.');
+      }
+      if (this.createProgramDialog.form.get('organizationId').errors?.required) {
+        this.toastService.displayError('Organization field must not be empty.');
+      }
+    }
   }
 }

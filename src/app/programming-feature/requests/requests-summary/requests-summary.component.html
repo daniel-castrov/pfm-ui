@@ -157,3 +157,59 @@
     </div>
   </ng-template>
 </ng-container>
+
+<ng-container *ngIf="createProgramDialog.display">
+  <pfm-custom-dialog
+    [title]="createProgramDialog.title"
+    [body]="createProgramBody"
+    [actions]="createProgramActions"
+    (onCancelDialog)="onCancelNegativeValidationDialog()"
+  ></pfm-custom-dialog>
+
+  <ng-template #createProgramBody>
+    <div class="section-form">
+      <form class="form-horizontal" *ngIf="createProgramDialog.form" [formGroup]="createProgramDialog.form">
+        <div class="form-group row">
+          <label for="shortName" class="col-sm-4 col-form-label">*Program ID</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" id="shortName" formControlName="shortName" />
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="longName" class="col-sm-4 col-form-label">*Program Name</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" id="longName" formControlName="longName" />
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="organizationId" class="col-sm-4 col-form-label">*Organization</label>
+          <div class="col-sm-8">
+            <span *ngIf="selectedOrg.value">{{ selectedOrg.id }}</span>
+            <select
+              *ngIf="!selectedOrg.value"
+              id="organizationId"
+              class="form-control"
+              formControlName="organizationId"
+              [class.form-control-plaintext]=""
+            >
+              <option value="" disabled>Select...</option>
+              <option *ngFor="let org of orgs" [value]="org.id">{{ org.abbreviation }}</option>
+            </select>
+          </div>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+
+  <ng-template #createProgramActions>
+    <div class="pull-left">
+      <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onCreateProgramAction()">
+        Create
+      </button>
+    </div>
+
+    <div class="pull-right">
+      <pfm-cancel-cta (onCancelClicked)="onCancelCreateProgramDialog()"></pfm-cancel-cta>
+    </div>
+  </ng-template>
+</ng-container>
