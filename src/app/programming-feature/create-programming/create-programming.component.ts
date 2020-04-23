@@ -42,7 +42,7 @@ export class CreateProgrammingComponent implements OnInit {
   id = 'create-programming-component';
   busy: boolean;
   availableYears: ListItem[];
-  selectedYear: string;
+  selectedYear: ListItem;
   currentYear: number;
   byYear: any;
   programYearSelected: any;
@@ -90,7 +90,7 @@ export class CreateProgrammingComponent implements OnInit {
     );
   }
 
-  yearSelected(year: string): void {
+  yearSelected(year: ListItem): void {
     this.selectedYear = year;
     this.loadBaseline = false;
     if (this.programYearSelected !== 'undefined') {
@@ -117,9 +117,7 @@ export class CreateProgrammingComponent implements OnInit {
   }
 
   onSelectBaseLine() {
-    this.programYearSelected = Object.keys(this.selectedYear)
-      .map(key => this.selectedYear[key])
-      .slice(0, 1);
+    this.programYearSelected = this.selectedYear.value;
 
     if (this.programYearSelected === 'Spreadsheet') {
       this.showUploadDialog = true;
@@ -295,6 +293,7 @@ export class CreateProgrammingComponent implements OnInit {
       this.LoadPomFromFile(newFile.id);
     } else {
       this.yearDropDown.selectedItem = this.yearDropDown.prompt;
+      this.programYearSelected = this.yearDropDown.prompt;
     }
   }
 
