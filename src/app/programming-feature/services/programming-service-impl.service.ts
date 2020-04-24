@@ -24,11 +24,12 @@ export class ProgrammingServiceImpl extends ProgrammingService {
     );
   }
 
-  processPRsForContainer(containerId: string, action: string, organizationId?: string,
-                         skipToaValidation?: boolean) {
+  processPRsForContainer(containerId: string, action: string, organizationId?: string, skipToaValidation?: boolean) {
     organizationId = organizationId ? organizationId : '';
-    const params: HttpParams = new HttpParams().set('action', action).set('organizationId', organizationId)
-      .set('skipToaValidation', ''+!!skipToaValidation);
+    const params: HttpParams = new HttpParams()
+      .set('action', action)
+      .set('organizationId', organizationId)
+      .set('skipToaValidation', '' + !!skipToaValidation);
     return this.put('program/container/' + containerId + '/process', null, params);
   }
 
@@ -47,6 +48,10 @@ export class ProgrammingServiceImpl extends ProgrammingService {
 
   updateProgram(program: Program) {
     return this.put('program/', program);
+  }
+
+  create(program: Program) {
+    return this.post('program', program);
   }
 
   save(program: Program) {
