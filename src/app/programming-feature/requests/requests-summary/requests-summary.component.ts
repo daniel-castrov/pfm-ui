@@ -24,6 +24,7 @@ import { PlanningStatus } from 'src/app/planning-feature/models/enumerators/plan
 import { IntIntMap } from '../../models/IntIntMap';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ProgramStatus } from '../../models/enumerations/program-status.model';
+import { RoleConstants } from 'src/app/pfm-common-models/role-contants.model';
 
 @Component({
   selector: 'pfm-requests-summary',
@@ -204,7 +205,7 @@ export class RequestsSummaryComponent implements OnInit {
           dropdownOptions.unshift(showAllOrg);
         }
         this.availableOrgs = this.toListItemOrgs(dropdownOptions.concat(orgs));
-        if (this.availableOrgs.length === 1) {
+        if (this.availableOrgs.length === 1 || this.appModel.userDetails.roles.includes(RoleConstants.POM_MANAGER)) {
           this.organizationSelected(this.availableOrgs[0]);
         }
         this.dropdownDefault = this.selectedOrg;
