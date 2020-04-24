@@ -18,8 +18,12 @@ export abstract class ProgrammingService extends BaseRestService {
 
   abstract getBaBlinSummary(containerId: string, organizationId?: string): Observable<object>;
 
-  abstract processPRsForContainer(containerId: string, action: string, organizationId?: string,
-                                  skipToaValidation?: boolean): Observable<object>;
+  abstract processPRsForContainer(
+    containerId: string,
+    action: string,
+    organizationId?: string,
+    skipToaValidation?: boolean
+  ): Observable<object>;
 
   abstract getPermittedOrganizations(): Observable<object>;
 
@@ -28,6 +32,8 @@ export abstract class ProgrammingService extends BaseRestService {
   abstract getProgramById(id: string): Observable<any>;
 
   abstract updateProgram(program: Program): Observable<any>;
+
+  abstract create(program: Program): Observable<any>;
 
   abstract save(program: Program): Observable<any>;
 

@@ -23,6 +23,7 @@ import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
 import { PlanningStatus } from 'src/app/planning-feature/models/enumerators/planning-status.model';
 import { IntIntMap } from '../../models/IntIntMap';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ProgramStatus } from '../../models/enumerations/program-status.model';
 
 @Component({
   selector: 'pfm-requests-summary',
@@ -488,16 +489,17 @@ export class RequestsSummaryComponent implements OnInit {
   }
 
   onCreateProgramAction() {
-    debugger;
     const program = {
       shortName: this.createProgramDialog.form.get(['shortName']).value,
       longName: this.createProgramDialog.form.get(['longName']).value,
       type: this.createProgramDialog.form.get(['type']).value,
       organizationId: this.createProgramDialog.form.get(['organizationId']).value
     } as Program;
+    program.containerId = this.programmingModel.pom.workspaceId;
+    program.programStatus = ProgramStatus.SAVED;
     const canSave = this.createProgramDialog.form.valid;
     if (canSave) {
-      this.programmingService.save(program).subscribe(
+      this.programmingService.create(program).subscribe(
         resp => {
           const resultProgram = resp.result as Program;
           this.toastService.displaySuccess('Program Request saved successfully.');
