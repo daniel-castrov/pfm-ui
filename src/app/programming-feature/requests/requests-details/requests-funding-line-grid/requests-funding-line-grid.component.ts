@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ColGroupDef, ColumnApi, GridApi, GroupCellRenderer } from '@ag-grid-community/all-modules';
 import { DataGridMessage } from '../../../../pfm-coreui/models/DataGridMessage';
 import { ActionCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/action-cell-renderer/action-cell-renderer.component';
@@ -20,6 +20,9 @@ import { ExpenditureType } from '../../../models/expenditure-type.model';
 import { WorkUnitCode } from '../../../models/work-unit-code.model';
 import { RestResponse } from 'src/app/util/rest-response';
 import { DropdownCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/dropdown-cell-renderer/dropdown-cell-renderer.component';
+import { GoogleChartComponent, GoogleChartInterface } from 'ng2-google-charts';
+import { ListItem } from 'src/app/pfm-common-models/ListItem';
+import { DropdownComponent } from 'src/app/pfm-coreui/form-inputs/dropdown/dropdown.component';
 
 @Component({
   selector: 'pfm-requests-funding-line-grid',
@@ -27,6 +30,18 @@ import { DropdownCellRendererComponent } from 'src/app/pfm-coreui/datagrid/rende
   styleUrls: ['./requests-funding-line-grid.component.scss']
 })
 export class RequestsFundingLineGridComponent implements OnInit {
+  @ViewChild('googleChart')
+  chart: GoogleChartComponent;
+  @ViewChild('appropriationDropdown')
+  appropriationDropdown: DropdownComponent;
+  @ViewChild('bablinDropdown')
+  bablinDropdown: DropdownComponent;
+  @ViewChild('sagDropdown')
+  sagDropdown: DropdownComponent;
+  @ViewChild('wucdDropdown')
+  wucdDropdown: DropdownComponent;
+  @ViewChild('expTypeDropdown')
+  expTypeDropdown: DropdownComponent;
   @Input() pomYear: number;
   @Input() program: Program;
 
@@ -51,6 +66,39 @@ export class RequestsFundingLineGridComponent implements OnInit {
       canDelete: true,
       canUpload: false,
       isSingleDelete: true
+    }
+  };
+
+  chartData: GoogleChartInterface = {
+    chartType: 'LineChart',
+    options: {
+      title: 'Funding Lines',
+      width: 1000,
+      height: 350,
+      chartArea: {
+        width: '50%',
+        height: '70%',
+        left: '15%'
+      },
+      series: {
+        0: {
+          type: 'line'
+        },
+        1: {
+          type: 'line'
+        }
+      },
+      vAxis: {
+        format: '$#,###',
+        gridlines: {
+          count: 10
+        }
+      },
+      animation: {
+        duration: 500,
+        easing: 'out',
+        startup: true
+      }
     }
   };
 
@@ -81,6 +129,13 @@ export class RequestsFundingLineGridComponent implements OnInit {
   wucdOptions = [];
   expTypeOptions = [];
 
+  displayDropdownOptions: ListItem[] = [];
+  appropriationDropdownOptions: ListItem[] = [];
+  bablinDropdownOptions: ListItem[] = [];
+  sagDropdownOptions: ListItem[] = [];
+  wucdDropdownOptions: ListItem[] = [];
+  expTypeDropdownOptions: ListItem[] = [];
+
   constructor(
     private dialogService: DialogService,
     private propertyService: PropertyService,
@@ -96,18 +151,17 @@ export class RequestsFundingLineGridComponent implements OnInit {
   onNonSummaryGridIsReady(api: GridApi) {
     this.nonSummaryFundingLineGridApi = api;
     this.nonSummaryFundingLineRows = [];
-    this.resetTotalFunding();
-    this.nonSummaryFundingLineRows.splice(1, 0, ...this.summaryFundingLineRows);
-    this.updateTotalFields();
-    if (this.nonSummaryFundingLineRows.length === 1) {
+    this.nonSummaryFundingLineRows.push(...this.summaryFundingLineRows);
+    this.updateTotalFields(this.nonSummaryFundingLineGridApi, this.nonSummaryFundingLineRows);
+    if (!this.nonSummaryFundingLineRows.length) {
       this.loadDataFromProgram();
     }
   }
 
   onSummaryGridReady(api: GridApi) {
     this.summaryFundingLineGridApi = api;
-    this.summaryFundingLineRows = [...this.nonSummaryFundingLineRows.filter((x, index) => index > 0)];
-    this.updateSummaryTotalFields();
+    this.summaryFundingLineRows = [...this.nonSummaryFundingLineRows];
+    this.updateTotalFields(this.summaryFundingLineGridApi, this.summaryFundingLineRows);
     this.summaryFundingLineGridApi.setRowData(this.summaryFundingLineRows);
   }
 
@@ -153,6 +207,56 @@ export class RequestsFundingLineGridComponent implements OnInit {
       .subscribe((res: RestResponse<Property<ExpenditureType>[]>) => {
         this.expTypeOptions = res.result.map(x => x.value).map(x => x.code);
       });
+
+    this.displayDropdownOptions = [
+      {
+        id: 'PR',
+        name: 'PR',
+        value: 'PR',
+        rawData: 'PR',
+        isSelected: true
+      },
+      {
+        id: 'APPN',
+        name: 'APPN',
+        value: 'APPN',
+        rawData: 'APPN',
+        isSelected: false
+      },
+      {
+        id: 'BA/BLIN',
+        name: 'BA/BLIN',
+        value: 'BA/BLIN',
+        rawData: 'BA/BLIN',
+        isSelected: false
+      },
+      {
+        id: 'SAG',
+        name: 'SAG',
+        value: 'SAG',
+        rawData: 'SAG',
+        isSelected: false
+      },
+      {
+        id: 'WUCD',
+        name: 'WUCD',
+        value: 'WUCD',
+        rawData: 'WUCD',
+        isSelected: false
+      },
+      {
+        id: 'EXP Type',
+        name: 'EXP Type',
+        value: 'EXP Type',
+        rawData: 'EXP Type',
+        isSelected: false
+      }
+    ];
+    this.insertDefaultOptions(this.appropriationDropdownOptions);
+    this.insertDefaultOptions(this.bablinDropdownOptions);
+    this.insertDefaultOptions(this.sagDropdownOptions);
+    this.insertDefaultOptions(this.wucdDropdownOptions);
+    this.insertDefaultOptions(this.expTypeDropdownOptions);
   }
 
   private loadDataFromProgram() {
@@ -161,10 +265,10 @@ export class RequestsFundingLineGridComponent implements OnInit {
       .pipe(map(resp => this.convertFundsToFiscalYear(resp)))
       .subscribe(resp => {
         const fundingLine = resp as FundingData[];
-        this.resetTotalFunding();
         this.nonSummaryFundingLineRows.push(...fundingLine);
-        this.updateTotalFields();
+        this.updateTotalFields(this.nonSummaryFundingLineGridApi, this.nonSummaryFundingLineRows);
         this.nonSummaryFundingLineGridApi.setRowData(this.nonSummaryFundingLineRows);
+        this.drawLineChart();
       });
   }
 
@@ -181,7 +285,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
   private fundingLineToFundingData(fundingLine: FundingLine) {
     const funds = fundingLine.funds;
     const fundingData = { ...fundingLine } as FundingData;
-    for (let i = this.pomYear - 3, x = 0; i < this.pomYear + 6; i++, x++) {
+    for (let i = this.pomYear - 3, x = 0; i < this.pomYear + 5; i++, x++) {
       const headerName = (i < this.pomYear - 1
         ? 'PY' + (this.pomYear - i === 2 ? '' : this.pomYear - i - 2)
         : i >= this.pomYear
@@ -197,11 +301,11 @@ export class RequestsFundingLineGridComponent implements OnInit {
   private convertFiscalYearToFunds(fundingLine: FundingData) {
     const fundingLineToSave: FundingLine = { ...fundingLine };
     fundingLineToSave.funds = {};
-    for (let i = this.pomYear - 2, x = 0; i < this.pomYear + 6; i++, x++) {
-      const headerName = (i < this.pomYear
-        ? 'PY' + (this.pomYear - i === 1 ? '' : this.pomYear - i - 1)
-        : i > this.pomYear
-        ? 'BY' + (i === this.pomYear + 1 ? '' : i - this.pomYear - 1)
+    for (let i = this.pomYear - 3, x = 0; i < this.pomYear + 5; i++, x++) {
+      const headerName = (i < this.pomYear - 1
+        ? 'PY' + (this.pomYear - i === 2 ? '' : this.pomYear - i - 2)
+        : i >= this.pomYear
+        ? 'BY' + (i === this.pomYear ? '' : i - this.pomYear)
         : 'CY'
       ).toLowerCase();
       fundingLineToSave.funds[i] = Number(fundingLine[headerName]);
@@ -212,12 +316,12 @@ export class RequestsFundingLineGridComponent implements OnInit {
 
   private setupSummaryFundingLineGrid() {
     const columnGroups: any[] = [];
-    for (let i = this.pomYear - 2, x = 0; i < this.pomYear + 6; i++, x++) {
+    for (let i = this.pomYear - 3, x = 0; i < this.pomYear + 5; i++, x++) {
       const headerName =
-        i < this.pomYear
-          ? 'PY' + (this.pomYear - i === 1 ? '' : '-' + (this.pomYear - i - 1))
-          : i > this.pomYear
-          ? 'BY' + (i === this.pomYear + 1 ? '' : '+' + (i - this.pomYear - 1))
+        i < this.pomYear - 1
+          ? 'PY' + (this.pomYear - i === 2 ? '' : '-' + (this.pomYear - i - 2))
+          : i >= this.pomYear
+          ? 'BY' + (i === this.pomYear ? '' : '+' + (i - this.pomYear))
           : 'CY';
       const fieldPrefix = headerName.toLowerCase().replace('+', '').replace('-', '');
       columnGroups.push({
@@ -228,9 +332,9 @@ export class RequestsFundingLineGridComponent implements OnInit {
         children: [
           {
             colId: 5 + x,
-            headerName: 'FY' + ((i - 1) % 100),
+            headerName: 'FY' + (i % 100),
             field: fieldPrefix,
-            editable: i > this.pomYear,
+            editable: i >= this.pomYear,
             suppressMovable: true,
             filter: false,
             sortable: false,
@@ -250,10 +354,8 @@ export class RequestsFundingLineGridComponent implements OnInit {
         colId: 0,
         headerName: 'APPN',
         showRowGroup: 'appropriation',
+        field: 'appropriationSummary',
         cellRenderer: GroupCellRenderer,
-        cellRendererParams: {
-          footerValueGetter: '"Total Funding"'
-        },
         editable: false,
         suppressMovable: true,
         filter: false,
@@ -269,9 +371,6 @@ export class RequestsFundingLineGridComponent implements OnInit {
         headerName: 'BA/BLIN',
         showRowGroup: 'baOrBlin',
         cellRenderer: GroupCellRenderer,
-        cellRendererParams: {
-          footerValueGetter: '""'
-        },
         editable: false,
         suppressMovable: true,
         filter: false,
@@ -287,9 +386,6 @@ export class RequestsFundingLineGridComponent implements OnInit {
         headerName: 'SAG',
         showRowGroup: 'sag',
         cellRenderer: GroupCellRenderer,
-        cellRendererParams: {
-          footerValueGetter: '""'
-        },
         editable: false,
         suppressMovable: true,
         filter: false,
@@ -305,9 +401,6 @@ export class RequestsFundingLineGridComponent implements OnInit {
         headerName: 'WUCD',
         showRowGroup: 'wucd',
         cellRenderer: GroupCellRenderer,
-        cellRendererParams: {
-          footerValueGetter: '""'
-        },
         editable: false,
         suppressMovable: true,
         filter: false,
@@ -322,9 +415,6 @@ export class RequestsFundingLineGridComponent implements OnInit {
         colId: 4,
         headerName: 'Exp Type',
         field: 'expenditureType',
-        cellRendererParams: {
-          footerValueGetter: '""'
-        },
         editable: false,
         suppressMovable: true,
         filter: false,
@@ -475,12 +565,12 @@ export class RequestsFundingLineGridComponent implements OnInit {
 
   private setupNonSummaryFundingLineGrid() {
     const columnGroups: any[] = [];
-    for (let i = this.pomYear - 2, x = 0; i < this.pomYear + 6; i++, x++) {
+    for (let i = this.pomYear - 3, x = 0; i < this.pomYear + 5; i++, x++) {
       const headerName =
-        i < this.pomYear
-          ? 'PY' + (this.pomYear - i === 1 ? '' : '-' + (this.pomYear - i - 1))
-          : i > this.pomYear
-          ? 'BY' + (i === this.pomYear + 1 ? '' : '+' + (i - this.pomYear - 1))
+        i < this.pomYear - 1
+          ? 'PY' + (this.pomYear - i === 2 ? '' : '-' + (this.pomYear - i - 2))
+          : i >= this.pomYear
+          ? 'BY' + (i === this.pomYear ? '' : '+' + (i - this.pomYear))
           : 'CY';
       const fieldPrefix = headerName.toLowerCase().replace('+', '').replace('-', '');
       columnGroups.push({
@@ -491,14 +581,14 @@ export class RequestsFundingLineGridComponent implements OnInit {
         children: [
           {
             colId: 4 + x,
-            headerName: 'FY' + ((i - 1) % 100),
+            headerName: 'FY' + (i % 100),
             field: fieldPrefix,
-            editable: i > this.pomYear,
+            editable: i >= this.pomYear,
             suppressMovable: true,
             filter: false,
             sortable: false,
             suppressMenu: true,
-            cellClass: params => ['numeric-class', params.rowIndex === 0 ? 'aggregate-cell' : 'regular-cell'],
+            cellClass: params => ['numeric-class', 'regular-cell'],
             cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
             minWidth: 80,
             cellEditor: NumericCellEditor.create({ returnUndefinedOnZero: false }),
@@ -523,7 +613,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
             filter: false,
             sortable: false,
             suppressMenu: true,
-            cellClass: params => ['text-class', params.rowIndex === 0 ? 'aggregate-cell' : 'regular-cell'],
+            cellClass: params => ['text-class', 'regular-cell'],
             cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-start' },
             maxWidth: 110,
             minWidth: 110,
@@ -543,7 +633,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
             filter: false,
             sortable: false,
             suppressMenu: true,
-            cellClass: params => ['text-class', params.rowIndex === 0 ? 'aggregate-cell' : 'regular-cell'],
+            cellClass: params => ['text-class', 'regular-cell'],
             cellStyle: {
               display: 'flex',
               'align-items': 'center',
@@ -571,7 +661,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
             filter: false,
             sortable: false,
             suppressMenu: true,
-            cellClass: params => ['text-class', params.rowIndex === 0 ? 'aggregate-cell' : 'regular-cell'],
+            cellClass: params => ['text-class', 'regular-cell'],
             cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-start' },
             maxWidth: 110,
             minWidth: 110,
@@ -591,7 +681,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
             filter: false,
             sortable: false,
             suppressMenu: true,
-            cellClass: params => ['text-class', params.rowIndex === 0 ? 'aggregate-cell' : 'regular-cell'],
+            cellClass: params => ['text-class', 'regular-cell'],
             cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-start' },
             maxWidth: 110,
             minWidth: 110,
@@ -611,7 +701,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
             filter: false,
             sortable: false,
             suppressMenu: true,
-            cellClass: params => ['text-class', params.rowIndex === 0 ? 'aggregate-cell' : 'regular-cell'],
+            cellClass: params => ['text-class', 'regular-cell'],
             cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-start' },
             maxWidth: 110,
             minWidth: 110,
@@ -633,7 +723,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
         filter: false,
         sortable: false,
         suppressMenu: true,
-        cellClass: params => ['numeric-class', params.rowIndex === 0 ? 'aggregate-cell' : 'regular-cell'],
+        cellClass: params => ['numeric-class', 'regular-cell'],
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
         minWidth: 80,
         valueFormatter: params => this.currencyFormatter(params.data[params.colDef.field])
@@ -646,7 +736,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
         filter: false,
         sortable: false,
         suppressMenu: true,
-        cellClass: params => ['numeric-class', params.rowIndex === 0 ? 'aggregate-cell' : 'regular-cell'],
+        cellClass: params => ['numeric-class', 'regular-cell'],
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
         minWidth: 80,
         cellEditor: NumericCellEditor.create({ returnUndefinedOnZero: false }),
@@ -660,32 +750,12 @@ export class RequestsFundingLineGridComponent implements OnInit {
         filter: false,
         sortable: false,
         suppressMenu: true,
-        cellClass: params => (params.rowIndex === 0 ? 'aggregate-cell' : 'regular-cell'),
+        cellClass: params => 'regular-cell',
         cellRendererFramework: ActionCellRendererComponent,
         minWidth: 120
       }
     ];
-    this.resetTotalFunding();
-  }
-
-  private resetTotalFunding() {
-    this.nonSummaryFundingLineRows[0] = {
-      appropriation: 'Total Funding',
-
-      py1: 0,
-      py: 0,
-      cy: 0,
-      by: 0,
-      by1: 0,
-      by2: 0,
-      by3: 0,
-      by4: 0,
-
-      fyTotal: 0,
-      ctc: 0,
-
-      action: null
-    };
+    this.updateTotalFields(this.nonSummaryFundingLineGridApi, this.nonSummaryFundingLineRows);
   }
 
   currencyFormatter(params) {
@@ -762,8 +832,10 @@ export class RequestsFundingLineGridComponent implements OnInit {
       .subscribe(
         fundingData => {
           this.nonSummaryFundingLineRows[rowIndex] = fundingData;
-          this.updateTotalFields();
+          this.updateTotalFields(this.nonSummaryFundingLineGridApi, this.nonSummaryFundingLineRows);
           this.viewNonSummaryMode(rowIndex);
+          this.reloadDropdownOptions();
+          this.drawLineChart();
         },
         error => {
           this.dialogService.displayDebug(error);
@@ -772,29 +844,47 @@ export class RequestsFundingLineGridComponent implements OnInit {
       );
   }
 
-  private updateTotalFields() {
-    this.resetTotalFunding();
-    this.nonSummaryFundingLineRows
-      .filter((row, index) => index > 0)
-      .forEach(row => {
-        let total = 0;
-        row.ctc = row.ctc ? row.ctc : 0;
-        for (let i = this.pomYear - 2; i < this.pomYear + 6; i++) {
-          const field =
-            i < this.pomYear
-              ? 'py' + (this.pomYear - i === 1 ? '' : this.pomYear - i - 1)
-              : i > this.pomYear
-              ? 'by' + (i === this.pomYear + 1 ? '' : i - this.pomYear - 1)
-              : 'cy';
-          this.nonSummaryFundingLineRows[0][field] += Number(row[field]);
-          if (i > this.pomYear) {
-            total += Number(row[field]);
-          }
+  private updateTotalFields(gridApi: GridApi, rows: FundingData[]) {
+    const totalRow = {
+      appropriationSummary: 'Total Funding',
+      appropriation: 'Total Funding',
+
+      py1: 0,
+      py: 0,
+      cy: 0,
+      by: 0,
+      by1: 0,
+      by2: 0,
+      by3: 0,
+      by4: 0,
+
+      fyTotal: 0,
+      ctc: 0,
+
+      action: null
+    };
+    rows.forEach(row => {
+      let total = 0;
+      row.ctc = row.ctc ? row.ctc : 0;
+      for (let i = this.pomYear - 3; i < this.pomYear + 5; i++) {
+        const field =
+          i < this.pomYear - 1
+            ? 'py' + (this.pomYear - i === 2 ? '' : this.pomYear - i - 2)
+            : i >= this.pomYear
+            ? 'by' + (i === this.pomYear ? '' : i - this.pomYear)
+            : 'cy';
+        totalRow[field] += Number(row[field]);
+        if (i >= this.pomYear) {
+          total += Number(row[field]);
         }
-        row.fyTotal = total;
-        this.nonSummaryFundingLineRows[0].ctc += Number(row.ctc);
-        this.nonSummaryFundingLineRows[0].fyTotal += Number(row.fyTotal);
-      });
+      }
+      row.fyTotal = total;
+      totalRow.ctc += Number(row.ctc);
+      totalRow.fyTotal += Number(row.fyTotal);
+    });
+    if (gridApi) {
+      gridApi.setPinnedTopRowData([{ ...totalRow }]);
+    }
   }
 
   private validateNonSummaryRowData(rowIndex: any) {
@@ -849,7 +939,9 @@ export class RequestsFundingLineGridComponent implements OnInit {
       this.fundingLineService.removeFundingLineById(this.nonSummaryFundingLineRows[rowIndex].id).subscribe(
         () => {
           this.performNonSummaryDelete(rowIndex);
-          this.updateTotalFields();
+          this.updateTotalFields(this.nonSummaryFundingLineGridApi, this.nonSummaryFundingLineRows);
+          this.reloadDropdownOptions();
+          this.drawLineChart();
         },
         error => {
           this.dialogService.displayDebug(error);
@@ -913,8 +1005,10 @@ export class RequestsFundingLineGridComponent implements OnInit {
         .subscribe(
           fundingData => {
             this.summaryFundingLineRows[rowIndex] = fundingData;
-            this.updateSummaryTotalFields();
+            this.updateTotalFields(this.summaryFundingLineGridApi, this.summaryFundingLineRows);
             this.viewSummaryMode(rowIndex);
+            this.reloadDropdownOptions();
+            this.drawLineChart();
           },
           error => {
             this.dialogService.displayDebug(error);
@@ -922,26 +1016,6 @@ export class RequestsFundingLineGridComponent implements OnInit {
           }
         );
     }
-  }
-
-  private updateSummaryTotalFields() {
-    this.summaryFundingLineRows.forEach(row => {
-      let total = 0;
-      for (let i = this.pomYear + 1; i < this.pomYear + 6; i++) {
-        const field =
-          i < this.pomYear
-            ? 'py' + (this.pomYear - i === 1 ? '' : this.pomYear - i - 1)
-            : i > this.pomYear
-            ? 'by' + (i === this.pomYear + 1 ? '' : i - this.pomYear - 1)
-            : 'cy';
-        row[field] = Number(row[field]);
-        if (i > this.pomYear) {
-          total += Number(row[field]);
-        }
-      }
-      row.ctc = Number(row.ctc);
-      row.fyTotal = total;
-    });
   }
 
   private cancelSummaryRow(rowIndex: number) {
@@ -961,9 +1035,11 @@ export class RequestsFundingLineGridComponent implements OnInit {
       this.fundingLineService.removeFundingLineById(this.summaryFundingLineRows[rowIndex].id).subscribe(
         () => {
           this.summaryFundingLineRows.splice(rowIndex, 1);
-          this.updateSummaryTotalFields();
+          this.updateTotalFields(this.summaryFundingLineGridApi, this.summaryFundingLineRows);
           this.summaryFundingLineGridApi.setRowData(this.summaryFundingLineRows);
           this.summaryFundingLineGridApi.refreshClientSideRowModel('aggregate');
+          this.reloadDropdownOptions();
+          this.drawLineChart();
         },
         error => {
           this.dialogService.displayDebug(error);
@@ -1092,6 +1168,456 @@ export class RequestsFundingLineGridComponent implements OnInit {
         baBlinDropdownComponent.updateList(list);
       });
     }
+  }
+
+  drawLineChart() {
+    const data = this.lineChartData();
+    this.chartData.dataTable = data;
+    if (this.chart && this.chart.wrapper) {
+      this.chart.draw();
+    }
+  }
+
+  lineChartData() {
+    let data: any[] = [['Fiscal Year']];
+    let hasData: boolean;
+
+    if (this.expTypeDropdown.visible) {
+      if (this.expTypeDropdown.selectedItem.toLowerCase() !== 'select') {
+        data = this.retrieveLineChartData(this.expTypeDropdown, this.expTypeDropdownOptions, 'expenditureType');
+        hasData = true;
+      }
+    }
+    if (this.wucdDropdown.visible && !hasData) {
+      if (this.wucdDropdown.selectedItem.toLowerCase() !== 'select') {
+        data = this.retrieveLineChartData(this.wucdDropdown, this.wucdDropdownOptions, 'wucd');
+        hasData = true;
+      }
+    }
+    if (this.sagDropdown.visible && !hasData) {
+      if (this.sagDropdown.selectedItem.toLowerCase() !== 'select') {
+        data = this.retrieveLineChartData(this.sagDropdown, this.sagDropdownOptions, 'sag');
+        hasData = true;
+      }
+    }
+    if (this.bablinDropdown.visible && !hasData) {
+      if (this.bablinDropdown.selectedItem.toLowerCase() !== 'select') {
+        data = this.retrieveLineChartData(this.bablinDropdown, this.bablinDropdownOptions, 'baOrBlin');
+        hasData = true;
+      }
+    }
+    if (this.appropriationDropdown.visible && !hasData) {
+      if (this.appropriationDropdown.selectedItem.toLowerCase() !== 'select') {
+        data = this.retrieveLineChartData(
+          this.appropriationDropdown,
+          this.appropriationDropdownOptions,
+          'appropriation'
+        );
+        hasData = true;
+      }
+    }
+
+    if (!hasData) {
+      data = [['Fiscal Year', 'Total Funding']];
+      const funds: number[] = [];
+      const fundingLineRows = this.summaryFundingLineGridApi
+        ? this.summaryFundingLineRows
+        : this.nonSummaryFundingLineRows;
+      fundingLineRows.forEach(row => {
+        const fundingLine = this.convertFiscalYearToFunds(row);
+        for (const year of Object.keys(fundingLine.funds)) {
+          funds[year] = funds[year] ?? 0;
+          funds[year] += Number(fundingLine.funds[year]) ?? 0;
+        }
+      });
+      for (let i = this.pomYear - 3, x = 0; i < this.pomYear + 5; i++) {
+        data.push(['FY' + (i % 100), funds[i] ?? 0]);
+      }
+    }
+
+    return data;
+  }
+
+  private retrieveLineChartData(dropdown: DropdownComponent, downpdownOptions: ListItem[], field: string) {
+    const data: any[] = [['Fiscal Year']];
+    let funds: number[] = [];
+    let fundingLineRows = this.summaryFundingLineGridApi ? this.summaryFundingLineRows : this.nonSummaryFundingLineRows;
+    if (dropdown.selectedItem.toLowerCase() === 'all') {
+      const current = [];
+      downpdownOptions
+        .filter((option, index) => index > 1)
+        .forEach(option => {
+          funds = [];
+          const legends = this.retrieveChartLegend();
+          data[0].push((legends.length ? legends + '/' : '') + option.name);
+          const fundingLineFiltered = this.filterFundingLineRow();
+          if (!this.isSingleChartDropdown()) {
+            fundingLineRows = fundingLineFiltered;
+          }
+          fundingLineRows
+            .filter(fundingLine => fundingLine[field] === option.name)
+            .forEach(row => {
+              const fundingLine = this.convertFiscalYearToFunds(row);
+              for (const year of Object.keys(fundingLine.funds)) {
+                funds[year] = funds[year] ?? 0;
+                funds[year] += Number(fundingLine.funds[year]) ?? 0;
+              }
+            });
+          current[option.name] = funds;
+        });
+      for (let i = this.pomYear - 3, x = 0; i < this.pomYear + 5; i++) {
+        const singleData = ['FY' + (i % 100)];
+        Object.keys(current).forEach(line => {
+          singleData.push(current[line][i]);
+        });
+        data.push(singleData);
+      }
+    } else {
+      data[0].push(this.retrieveChartLegend());
+      const fundingLineFiltered = this.filterFundingLineRow();
+      fundingLineFiltered.forEach(row => {
+        const fundingLine = this.convertFiscalYearToFunds(row);
+        for (const year of Object.keys(fundingLine.funds)) {
+          funds[year] = funds[year] ?? 0;
+          funds[year] += Number(fundingLine.funds[year]) ?? 0;
+        }
+      });
+      for (let i = this.pomYear - 3, x = 0; i < this.pomYear + 5; i++) {
+        data.push(['FY' + (i % 100), funds[i] ?? 0]);
+      }
+    }
+    return data;
+  }
+
+  private filterFundingLineRow() {
+    let filteredFundingLineRows = [];
+    const dropdowns: any[] = [
+      [this.appropriationDropdown, 'appropriation'],
+      [this.bablinDropdown, 'baOrBlin'],
+      [this.sagDropdown, 'sag'],
+      [this.wucdDropdown, 'wucd'],
+      [this.expTypeDropdown, 'expenditureType']
+    ];
+    const fundingLineRows = this.summaryFundingLineGridApi
+      ? this.summaryFundingLineRows
+      : this.nonSummaryFundingLineRows;
+
+    dropdowns.forEach((dropdownData, index) => {
+      const dropdown = dropdownData[0];
+      const field = dropdownData[1];
+      if (dropdown.visible) {
+        const selection = dropdown.selectedItem.toLowerCase();
+        if (selection !== 'select' && selection !== 'all') {
+          filteredFundingLineRows = filteredFundingLineRows.length
+            ? filteredFundingLineRows.filter(fundingLine => fundingLine[field] === dropdown.selectedItem)
+            : fundingLineRows.filter(fundingLine => fundingLine[field] === dropdown.selectedItem);
+        }
+      }
+    });
+    return filteredFundingLineRows;
+  }
+
+  private isSingleChartDropdown() {
+    const dropdowns = [
+      this.appropriationDropdown,
+      this.bablinDropdown,
+      this.sagDropdown,
+      this.wucdDropdown,
+      this.expTypeDropdown
+    ];
+    return dropdowns.filter(dropdown => dropdown.visible).length === 1;
+  }
+
+  private retrieveChartLegend() {
+    const dropdowns = [
+      this.appropriationDropdown,
+      this.bablinDropdown,
+      this.sagDropdown,
+      this.wucdDropdown,
+      this.expTypeDropdown
+    ];
+    const legends = [];
+    let legend: string;
+    dropdowns.forEach(dropdown => {
+      legend = this.retrieveDropdownValue(dropdown);
+      if (legend) {
+        legends.push(legend);
+      }
+    });
+    return legends.join('/');
+  }
+
+  private retrieveDropdownValue(dropdown: DropdownComponent) {
+    if (
+      dropdown.visible &&
+      dropdown.selectedItem.toLowerCase() !== 'select' &&
+      dropdown.selectedItem.toLowerCase() !== 'all'
+    ) {
+      return dropdown.selectedItem;
+    }
+    return null;
+  }
+
+  onDisplayDropdownChange(event: ListItem) {
+    this.clearOptions(this.appropriationDropdownOptions, this.appropriationDropdown);
+    this.clearOptions(this.bablinDropdownOptions, this.bablinDropdown);
+    this.clearOptions(this.sagDropdownOptions, this.sagDropdown);
+    this.clearOptions(this.wucdDropdownOptions, this.wucdDropdown);
+    this.clearOptions(this.expTypeDropdownOptions, this.expTypeDropdown);
+    switch (event.name.toUpperCase()) {
+      case 'APPN':
+        this.loadChartDropdown(this.appropriationDropdownOptions, 'appropriation');
+        break;
+      case 'BA/BLIN':
+        this.loadChartDropdown(this.bablinDropdownOptions, 'baOrBlin');
+        break;
+      case 'SAG':
+        this.loadChartDropdown(this.sagDropdownOptions, 'sag');
+        break;
+      case 'WUCD':
+        this.loadChartDropdown(this.wucdDropdownOptions, 'wucd');
+        break;
+      case 'EXP TYPE':
+        this.loadChartDropdown(this.expTypeDropdownOptions, 'expenditureType');
+        break;
+    }
+  }
+
+  onAppropiationDropdownChange(event: ListItem) {
+    this.clearOptions(this.bablinDropdownOptions, this.bablinDropdown);
+    if (event.name.toLowerCase() !== 'all' && event.name.toLowerCase() !== 'select') {
+      this.loadChartDropdown(this.bablinDropdownOptions, 'baOrBlin', 'appropriation', event.name);
+      this.bablinDropdown.visible = true;
+    }
+    this.clearOptions(this.sagDropdownOptions, this.sagDropdown);
+    this.clearOptions(this.wucdDropdownOptions, this.wucdDropdown);
+    this.clearOptions(this.expTypeDropdownOptions, this.expTypeDropdown);
+  }
+
+  onBablinDropdownChange(event: ListItem) {
+    this.clearOptions(this.sagDropdownOptions, this.sagDropdown);
+    if (event.name.toLowerCase() !== 'all' && event.name.toLowerCase() !== 'select') {
+      this.loadChartDropdown(this.sagDropdownOptions, 'sag', 'baOrBlin', event.name);
+      if (this.sagDropdownOptions.length > 2) {
+        this.sagDropdown.visible = true;
+      }
+    }
+    this.clearOptions(this.wucdDropdownOptions, this.wucdDropdown);
+    this.clearOptions(this.expTypeDropdownOptions, this.expTypeDropdown);
+  }
+
+  onSagDropdownChange(event: ListItem) {
+    this.clearOptions(this.wucdDropdownOptions, this.wucdDropdown);
+    if (event.name.toLowerCase() !== 'all' && event.name.toLowerCase() !== 'select') {
+      this.loadChartDropdown(this.wucdDropdownOptions, 'wucd', 'sag', event.name);
+      if (this.wucdDropdownOptions.length > 2) {
+        this.wucdDropdown.visible = true;
+      }
+    }
+    this.clearOptions(this.expTypeDropdownOptions, this.expTypeDropdown);
+  }
+
+  onWucdDropdownChange(event: ListItem) {
+    this.clearOptions(this.expTypeDropdownOptions, this.expTypeDropdown);
+    if (event.name.toLowerCase() !== 'all' && event.name.toLowerCase() !== 'select') {
+      this.loadChartDropdown(this.expTypeDropdownOptions, 'expenditureType', 'wucd', event.name);
+      if (this.expTypeDropdownOptions.length > 2) {
+        this.expTypeDropdown.visible = true;
+      }
+    }
+  }
+
+  private loadChartDropdown(options: ListItem[], field: string, originField?: string, selectedOrigin?: string) {
+    options.splice(0, options.length);
+    this.insertDefaultOptions(options);
+    const filteredFundingRows = this.filterFundingLineRow();
+    const dropdownOptions = [];
+    if (filteredFundingRows.length) {
+      dropdownOptions.push(
+        ...filteredFundingRows.filter(fundingLine => fundingLine[field]).map(fundingLine => fundingLine[field])
+      );
+    } else {
+      dropdownOptions.push(
+        ...this.nonSummaryFundingLineRows
+          .filter(fundingLine => (originField ? fundingLine[originField] === selectedOrigin : true))
+          .filter(fundingLine => fundingLine[field])
+          .map(fundingLine => fundingLine[field])
+      );
+    }
+    new Set(dropdownOptions).forEach(option => {
+      options.push({
+        id: option,
+        name: option,
+        rawData: option,
+        value: option,
+        isSelected: false
+      });
+    });
+  }
+
+  private insertDefaultOptions(options: ListItem[], setSelected?: boolean) {
+    options.push({
+      id: 'Select',
+      name: 'Select',
+      rawData: 'Select',
+      value: 'Select',
+      isSelected: setSelected
+    });
+    options.push({
+      id: 'All',
+      name: 'All',
+      rawData: 'All',
+      value: 'All',
+      isSelected: false
+    });
+  }
+
+  private clearOptions(options: ListItem[], dropdown: DropdownComponent) {
+    dropdown.selectedItem = 'Select';
+    options.splice(0, options.length);
+  }
+
+  private reloadDropdownOptions() {
+    const currentAppropriations = this.nonSummaryFundingLineRows
+      .filter(fundingLine => fundingLine.appropriation === this.appropriationDropdown.selectedItem)
+      .map(fundingLine => fundingLine.appropriation);
+    this.updateChartOptionDifferences(this.appropriationDropdownOptions, 'appropriation');
+    const appropriationSelection = currentAppropriations.filter(
+      option => option === this.appropriationDropdown.selectedItem
+    )[0];
+    if (!appropriationSelection) {
+      this.bablinDropdown.selectedItem = 'Select';
+      this.bablinDropdown.visible = false;
+      this.appropriationDropdown.selectedItem = 'Select';
+      this.sagDropdown.selectedItem = 'Select';
+      this.sagDropdown.visible = false;
+      this.wucdDropdown.selectedItem = 'Select';
+      this.wucdDropdown.visible = false;
+      this.expTypeDropdown.selectedItem = 'Select';
+      this.expTypeDropdown.visible = false;
+      this.loadChartDropdown(this.appropriationDropdownOptions, 'appropriation', null, null);
+      return;
+    }
+
+    const currentBablins = this.nonSummaryFundingLineRows
+      .filter(
+        fundingLine =>
+          fundingLine.appropriation === this.appropriationDropdown.selectedItem &&
+          fundingLine.baOrBlin === this.bablinDropdown.selectedItem
+      )
+      .map(fundingLine => fundingLine.baOrBlin);
+    this.updateChartOptionDifferences(this.bablinDropdownOptions, 'baOrBlin');
+    const bablinSelection = currentBablins.filter(option => option === this.bablinDropdown.selectedItem)[0];
+    if (!bablinSelection) {
+      this.bablinDropdown.selectedItem = 'Select';
+      if (this.appropriationDropdown.selectedItem.toLowerCase() === 'select') {
+        this.bablinDropdown.visible = false;
+      }
+      this.sagDropdown.selectedItem = 'Select';
+      this.sagDropdown.visible = false;
+      this.wucdDropdown.selectedItem = 'Select';
+      this.wucdDropdown.visible = false;
+      this.expTypeDropdown.selectedItem = 'Select';
+      this.expTypeDropdown.visible = false;
+      this.loadChartDropdown(
+        this.bablinDropdownOptions,
+        'baOrBlin',
+        'appropriation',
+        this.appropriationDropdown.selectedItem
+      );
+      return;
+    }
+
+    const currentSags = this.nonSummaryFundingLineRows
+      .filter(
+        fundingLine =>
+          fundingLine.appropriation === this.appropriationDropdown.selectedItem &&
+          fundingLine.baOrBlin === this.bablinDropdown.selectedItem &&
+          fundingLine.sag === this.sagDropdown.selectedItem
+      )
+      .map(fundingLine => fundingLine.sag);
+    this.updateChartOptionDifferences(this.sagDropdownOptions, 'sag');
+    const sagSelection = currentSags.filter(option => option === this.sagDropdown.selectedItem)[0];
+    if (!sagSelection) {
+      this.sagDropdown.selectedItem = 'Select';
+      if (this.bablinDropdown.selectedItem.toLowerCase() === 'select') {
+        this.sagDropdown.visible = false;
+      }
+      this.wucdDropdown.selectedItem = 'Select';
+      this.wucdDropdown.visible = false;
+      this.expTypeDropdown.selectedItem = 'Select';
+      this.expTypeDropdown.visible = false;
+      this.loadChartDropdown(this.sagDropdownOptions, 'sag', 'baOrBlin', this.bablinDropdown.selectedItem);
+      return;
+    }
+
+    const currentWucds = this.nonSummaryFundingLineRows
+      .filter(
+        fundingLine =>
+          fundingLine.appropriation === this.appropriationDropdown.selectedItem &&
+          fundingLine.baOrBlin === this.bablinDropdown.selectedItem &&
+          fundingLine.sag === this.sagDropdown.selectedItem &&
+          fundingLine.wucd === this.wucdDropdown.selectedItem
+      )
+      .map(fundingLine => fundingLine.wucd);
+    this.updateChartOptionDifferences(this.wucdDropdownOptions, 'wucd');
+    const wucdSelection = currentWucds.filter(option => option === this.wucdDropdown.selectedItem)[0];
+    if (!wucdSelection) {
+      this.wucdDropdown.selectedItem = 'Select';
+      if (this.sagDropdown.selectedItem.toLowerCase() === 'select') {
+        this.wucdDropdown.visible = false;
+      }
+      this.expTypeDropdown.selectedItem = 'Select';
+      this.expTypeDropdown.visible = false;
+      this.loadChartDropdown(this.wucdDropdownOptions, 'wucd', 'sag', this.sagDropdown.selectedItem);
+      return;
+    }
+
+    const currentExpTypes = this.nonSummaryFundingLineRows
+      .filter(
+        fundingLine =>
+          fundingLine.appropriation === this.appropriationDropdown.selectedItem &&
+          fundingLine.baOrBlin === this.bablinDropdown.selectedItem &&
+          fundingLine.sag === this.sagDropdown.selectedItem &&
+          fundingLine.wucd === this.wucdDropdown.selectedItem &&
+          fundingLine.expenditureType === this.expTypeDropdown.selectedItem
+      )
+      .map(fundingLine => fundingLine.expenditureType);
+    this.updateChartOptionDifferences(this.expTypeDropdownOptions, 'expenditureType');
+    const expTypeSelection = currentExpTypes.filter(option => option === this.expTypeDropdown.selectedItem)[0];
+    if (!expTypeSelection) {
+      this.expTypeDropdown.selectedItem = 'Select';
+      if (this.wucdDropdown.selectedItem.toLowerCase() === 'select') {
+        this.expTypeDropdown.visible = false;
+        this.loadChartDropdown(this.expTypeDropdownOptions, 'expenditureType', 'wucd', this.wucdDropdown.selectedItem);
+      }
+    }
+  }
+
+  private updateChartOptionDifferences(options: ListItem[], field: string) {
+    const filteredData = field === 'appropriation' ? this.nonSummaryFundingLineRows : this.filterFundingLineRow();
+    const differenceToRemove = options
+      .filter((option, index) => index > 2)
+      .map(option => option.name)
+      .filter(option => !filteredData.map(fundingLine => fundingLine[field]).includes(option));
+    const differenceToAdd = filteredData
+      .map(fundingLine => fundingLine[field])
+      .filter(fundingLine => !options.map(option => option.name).includes(fundingLine));
+    differenceToRemove.forEach(option =>
+      options.splice(
+        options.findIndex(o => o.name === option),
+        1
+      )
+    );
+    differenceToAdd.forEach(option =>
+      options.push({
+        id: option,
+        name: option,
+        rawData: option,
+        value: option,
+        isSelected: false
+      })
+    );
   }
 }
 

@@ -1,4 +1,4 @@
-<ng-container *ngIf="type == 'labelDropdown'">
+<ng-container *ngIf="type === 'labelDropdown' && visible">
   <div class="pfm-dropdown-section">
     <div class="pfm-label">
       <label>{{ label }}</label>
@@ -20,7 +20,7 @@
   </div>
 </ng-container>
 
-<ng-container *ngIf="type == 'attatchmentDropdown'">
+<ng-container *ngIf="type === 'attatchmentDropdown' && visible">
   <div class="pfm-dropdown-section">
     <div class="pfm-dropdown col-12 p-0">
       <select
@@ -38,7 +38,7 @@
   </div>
 </ng-container>
 
-<ng-container *ngIf="type == 'longLabelDropdown'">
+<ng-container *ngIf="type === 'longLabelDropdown' && visible">
   <div class="pfm-dropdown-section">
     <div class="pfm-dropdown-long">
       <select
@@ -56,7 +56,7 @@
   </div>
 </ng-container>
 
-<ng-container *ngIf="type == 'iconDropdown'">
+<ng-container *ngIf="type === 'iconDropdown' && visible">
   <div [id]="id" ngbDropdown container="body" class="d-inline-block">
     <span class="icon-dropown" *ngIf="iconName" [title]="title">
       <fa-icon [icon]="iconName" ngbDropdownToggle></fa-icon>
