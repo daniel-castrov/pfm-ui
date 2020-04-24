@@ -160,7 +160,9 @@ export class ScheduleComponent implements OnInit {
       for (let i = 0; i < this.scheduleGridRows.length; i++) {
         this.viewMode(i);
       }
-      this.gridApi.setRowData(this.scheduleGridRows);
+      if (this.gridApi) {
+        this.gridApi.setRowData(this.scheduleGridRows);
+      }
       this.drawGanttChart(true);
     });
   }
@@ -233,12 +235,12 @@ export class ScheduleComponent implements OnInit {
   }
 
   drawTitleOnTop() {
-    const g = document
-      .getElementsByTagName('google-chart')[0]
-      .getElementsByTagName('svg')[0]
-      .getElementsByTagName('g')[1];
-    document.getElementsByTagName('google-chart')[0].getElementsByTagName('svg')[0].parentElement.style.top = '40px';
-    document.getElementsByTagName('google-chart')[0].getElementsByTagName('svg')[0].style.overflow = 'visible';
+    const scheduleGanttChartChart = document
+      .getElementsByClassName('gantt-chart-container')[0]
+      .getElementsByTagName('google-chart')[0];
+    const g = scheduleGanttChartChart.getElementsByTagName('svg')[0].getElementsByTagName('g')[1];
+    scheduleGanttChartChart.getElementsByTagName('svg')[0].parentElement.style.top = '40px';
+    scheduleGanttChartChart.getElementsByTagName('svg')[0].style.overflow = 'visible';
     const height = Number(g.getElementsByTagName('text')[0].getAttribute('y')) + 19;
     g.setAttribute('transform', 'translate(0,-' + height + ')');
   }

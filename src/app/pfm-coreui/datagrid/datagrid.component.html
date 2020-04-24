@@ -75,6 +75,7 @@
       [suppressPaginationPanel]="true"
       (paginationChanged)="agGridPagination.onPaginationChanged($event)"
       domLayout="autoHeight"
+      [pinnedTopRowData]="pinnedTopRowData"
     >
     </ag-grid-angular>
     <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>

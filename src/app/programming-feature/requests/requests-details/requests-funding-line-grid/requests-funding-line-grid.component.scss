@@ -24,10 +24,11 @@ fa-icon {
   flex-grow: 1;
 }
 
-:host ::ng-deep .pfm-data .aggregate-cell {
+:host ::ng-deep .pfm-data .ag-body-viewport .aggregate-cell,
+:host ::ng-deep .pfm-data .ag-row-pinned {
   background-color: #ffeb3b59;
 }
 
-:host ::ng-deep .pfm-data .regular-cell {
+:host ::ng-deep .pfm-data .ag-body-viewport .regular-cell {
   background-color: #bbced7;
 }
