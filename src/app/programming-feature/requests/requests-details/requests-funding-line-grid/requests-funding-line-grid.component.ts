@@ -900,7 +900,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
     } else if (row.sag && (!row.sag.length || row.sag.toLowerCase() === 'select')) {
       errorMessage = 'Please, select a SAG.';
     } else if (row.wucd && (!row.wucd.length || row.wucd.toLowerCase() === 'select')) {
-      errorMessage = 'Please, select a WUCD. ';
+      errorMessage = 'Please, select a WUCD.';
     } else if (row.expenditureType && (!row.expenditureType.length || row.expenditureType.toLowerCase() === 'select')) {
       errorMessage = 'Please, select a Exp Type.';
     } else if (
@@ -915,7 +915,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
         );
       })
     ) {
-      errorMessage = 'You have repeated an existing funding line.  Please delete this row and edit the existing line.';
+      errorMessage = 'You have repeated an existing funding line. Please delete this row and edit the existing line.';
     }
     if (errorMessage.length) {
       this.dialogService.displayError(errorMessage);
