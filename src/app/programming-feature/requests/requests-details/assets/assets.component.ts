@@ -387,14 +387,14 @@ export class AssetsComponent implements OnInit {
       .then(
         fundingLine => {
           const errorFields = [];
-          for (let i = this.pomYear; i < this.pomYear + 6; i++) {
+          for (let i = this.pomYear; i < this.pomYear + 5; i++) {
             const totalCost = fundingLine.funds[i] || 0;
             let totalAssetCost = 0;
             this.assetSummaryRows.forEach(summary => {
               totalAssetCost += summary.details[i].totalCost;
             });
             if (totalAssetCost > totalCost) {
-              const index = i - this.pomYear;
+              const index = i - this.pomYear + 1;
               errorFields.push(11 + 3 * index);
             }
           }
@@ -590,7 +590,8 @@ export class AssetsComponent implements OnInit {
                 minWidth: 80,
                 valueGetter: params => params.data.details[i].totalCost,
                 valueSetter: params => {
-                  params.data.details[i + 1].totalCost = Number(params.newValue);
+                  params.data.details[i].totalCost = Number(params.newValue);
+
                   return true;
                 },
                 cellEditor: NumericCellEditor.create({
