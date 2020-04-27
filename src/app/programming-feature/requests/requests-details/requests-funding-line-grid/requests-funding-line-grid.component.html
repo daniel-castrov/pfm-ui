@@ -1,6 +1,90 @@
 <div>
-  <pfm-toggle-input [checked]="showSubtotals" [label]="'Show Subtotals'" (valueChanged)="onToggleValueChanged($event)">
-  </pfm-toggle-input>
+  <div class="row col-12">
+    <google-chart #googleChart [data]="chartData"></google-chart>
+    <div class="row col-12 mx-auto">
+      <pfm-dropdown
+        #displayDropdown
+        class="col-2"
+        (selectionChanged)="onDisplayDropdownChange($event)"
+        [fieldName]="'name'"
+        [fieldLabel]="'name'"
+        [defaultOption]="displayDropdownOptions[0]"
+        [options]="displayDropdownOptions"
+        [label]="'Display'"
+        [showPrompt]="false"
+      >
+      </pfm-dropdown>
+      <pfm-dropdown
+        #appropriationDropdown
+        class="col-1"
+        (selectionChanged)="onAppropiationDropdownChange($event)"
+        [fieldName]="'name'"
+        [fieldLabel]="'name'"
+        [options]="appropriationDropdownOptions"
+        [visible]="appropriationDropdownOptions.length > 2"
+        [showPrompt]="false"
+      >
+      </pfm-dropdown>
+      <pfm-dropdown
+        #bablinDropdown
+        class="col-1"
+        (selectionChanged)="onBablinDropdownChange($event)"
+        [fieldName]="'name'"
+        [fieldLabel]="'name'"
+        [defaultOption]="'Select'"
+        [options]="bablinDropdownOptions"
+        [visible]="bablinDropdownOptions.length > 2"
+        [showPrompt]="false"
+      >
+      </pfm-dropdown>
+      <pfm-dropdown
+        #sagDropdown
+        class="col-1"
+        (selectionChanged)="onSagDropdownChange($event)"
+        [fieldName]="'name'"
+        [fieldLabel]="'name'"
+        [defaultOption]="'Select'"
+        [options]="sagDropdownOptions"
+        [visible]="sagDropdownOptions.length > 2"
+        [showPrompt]="false"
+      >
+      </pfm-dropdown>
+      <pfm-dropdown
+        #wucdDropdown
+        class="col-1"
+        (selectionChanged)="onWucdDropdownChange($event)"
+        [fieldName]="'name'"
+        [fieldLabel]="'name'"
+        [defaultOption]="'Select'"
+        [options]="wucdDropdownOptions"
+        [visible]="wucdDropdownOptions.length > 2"
+        [showPrompt]="false"
+      >
+      </pfm-dropdown>
+      <pfm-dropdown
+        #expTypeDropdown
+        class="col-1"
+        [fieldName]="'name'"
+        [fieldLabel]="'name'"
+        [defaultOption]="'Select'"
+        [options]="expTypeDropdownOptions"
+        [visible]="expTypeDropdownOptions.length > 2"
+        [showPrompt]="false"
+      >
+      </pfm-dropdown>
+      <button class="col-1" type="button" class="btn btn-primary" (click)="drawLineChart()">
+        Go
+      </button>
+    </div>
+  </div>
+  <div class="mt-5">
+    <pfm-toggle-input
+      [checked]="showSubtotals"
+      [label]="'Show Subtotals'"
+      (valueChanged)="onToggleValueChanged($event)"
+    >
+    </pfm-toggle-input>
+  </div>
   <div class="grid-container" *ngIf="showSubtotals">
     <pfm-datagrid
       [extras]="expandCollapse"
@@ -10,7 +94,6 @@
       (cellAction)="onSummaryCellAction($event)"
       [showPagination]="false"
       (mousedown)="onSummaryMouseDown($event)"
-      [showGrandTotal]="true"
     >
     </pfm-datagrid>
   </div>

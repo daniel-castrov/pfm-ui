@@ -22,6 +22,7 @@ export class DropdownComponent implements ValidatedComponent, OnInit {
   @Input() attachmentsDisabled: boolean;
   @Input() defaultOption: ListItem;
   @Input() showPrompt = true;
+  @Input() visible = true;
   @Output() selectionChanged = new EventEmitter<any>();
 
   selectedItem: string;

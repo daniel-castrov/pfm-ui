@@ -22,6 +22,9 @@ import { AppModel } from '../../../pfm-common-models/AppModel';
 import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
 import { PlanningStatus } from 'src/app/planning-feature/models/enumerators/planning-status.model';
 import { IntIntMap } from '../../models/IntIntMap';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ProgramStatus } from '../../models/enumerations/program-status.model';
+import { RoleConstants } from 'src/app/pfm-common-models/role-contants.model';
 
 @Component({
   selector: 'pfm-requests-summary',
@@ -61,6 +64,19 @@ export class RequestsSummaryComponent implements OnInit {
   baBlinSummary: IntIntMap;
   negativeValidationDialog = {
     title: 'Caution',
+    bodyText: `At least one year's PR Totals are below the organization TOAs. Do you want to continue?`,
+    continueAction: null,
+    display: false
+  };
+
+  createProgramDialog = {
+    title: 'Add New Program',
+    form: new FormGroup({
+      shortName: new FormControl('', [Validators.required]),
+      longName: new FormControl('', [Validators.required]),
+      type: new FormControl('PROGRAM', [Validators.required]),
+      organizationId: new FormControl('', [Validators.required])
+    }),
     bodyText: `At least one year's PR Totals are below the organization TOAs. Do you want to continue?`,
     continueAction: null,
     display: false
@@ -159,14 +175,18 @@ export class RequestsSummaryComponent implements OnInit {
     );
   }
 
-  async setupVisibility() {
-    const response = await this.visibilityService.isCurrentlyVisible('requests-summary-component').toPromise();
-    if ((response as any).result) {
-      if (!this.appModel['visibilityDef']) {
-        this.appModel['visibilityDef'] = {};
-      }
-      this.appModel['visibilityDef']['requests-summary-component'] = (response as any).result;
-    }
+  setupVisibility() {
+    this.visibilityService
+      .isCurrentlyVisible('requests-summary-component')
+      .toPromise()
+      .then(response => {
+        if ((response as any).result) {
+          if (!this.appModel['visibilityDef']) {
+            this.appModel['visibilityDef'] = {};
+          }
+          this.appModel['visibilityDef']['requests-summary-component'] = (response as any).result;
+        }
+      });
   }
 
   setupDropDown() {
@@ -185,7 +205,7 @@ export class RequestsSummaryComponent implements OnInit {
           dropdownOptions.unshift(showAllOrg);
         }
         this.availableOrgs = this.toListItemOrgs(dropdownOptions.concat(orgs));
-        if (this.availableOrgs.length === 1) {
+        if (this.availableOrgs.length === 1 || this.appModel.userDetails.roles.includes(RoleConstants.POM_MANAGER)) {
           this.organizationSelected(this.availableOrgs[0]);
         }
         this.dropdownDefault = this.selectedOrg;
@@ -319,7 +339,13 @@ export class RequestsSummaryComponent implements OnInit {
 
   handleAdd(addEvent: any) {
     if (addEvent.action === 'new-program') {
-      this.router.navigate(['/programming/requests/details/' + undefined]);
+      this.createProgramDialog.form.patchValue({
+        shortName: '',
+        longName: '',
+        type: 'PROGRAM',
+        organizationId: this.selectedOrg.value ?? ''
+      });
+      this.createProgramDialog.display = true;
     } else if (addEvent.action === 'previously-funded-program') {
       this.busy = true;
       this.mrdbService.getProgramsMinusPrs(this.selectedOrg.value, this.programmingModel.programs).subscribe(
@@ -346,32 +372,24 @@ export class RequestsSummaryComponent implements OnInit {
   onImportProgram() {}
 
   onApproveOrganization(): void {
-    const validation = this.validateToa();
-
-    if (validation === TOAValidationStatus.POSITIVE) {
-      this.toastService.displayError(
-        'No program requests were approved. Some requests caused organization TOAs to be exceeded.'
-      );
-      return;
-    } else if (validation === TOAValidationStatus.NEGATIVE) {
-      this.negativeValidationDialog.display = true;
-      this.negativeValidationDialog.continueAction = this.approveOrganization.bind(this);
-      return;
-    }
     this.approveOrganization();
   }
 
-  approveOrganization() {
+  approveOrganization(skipToaValidation?: boolean) {
     this.programmingService
-      .processPRsForContainer(this.programmingModel.pom.workspaceId, 'Approve Organization', this.selectedOrg.value)
+      .processPRsForContainer(
+        this.programmingModel.pom.workspaceId,
+        'Approve Organization',
+        this.selectedOrg.value,
+        skipToaValidation
+      )
       .subscribe(
         resp => {
           this.organizationSelected(this.selectedOrg);
           this.toastService.displaySuccess('All program requests have been approved successfully.');
         },
         error => {
-          const err = (error as any).error;
-          this.toastService.displayError(err.error);
+          this.handleActionError(error, this.approveOrganization.bind(this));
         },
         () => (this.negativeValidationDialog.display = false)
       );
@@ -393,64 +411,59 @@ export class RequestsSummaryComponent implements OnInit {
   }
 
   onAdvanceOrganization() {
-    const validation = this.validateToa();
-
-    if (validation === TOAValidationStatus.POSITIVE) {
-      this.toastService.displayError(
-        'No program requests were advanced. Some requests caused organization TOAs to be exceeded.'
-      );
-      return;
-    } else if (validation === TOAValidationStatus.NEGATIVE) {
-      this.negativeValidationDialog.display = true;
-      this.negativeValidationDialog.continueAction = this.advanceOrganization.bind(this);
-      return;
-    }
     this.advanceOrganization();
   }
 
-  advanceOrganization() {
+  advanceOrganization(skipToaValidation?: boolean) {
     this.programmingService
-      .processPRsForContainer(this.programmingModel.pom.workspaceId, 'Advance Organization', this.selectedOrg.value)
+      .processPRsForContainer(
+        this.programmingModel.pom.workspaceId,
+        'Advance Organization',
+        this.selectedOrg.value,
+        skipToaValidation
+      )
       .subscribe(
         resp => {
           this.organizationSelected(this.selectedOrg);
           this.toastService.displaySuccess('All program requests successfully advanced.');
         },
         error => {
-          const err = (error as any).error;
-          this.toastService.displayError(err.error);
+          this.handleActionError(error, this.advanceOrganization.bind(this));
         },
         () => (this.negativeValidationDialog.display = false)
       );
   }
 
   onApproveAllPrs(): void {
-    const validation = this.validateToa();
-    if (validation === TOAValidationStatus.POSITIVE) {
-      this.toastService.displayError(
-        'No program requests were approved. Some requests caused organization TOAs to be exceeded.'
-      );
-      return;
-    } else if (validation === TOAValidationStatus.NEGATIVE) {
-      this.negativeValidationDialog.display = true;
-      this.negativeValidationDialog.continueAction = this.approveAllPRs.bind(this);
-      return;
-    }
     this.approveAllPRs();
   }
 
-  approveAllPRs(): void {
-    this.programmingService.processPRsForContainer(this.programmingModel.pom.workspaceId, 'Approve All PRs').subscribe(
-      resp => {
-        this.organizationSelected(this.selectedOrg);
-        this.toastService.displaySuccess('All program requests successfully approved.');
-      },
-      error => {
-        const err = (error as any).error;
-        this.toastService.displayError(err.error);
-      },
-      () => (this.negativeValidationDialog.display = false)
-    );
+  approveAllPRs(skipToaValidation?: boolean): void {
+    this.programmingService
+      .processPRsForContainer(this.programmingModel.pom.workspaceId, 'Approve All PRs', undefined, skipToaValidation)
+      .subscribe(
+        resp => {
+          this.organizationSelected(this.selectedOrg);
+          this.toastService.displaySuccess('All program requests successfully approved.');
+        },
+        error => {
+          this.handleActionError(error, this.approveAllPRs.bind(this));
+        },
+        () => (this.negativeValidationDialog.display = false)
+      );
+  }
+
+  handleActionError(error, action) {
+    const err = (error as any).error;
+    const errorStr = err.error;
+    if (errorStr.toLowerCase().includes('below')) {
+      this.negativeValidationDialog.display = true;
+      this.negativeValidationDialog.continueAction = () => {
+        action(true);
+      };
+    } else {
+      this.toastService.displayError(err.error);
+    }
   }
 
   getRespRoleId(roleStr: string): any {
@@ -468,66 +481,54 @@ export class RequestsSummaryComponent implements OnInit {
     this.griddata = data;
   }
 
-  validateToa(): TOAValidationStatus {
-    let validationStatus = TOAValidationStatus.PASSED;
-
-    if (!this.selectedOrg.value) {
-      for (const org of this.orgs) {
-        const validOrg = this.validateOrganizationToa(org.id);
-        if (validOrg !== TOAValidationStatus.PASSED) {
-          validationStatus = validOrg;
-        }
-        if (validationStatus === TOAValidationStatus.POSITIVE) {
-          break;
-        }
-      }
-    } else {
-      validationStatus = this.validateOrganizationToa(this.selectedOrg.value);
-    }
-    return validationStatus;
-  }
-
-  private validateOrganizationToa(organizationId: string): TOAValidationStatus {
-    const totals = this.calculateTotals(organizationId);
-    let validationStatus = TOAValidationStatus.PASSED;
-    // Add difference to data
-    for (let i = 0; i < 5; i++) {
-      const difference: number = totals[i].amount - this.programmingModel.pom.orgToas[organizationId][i].amount;
-      if (difference < 0) {
-        validationStatus = TOAValidationStatus.NEGATIVE;
-      } else if (difference > 0) {
-        validationStatus = TOAValidationStatus.POSITIVE;
-        break;
-      }
-    }
-    return validationStatus;
-  }
-
-  // Used to calculate total funds per year
-  private calculateTotals(organizationId: string): any[] {
-    const totals: any[] = [];
-    const orgPrs = this.griddata.filter(x => x.organizationId === organizationId);
-    for (const row of orgPrs) {
-      for (let i = 0; i < 5; i++) {
-        const year = this.pomYear + i;
-        if (!totals[i]) {
-          totals[i] = { year, amount: 0 };
-        }
-        if (row.funds[this.pomYear + i]) {
-          totals[i].amount += row.funds[year];
-        }
-      }
-    }
-    return totals;
-  }
-
   onCancelNegativeValidationDialog() {
     this.negativeValidationDialog.display = false;
   }
-}
 
-const enum TOAValidationStatus {
-  PASSED = 'PASSED',
-  POSITIVE = 'POSITIVE',
-  NEGATIVE = 'NEGATIVE'
+  onCancelCreateProgramDialog() {
+    this.createProgramDialog.display = false;
+  }
+
+  onCreateProgramAction() {
+    const program = {
+      shortName: this.createProgramDialog.form.get(['shortName']).value,
+      longName: this.createProgramDialog.form.get(['longName']).value,
+      type: this.createProgramDialog.form.get(['type']).value,
+      organizationId: this.createProgramDialog.form.get(['organizationId']).value
+    } as Program;
+    program.containerId = this.programmingModel.pom.workspaceId;
+    program.programStatus = ProgramStatus.SAVED;
+    const canSave = this.createProgramDialog.form.valid;
+    if (canSave) {
+      this.programmingService.create(program).subscribe(
+        resp => {
+          const resultProgram = resp.result as Program;
+          this.toastService.displaySuccess('Program Request saved successfully.');
+          this.router.navigate([
+            '/programming/requests/details/' + resultProgram.id,
+            {
+              pomYear: this.pomYear
+            }
+          ]);
+        },
+        error => {
+          this.toastService.displayError('An error has occurred while attempting to save program.');
+        },
+        () => (this.busy = false)
+      );
+    } else {
+      if (this.createProgramDialog.form.get('shortName').errors?.required) {
+        this.toastService.displayError('Program ID field must not be empty.');
+      }
+      if (this.createProgramDialog.form.get('longName').errors?.required) {
+        this.toastService.displayError('Program Name field must not be empty.');
+      }
+      if (this.createProgramDialog.form.get('type').errors?.required) {
+        this.toastService.displayError('Program Type field must not be empty.');
+      }
+      if (this.createProgramDialog.form.get('organizationId').errors?.required) {
+        this.toastService.displayError('Organization field must not be empty.');
+      }
+    }
+  }
 }

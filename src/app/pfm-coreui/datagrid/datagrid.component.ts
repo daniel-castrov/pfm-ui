@@ -25,6 +25,7 @@ export class DatagridComponent implements OnInit {
   @Input() excelMessage = 'UNCLASSIFIED / FOUO';
   @Input() suppressKeyboardEvent = true;
   @Input() rowDragManaged = true;
+  @Input() pinnedTopRowData = [];
 
   private dropdownCtaOptions: ListItem[];
 

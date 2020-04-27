@@ -15,13 +15,29 @@ export abstract class ProgrammingService extends BaseRestService {
    * @param organizationId - Organization Id for filtering by organization, null for all
    */
   abstract getPRsForContainer(containerId: string, organizationId: string): Observable<object>;
+
   abstract getBaBlinSummary(containerId: string, organizationId?: string): Observable<object>;
-  abstract processPRsForContainer(containerId: string, action: string, organizationId?: string): Observable<object>;
+
+  abstract processPRsForContainer(
+    containerId: string,
+    action: string,
+    organizationId?: string,
+    skipToaValidation?: boolean
+  ): Observable<object>;
+
   abstract getPermittedOrganizations(): Observable<object>;
+
   abstract getPRForYearAndShortName(year: number, shortName: string): Observable<any>;
+
   abstract getProgramById(id: string): Observable<any>;
+
   abstract updateProgram(program: Program): Observable<any>;
+
+  abstract create(program: Program): Observable<any>;
+
   abstract save(program: Program): Observable<any>;
+
   abstract reject(program: Program): Observable<any>;
+
   abstract approve(program: Program): Observable<any>;
 }
