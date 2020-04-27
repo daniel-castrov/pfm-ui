@@ -1496,7 +1496,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
       const appropriationSelection = currentAppropriations.filter(
         option => option === this.appropriationDropdown.selectedItem
       )[0];
-      if (!appropriationSelection) {
+      if (!appropriationSelection && this.appropriationDropdown.selectedItem !== 'All') {
         this.bablinDropdown.selectedItem = 'Select';
         this.bablinDropdown.visible = false;
         this.appropriationDropdown.selectedItem = 'Select';
@@ -1520,7 +1520,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
       const currentBablins = filterChain.map(fundingLine => fundingLine.baOrBlin);
       this.updateChartOptionDifferences(this.bablinDropdownOptions, 'baOrBlin');
       const bablinSelection = currentBablins.filter(option => option === this.bablinDropdown.selectedItem)[0];
-      if (!bablinSelection) {
+      if (!bablinSelection && this.bablinDropdown.selectedItem !== 'All') {
         this.bablinDropdown.selectedItem = 'Select';
         if (this.appropriationDropdown.selectedItem.toLowerCase() === 'select' && this.appropriationDropdown.visible) {
           this.bablinDropdown.visible = false;
@@ -1548,7 +1548,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
       const currentSags = filterChain.map(fundingLine => fundingLine.sag);
       this.updateChartOptionDifferences(this.sagDropdownOptions, 'sag');
       const sagSelection = currentSags.filter(option => option === this.sagDropdown.selectedItem)[0];
-      if (!sagSelection) {
+      if (!sagSelection && this.sagDropdown.selectedItem !== 'All') {
         this.sagDropdown.selectedItem = 'Select';
         if (this.bablinDropdown.selectedItem.toLowerCase() === 'select' && this.bablinDropdown.visible) {
           this.sagDropdown.visible = false;
@@ -1569,7 +1569,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
       const currentWucds = filterChain.map(fundingLine => fundingLine.wucd);
       this.updateChartOptionDifferences(this.wucdDropdownOptions, 'wucd');
       const wucdSelection = currentWucds.filter(option => option === this.wucdDropdown.selectedItem)[0];
-      if (!wucdSelection) {
+      if (!wucdSelection && this.wucdDropdown.selectedItem !== 'All') {
         this.wucdDropdown.selectedItem = 'Select';
         if (this.sagDropdown.selectedItem.toLowerCase() === 'select' && this.sagDropdown.visible) {
           this.wucdDropdown.visible = false;
@@ -1590,7 +1590,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
       const currentExpTypes = filterChain.map(fundingLine => fundingLine.expenditureType);
       this.updateChartOptionDifferences(this.expTypeDropdownOptions, 'expenditureType');
       const expTypeSelection = currentExpTypes.filter(option => option === this.expTypeDropdown.selectedItem)[0];
-      if (!expTypeSelection) {
+      if (!expTypeSelection && this.expTypeDropdown.selectedItem !== 'All') {
         this.expTypeDropdown.selectedItem = 'Select';
         if (this.wucdDropdown.selectedItem.toLowerCase() === 'select' && this.wucdDropdown.visible) {
           this.expTypeDropdown.visible = false;
