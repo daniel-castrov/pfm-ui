@@ -40,13 +40,14 @@ export class DialogService {
     this.sendMessage(message);
   }
 
-  displayConfirmation(text: string, title: string, okCallBack: any, cancelCallBack: any): void {
+  displayConfirmation(text: string, title: string, okCallBack: any, cancelCallBack: any, labelForOk?: string): void {
     const message: DialogMessage = new DialogMessage();
     message.type = 'CONFIRMATION';
     message.title = title;
     message.body = text;
     message.okCallBack = okCallBack;
     message.cancelCallBack = cancelCallBack;
+    message.labelForOk = labelForOk ?? message.labelForOk;
     this.sendMessage(message);
   }
 
