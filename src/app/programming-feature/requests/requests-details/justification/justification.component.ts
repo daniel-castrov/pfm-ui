@@ -22,11 +22,12 @@ export class JustificationComponent implements OnInit {
   form: FormGroup;
 
   chartData: GoogleChartInterface = {
-    chartType: 'ColumnChart',
+    chartType: 'LineChart',
     options: {
       titlePosition: 'none',
       width: 800,
       height: 350,
+
       series: {
         0: {
           type: 'line'
@@ -66,10 +67,12 @@ export class JustificationComponent implements OnInit {
 
   async ngOnInit() {
     this.loadForm();
+    this.updateForm(this.program);
+  }
+
+  async loadChart() {
     await this.loadPom();
     this.drawLineChart(true);
-
-    this.updateForm(this.program);
   }
 
   loadForm() {
@@ -160,8 +163,18 @@ export class JustificationComponent implements OnInit {
           this.programmingPreviousYear = [];
         }
       );
-    this.programmingCurrentYear = [];
-    this.loadFundingData(this.program.fundingLines, this.programmingCurrentYear);
+
+    await this.programmingService
+      .getProgramById(this.program.id)
+      .toPromise()
+      .then(
+        resp => {
+          this.loadFundingData(resp.result.fundingLines, this.programmingCurrentYear);
+        },
+        err => {
+          this.programmingCurrentYear = [];
+        }
+      );
   }
 
   private loadFundingData(fundingLines: any[], programmingYear: any[]) {
@@ -170,7 +183,7 @@ export class JustificationComponent implements OnInit {
       for (const fundingLine of fundingLines) {
         funds += fundingLine.funds[year] || 0;
       }
-      programmingYear[programmingYear.length] = funds;
+      programmingYear[year - this.pomYear] = funds;
     }
   }
 }
