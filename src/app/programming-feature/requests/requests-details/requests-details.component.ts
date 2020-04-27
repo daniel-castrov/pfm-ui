@@ -15,6 +15,7 @@ import { AppModel } from 'src/app/pfm-common-models/AppModel';
 import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
 import { RequestsFundingLineGridComponent } from './requests-funding-line-grid/requests-funding-line-grid.component';
 import { ProgramStatus } from '../../models/enumerations/program-status.model';
+import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
 
 @Component({
   selector: 'pfm-requests-details',
@@ -49,10 +50,30 @@ export class RequestsDetailsComponent implements OnInit {
     private requestSummaryNavigationHistoryService: RequestSummaryNavigationHistoryService,
     private visibilityService: VisibilityService,
     public appModel: AppModel,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private dialogService: DialogService
   ) {}
 
   goBack(): void {
+    const canGoBack = this.hasNoEditingGrids(false, false);
+    if (canGoBack) {
+      this.performBackButton();
+    } else {
+      this.dialogService.displayConfirmation(
+        'You have unsaved data in fields or grids on one or more tabs. ' +
+          'If you continue this data will be lost. ' +
+          'Do you want to continue and lose this data?',
+        'Caution',
+        () => {
+          this.performBackButton();
+        },
+        () => {},
+        'Lose Data'
+      );
+    }
+  }
+
+  private performBackButton() {
     this.requestSummaryNavigationHistoryService.prepareNavigationHistory();
     this.router.navigate(['/programming/requests']);
   }
@@ -110,7 +131,7 @@ export class RequestsDetailsComponent implements OnInit {
   onSave(): void {
     this.busy = true;
     let pro = this.program;
-    const canSave = this.canSaveProgram(true);
+    const canSave = this.hasNoEditingGrids(true);
     if (canSave) {
       pro = this.getFromDetailForm(pro);
       pro = this.getFromScopeForm(pro);
@@ -129,7 +150,7 @@ export class RequestsDetailsComponent implements OnInit {
     }
   }
 
-  private canSaveProgram(isSave: boolean) {
+  private hasNoEditingGrids(isSave: boolean, displayToast: boolean = true) {
     const errorMessage = isSave
       ? 'Please save all rows in grids before saving the page.'
       : 'Please save row(s) currently open for editing.';
@@ -141,7 +162,9 @@ export class RequestsDetailsComponent implements OnInit {
       editing += this.scopeComponent.processPriorizationGridApi.getEditingCells().length;
       if (editing) {
         canSave = false;
-        this.toastService.displayError(errorMessage, 'Scope');
+        if (displayToast) {
+          this.toastService.displayError(errorMessage, 'Scope');
+        }
       }
     }
     if (this.fundingLinesComponent) {
@@ -154,20 +177,26 @@ export class RequestsDetailsComponent implements OnInit {
       }
       if (editing) {
         canSave = false;
-        this.toastService.displayError(errorMessage, 'Funds');
+        if (displayToast) {
+          this.toastService.displayError(errorMessage, 'Funds');
+        }
       }
     }
     if (this.pfmSchedule) {
       if (this.pfmSchedule.gridApi.getEditingCells().length) {
         canSave = false;
-        this.toastService.displayError(errorMessage, 'Schedule');
+        if (displayToast) {
+          this.toastService.displayError(errorMessage, 'Schedule');
+        }
       }
     }
     if (this.assetsComponent) {
       if (this.assetsComponent.assetGridApi) {
         if (this.assetsComponent.assetGridApi.getEditingCells().length) {
           canSave = false;
-          this.toastService.displayError(errorMessage, 'Assets');
+          if (displayToast) {
+            this.toastService.displayError(errorMessage, 'Assets');
+          }
         }
       }
     }
@@ -177,7 +206,7 @@ export class RequestsDetailsComponent implements OnInit {
   onReject(): void {
     this.busy = true;
     let pro = this.program;
-    const canSave = this.canSaveProgram(false);
+    const canSave = this.hasNoEditingGrids(false);
     if (canSave) {
       pro = this.getFromDetailForm(pro);
       pro = this.getFromScopeForm(pro);
@@ -203,7 +232,7 @@ export class RequestsDetailsComponent implements OnInit {
   onValidate(showSucessfulMessage: boolean): boolean {
     let passedValidation = true;
     let program = { ...this.program };
-    passedValidation = this.canSaveProgram(false);
+    passedValidation = this.hasNoEditingGrids(false);
     if (this.requestDetailsFormComponent) {
       program = this.getFromDetailForm(program);
       if (!program.shortName) {
