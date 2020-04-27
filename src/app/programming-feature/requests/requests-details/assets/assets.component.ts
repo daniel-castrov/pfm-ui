@@ -527,7 +527,7 @@ export class AssetsComponent implements OnInit {
               {
                 colId: 2 + x * 3 + 1,
                 headerName: 'Unit Cost',
-                editable: i > this.pomYear,
+                editable: i >= this.pomYear,
                 suppressMovable: true,
                 filter: false,
                 sortable: false,
@@ -552,7 +552,7 @@ export class AssetsComponent implements OnInit {
               {
                 colId: 2 + x * 3 + 2,
                 headerName: 'Qty',
-                editable: i > this.pomYear,
+                editable: i >= this.pomYear,
                 suppressMovable: true,
                 suppressMenu: true,
                 filter: false,
@@ -576,7 +576,7 @@ export class AssetsComponent implements OnInit {
               {
                 colId: 2 + x * 3 + 3,
                 headerName: 'Total Cost',
-                editable: i > this.pomYear,
+                editable: i >= this.pomYear,
                 suppressMovable: true,
                 suppressMenu: true,
                 filter: false,
