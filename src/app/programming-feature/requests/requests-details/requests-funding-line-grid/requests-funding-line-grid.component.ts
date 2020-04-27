@@ -32,6 +32,8 @@ import { DropdownComponent } from 'src/app/pfm-coreui/form-inputs/dropdown/dropd
 export class RequestsFundingLineGridComponent implements OnInit {
   @ViewChild('googleChart')
   chart: GoogleChartComponent;
+  @ViewChild('displayDropdown')
+  displayDropdown: DropdownComponent;
   @ViewChild('appropriationDropdown')
   appropriationDropdown: DropdownComponent;
   @ViewChild('bablinDropdown')
@@ -1430,7 +1432,13 @@ export class RequestsFundingLineGridComponent implements OnInit {
   private loadChartDropdown(options: ListItem[], field: string, originField?: string, selectedOrigin?: string) {
     options.splice(0, options.length);
     this.insertDefaultOptions(options);
-    const filteredFundingRows = this.filterFundingLineRow();
+    const noFilter =
+      (this.displayDropdown.selectedItem.toUpperCase() === 'APPN' && field === 'appropriation') ||
+      (this.displayDropdown.selectedItem.toUpperCase() === 'BA/BLIN' && field === 'baOrBlin') ||
+      (this.displayDropdown.selectedItem.toUpperCase() === 'SAG' && field === 'sag') ||
+      (this.displayDropdown.selectedItem.toUpperCase() === 'WUCD' && field === 'wucd') ||
+      (this.displayDropdown.selectedItem.toUpperCase() === 'EXP TYPE' && field === 'expenditureType');
+    const filteredFundingRows = noFilter ? this.nonSummaryFundingLineRows : this.filterFundingLineRow();
     const dropdownOptions = [];
     if (filteredFundingRows.length) {
       dropdownOptions.push(
@@ -1478,124 +1486,133 @@ export class RequestsFundingLineGridComponent implements OnInit {
   }
 
   private reloadDropdownOptions() {
-    const currentAppropriations = this.nonSummaryFundingLineRows
-      .filter(fundingLine => fundingLine.appropriation === this.appropriationDropdown.selectedItem)
-      .map(fundingLine => fundingLine.appropriation);
-    this.updateChartOptionDifferences(this.appropriationDropdownOptions, 'appropriation');
-    const appropriationSelection = currentAppropriations.filter(
-      option => option === this.appropriationDropdown.selectedItem
-    )[0];
-    if (!appropriationSelection) {
-      this.bablinDropdown.selectedItem = 'Select';
-      this.bablinDropdown.visible = false;
-      this.appropriationDropdown.selectedItem = 'Select';
-      this.sagDropdown.selectedItem = 'Select';
-      this.sagDropdown.visible = false;
-      this.wucdDropdown.selectedItem = 'Select';
-      this.wucdDropdown.visible = false;
-      this.expTypeDropdown.selectedItem = 'Select';
-      this.expTypeDropdown.visible = false;
-      this.loadChartDropdown(this.appropriationDropdownOptions, 'appropriation', null, null);
-      return;
-    }
-
-    const currentBablins = this.nonSummaryFundingLineRows
-      .filter(
-        fundingLine =>
-          fundingLine.appropriation === this.appropriationDropdown.selectedItem &&
-          fundingLine.baOrBlin === this.bablinDropdown.selectedItem
-      )
-      .map(fundingLine => fundingLine.baOrBlin);
-    this.updateChartOptionDifferences(this.bablinDropdownOptions, 'baOrBlin');
-    const bablinSelection = currentBablins.filter(option => option === this.bablinDropdown.selectedItem)[0];
-    if (!bablinSelection) {
-      this.bablinDropdown.selectedItem = 'Select';
-      if (this.appropriationDropdown.selectedItem.toLowerCase() === 'select') {
-        this.bablinDropdown.visible = false;
-      }
-      this.sagDropdown.selectedItem = 'Select';
-      this.sagDropdown.visible = false;
-      this.wucdDropdown.selectedItem = 'Select';
-      this.wucdDropdown.visible = false;
-      this.expTypeDropdown.selectedItem = 'Select';
-      this.expTypeDropdown.visible = false;
-      this.loadChartDropdown(
-        this.bablinDropdownOptions,
-        'baOrBlin',
-        'appropriation',
-        this.appropriationDropdown.selectedItem
+    let filterChain: FundingData[] = null;
+    if (this.appropriationDropdown.visible) {
+      filterChain = this.nonSummaryFundingLineRows.filter(
+        fundingLine => fundingLine.appropriation === this.appropriationDropdown.selectedItem
       );
-      return;
-    }
-
-    const currentSags = this.nonSummaryFundingLineRows
-      .filter(
-        fundingLine =>
-          fundingLine.appropriation === this.appropriationDropdown.selectedItem &&
-          fundingLine.baOrBlin === this.bablinDropdown.selectedItem &&
-          fundingLine.sag === this.sagDropdown.selectedItem
-      )
-      .map(fundingLine => fundingLine.sag);
-    this.updateChartOptionDifferences(this.sagDropdownOptions, 'sag');
-    const sagSelection = currentSags.filter(option => option === this.sagDropdown.selectedItem)[0];
-    if (!sagSelection) {
-      this.sagDropdown.selectedItem = 'Select';
-      if (this.bablinDropdown.selectedItem.toLowerCase() === 'select') {
+      const currentAppropriations = filterChain.map(fundingLine => fundingLine.appropriation);
+      this.updateChartOptionDifferences(this.appropriationDropdownOptions, 'appropriation');
+      const appropriationSelection = currentAppropriations.filter(
+        option => option === this.appropriationDropdown.selectedItem
+      )[0];
+      if (!appropriationSelection) {
+        this.bablinDropdown.selectedItem = 'Select';
+        this.bablinDropdown.visible = false;
+        this.appropriationDropdown.selectedItem = 'Select';
+        this.sagDropdown.selectedItem = 'Select';
         this.sagDropdown.visible = false;
-      }
-      this.wucdDropdown.selectedItem = 'Select';
-      this.wucdDropdown.visible = false;
-      this.expTypeDropdown.selectedItem = 'Select';
-      this.expTypeDropdown.visible = false;
-      this.loadChartDropdown(this.sagDropdownOptions, 'sag', 'baOrBlin', this.bablinDropdown.selectedItem);
-      return;
-    }
-
-    const currentWucds = this.nonSummaryFundingLineRows
-      .filter(
-        fundingLine =>
-          fundingLine.appropriation === this.appropriationDropdown.selectedItem &&
-          fundingLine.baOrBlin === this.bablinDropdown.selectedItem &&
-          fundingLine.sag === this.sagDropdown.selectedItem &&
-          fundingLine.wucd === this.wucdDropdown.selectedItem
-      )
-      .map(fundingLine => fundingLine.wucd);
-    this.updateChartOptionDifferences(this.wucdDropdownOptions, 'wucd');
-    const wucdSelection = currentWucds.filter(option => option === this.wucdDropdown.selectedItem)[0];
-    if (!wucdSelection) {
-      this.wucdDropdown.selectedItem = 'Select';
-      if (this.sagDropdown.selectedItem.toLowerCase() === 'select') {
+        this.wucdDropdown.selectedItem = 'Select';
         this.wucdDropdown.visible = false;
+        this.expTypeDropdown.selectedItem = 'Select';
+        this.expTypeDropdown.visible = false;
+        this.loadChartDropdown(this.appropriationDropdownOptions, 'appropriation', null, null);
+        return;
       }
-      this.expTypeDropdown.selectedItem = 'Select';
-      this.expTypeDropdown.visible = false;
-      this.loadChartDropdown(this.wucdDropdownOptions, 'wucd', 'sag', this.sagDropdown.selectedItem);
-      return;
     }
 
-    const currentExpTypes = this.nonSummaryFundingLineRows
-      .filter(
-        fundingLine =>
-          fundingLine.appropriation === this.appropriationDropdown.selectedItem &&
-          fundingLine.baOrBlin === this.bablinDropdown.selectedItem &&
-          fundingLine.sag === this.sagDropdown.selectedItem &&
-          fundingLine.wucd === this.wucdDropdown.selectedItem &&
-          fundingLine.expenditureType === this.expTypeDropdown.selectedItem
-      )
-      .map(fundingLine => fundingLine.expenditureType);
-    this.updateChartOptionDifferences(this.expTypeDropdownOptions, 'expenditureType');
-    const expTypeSelection = currentExpTypes.filter(option => option === this.expTypeDropdown.selectedItem)[0];
-    if (!expTypeSelection) {
-      this.expTypeDropdown.selectedItem = 'Select';
-      if (this.wucdDropdown.selectedItem.toLowerCase() === 'select') {
+    if (this.bablinDropdown.visible) {
+      filterChain = filterChain
+        ? filterChain.filter(fundingLine => fundingLine.baOrBlin === this.bablinDropdown.selectedItem)
+        : this.nonSummaryFundingLineRows.filter(
+            fundingLine => fundingLine.baOrBlin === this.bablinDropdown.selectedItem
+          );
+      const currentBablins = filterChain.map(fundingLine => fundingLine.baOrBlin);
+      this.updateChartOptionDifferences(this.bablinDropdownOptions, 'baOrBlin');
+      const bablinSelection = currentBablins.filter(option => option === this.bablinDropdown.selectedItem)[0];
+      if (!bablinSelection) {
+        this.bablinDropdown.selectedItem = 'Select';
+        if (this.appropriationDropdown.selectedItem.toLowerCase() === 'select' && this.appropriationDropdown.visible) {
+          this.bablinDropdown.visible = false;
+        }
+        this.sagDropdown.selectedItem = 'Select';
+        this.sagDropdown.visible = false;
+        this.wucdDropdown.selectedItem = 'Select';
+        this.wucdDropdown.visible = false;
+        this.expTypeDropdown.selectedItem = 'Select';
         this.expTypeDropdown.visible = false;
-        this.loadChartDropdown(this.expTypeDropdownOptions, 'expenditureType', 'wucd', this.wucdDropdown.selectedItem);
+        this.loadChartDropdown(
+          this.bablinDropdownOptions,
+          'baOrBlin',
+          'appropriation',
+          this.appropriationDropdown.selectedItem
+        );
+        return;
+      }
+    }
+
+    if (this.sagDropdown.visible) {
+      filterChain = filterChain
+        ? filterChain.filter(fundingLine => fundingLine.sag === this.sagDropdown.selectedItem)
+        : this.nonSummaryFundingLineRows.filter(fundingLine => fundingLine.sag === this.sagDropdown.selectedItem);
+      const currentSags = filterChain.map(fundingLine => fundingLine.sag);
+      this.updateChartOptionDifferences(this.sagDropdownOptions, 'sag');
+      const sagSelection = currentSags.filter(option => option === this.sagDropdown.selectedItem)[0];
+      if (!sagSelection) {
+        this.sagDropdown.selectedItem = 'Select';
+        if (this.bablinDropdown.selectedItem.toLowerCase() === 'select' && this.bablinDropdown.visible) {
+          this.sagDropdown.visible = false;
+        }
+        this.wucdDropdown.selectedItem = 'Select';
+        this.wucdDropdown.visible = false;
+        this.expTypeDropdown.selectedItem = 'Select';
+        this.expTypeDropdown.visible = false;
+        this.loadChartDropdown(this.sagDropdownOptions, 'sag', 'baOrBlin', this.bablinDropdown.selectedItem);
+        return;
+      }
+    }
+
+    if (this.wucdDropdown.visible) {
+      filterChain = filterChain
+        ? filterChain.filter(fundingLine => fundingLine.wucd === this.wucdDropdown.selectedItem)
+        : this.nonSummaryFundingLineRows.filter(fundingLine => fundingLine.wucd === this.wucdDropdown.selectedItem);
+      const currentWucds = filterChain.map(fundingLine => fundingLine.wucd);
+      this.updateChartOptionDifferences(this.wucdDropdownOptions, 'wucd');
+      const wucdSelection = currentWucds.filter(option => option === this.wucdDropdown.selectedItem)[0];
+      if (!wucdSelection) {
+        this.wucdDropdown.selectedItem = 'Select';
+        if (this.sagDropdown.selectedItem.toLowerCase() === 'select' && this.sagDropdown.visible) {
+          this.wucdDropdown.visible = false;
+        }
+        this.expTypeDropdown.selectedItem = 'Select';
+        this.expTypeDropdown.visible = false;
+        this.loadChartDropdown(this.wucdDropdownOptions, 'wucd', 'sag', this.sagDropdown.selectedItem);
+        return;
+      }
+    }
+
+    if (this.expTypeDropdown.visible) {
+      filterChain = filterChain
+        ? filterChain.filter(fundingLine => fundingLine.expenditureType === this.expTypeDropdown.selectedItem)
+        : this.nonSummaryFundingLineRows.filter(
+            fundingLine => fundingLine.expenditureType === this.expTypeDropdown.selectedItem
+          );
+      const currentExpTypes = filterChain.map(fundingLine => fundingLine.expenditureType);
+      this.updateChartOptionDifferences(this.expTypeDropdownOptions, 'expenditureType');
+      const expTypeSelection = currentExpTypes.filter(option => option === this.expTypeDropdown.selectedItem)[0];
+      if (!expTypeSelection) {
+        this.expTypeDropdown.selectedItem = 'Select';
+        if (this.wucdDropdown.selectedItem.toLowerCase() === 'select' && this.wucdDropdown.visible) {
+          this.expTypeDropdown.visible = false;
+          this.loadChartDropdown(
+            this.expTypeDropdownOptions,
+            'expenditureType',
+            'wucd',
+            this.wucdDropdown.selectedItem
+          );
+        }
       }
     }
   }
 
   private updateChartOptionDifferences(options: ListItem[], field: string) {
-    const filteredData = field === 'appropriation' ? this.nonSummaryFundingLineRows : this.filterFundingLineRow();
+    const noFilter =
+      (this.displayDropdown.selectedItem.toUpperCase() === 'APPN' && field === 'appropriation') ||
+      (this.displayDropdown.selectedItem.toUpperCase() === 'BA/BLIN' && field === 'baOrBlin') ||
+      (this.displayDropdown.selectedItem.toUpperCase() === 'SAG' && field === 'sag') ||
+      (this.displayDropdown.selectedItem.toUpperCase() === 'WUCD' && field === 'wucd') ||
+      (this.displayDropdown.selectedItem.toUpperCase() === 'EXP TYPE' && field === 'expenditureType');
+    const filteredData = noFilter ? this.nonSummaryFundingLineRows : this.filterFundingLineRow();
     const differenceToRemove = options
       .filter((option, index) => index > 2)
       .map(option => option.name)
@@ -1609,15 +1626,17 @@ export class RequestsFundingLineGridComponent implements OnInit {
         1
       )
     );
-    differenceToAdd.forEach(option =>
-      options.push({
-        id: option,
-        name: option,
-        rawData: option,
-        value: option,
-        isSelected: false
-      })
-    );
+    differenceToAdd
+      .filter(option => option)
+      .forEach(option =>
+        options.push({
+          id: option,
+          name: option,
+          rawData: option,
+          value: option,
+          isSelected: false
+        })
+      );
   }
 }
 

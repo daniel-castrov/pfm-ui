@@ -3,6 +3,7 @@
     <google-chart #googleChart [data]="chartData"></google-chart>
     <div class="row col-12 mx-auto">
       <pfm-dropdown
+        #displayDropdown
         class="col-2"
         (selectionChanged)="onDisplayDropdownChange($event)"
         [fieldName]="'name'"
