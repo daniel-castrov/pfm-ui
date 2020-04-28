@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, HostListener, Input } from '@angular/core';
+import { Component, HostListener, Input, OnInit, ViewChild } from '@angular/core';
 import { GoogleChartComponent } from 'ng2-google-charts';
 import { GoogleChartInterface } from 'ng2-google-charts/ng2-google-charts';
 import { ProgrammingService } from 'src/app/programming-feature/services/programming-service';
@@ -27,6 +27,7 @@ export class JustificationComponent implements OnInit {
       titlePosition: 'none',
       width: 800,
       height: 350,
+
       series: {
         0: {
           type: 'line'
@@ -66,10 +67,12 @@ export class JustificationComponent implements OnInit {
 
   async ngOnInit() {
     this.loadForm();
+    this.updateForm(this.program);
+  }
+
+  async loadChart() {
     await this.loadPom();
     this.drawLineChart(true);
-
-    this.updateForm(this.program);
   }
 
   loadForm() {
@@ -86,14 +89,15 @@ export class JustificationComponent implements OnInit {
     });
   }
 
+  onChartReady(event: any) {}
+
   @HostListener('window:resize', ['$event'])
   onWindowResize(event: any) {
     if (this.chart) {
-      this.chart.draw();
+      // this.chart.draw();
+      this.drawLineChart(true);
     }
   }
-
-  onChartReady(event: any) {}
 
   drawLineChart(redraw?: boolean) {
     const data: any[] = [['Fiscal Year', 'POM' + ((this.pomYear % 100) - 1), 'POM' + (this.pomYear % 100), '']];
@@ -160,8 +164,18 @@ export class JustificationComponent implements OnInit {
           this.programmingPreviousYear = [];
         }
       );
-    this.programmingCurrentYear = [];
-    this.loadFundingData(this.program.fundingLines, this.programmingCurrentYear);
+
+    await this.programmingService
+      .getProgramById(this.program.id)
+      .toPromise()
+      .then(
+        resp => {
+          this.loadFundingData(resp.result.fundingLines, this.programmingCurrentYear);
+        },
+        err => {
+          this.programmingCurrentYear = [];
+        }
+      );
   }
 
   private loadFundingData(fundingLines: any[], programmingYear: any[]) {
@@ -170,7 +184,7 @@ export class JustificationComponent implements OnInit {
       for (const fundingLine of fundingLines) {
         funds += fundingLine.funds[year] || 0;
       }
-      programmingYear[programmingYear.length] = funds;
+      programmingYear[year - this.pomYear] = funds;
     }
   }
 }
