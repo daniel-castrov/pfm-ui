@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, HostListener, Input } from '@angular/core';
+import { Component, HostListener, Input, OnInit, ViewChild } from '@angular/core';
 import { GoogleChartComponent } from 'ng2-google-charts';
 import { GoogleChartInterface } from 'ng2-google-charts/ng2-google-charts';
 import { ProgrammingService } from 'src/app/programming-feature/services/programming-service';
@@ -22,7 +22,7 @@ export class JustificationComponent implements OnInit {
   form: FormGroup;
 
   chartData: GoogleChartInterface = {
-    chartType: 'LineChart',
+    chartType: 'ColumnChart',
     options: {
       titlePosition: 'none',
       width: 800,
@@ -89,14 +89,15 @@ export class JustificationComponent implements OnInit {
     });
   }
 
+  onChartReady(event: any) {}
+
   @HostListener('window:resize', ['$event'])
   onWindowResize(event: any) {
     if (this.chart) {
-      this.chart.draw();
+      // this.chart.draw();
+      this.drawLineChart(true);
     }
   }
-
-  onChartReady(event: any) {}
 
   drawLineChart(redraw?: boolean) {
     const data: any[] = [['Fiscal Year', 'POM' + ((this.pomYear % 100) - 1), 'POM' + (this.pomYear % 100), '']];
