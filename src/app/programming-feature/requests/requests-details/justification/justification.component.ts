@@ -94,7 +94,6 @@ export class JustificationComponent implements OnInit {
   @HostListener('window:resize', ['$event'])
   onWindowResize(event: any) {
     if (this.chart) {
-      // this.chart.draw();
       this.drawLineChart(true);
     }
   }
