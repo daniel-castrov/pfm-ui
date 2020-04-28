@@ -1,0 +1,28 @@
+<div>
+  <div class="funding-detail-container">
+    <div>
+      <pfm-dropdown
+        (selectionChanged)="onFilterSelection($event)"
+        [type]="'labelDropdown'"
+        [label]="'Completed in the'"
+        [id]="'id'"
+        [fieldName]="'name'"
+        [fieldLabel]="'name'"
+        [options]="daysOptions"
+        [defaultOption]="'daysOptions[0]'"
+        [showPrompt]="false"
+      >
+      </pfm-dropdown>
+    </div>
+    <div class="grid-container mt-3">
+      <pfm-datagrid
+        (gridIsReady)="onGridIsReady($event)"
+        [columns]="columnDefinitions"
+        [rows]="rows"
+        [showAddSingleRow]="false"
+        [showPagination]="false"
+      >
+      </pfm-datagrid>
+    </div>
+  </div>
+</div>
