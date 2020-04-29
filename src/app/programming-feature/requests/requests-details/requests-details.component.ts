@@ -287,7 +287,8 @@ export class RequestsDetailsComponent implements OnInit {
         this.currentSelectedTab = 4;
         break;
       case 'justification':
-        this.justificationComponent.drawLineChart(true);
+        setTimeout(() => this.justificationComponent.loadChart(), 0);
+
         this.currentSelectedTab = 5;
         break;
     }

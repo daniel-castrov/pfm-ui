@@ -14,6 +14,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { GridsterModule } from 'angular-gridster2';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AssignedToMeComponent } from './assigned-to-me/assigned-to-me.component';
+import { CompletedComponent } from './completed/completed.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { AssignedToMeComponent } from './assigned-to-me/assigned-to-me.component
     DemoWidgetMissionFundingMoneyComponent,
     DemoWidgetPOMPhaseFundingComponent,
     DemoWidgetPrStatusComponent,
-    AssignedToMeComponent
+    AssignedToMeComponent,
+    CompletedComponent
   ],
   imports: [
     CommonModule,
