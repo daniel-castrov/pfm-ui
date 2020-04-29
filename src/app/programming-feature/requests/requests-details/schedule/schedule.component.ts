@@ -103,6 +103,13 @@ export class ScheduleComponent implements OnInit {
         value: 'Show All',
         isSelected: true,
         rawData: 'Show All'
+      },
+      {
+        id: 'None',
+        name: 'No funding line association',
+        value: 'None',
+        isSelected: false,
+        rawData: 'None'
       }
     ];
     this.fundingGridAssociations = [];
@@ -203,7 +210,13 @@ export class ScheduleComponent implements OnInit {
       100,
       null
     ]);
-    if (this.selectedFundingFilter.toLowerCase() !== 'show all') {
+    if (this.selectedFundingFilter.toLowerCase() === 'none') {
+      this.scheduleGridRows
+        .filter((row, index) => !row.fundingLineId)
+        .forEach(row => {
+          data.push([row.id + '', '', new Date(row.startDate), new Date(row.endDate), 0, 100, '0']);
+        });
+    } else if (this.selectedFundingFilter.toLowerCase() !== 'show all') {
       this.scheduleGridRows
         .filter((row, index) => row.fundingLineId === this.selectedFundingFilter)
         .forEach(row => {
@@ -312,7 +325,7 @@ export class ScheduleComponent implements OnInit {
               return params.value;
             }
           }
-          return '';
+          return null;
         },
         cellEditorParams: params => {
           return {
@@ -373,6 +386,8 @@ export class ScheduleComponent implements OnInit {
       this.selectedFundingFilter = item.value;
       if (item.value.toLowerCase() === 'show all') {
         this.gridApi.setRowData(this.scheduleGridRows);
+      } else if (item.value.toLowerCase() === 'none') {
+        this.gridApi.setRowData(this.scheduleGridRows.filter((row, index) => !row.fundingLineId));
       } else {
         this.gridApi.setRowData(this.scheduleGridRows.filter((row, index) => row.fundingLineId === item.value));
       }
@@ -420,9 +435,9 @@ export class ScheduleComponent implements OnInit {
     const canSave = this.validateRowData(row);
     if (canSave) {
       row.programId = this.program.id;
-      if (row.fundingLineId?.toLowerCase() === 'select') {
-        row.fundingLineId = null;
-      }
+      // if (row.fundingLineId?.toLowerCase() === 'select') {
+      //   row.fundingLineId = null;
+      // }
       if (row.startDate) {
         row.startDate = moment(row.startDate, 'MM/DD/YYYY');
       }
