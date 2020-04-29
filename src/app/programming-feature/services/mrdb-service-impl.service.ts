@@ -13,6 +13,14 @@ export class MrdbServiceImpl extends MrdbService {
     super(httpClient);
   }
 
+  getById(mrId: string): Observable<any> {
+    return this.get('mrdb/' + mrId);
+  }
+
+  getByName(shortName: string): Observable<any> {
+    return this.get('mrdb/name/' + shortName);
+  }
+
   getPrograms(organizationId: string): Observable<object> {
     if (organizationId) {
       // Filter by organization

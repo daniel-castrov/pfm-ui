@@ -25,6 +25,7 @@ import { IntIntMap } from '../../models/IntIntMap';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ProgramStatus } from '../../models/enumerations/program-status.model';
 import { RoleConstants } from 'src/app/pfm-common-models/role-contants.model';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'pfm-requests-summary',
@@ -58,6 +59,7 @@ export class RequestsSummaryComponent implements OnInit {
   dashboard: Array<GridsterItem>;
   showPreviousFundedProgramDialog: boolean;
   availablePrograms: ListItem[];
+  selectedPreviousYearProgramId: string;
   orgs: Organization[];
   availableToaCharts: ListItem[];
   dropdownDefault: ListItem;
@@ -97,7 +99,7 @@ export class RequestsSummaryComponent implements OnInit {
     private toastService: ToastService
   ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
     this.options = {
       minCols: 8,
       maxCols: 8,
@@ -137,7 +139,7 @@ export class RequestsSummaryComponent implements OnInit {
       }
     ];
 
-    this.setupVisibility();
+    await this.setupVisibility();
 
     // Populate dropdown options
     const item: ListItem = new ListItem();
@@ -148,7 +150,11 @@ export class RequestsSummaryComponent implements OnInit {
     item2.name = 'New Program';
     item2.value = 'new-program';
     item2.id = 'new-program';
-    this.addOptions = [item, item2];
+    if (this.appModel.visibilityDef['requests-summary-component']?.previouslyFundedProgram) {
+      this.addOptions = [item, item2];
+    } else {
+      this.addOptions = [item2];
+    }
 
     // Get latest POM
     this.pomService.getLatestPom().subscribe(
@@ -175,8 +181,8 @@ export class RequestsSummaryComponent implements OnInit {
     );
   }
 
-  setupVisibility() {
-    this.visibilityService
+  async setupVisibility() {
+    await this.visibilityService
       .isCurrentlyVisible('requests-summary-component')
       .toPromise()
       .then(response => {
@@ -347,6 +353,7 @@ export class RequestsSummaryComponent implements OnInit {
       });
       this.createProgramDialog.display = true;
     } else if (addEvent.action === 'previously-funded-program') {
+      this.selectedPreviousYearProgramId = null;
       this.busy = true;
       this.mrdbService.getProgramsMinusPrs(this.selectedOrg.value, this.programmingModel.programs).subscribe(
         resp => {
@@ -367,9 +374,46 @@ export class RequestsSummaryComponent implements OnInit {
     }
   }
 
-  importProgramSelected($event: any) {}
+  importProgramSelected(event: ListItem) {
+    this.selectedPreviousYearProgramId = event.value;
+  }
 
-  onImportProgram() {}
+  onImportProgram() {
+    this.mrdbService
+      .getById(this.selectedPreviousYearProgramId)
+      .pipe(
+        map(resp => {
+          const mrdbProgram = resp.result as Program;
+          const program = {
+            shortName: mrdbProgram.shortName,
+            longName: mrdbProgram.longName,
+            type: mrdbProgram.type,
+            organizationId: mrdbProgram.organizationId
+          } as Program;
+          program.containerId = this.programmingModel.pom.workspaceId;
+          program.programStatus = ProgramStatus.SAVED;
+          return program;
+        })
+      )
+      .subscribe(program => {
+        this.programmingService.create(program).subscribe(
+          resp => {
+            const resultProgram = resp.result as Program;
+            this.router.navigate([
+              '/programming/requests/details/' + resultProgram.id,
+              {
+                pomYear: this.pomYear,
+                tab: 0
+              }
+            ]);
+          },
+          error => {
+            this.toastService.displayError('An error has occurred while attempting to save program.');
+          },
+          () => (this.busy = false)
+        );
+      });
+  }
 
   onApproveOrganization(): void {
     this.approveOrganization();

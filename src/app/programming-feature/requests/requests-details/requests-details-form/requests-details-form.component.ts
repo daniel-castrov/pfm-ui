@@ -10,6 +10,7 @@ import { FileDownloadService } from 'src/app/pfm-secure-filedownload/services/fi
 import { TagService } from 'src/app/programming-feature/services/tag.service';
 import { Tag } from 'src/app/programming-feature/models/Tag';
 import { MissionPriority } from 'src/app/planning-feature/models/MissionPriority';
+import { MrdbService } from 'src/app/programming-feature/services/mrdb-service';
 
 @Component({
   selector: 'pfm-requests-details-form',
@@ -29,6 +30,7 @@ export class RequestsDetailsFormComponent implements OnInit {
 
   form: FormGroup;
   addMode = false;
+  isPreviousYear = false;
   organizations: Organization[];
   divisions = [];
   missionPriorities: MissionPriority[];
@@ -48,7 +50,8 @@ export class RequestsDetailsFormComponent implements OnInit {
     private organizationService: OrganizationService,
     private planningService: PlanningService,
     private fileDownloadService: FileDownloadService,
-    private tagService: TagService
+    private tagService: TagService,
+    private mrdbService: MrdbService
   ) {}
 
   async ngOnInit() {
@@ -138,6 +141,16 @@ export class RequestsDetailsFormComponent implements OnInit {
     this.tagService.getByType(this.AGENCY_OBJECTIVES).subscribe(resp => {
       this.agencyObjectives = resp.result as Tag[];
     });
+    if (this.program.shortName) {
+      await this.mrdbService
+        .getByName(this.program.shortName)
+        .toPromise()
+        .then(resp => {
+          if (resp.result) {
+            this.isPreviousYear = true;
+          }
+        });
+    }
   }
 
   onChangeMissionPriority(event: any) {
@@ -163,7 +176,9 @@ export class RequestsDetailsFormComponent implements OnInit {
     this.form.controls['type'].disable();
     if (!this.addMode) {
       this.form.controls['shortName'].disable();
-      this.form.controls['organizationId'].disable();
+      if (!this.isPreviousYear) {
+        this.form.controls['organizationId'].disable();
+      }
     }
   }
 

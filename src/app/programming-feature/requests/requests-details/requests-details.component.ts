@@ -81,8 +81,10 @@ export class RequestsDetailsComponent implements OnInit {
   ngOnInit() {
     this.programmingModel.selectedProgramId = this.route.snapshot.paramMap.get('id');
     this.pomYear = Number(this.route.snapshot.paramMap.get('pomYear'));
+    const openTab = Number(this.route.snapshot.paramMap.get('tab') ?? 1);
     this.loadProgram();
     this.setupVisibility();
+    this.currentSelectedTab = openTab < 0 || openTab > 5 ? 1 : openTab;
   }
 
   async loadProgram() {
@@ -137,17 +139,26 @@ export class RequestsDetailsComponent implements OnInit {
       pro = this.getFromScopeForm(pro);
       pro = this.getFromAssets(pro);
       pro = this.getFromJustificationForm(pro);
-      this.programmingService.save(pro).subscribe(
-        resp => {
-          this.program = resp.result as Program;
-          this.toastService.displaySuccess('Program request saved successfully.');
-        },
-        error => {
-          this.toastService.displayError('An error has ocurred while attempting to save program.');
-        },
-        () => (this.busy = false)
+      this.performSaveOrCreate(
+        pro.id
+          ? this.programmingService.save.bind(this.programmingService)
+          : this.programmingService.create.bind(this.programmingService),
+        pro
       );
     }
+  }
+
+  private performSaveOrCreate(programServiceCall, program: Program) {
+    programServiceCall(program).subscribe(
+      resp => {
+        this.program = resp.result as Program;
+        this.toastService.displaySuccess('Program request saved successfully.');
+      },
+      error => {
+        this.toastService.displayError('An error has ocurred while attempting to save program.');
+      },
+      () => (this.busy = false)
+    );
   }
 
   private hasNoEditingGrids(isSave: boolean, displayToast: boolean = true) {
