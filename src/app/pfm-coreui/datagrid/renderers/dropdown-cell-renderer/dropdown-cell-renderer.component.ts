@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { ListItem } from '../../../../pfm-common-models/ListItem';
 import { DatagridMbService } from '../../../services/datagrid-mb.service';
 import { DataGridMessage } from '../../../models/DataGridMessage';
+import { ListItemHelper } from 'src/app/util/ListItemHelper';
 
 @Component({
   selector: 'pfm-dropdown-cell-renderer',
@@ -45,17 +46,8 @@ export class DropdownCellRendererComponent {
     this.updateList(this.data);
   }
 
-  updateList(options: string[]) {
-    this.list = [];
-    for (const option of options) {
-      const item: ListItem = new ListItem();
-      item.name = option;
-      item.value = option;
-      item.id = option;
-      item.rawData = option;
-      item.isSelected = option === this.selectedValue;
-      this.list.push(item);
-    }
+  updateList(options: string[] | string[][]) {
+    this.list = ListItemHelper.generateListItemFromArray(options);
     this.change.emit();
   }
 }

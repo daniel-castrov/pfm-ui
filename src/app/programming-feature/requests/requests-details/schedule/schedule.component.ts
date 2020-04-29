@@ -317,7 +317,12 @@ export class ScheduleComponent implements OnInit {
         cellEditorParams: params => {
           return {
             cellHeight: 50,
-            values: ['Select', ...this.fundingGridAssociations.map(x => x.name)]
+            values: [
+              ['Select', 'Select'],
+              ...this.fundingGridAssociations.map(x => {
+                return [x.name, x.value];
+              })
+            ]
           };
         }
       },
