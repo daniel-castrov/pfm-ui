@@ -23,6 +23,7 @@ import { DropdownCellRendererComponent } from 'src/app/pfm-coreui/datagrid/rende
 import { GoogleChartComponent, GoogleChartInterface } from 'ng2-google-charts';
 import { ListItem } from 'src/app/pfm-common-models/ListItem';
 import { DropdownComponent } from 'src/app/pfm-coreui/form-inputs/dropdown/dropdown.component';
+import { ProgramStatus } from 'src/app/programming-feature/models/enumerations/program-status.model';
 
 @Component({
   selector: 'pfm-requests-funding-line-grid',
@@ -507,7 +508,9 @@ export class RequestsFundingLineGridComponent implements OnInit {
       case 'delete-row':
         if (!this.currentNonSummaryRowDataState.isEditMode) {
           this.deleteDialog.bodyText =
-            'You will be permanently deleting the row from the grid.  Are you sure you want to delete this row?';
+            'By deleting this row, you will not only delete the row on this tab, ' +
+            'but also any row associated to this funding line on the Scheduling and Asset tabs.  ' +
+            'Are you sure you want to continue?';
           this.displayDeleteDialog(cellAction, this.deleteRow.bind(this));
         }
         break;
@@ -838,6 +841,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
           this.viewNonSummaryMode(rowIndex);
           this.reloadDropdownOptions();
           this.drawLineChart();
+          this.program.programStatus = ProgramStatus.SAVED;
         },
         error => {
           this.dialogService.displayDebug(error);
