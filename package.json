@@ -13,8 +13,7 @@
     "serve:ssr": "node dist/server",
     "build:ssr": "npm run build:client-and-server-bundles && npm run compile:server",
     "build:client-and-server-bundles": "ng build --prod && ng run angular-plugin-architecture:server:production",
-    "build:planning-create": "ng build --project plugins --prod --modulePath=./app/planning/create-planning/create-planning.module#CreatePlanningModule --pluginName=planning-create --outputPath=./src/assets/plugins",
-    "postinstall": "ngcc"
+    "build:planning-create": "ng build --project plugins --prod --modulePath=./app/planning/create-planning/create-planning.module#CreatePlanningModule --pluginName=planning-create --outputPath=./src/assets/plugins"
   },
   "private": true,
   "dependencies": {
