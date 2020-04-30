@@ -79,6 +79,7 @@ export class ScheduleComponent implements OnInit {
   gridApi: GridApi;
   components: any;
   fundingGridColumnDefinitions: ColDef[] = [];
+  schedulesData: ScheduleDataInterface[] = [];
   scheduleGridRows: ScheduleDataInterface[] = [];
 
   busy: boolean;
@@ -152,6 +153,7 @@ export class ScheduleComponent implements OnInit {
   }
 
   private loadSchedules() {
+    this.schedulesData = [];
     this.scheduleService.getByProgramId(this.program.id).subscribe(schResp => {
       const schedules = (schResp as any).result;
       for (const schedule of schedules) {
@@ -161,9 +163,10 @@ export class ScheduleComponent implements OnInit {
         if (schedule.endDate) {
           schedule.endDate = schedule.endDate.format('MM/DD/YYYY');
         }
-        this.scheduleGridRows.push(schedule);
+        this.schedulesData.push(schedule);
       }
-      this.scheduleGridRows.sort((a, b) => a.order - b.order);
+      this.schedulesData.sort((a, b) => a.order - b.order);
+      this.scheduleGridRows = [...this.schedulesData];
       for (let i = 0; i < this.scheduleGridRows.length; i++) {
         this.viewMode(i);
       }
@@ -178,15 +181,18 @@ export class ScheduleComponent implements OnInit {
     if (this.currentRowDataState.isEditMode) {
       return;
     }
-    const maxOrder = this.scheduleGridRows.length
+    const maxOrder = this.schedulesData.length
       ? Math.max.apply(
           Math,
-          this.scheduleGridRows.map(row => row.order)
+          this.schedulesData.map(row => row.order)
         )
       : 0;
     this.scheduleGridRows.push({
       taskDescription: '',
-      fundingLineId: '',
+      fundingLineId:
+        this.selectedFundingFilter.toLowerCase() !== 'none' && this.selectedFundingFilter.toLowerCase() !== 'show all'
+          ? this.selectedFundingFilter
+          : '',
       startDate: formatDate(new Date(this.currentFiscalYear + '-01-01 00:00:00'), 'MM/dd/yyyy', 'en-US'),
       endDate: formatDate(new Date(this.currentFiscalYear + 5 + '-12-31  00:00:00'), 'MM/dd/yyyy', 'en-US'),
       order: maxOrder + 1,
@@ -308,7 +314,9 @@ export class ScheduleComponent implements OnInit {
       {
         headerName: 'Funding Line Association',
         field: 'fundingLineId',
-        editable: true,
+        editable: params => {
+          return this.selectedFundingFilter.toLowerCase() === 'show all';
+        },
         suppressMovable: true,
         filter: false,
         sortable: false,
@@ -331,7 +339,7 @@ export class ScheduleComponent implements OnInit {
           return {
             cellHeight: 50,
             values: [
-              ['Select', 'Select'],
+              ['Select', ''],
               ...this.fundingGridAssociations.map(x => {
                 return [x.name, x.value];
               })
@@ -384,15 +392,25 @@ export class ScheduleComponent implements OnInit {
   onFilterSelection(item: ListItem) {
     if (item && item.value) {
       this.selectedFundingFilter = item.value;
-      if (item.value.toLowerCase() === 'show all') {
-        this.gridApi.setRowData(this.scheduleGridRows);
-      } else if (item.value.toLowerCase() === 'none') {
-        this.gridApi.setRowData(this.scheduleGridRows.filter((row, index) => !row.fundingLineId));
-      } else {
-        this.gridApi.setRowData(this.scheduleGridRows.filter((row, index) => row.fundingLineId === item.value));
-      }
-      this.drawGanttChart(true);
+      this.filterRows();
     }
+  }
+
+  filterRows() {
+    if (this.selectedFundingFilter.toLowerCase() === 'show all') {
+      this.scheduleGridRows = this.schedulesData;
+    } else if (this.selectedFundingFilter.toLowerCase() === 'none') {
+      this.scheduleGridRows = this.schedulesData.filter((row, index) => !row.fundingLineId);
+    } else {
+      this.scheduleGridRows = this.schedulesData.filter(
+        (row, index) => row.fundingLineId === this.selectedFundingFilter
+      );
+    }
+
+    this.gridApi.setRowData(this.scheduleGridRows);
+
+    this.drawGanttChart(true);
+    return this.scheduleGridRows;
   }
 
   onMouseDown(event: MouseEvent) {
@@ -458,6 +476,7 @@ export class ScheduleComponent implements OnInit {
             // Update view
             this.viewMode(rowIndex);
             this.updateGanttChart();
+            this.schedulesData.push(row);
           },
           error => {
             this.busy = false;
@@ -566,9 +585,13 @@ export class ScheduleComponent implements OnInit {
     this.busy = true;
     const rowObj = this.scheduleGridRows[rowIndex];
     if (rowObj.id) {
-      this.scheduleService.deleteSchedule(rowObj.id).subscribe(x => {
-        this.busy = false;
-      });
+      this.scheduleService.deleteSchedule(rowObj.id).subscribe(
+        x => {
+          this.busy = false;
+        },
+        error => null,
+        () => (this.schedulesData = this.schedulesData.filter(x => x.id !== rowObj.id))
+      );
     }
     this.scheduleGridRows.splice(rowIndex, 1);
     this.currentRowDataState.currentEditingRowIndex = 0;
