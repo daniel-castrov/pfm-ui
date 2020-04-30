@@ -1,0 +1,27 @@
+<pfm-action-cell-renderer
+  [data]="data"
+  [params]="params"
+  [columnApi]="columnApi"
+  [options]="options"
+  [disabled]="disabled"
+  [extraActions]="extraActions"
+>
+</pfm-action-cell-renderer>
+
+<ng-container></ng-container>
+
+<ng-template #extraActions>
+  <div class="action">
+    <span>
+      <ng-container *ngIf="data.canView">
+        <fa-icon icon="eye" [title]="'View details'"></fa-icon>
+      </ng-container>
+      <ng-container *ngIf="!data.canView">
+        <fa-icon icon="lock" [title]="'In use'"></fa-icon>
+      </ng-container>
+      <ng-container *ngIf="data.isSingleDelete">
+        <fa-icon icon="trash" [title]="'Delete request'"></fa-icon>
+      </ng-container>
+    </span>
+  </div>
+</ng-template>

@@ -15,6 +15,7 @@ import { GridsterModule } from 'angular-gridster2';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AssignedToMeComponent } from './assigned-to-me/assigned-to-me.component';
 import { CompletedComponent } from './completed/completed.component';
+import { MyPendingRequestsComponent } from './my-pending-requests/my-pending-requests.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { CompletedComponent } from './completed/completed.component';
     DemoWidgetPOMPhaseFundingComponent,
     DemoWidgetPrStatusComponent,
     AssignedToMeComponent,
-    CompletedComponent
+    CompletedComponent,
+    MyPendingRequestsComponent
   ],
   imports: [
     CommonModule,
