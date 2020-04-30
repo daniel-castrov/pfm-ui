@@ -532,7 +532,16 @@ export class AssetsComponent implements OnInit {
                 filter: false,
                 sortable: false,
                 suppressMenu: true,
-                cellClass: 'numeric-class',
+                cellClass: params => {
+                  return [
+                    'numeric-class',
+                    this.currentRowDataState.currentEditingRowIndex === params.rowIndex
+                      ? this.currentRowDataState.isEditMode && i >= this.pomYear
+                        ? ''
+                        : 'non-editable-cell'
+                      : ''
+                  ];
+                },
                 cellStyle: {
                   display: 'flex',
                   'align-items': 'center',
@@ -557,7 +566,16 @@ export class AssetsComponent implements OnInit {
                 suppressMenu: true,
                 filter: false,
                 sortable: false,
-                cellClass: 'numeric-class',
+                cellClass: params => {
+                  return [
+                    'numeric-class',
+                    this.currentRowDataState.currentEditingRowIndex === params.rowIndex
+                      ? this.currentRowDataState.isEditMode && i >= this.pomYear
+                        ? ''
+                        : 'non-editable-cell'
+                      : ''
+                  ];
+                },
                 valueGetter: params => params.data.details[i].quantity,
                 valueSetter: params => {
                   params.data.details[i].quantity = Number(params.newValue);
@@ -581,7 +599,16 @@ export class AssetsComponent implements OnInit {
                 suppressMenu: true,
                 filter: false,
                 sortable: false,
-                cellClass: 'numeric-class',
+                cellClass: params => {
+                  return [
+                    'numeric-class',
+                    this.currentRowDataState.currentEditingRowIndex === params.rowIndex
+                      ? this.currentRowDataState.isEditMode && i >= this.pomYear
+                        ? ''
+                        : 'non-editable-cell'
+                      : ''
+                  ];
+                },
                 cellStyle: {
                   display: 'flex',
                   'align-items': 'center',

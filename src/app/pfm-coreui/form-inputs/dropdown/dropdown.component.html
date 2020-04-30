@@ -4,13 +4,7 @@
       <label>{{ label }}</label>
     </div>
     <div class="pfm-dropdown">
-      <select
-        (ngModelChange)="handleSelectionChanged($event)"
-        [name]="id"
-        [id]="id"
-        class="form-control"
-        [(ngModel)]="selectedItem"
-      >
+      <select (ngModelChange)="handleSelectionChanged($event)" class="form-control" [(ngModel)]="selectedItem">
         <option disabled value="{{ prompt }}" *ngIf="showPrompt">{{ prompt }}</option>
         <option *ngFor="let option of options" [value]="option[fieldName]" [disabled]="option.disabled">
           {{ option[fieldLabel] }}</option
@@ -25,8 +19,6 @@
     <div class="pfm-dropdown col-12 p-0">
       <select
         (ngModelChange)="handleSelectionChanged($event)"
-        [name]="id"
-        [id]="id"
         class="form-control"
         [(ngModel)]="selectedItem"
         [disabled]="attachmentsDisabled"
@@ -43,8 +35,6 @@
     <div class="pfm-dropdown-long">
       <select
         (ngModelChange)="handleSelectionChanged($event)"
-        [name]="id"
-        [id]="id"
         class="form-control"
         [(ngModel)]="selectedItem"
         [disabled]="attachmentsDisabled"

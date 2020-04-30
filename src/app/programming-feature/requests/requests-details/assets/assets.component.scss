@@ -29,3 +29,11 @@
   display: flex;
   flex-grow: 1;
 }
+
+:host ::ng-deep .non-editable-cell {
+  background-color: #d3d3d3;
+}
+
+:host ::ng-deep .editable-cell {
+  background-color: none;
+}

@@ -1,6 +1,5 @@
 <div class="pl-5 pr-5">
   <form [formGroup]="form">
-
     <fieldset>
       <legend>Program Goals</legend>
       <div class="form-group row">
@@ -19,7 +18,7 @@
       <div class="form-group row">
         <div class="row col-12 mt-3">
           <p class="col-1 ml-4">Budget</p>
-          <p class="col-10">{{ budget | currency:'':'symbol':'0.0'}}</p>
+          <p class="col-10">{{ budget | currency: '':'symbol':'0.0' }}</p>
         </div>
         <div class="row col-12 mt-1">
           <p class="col-1 ml-4">Schedule</p>
@@ -35,8 +34,14 @@
         </div>
         <div class="row col-12 mt-3 attachment-container">
           <p class="col-1 ml-4">Attachment</p>
-          <pfm-dropdown class="col-5 p-0" (selectionChanged)="downloadAttachment($event)" [type]="'attatchmentDropdown'"
-            [options]="attachmentsUploaded" [id]="'render'" [fieldLabel]="'name'" [fieldName]="'name'"></pfm-dropdown>
+          <pfm-dropdown
+            class="col-5 p-0"
+            (selectionChanged)="downloadAttachment($event)"
+            [type]="'attatchmentDropdown'"
+            [options]="attachmentsUploaded"
+            [fieldLabel]="'name'"
+            [fieldName]="'name'"
+          ></pfm-dropdown>
           <i class="fa fa-upload col-1 text-center" (click)="onFileUploadClick()"></i>
         </div>
       </div>
@@ -45,25 +50,44 @@
 
   <fieldset>
     <legend>Program Evaluation Measure</legend>
-    <pfm-datagrid (gridIsReady)="onEvaluationMeasureGridIsReady($event)"
-      (cellAction)="onHandleEvaluationMeasureCellAction($event)" [columns]="evaluationMeasureColumnDefinitions"
-      [rows]="evaluationMeasureRows" [showAddSingleRow]="true" [showPagination]="false"
-      (addCtaEvent)="onEvaluationMeasureRowAdd($event)" (mousedown)="onEvaluationMeasureMouseDown($event)">
+    <pfm-datagrid
+      (gridIsReady)="onEvaluationMeasureGridIsReady($event)"
+      (cellAction)="onHandleEvaluationMeasureCellAction($event)"
+      [columns]="evaluationMeasureColumnDefinitions"
+      [rows]="evaluationMeasureRows"
+      [showAddSingleRow]="true"
+      [showPagination]="false"
+      (addCtaEvent)="onEvaluationMeasureRowAdd($event)"
+      (mousedown)="onEvaluationMeasureMouseDown($event)"
+    >
     </pfm-datagrid>
   </fieldset>
   <fieldset>
     <legend>Program Team Leads</legend>
-    <pfm-datagrid (gridIsReady)="onTeamLeadGridIsReady($event)" (cellAction)="onHandleTeamLeadCellAction($event)"
-      [columns]="teamLeadsColumnDefinitions" [rows]="teamLeadRows" [showAddSingleRow]="true" [showPagination]="false"
-      (addCtaEvent)="onTeamLeadRowAdd($event)" (mousedown)="onTeamLeadMouseDown($event)">
+    <pfm-datagrid
+      (gridIsReady)="onTeamLeadGridIsReady($event)"
+      (cellAction)="onHandleTeamLeadCellAction($event)"
+      [columns]="teamLeadsColumnDefinitions"
+      [rows]="teamLeadRows"
+      [showAddSingleRow]="true"
+      [showPagination]="false"
+      (addCtaEvent)="onTeamLeadRowAdd($event)"
+      (mousedown)="onTeamLeadMouseDown($event)"
+    >
     </pfm-datagrid>
   </fieldset>
   <fieldset>
     <legend>Program Process Prioritization</legend>
-    <pfm-datagrid (gridIsReady)="onProcessPriorizationGridIsReady($event)"
-      (cellAction)="onHandleProcessPriorizationCellAction($event)" [columns]="processPriorizationColumnDefinitions"
-      [rows]="processPriorizationRows" [showAddSingleRow]="true" [showPagination]="false"
-      (addCtaEvent)="onProcessPriorizationRowAdd($event)" (mousedown)="onProcessPriorizationMouseDown($event)">
+    <pfm-datagrid
+      (gridIsReady)="onProcessPriorizationGridIsReady($event)"
+      (cellAction)="onHandleProcessPriorizationCellAction($event)"
+      [columns]="processPriorizationColumnDefinitions"
+      [rows]="processPriorizationRows"
+      [showAddSingleRow]="true"
+      [showPagination]="false"
+      (addCtaEvent)="onProcessPriorizationRowAdd($event)"
+      (mousedown)="onProcessPriorizationMouseDown($event)"
+    >
     </pfm-datagrid>
   </fieldset>
 </div>
@@ -71,8 +95,12 @@
   <pfm-secure-upload (onFilesUploaded)="handleNewAttachments($event)"></pfm-secure-upload>
 </ng-container>
 <ng-container *ngIf="deleteDialog.display">
-  <pfm-custom-dialog [title]="deleteDialog.title" [body]="deleteBody" [actions]="deleteActions"
-    (onCancelDialog)="onCancelDeleteDialog()"></pfm-custom-dialog>
+  <pfm-custom-dialog
+    [title]="deleteDialog.title"
+    [body]="deleteBody"
+    [actions]="deleteActions"
+    (onCancelDialog)="onCancelDeleteDialog()"
+  ></pfm-custom-dialog>
 
   <ng-template #deleteBody>
     <span>{{ deleteDialog.bodyText }}</span>
