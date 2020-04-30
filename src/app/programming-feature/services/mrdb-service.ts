@@ -9,6 +9,20 @@ export abstract class MrdbService extends BaseRestService {
   }
 
   /**
+   * Get Programs from master program list by id
+   *
+   * @param mrId - Existing Mrdb Program Id
+   */
+  abstract getById(mrId: string): Observable<any>;
+
+  /**
+   * Get Programs from master program list by Short Name
+   *
+   * @param shortName - Existing Mrdb Program Short Name
+   */
+  abstract getByName(shortName: string): Observable<any>;
+
+  /**
    * Get Programs from master program list
    *
    * @param organizationId - Organization Id for filtering by organization, null for all

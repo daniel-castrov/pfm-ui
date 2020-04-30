@@ -166,6 +166,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
     this.summaryFundingLineRows = [...this.nonSummaryFundingLineRows];
     this.updateTotalFields(this.summaryFundingLineGridApi, this.summaryFundingLineRows);
     this.summaryFundingLineGridApi.setRowData(this.summaryFundingLineRows);
+    setTimeout(() => this.summaryFundingLineGridApi.hideOverlay(), 0);
   }
 
   onToggleValueChanged(value) {
@@ -174,6 +175,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
       if (this.nonSummaryFundingLineGridApi.getEditingCells().length) {
         this.performNonSummaryCancel(this.nonSummaryFundingLineGridApi.getEditingCells()[0].rowIndex);
       }
+      this.summaryFundingLineGridApi.hideOverlay();
     } else {
       if (this.summaryFundingLineGridApi.getEditingCells().length) {
         const gridApiRowIndex = this.summaryFundingLineGridApi.getEditingCells()[0].rowIndex;
@@ -271,6 +273,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
         this.nonSummaryFundingLineRows.push(...fundingLine);
         this.updateTotalFields(this.nonSummaryFundingLineGridApi, this.nonSummaryFundingLineRows);
         this.nonSummaryFundingLineGridApi.setRowData(this.nonSummaryFundingLineRows);
+        this.nonSummaryFundingLineGridApi.hideOverlay();
         this.drawLineChart();
       });
   }
@@ -799,6 +802,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
     });
     this.currentNonSummaryRowDataState.isAddMode = true;
     this.nonSummaryFundingLineGridApi.setRowData(this.nonSummaryFundingLineRows);
+    this.nonSummaryFundingLineGridApi.hideOverlay();
     this.editRow(this.nonSummaryFundingLineRows.length - 1);
   }
 
@@ -968,6 +972,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
       row.isDisabled = false;
     });
     this.nonSummaryFundingLineGridApi.setRowData(this.nonSummaryFundingLineRows);
+    this.nonSummaryFundingLineGridApi.hideOverlay();
   }
 
   private viewNonSummaryMode(rowIndex: number) {
@@ -982,6 +987,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
       row.isDisabled = false;
     });
     this.nonSummaryFundingLineGridApi.setRowData(this.nonSummaryFundingLineRows);
+    this.nonSummaryFundingLineGridApi.hideOverlay();
   }
 
   private editNonSummaryMode(rowIndex: number) {
@@ -994,6 +1000,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
       }
     });
     this.nonSummaryFundingLineGridApi.setRowData(this.nonSummaryFundingLineRows);
+    this.nonSummaryFundingLineGridApi.hideOverlay();
     this.nonSummaryFundingLineGridApi.startEditingCell({
       rowIndex,
       colKey: '0'
@@ -1043,6 +1050,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
           this.summaryFundingLineRows.splice(rowIndex, 1);
           this.updateTotalFields(this.summaryFundingLineGridApi, this.summaryFundingLineRows);
           this.summaryFundingLineGridApi.setRowData(this.summaryFundingLineRows);
+          this.summaryFundingLineGridApi.hideOverlay();
           this.summaryFundingLineGridApi.refreshClientSideRowModel('aggregate');
           this.reloadDropdownOptions();
           this.drawLineChart();
@@ -1066,6 +1074,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
       row.isDisabled = false;
     });
     this.summaryFundingLineGridApi.setRowData(this.summaryFundingLineRows);
+    this.summaryFundingLineGridApi.hideOverlay();
   }
 
   private editSummaryMode(rowIndex: number, gridApiRowIndex: number) {
@@ -1078,6 +1087,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
       }
     });
     this.summaryFundingLineGridApi.setRowData(this.summaryFundingLineRows);
+    this.summaryFundingLineGridApi.hideOverlay();
     this.summaryFundingLineGridApi.startEditingCell({
       rowIndex: gridApiRowIndex,
       colKey: '8'
@@ -1143,11 +1153,13 @@ export class RequestsFundingLineGridComponent implements OnInit {
   collapse() {
     this.expanded = false;
     this.summaryFundingLineGridApi.collapseAll();
+    this.summaryFundingLineGridApi.hideOverlay();
   }
 
   expand() {
     this.expanded = true;
     this.summaryFundingLineGridApi.expandAll();
+    this.summaryFundingLineGridApi.hideOverlay();
   }
 
   setupAppnDependency() {
