@@ -8,7 +8,6 @@ import { ListItem } from '../../../pfm-common-models/ListItem';
   styleUrls: ['./dropdown.component.scss']
 })
 export class DropdownComponent implements ValidatedComponent, OnInit {
-  @Input() id: string; // id and name of the select element
   @Input() disabled: boolean;
   @Input() label: string;
   @Input() required: boolean;
