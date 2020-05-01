@@ -44,6 +44,7 @@ import { MpActionCellRendererComponent } from './datagrid/renderers/mp-action-ce
 import { AgGridPaginationComponent } from './datagrid/ag-grid-pagination/ag-grid-pagination.component';
 import { AtmActionCellRendererComponent } from './datagrid/renderers/atm-action-cell-renderer/atm-action-cell-renderer.component';
 import { MprActionCellRendererComponent } from './datagrid/renderers/mpr-action-cell-renderer/mpr-action-cell-renderer.component';
+import { CActionCellRendererComponent } from './datagrid/renderers/c-action-cell-renderer/c-action-cell-renderer.component';
 
 @NgModule({
   declarations: [
@@ -81,7 +82,8 @@ import { MprActionCellRendererComponent } from './datagrid/renderers/mpr-action-
     MpActionCellRendererComponent,
     AgGridPaginationComponent,
     AtmActionCellRendererComponent,
-    MprActionCellRendererComponent
+    MprActionCellRendererComponent,
+    CActionCellRendererComponent
   ],
   imports: [
     ToastModule,
@@ -102,7 +104,8 @@ import { MprActionCellRendererComponent } from './datagrid/renderers/mpr-action-
       DatePickerCellEditorComponent,
       DatePickerCellRendererComponent,
       AtmActionCellRendererComponent,
-      DropdownCellRendererComponent
+      DropdownCellRendererComponent,
+      CActionCellRendererComponent
     ]),
     BsDatepickerModule.forRoot()
   ],
