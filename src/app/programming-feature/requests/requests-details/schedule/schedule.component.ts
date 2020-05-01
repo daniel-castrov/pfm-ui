@@ -453,9 +453,6 @@ export class ScheduleComponent implements OnInit {
     const canSave = this.validateRowData(row);
     if (canSave) {
       row.programId = this.program.id;
-      // if (row.fundingLineId?.toLowerCase() === 'select') {
-      //   row.fundingLineId = null;
-      // }
       if (row.startDate) {
         row.startDate = moment(row.startDate, 'MM/DD/YYYY');
       }

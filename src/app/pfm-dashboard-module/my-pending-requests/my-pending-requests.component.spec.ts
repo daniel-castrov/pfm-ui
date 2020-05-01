@@ -8,9 +8,8 @@ describe('MyPendingRequestsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MyPendingRequestsComponent ]
-    })
-    .compileComponents();
+      declarations: [MyPendingRequestsComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
