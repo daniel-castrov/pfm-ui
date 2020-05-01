@@ -7,15 +7,17 @@
   [extraActions]="extraActions"
 >
 </pfm-action-cell-renderer>
-
 <ng-template #extraActions>
   <div class="action">
-    <span [title]="title">
+    <span>
       <ng-container *ngIf="data.canView">
-        <fa-icon icon="eye"></fa-icon>
+        <fa-icon icon="eye" [title]="'View details'"></fa-icon>
       </ng-container>
       <ng-container *ngIf="!data.canView">
-        <fa-icon icon="lock"></fa-icon>
+        <fa-icon icon="lock" [title]="'In use'"></fa-icon>
+      </ng-container>
+      <ng-container *ngIf="data.isSingleDelete">
+        <fa-icon icon="trash" [title]="'Delete request'"></fa-icon>
       </ng-container>
     </span>
   </div>

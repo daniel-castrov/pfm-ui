@@ -5,9 +5,9 @@ import { ColDef } from '@ag-grid-community/all-modules';
 import { GridApi } from 'ag-grid-community';
 import { formatDate } from '@angular/common';
 import { AppModel } from '../../pfm-common-models/AppModel';
-import { AtmActionCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/atm-action-cell-renderer/atm-action-cell-renderer.component';
 import { ListItem } from 'src/app/pfm-common-models/ListItem';
 import * as moment from 'moment';
+import { CActionCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/c-action-cell-renderer/c-action-cell-renderer.component';
 
 @Component({
   selector: 'pfm-completed',
@@ -23,9 +23,6 @@ export class CompletedComponent implements OnInit, OnDestroy {
   gridActionState = {
     VIEW: {
       canView: true
-    },
-    LOCKED: {
-      canView: false
     }
   };
 
@@ -189,7 +186,7 @@ export class CompletedComponent implements OnInit, OnDestroy {
         sortable: false,
         suppressMenu: true,
         cellStyle: { display: 'flex', 'align-items': 'center', 'white-space': 'normal' },
-        cellRendererFramework: AtmActionCellRendererComponent,
+        cellRendererFramework: CActionCellRendererComponent,
         maxWidth: 120
       }
     ];

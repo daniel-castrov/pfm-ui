@@ -26,6 +26,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ProgramStatus } from '../../models/enumerations/program-status.model';
 import { RoleConstants } from 'src/app/pfm-common-models/role-contants.model';
 import { map } from 'rxjs/operators';
+import { OrganizationService } from 'src/app/services/organization-service';
 
 @Component({
   selector: 'pfm-requests-summary',
@@ -83,6 +84,7 @@ export class RequestsSummaryComponent implements OnInit {
     continueAction: null,
     display: false
   };
+  errorMessage: string;
 
   constructor(
     private programmingModel: ProgrammingModel,
@@ -96,7 +98,8 @@ export class RequestsSummaryComponent implements OnInit {
     private router: Router,
     private visibilityService: VisibilityService,
     public appModel: AppModel,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private organizationService: OrganizationService
   ) {}
 
   async ngOnInit() {
@@ -345,6 +348,7 @@ export class RequestsSummaryComponent implements OnInit {
 
   handleAdd(addEvent: any) {
     if (addEvent.action === 'new-program') {
+      this.errorMessage = null;
       this.createProgramDialog.form.patchValue({
         shortName: '',
         longName: '',
@@ -533,7 +537,7 @@ export class RequestsSummaryComponent implements OnInit {
     this.createProgramDialog.display = false;
   }
 
-  onCreateProgramAction() {
+  async onCreateProgramAction() {
     const program = {
       shortName: this.createProgramDialog.form.get(['shortName']).value,
       longName: this.createProgramDialog.form.get(['longName']).value,
@@ -544,6 +548,9 @@ export class RequestsSummaryComponent implements OnInit {
     program.programStatus = ProgramStatus.SAVED;
     const canSave = this.createProgramDialog.form.valid;
     if (canSave) {
+      if ((await this.checkProgramExistInMaster(program)) || (await this.checkProgramAlreadyExists(program))) {
+        return;
+      }
       this.programmingService.create(program).subscribe(
         resp => {
           const resultProgram = resp.result as Program;
@@ -551,7 +558,8 @@ export class RequestsSummaryComponent implements OnInit {
           this.router.navigate([
             '/programming/requests/details/' + resultProgram.id,
             {
-              pomYear: this.pomYear
+              pomYear: this.pomYear,
+              tab: 0
             }
           ]);
         },
@@ -574,5 +582,48 @@ export class RequestsSummaryComponent implements OnInit {
         this.toastService.displayError('Organization field must not be empty.');
       }
     }
+  }
+
+  private async checkProgramExistInMaster(program: Program) {
+    let ret = false;
+    let masterProgram: Program;
+    await this.mrdbService
+      .getByName(program.shortName)
+      .toPromise()
+      .then(resp => {
+        masterProgram = resp.result as Program;
+      });
+    if (masterProgram) {
+      this.errorMessage =
+        'The program ID entered already exists as a previously funded program. ' +
+        'Please cancel out of this and click the + button to add a Previously Funded Program.';
+      ret = true;
+    }
+    return ret;
+  }
+
+  private async checkProgramAlreadyExists(program: Program) {
+    let ret = false;
+    let databaseProgram: Program;
+    await this.programmingService
+      .findByShortNameAndContainerId(program.containerId, program.shortName)
+      .toPromise()
+      .then(resp => {
+        databaseProgram = resp.result as Program;
+      });
+    if (databaseProgram) {
+      let organizationAbbreviation: string;
+      await this.organizationService
+        .getById(databaseProgram.organizationId)
+        .toPromise()
+        .then(resp => {
+          const organization = resp.result as Organization;
+          organizationAbbreviation = organization.abbreviation;
+        });
+      this.errorMessage =
+        'The program ID entered already exists on the POM in the ' + organizationAbbreviation + ' organization.';
+      ret = true;
+    }
+    return ret;
   }
 }

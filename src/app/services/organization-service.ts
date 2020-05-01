@@ -7,6 +7,8 @@ export abstract class OrganizationService extends BaseRestService {
     super(httpClient);
   }
 
+  abstract getById(organizationId: string): Observable<any>;
+
   abstract getAll(): Observable<object>;
 
   abstract getMap(): Observable<object>;
