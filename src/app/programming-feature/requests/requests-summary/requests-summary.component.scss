@@ -84,3 +84,12 @@ h3 {
 .cancel {
   display: flex;
 }
+
+.error-message {
+  font-size: small;
+  color: #aa4342;
+}
+
+.input-error {
+  border-color: #aa4342;
+}
