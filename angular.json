@@ -151,49 +151,6 @@
         }
       }
     },
-    "plugins": {
-      "root": "projects/plugins/",
-      "sourceRoot": "projects/plugins/src",
-      "projectType": "application",
-      "prefix": "app",
-      "schematics": {},
-      "architect": {
-        "build": {
-          "builder": "./builders:plugin",
-          "options": {
-            "outputPath": "dist/plugins",
-            "index": "",
-            "main": "projects/plugins/src/main.ts",
-            "polyfills": "projects/plugins/src/polyfills.ts",
-            "tsConfig": "projects/plugins/tsconfig.app.json",
-            "assets": [],
-            "styles": [],
-            "scripts": []
-          },
-          "configurations": {
-            "production": {
-              "fileReplacements": [],
-              "optimization": true,
-              "outputHashing": "none",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": false,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                }
-              ]
-            }
-          }
-        }
-      }
-    },
     "app": {
       "projectType": "application",
       "schematics": {
