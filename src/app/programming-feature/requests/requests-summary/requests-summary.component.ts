@@ -548,7 +548,7 @@ export class RequestsSummaryComponent implements OnInit {
     program.programStatus = ProgramStatus.SAVED;
     const canSave = this.createProgramDialog.form.valid;
     if (canSave) {
-      if ((await this.checkProgramExistInMaster(program)) || (await this.checkProgramAlreadyExists(program))) {
+      if ((await this.checkProgramAlreadyExists(program)) || (await this.checkProgramExistInMaster(program))) {
         return;
       }
       this.programmingService.create(program).subscribe(
