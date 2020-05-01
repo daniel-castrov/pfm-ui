@@ -548,37 +548,7 @@ export class RequestsSummaryComponent implements OnInit {
     program.programStatus = ProgramStatus.SAVED;
     const canSave = this.createProgramDialog.form.valid;
     if (canSave) {
-      let masterProgram: Program;
-      let databaseProgram: Program;
-      await this.mrdbService
-        .getByName(program.shortName)
-        .toPromise()
-        .then(resp => {
-          masterProgram = resp.result as Program;
-        });
-      if (masterProgram) {
-        this.errorMessage =
-          'The program ID entered already exists as a previously funded program. ' +
-          'Please cancel out of this and click the + button to add a Previously Funded Program.';
-        return;
-      }
-      await this.programmingService
-        .findByShortNameAndContainerId(program.containerId, program.shortName)
-        .toPromise()
-        .then(resp => {
-          databaseProgram = resp.result as Program;
-        });
-      if (databaseProgram) {
-        let organizationAbbreviation: string;
-        await this.organizationService
-          .getById(databaseProgram.organizationId)
-          .toPromise()
-          .then(resp => {
-            const organization = resp.result as Organization;
-            organizationAbbreviation = organization.abbreviation;
-          });
-        this.errorMessage =
-          'The program ID entered already exists on the POM in the ' + organizationAbbreviation + ' organization.';
+      if ((await this.checkProgramExistInMaster(program)) || (await this.checkProgramAlreadyExists(program))) {
         return;
       }
       this.programmingService.create(program).subscribe(
@@ -612,5 +582,48 @@ export class RequestsSummaryComponent implements OnInit {
         this.toastService.displayError('Organization field must not be empty.');
       }
     }
+  }
+
+  private async checkProgramExistInMaster(program: Program) {
+    let ret = false;
+    let masterProgram: Program;
+    await this.mrdbService
+      .getByName(program.shortName)
+      .toPromise()
+      .then(resp => {
+        masterProgram = resp.result as Program;
+      });
+    if (masterProgram) {
+      this.errorMessage =
+        'The program ID entered already exists as a previously funded program. ' +
+        'Please cancel out of this and click the + button to add a Previously Funded Program.';
+      ret = true;
+    }
+    return ret;
+  }
+
+  private async checkProgramAlreadyExists(program: Program) {
+    let ret = false;
+    let databaseProgram: Program;
+    await this.programmingService
+      .findByShortNameAndContainerId(program.containerId, program.shortName)
+      .toPromise()
+      .then(resp => {
+        databaseProgram = resp.result as Program;
+      });
+    if (databaseProgram) {
+      let organizationAbbreviation: string;
+      await this.organizationService
+        .getById(databaseProgram.organizationId)
+        .toPromise()
+        .then(resp => {
+          const organization = resp.result as Organization;
+          organizationAbbreviation = organization.abbreviation;
+        });
+      this.errorMessage =
+        'The program ID entered already exists on the POM in the ' + organizationAbbreviation + ' organization.';
+      ret = true;
+    }
+    return ret;
   }
 }
