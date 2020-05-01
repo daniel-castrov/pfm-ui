@@ -17,6 +17,10 @@ export class OrganizationServiceImpl extends OrganizationService {
     return this.get('organization');
   }
 
+  getById(organizationId: string): Observable<object> {
+    return this.get('organization/' + organizationId);
+  }
+
   getMap(): Observable<object> {
     const orgs = new Map<string, Organization>();
     return this.getAll().pipe(
