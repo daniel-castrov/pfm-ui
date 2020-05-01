@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ListItem } from '../../../../pfm-common-models/ListItem';
 import { DatagridMbService } from '../../../services/datagrid-mb.service';
 import { DataGridMessage } from '../../../models/DataGridMessage';
@@ -47,7 +47,7 @@ export class DropdownCellRendererComponent {
   }
 
   updateList(options: string[] | string[][]) {
-    this.list = ListItemHelper.generateListItemFromArray(options);
+    this.list = ListItemHelper.generateListItemFromArray(options, this.selectedValue);
     this.change.emit();
   }
 }
