@@ -8,9 +8,8 @@ describe('MprActionCellRendererComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MprActionCellRendererComponent ]
-    })
-    .compileComponents();
+      declarations: [MprActionCellRendererComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

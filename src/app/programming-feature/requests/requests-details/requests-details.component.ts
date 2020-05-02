@@ -287,7 +287,7 @@ export class RequestsDetailsComponent implements OnInit {
         this.currentSelectedTab = 1;
         break;
       case 'schedule':
-        setTimeout(() => this.pfmSchedule.drawGanttChart(true), 0);
+        setTimeout(() => this.pfmSchedule.ngOnInit(), 0);
         this.currentSelectedTab = 2;
         break;
       case 'scope':

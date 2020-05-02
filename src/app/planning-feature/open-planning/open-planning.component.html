@@ -1,13 +1,15 @@
 <div class="main">
-  <h3>Open Planning Phase</h3>
-  <pfm-primary-button
-    *pfmIsVisible="'planning-phase-component.openPlanningPhase'"
-    [label]="'Open Planning Phase'"
-    [name]="id"
-    [id]="id"
-    (onClick)="openPlanningPhase()"
-  >
-  </pfm-primary-button>
+  <h3 class="w-50">Open Planning Phase</h3>
+  <div class="w-50 text-right">
+    <pfm-primary-button
+      *pfmIsVisible="'planning-phase-component.openPlanningPhase'"
+      [label]="'Open Planning Phase'"
+      [name]="id"
+      [id]="id"
+      (onClick)="openPlanningPhase()"
+    >
+    </pfm-primary-button>
+  </div>
 </div>
 
 <ng-container *ngIf="availableYears">
