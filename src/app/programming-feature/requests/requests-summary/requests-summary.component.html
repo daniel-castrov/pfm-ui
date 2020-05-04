@@ -117,7 +117,7 @@
     <div class="button-container">
       <div class="confirm">
         <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onImportProgram()">
-          OK
+          Add
         </button>
       </div>
       <div class="cancel">
@@ -162,7 +162,7 @@
     [title]="createProgramDialog.title"
     [body]="createProgramBody"
     [actions]="createProgramActions"
-    (onCancelDialog)="onCancelNegativeValidationDialog()"
+    (onCancelDialog)="onCancelCreateProgramDialog()"
   ></pfm-custom-dialog>
 
   <ng-template #createProgramBody>
