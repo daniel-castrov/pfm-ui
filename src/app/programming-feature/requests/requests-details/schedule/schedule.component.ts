@@ -398,7 +398,7 @@ export class ScheduleComponent implements OnInit {
 
   filterRows() {
     if (this.selectedFundingFilter.toLowerCase() === 'show all') {
-      this.scheduleGridRows = this.schedulesData;
+      this.scheduleGridRows = [...this.schedulesData];
     } else if (this.selectedFundingFilter.toLowerCase() === 'none') {
       this.scheduleGridRows = this.schedulesData.filter((row, index) => !row.fundingLineId);
     } else {
@@ -473,9 +473,7 @@ export class ScheduleComponent implements OnInit {
             // Update view
             this.viewMode(rowIndex);
             this.updateGanttChart();
-            if (this.selectedFundingFilter.toLowerCase() !== 'show all') {
-              this.schedulesData.push(row);
-            }
+            this.schedulesData.push(row);
           },
           error => {
             this.busy = false;
