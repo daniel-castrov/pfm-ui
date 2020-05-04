@@ -228,6 +228,10 @@ export class AssetsComponent implements OnInit {
                 this.resetState();
                 this.assetGridApi.setRowData(this.assetSummaryRows);
               }
+            } else {
+              setTimeout(() => {
+                this.form.controls.fundingLineSelect.patchValue(this.selectedAsset.fundingLineId);
+              }, 0);
             }
           }
         },
@@ -823,7 +827,13 @@ export class AssetsComponent implements OnInit {
       column: nextColumn,
       rowPinned: undefined
     };
-
+    if (!nextCell.column?.getColDef().cellEditor) {
+      const tabColId = Number(params.previousCellPosition.column.colDef.colId);
+      if (isBackward) {
+        this.assetGridApi.setFocusedCell(rowIndex, String(tabColId > 2 ? previousColId : previousColId + 1));
+      }
+      return null;
+    }
     return nextCell;
   }
 
