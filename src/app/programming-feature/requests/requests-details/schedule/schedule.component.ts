@@ -473,7 +473,9 @@ export class ScheduleComponent implements OnInit {
             // Update view
             this.viewMode(rowIndex);
             this.updateGanttChart();
-            this.schedulesData.push(row);
+            if (this.selectedFundingFilter.toLowerCase() !== 'show all') {
+              this.schedulesData.push(row);
+            }
           },
           error => {
             this.busy = false;
