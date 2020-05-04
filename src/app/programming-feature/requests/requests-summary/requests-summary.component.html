@@ -174,20 +174,29 @@
           <div class="col-sm-8">
             <input
               type="text"
-              [class.input-error]="errorMessage"
+              [class.input-error]="programErrorMessage"
               class="form-control"
               id="shortName"
               formControlName="shortName"
             />
-            <p class="error-message col align-self-end" *ngIf="errorMessage">
-              {{ errorMessage }}
+            <p class="error-message col align-self-end" *ngIf="programErrorMessage">
+              {{ programErrorMessage }}
             </p>
           </div>
         </div>
         <div class="form-group row">
           <label for="longName" class="col-sm-4 col-form-label">*Program Name</label>
           <div class="col-sm-8">
-            <input type="text" class="form-control" id="longName" formControlName="longName" />
+            <input
+              type="text"
+              [class.input-error]="programNameErrorMessage"
+              class="form-control"
+              id="longName"
+              formControlName="longName"
+            />
+            <p class="error-message col align-self-end" *ngIf="programNameErrorMessage">
+              {{ programNameErrorMessage }}
+            </p>
           </div>
         </div>
         <div class="form-group row">
@@ -195,6 +204,7 @@
           <div class="col-sm-8">
             <span *ngIf="selectedOrg.value">{{ selectedOrg.id }}</span>
             <select
+              [class.input-error]="organizationErrorMessage"
               *ngIf="!selectedOrg.value"
               id="organizationId"
               class="form-control"
@@ -204,6 +214,9 @@
               <option value="" disabled>Select...</option>
               <option *ngFor="let org of orgs" [value]="org.id">{{ org.abbreviation }}</option>
             </select>
+            <p class="error-message col align-self-end" *ngIf="organizationErrorMessage">
+              {{ organizationErrorMessage }}
+            </p>
           </div>
         </div>
       </form>
