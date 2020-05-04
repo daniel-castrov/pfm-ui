@@ -105,19 +105,18 @@
       [fieldName]="'name'"
       [fieldLabel]="'name'"
       [options]="availablePrograms"
+      [class.input-error]="previousYearErrorMessage"
     >
     </pfm-dropdown>
+    <p class="error-message col align-self-end" *ngIf="previousYearErrorMessage">
+      {{ previousYearErrorMessage }}
+    </p>
   </ng-template>
 
   <ng-template #importPreviousFundedProgramActions>
     <div class="button-container">
       <div class="confirm">
-        <button
-          type="button"
-          class="btn btn-primary"
-          data-dismiss="modal"
-          (click)="showPreviousFundedProgramDialog = false; onImportProgram()"
-        >
+        <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onImportProgram()">
           OK
         </button>
       </div>

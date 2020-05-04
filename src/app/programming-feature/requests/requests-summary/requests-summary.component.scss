@@ -90,6 +90,7 @@ h3 {
   color: #aa4342;
 }
 
-.input-error {
+.input-error,
+:host ::ng-deep pfm-dropdown.input-error .pfm-dropdown > select {
   border-color: #aa4342;
 }

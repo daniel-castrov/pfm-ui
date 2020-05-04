@@ -84,6 +84,7 @@ export class RequestsSummaryComponent implements OnInit {
     continueAction: null,
     display: false
   };
+  previousYearErrorMessage: string;
   programErrorMessage: string;
   programNameErrorMessage: string;
   organizationErrorMessage: string;
@@ -361,6 +362,7 @@ export class RequestsSummaryComponent implements OnInit {
       });
       this.createProgramDialog.display = true;
     } else if (addEvent.action === 'previously-funded-program') {
+      this.previousYearErrorMessage = null;
       this.selectedPreviousYearProgramId = null;
       this.busy = true;
       this.mrdbService.getProgramsMinusPrs(this.selectedOrg.value, this.programmingModel.programs).subscribe(
@@ -387,6 +389,10 @@ export class RequestsSummaryComponent implements OnInit {
   }
 
   onImportProgram() {
+    if (!this.selectedPreviousYearProgramId) {
+      this.previousYearErrorMessage = 'Value required.';
+      return;
+    }
     this.mrdbService
       .getById(this.selectedPreviousYearProgramId)
       .pipe(
@@ -403,24 +409,28 @@ export class RequestsSummaryComponent implements OnInit {
           return program;
         })
       )
-      .subscribe(program => {
-        this.programmingService.create(program).subscribe(
-          resp => {
-            const resultProgram = resp.result as Program;
-            this.router.navigate([
-              '/programming/requests/details/' + resultProgram.id,
-              {
-                pomYear: this.pomYear,
-                tab: 0
-              }
-            ]);
-          },
-          error => {
-            this.toastService.displayError('An error has occurred while attempting to save program.');
-          },
-          () => (this.busy = false)
-        );
-      });
+      .subscribe(
+        program => {
+          this.programmingService.create(program).subscribe(
+            resp => {
+              const resultProgram = resp.result as Program;
+              this.router.navigate([
+                '/programming/requests/details/' + resultProgram.id,
+                {
+                  pomYear: this.pomYear,
+                  tab: 0
+                }
+              ]);
+            },
+            error => {
+              this.toastService.displayError('An error has occurred while attempting to save program.');
+            },
+            () => (this.busy = false)
+          );
+        },
+        () => {},
+        () => (this.showPreviousFundedProgramDialog = false)
+      );
   }
 
   onApproveOrganization(): void {
