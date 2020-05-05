@@ -1,1 +1,13 @@
-<p>work-space-management works!</p>
+<div class="main">
+  <h3 class="w-50">POM{{ byYear.toString() | slice: 2:4 }} Workspace Management</h3>
+  <div class="w-50 text-right">
+    <pfm-primary-button
+      *pfmIsVisible="'planning-phase-component.closePlanningPhase'"
+      [label]="'Compare versions'"
+      [name]="'compare'"
+      [id]="'compare'"
+      (onClick)="compareVersion()"
+    >
+    </pfm-primary-button>
+  </div>
+</div>

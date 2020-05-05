@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormatterUtil } from 'src/app/util/formatterUtil';
 
 @Component({
   selector: 'pfm-programming',
@@ -6,7 +7,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./work-space-management.component.scss']
 })
 export class WorkSpaceManagementComponent implements OnInit {
+  byYear: number;
+
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.byYear = FormatterUtil.getCurrentFiscalYear() + 2;
+  }
+
+  compareVersion() {}
 }
