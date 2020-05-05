@@ -398,7 +398,7 @@ export class ScheduleComponent implements OnInit {
 
   filterRows() {
     if (this.selectedFundingFilter.toLowerCase() === 'show all') {
-      this.scheduleGridRows = this.schedulesData;
+      this.scheduleGridRows = [...this.schedulesData];
     } else if (this.selectedFundingFilter.toLowerCase() === 'none') {
       this.scheduleGridRows = this.schedulesData.filter((row, index) => !row.fundingLineId);
     } else {
