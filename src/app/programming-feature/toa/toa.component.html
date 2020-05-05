@@ -10,6 +10,7 @@
         <div class="rTableCell">
           <ng-container>
             <pfm-dropdown
+              (selectionChanged)="yearSelected($event)"
               *ngIf="pomYears"
               [type]="'labelDropdown'"
               [label]="'For:'"
@@ -18,7 +19,7 @@
               [fieldName]="'name'"
               [fieldLabel]="'name'"
               [options]="pomYears"
-              [defaultOption]="defaultYear"
+              [defaultOption]="selectedYear"
             ></pfm-dropdown>
           </ng-container>
         </div>
@@ -26,3 +27,83 @@
     </div>
   </div>
 </div>
+
+<div class="section-tabs" *ngIf="programBudgetData">
+  <div class="col-20">
+    <tabset class="program-tab-style" destroyOnHide="true">
+      <tab heading="Community" active="true" style="width: 100%; height: 100%;" (selectTab)="onTabSelected($event)">
+        <div class="section-tab">
+          <div class="section-chart">
+            <pfm-programming-community-graph></pfm-programming-community-graph>
+          </div>
+
+          <div class="section-datagrid">
+            <div>
+              <span>&nbsp;Set TOAs for Comunity ($K)&nbsp;</span>
+              <pfm-secondary-button
+                [label]="' Reset'"
+                [icon]="'fa fa-refresh reset-button'"
+                class="reset-button"
+                (click)="onResetCommunityData()"
+              >
+              </pfm-secondary-button>
+            </div>
+            <div class="grid-container">
+              <pfm-displaydatagrid
+                [tabToNextCell]="onTabToNextCell.bind(this)"
+                (onGridIsReady)="onCommunityGridIsReady($event)"
+                (onColumnIsReady)="onCommunityColumnIsReady($event)"
+                (onCellAction)="onCommunityGridCellAction($event)"
+                [showAddRow]="false"
+                [columns]="communityColumns"
+                [rows]="communityData"
+              >
+              </pfm-displaydatagrid>
+            </div>
+          </div>
+        </div>
+      </tab>
+      <tab heading="Organization" style="width: 100%; height: 100%;" (selectTab)="onTabSelected($event)">
+        <div class="section-tab">
+          <div class="section-chart">
+            <pfm-programming-organization-graph></pfm-programming-organization-graph>
+          </div>
+
+          <div class="section-datagrid">
+            <div>
+              <span>&nbsp;Set TOAs for Organization ($K)&nbsp;</span>
+            </div>
+            <!--<div style="height:300px;width:98%">-->
+            <div class="grid-container">
+              <pfm-displaydatagrid
+                [tabToNextCell]="onTabToNextCell.bind(this)"
+                (onGridIsReady)="onOrgGridIsReady($event)"
+                (onColumnIsReady)="onOrgColumnIsReady($event)"
+                (onCellAction)="onOrgGridCellAction($event)"
+                [showAddRow]="false"
+                [columns]="orgColumns"
+                [rows]="orgData"
+              >
+              </pfm-displaydatagrid>
+            </div>
+          </div>
+        </div>
+        <!--</div>-->
+        <!--
+      <div style="float:left; height:100px;width:98%">
+        <table border="1px" style="width:80%;height:99%">
+          <tr *ngFor="let row of subToasData" style="width:100%;height:30px;">
+
+            <td *ngFor="let column of tableHeaders" style="width:100px;padding-left: 1px;padding-right:5px; text-align:right;">
+              <strong>${{row[column]}}</strong>
+            </td>
+            </tr>
+        </table>
+      </div>
+    -->
+      </tab>
+    </tabset>
+  </div>
+</div>
+
+<pfm-busy [busy]="busy"></pfm-busy>
