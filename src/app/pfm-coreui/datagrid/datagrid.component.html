@@ -24,10 +24,11 @@
           [type]="'iconDropdown'"
           [iconName]="'plus'"
           [required]="true"
-          [id]="'grid_icon_dropdown_id'"
           [fieldName]="'name'"
           [fieldLabel]="'name'"
           [options]="options"
+          [showPrompt]="false"
+          [disabled]="api?.getEditingCells().length"
         >
         </pfm-dropdown>
       </div>

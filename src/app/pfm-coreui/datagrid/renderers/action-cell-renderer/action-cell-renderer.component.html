@@ -12,24 +12,27 @@
   </ng-container>
 
   <ng-container *ngIf="data.canDelete">
-    <div class="action" title="Delete" *ngIf="!data.isSingleDelete">
+    <div class="action" title="Delete" *ngIf="!data.isSingleDelete && !data.canSave">
       <pfm-dropdown
         (selectionChanged)="handleDelete($event)"
         [type]="'iconDropdown'"
         [iconName]="'trash-alt'"
         [label]="'Delete'"
+        [title]="'Delete'"
         [required]="true"
         [id]="id"
         [fieldName]="'name'"
         [fieldLabel]="'name'"
         [options]="options"
+        [showPrompt]="false"
+        [disabled]="params.data.isDisabled"
       >
       </pfm-dropdown>
     </div>
     <div class="action" (click)="onSelected('delete-row')" *ngIf="data.isSingleDelete && data.canEdit">
       <fa-icon [icon]="'trash-alt'" title="Delete" [class.disabled]="params.data.isDisabled"></fa-icon>
     </div>
-    <div class="action" (click)="onSelected('cancel')" *ngIf="data.isSingleDelete && data.canSave">
+    <div class="action" (click)="onSelected('cancel')" *ngIf="data.canSave">
       <fa-icon [icon]="'ban'" title="Cancel" [class.disabled]="params.data.isDisabled"></fa-icon>
     </div>
   </ng-container>
