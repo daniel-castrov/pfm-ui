@@ -18,12 +18,13 @@ fa-icon {
   line-height: 36px;
 }
 
-.disabled {
+.disabled,
+.icon-dropdown > button:disabled {
   opacity: 0.6;
 }
 
 .disabled:hover {
-  color: black;
+  color: inherit;
   cursor: default;
 }
 

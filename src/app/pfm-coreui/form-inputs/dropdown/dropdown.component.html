@@ -4,7 +4,12 @@
       <label>{{ label }}</label>
     </div>
     <div class="pfm-dropdown">
-      <select (ngModelChange)="handleSelectionChanged($event)" class="form-control" [(ngModel)]="selectedItem">
+      <select
+        (ngModelChange)="handleSelectionChanged($event)"
+        class="form-control"
+        [(ngModel)]="selectedItem"
+        [disabled]="disabled"
+      >
         <option disabled value="{{ prompt }}" *ngIf="showPrompt">{{ prompt }}</option>
         <option *ngFor="let option of options" [value]="option[fieldName]" [disabled]="option.disabled">
           {{ option[fieldLabel] }}</option
@@ -21,9 +26,9 @@
         (ngModelChange)="handleSelectionChanged($event)"
         class="form-control"
         [(ngModel)]="selectedItem"
-        [disabled]="attachmentsDisabled"
+        [disabled]="disabled"
       >
-        <option disabled value="{{ prompt }}">{{ prompt }}</option>
+        <option disabled value="{{ prompt }}" *ngIf="showPrompt">{{ prompt }}</option>
         <option *ngFor="let option of options" [value]="option[fieldName]">{{ option[fieldLabel] }}</option>
       </select>
     </div>
@@ -37,9 +42,9 @@
         (ngModelChange)="handleSelectionChanged($event)"
         class="form-control"
         [(ngModel)]="selectedItem"
-        [disabled]="attachmentsDisabled"
+        [disabled]="disabled"
       >
-        <option disabled value="{{ prompt }}">{{ prompt }}</option>
+        <option disabled value="{{ prompt }}" *ngIf="showPrompt">{{ prompt }}</option>
         <option *ngFor="let option of options" [value]="option[fieldName]">{{ option[fieldLabel] }}</option>
       </select>
     </div>
@@ -47,16 +52,20 @@
 </ng-container>
 
 <ng-container *ngIf="type === 'iconDropdown' && visible">
-  <div [id]="id" ngbDropdown container="body" class="d-inline-block">
+  <div [id]="id" ngbDropdown container="body" class="d-inline-block" [class.disabled]="disabled">
     <span class="icon-dropown" *ngIf="iconName" [title]="title">
-      <fa-icon [icon]="iconName" ngbDropdownToggle></fa-icon>
+      <button class="btn-blank" ngbDropdownToggle [disabled]="disabled">
+        <fa-icon [icon]="iconName"></fa-icon>
+      </button>
     </span>
     <div class="icon-select" ngbDropdownMenu>
-      <span ngbDropdownItem class="icon-option" (click)="handleSelectionChanged(prompt)">{{ prompt }}</span>
+      <span ngbDropdownItem class="icon-option" (click)="handleSelectionChanged(prompt)" *ngIf="showPrompt">{{
+        prompt
+      }}</span>
       <ng-container *ngFor="let option of options">
-        <span ngbDropdownItem class="icon-option" (click)="handleSelectionChanged(option[fieldLabel])">{{
-          option[fieldLabel]
-        }}</span>
+        <span ngbDropdownItem class="icon-option" (click)="handleSelectionChanged(option[fieldLabel])">
+          {{ option[fieldLabel] }}
+        </span>
       </ng-container>
     </div>
   </div>

@@ -28,11 +28,13 @@ option {
   background-color: #bbced7;
 }
 
-.icon-dropown {
+.icon-dropown,
+.icon-dropown > button:enabled {
   cursor: pointer;
 }
 
-.icon-dropown:hover {
+.icon-dropown:hover > :not(button),
+.icon-dropown:hover > button:enabled {
   color: red;
 }
 

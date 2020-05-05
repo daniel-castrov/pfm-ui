@@ -1085,3 +1085,14 @@ body {
 .w-70 {
   width: 70%;
 }
+
+.btn-blank {
+  padding: 0;
+  background: none;
+  border: none;
+}
+
+.btn-blank:disabled {
+  color: black;
+  cursor: default;
+}

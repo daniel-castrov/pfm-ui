@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, HostBinding } from '@angular/core';
 import { ValidatedComponent } from '../../models/validated-component';
 import { ListItem } from '../../../pfm-common-models/ListItem';
 
@@ -8,7 +8,7 @@ import { ListItem } from '../../../pfm-common-models/ListItem';
   styleUrls: ['./dropdown.component.scss']
 })
 export class DropdownComponent implements ValidatedComponent, OnInit {
-  @Input() disabled: boolean;
+  @Input() disabled = false;
   @Input() label: string;
   @Input() required: boolean;
   @Input() fieldName: string;
@@ -18,7 +18,6 @@ export class DropdownComponent implements ValidatedComponent, OnInit {
   @Input() type = 'labelDropdown'; // default
   @Input() iconName: string;
   @Input() title: string;
-  @Input() attachmentsDisabled: boolean;
   @Input() defaultOption: ListItem;
   @Input() showPrompt = true;
   @Input() visible = true;
@@ -28,6 +27,10 @@ export class DropdownComponent implements ValidatedComponent, OnInit {
 
   isValidFlag: boolean;
   errorMessage: string;
+
+  @HostBinding('class.disabled') get class() {
+    return this.disabled;
+  }
 
   constructor() {}
 
