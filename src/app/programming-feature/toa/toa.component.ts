@@ -626,7 +626,7 @@ export class ToaComponent implements OnInit {
 
   calculateSubToaTotals(): any {
     const subtoarow = {};
-    const fy = this.byYear;
+    const fy = this.programYearSelected;
 
     subtoarow['orgid'] = 'sub-TOA Total Actual';
     for (let i = 0; i < 5; i++) {
@@ -662,7 +662,7 @@ export class ToaComponent implements OnInit {
   calculateDeltaRow(totalsrow: any, subtoasrow: any): any {
     const toaDeltarow = {};
 
-    const fy = this.byYear;
+    const fy = this.programYearSelected;
     toaDeltarow['orgid'] = 'Delta';
     for (let i = 0; i < 5; i++) {
       toaDeltarow[fy + i] = totalsrow[fy + i] - subtoasrow[fy + i];
