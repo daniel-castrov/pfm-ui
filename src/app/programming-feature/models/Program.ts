@@ -57,6 +57,7 @@ export class Program {
   other: string;
 
   attachments: Attachment[];
+  userCreated: boolean;
 
   constructor() {}
 }

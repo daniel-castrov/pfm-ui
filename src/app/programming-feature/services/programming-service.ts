@@ -42,4 +42,6 @@ export abstract class ProgrammingService extends BaseRestService {
   abstract reject(program: Program): Observable<any>;
 
   abstract approve(program: Program): Observable<any>;
+
+  abstract remove(id: string): Observable<any>;
 }

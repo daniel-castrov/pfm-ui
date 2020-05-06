@@ -8,6 +8,9 @@ import { Role } from '../../../../pfm-common-models/Role';
 import { ListItem } from '../../../../pfm-common-models/ListItem';
 import { AppModel } from '../../../../pfm-common-models/AppModel';
 import { RoleConstants } from 'src/app/pfm-common-models/role-contants.model';
+import { PrsActionCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/prs-action-cell-renderer/prs-action-cell-renderer.component';
+import { ProgrammingService } from 'src/app/programming-feature/services/programming-service';
+import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
 
 @Component({
   selector: 'pfm-requests-summary-grid',
@@ -31,8 +34,15 @@ export class RequestsSummaryGridComponent implements OnInit {
 
   id = 'requests-summary-component';
   busy: boolean;
+  deleteDialog: DeleteDialogInterface = { title: 'Delete' };
 
-  constructor(private programmingModel: ProgrammingModel, private appModel: AppModel, private router: Router) {
+  constructor(
+    private programmingModel: ProgrammingModel,
+    private appModel: AppModel,
+    private router: Router,
+    private programmingService: ProgrammingService,
+    private dialogService: DialogService
+  ) {
     this.columns = [
       {
         groupId: 'sub-header',
@@ -126,9 +136,12 @@ export class RequestsSummaryGridComponent implements OnInit {
         {
           groupId: 'main-header',
           headerName: 'Actions',
+          field: 'action',
           maxWidth: 120,
           minWidth: 120,
-          rowDrag: false
+          rowDrag: false,
+          cellStyle: { display: 'flex', 'align-items': 'center', 'white-space': 'normal' },
+          cellRendererFramework: PrsActionCellRendererComponent
         }
       ]
     });
@@ -148,27 +161,13 @@ export class RequestsSummaryGridComponent implements OnInit {
 
   handleCellAction(cellAction: DataGridMessage): void {
     switch (cellAction.message) {
-      case 'save': {
+      case 'delete-program':
+        this.deleteDialog.bodyText = 'Are you sure you want to delete?';
+        this.displayDeleteDialog(cellAction, this.deleteRow.bind(this));
         break;
-      }
-      case 'edit': {
-        break;
-      }
-      case 'upload': {
-        break;
-      }
-      case 'delete-row': {
-        break;
-      }
-      case 'delete-attachments': {
-        break;
-      }
-      case 'download-attachment': {
-        break;
-      }
-      case 'cellClicked': {
+      case 'cellClicked':
         this.onCellClicked(cellAction);
-      }
+        break;
     }
   }
 
@@ -205,10 +204,12 @@ export class RequestsSummaryGridComponent implements OnInit {
     for (const program of this.programmingModel.programs) {
       const ps = new ProgramSummary();
       ps.id = program.id;
+      ps.containerId = program.containerId;
       ps.organizationId = program.organizationId;
       ps.programName = program.shortName;
       ps.assignedTo = this.getRoleName(program.responsibleRoleId);
       ps.status = program.programStatus;
+      ps.action = program.userCreated ? { canDeleteProgram: true } : null;
       ps.funds = {};
       ps.fundsTotal = 0;
       for (let i = this.gridMinYear; i <= this.gridMaxYear; i++) {
@@ -258,4 +259,53 @@ export class RequestsSummaryGridComponent implements OnInit {
   doesExternalFilterPass(node) {
     return this.appModel.userDetails.roles.includes(node.data.assignedTo);
   }
+
+  private deleteRow(rowIndex: number) {
+    const program = this.gridData[rowIndex];
+    if (program.id) {
+      this.programmingService.remove(program.id).subscribe(
+        () => {
+          this.gridData.splice(rowIndex, 1);
+          const modelProgramIndex = this.programmingModel.programs.findIndex(
+            modelProgram => modelProgram.id === program.id
+          );
+          this.programmingModel.programs.splice(modelProgramIndex, 1);
+          this.gridApi.setRowData(this.gridData);
+          this.gridDataChange.emit(this.gridData);
+        },
+        error => {
+          this.dialogService.displayDebug(error);
+        }
+      );
+    }
+  }
+
+  private displayDeleteDialog(cellAction: DataGridMessage, deleteFunction: (rowIndex: number) => void) {
+    this.deleteDialog.cellAction = cellAction;
+    this.deleteDialog.delete = deleteFunction;
+    this.deleteDialog.display = true;
+  }
+
+  onCancelDeleteDialog() {
+    this.closeDeleteDialog();
+  }
+
+  onDeleteData() {
+    this.deleteDialog.delete(this.deleteDialog.cellAction.rowIndex);
+    this.closeDeleteDialog();
+  }
+
+  private closeDeleteDialog() {
+    this.deleteDialog.cellAction = null;
+    this.deleteDialog.delete = null;
+    this.deleteDialog.display = false;
+  }
+}
+
+export interface DeleteDialogInterface {
+  title: string;
+  bodyText?: string;
+  display?: boolean;
+  cellAction?: DataGridMessage;
+  delete?: (rowIndex: number) => void;
 }
