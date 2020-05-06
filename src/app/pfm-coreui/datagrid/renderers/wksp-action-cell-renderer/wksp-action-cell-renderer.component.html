@@ -1,0 +1,24 @@
+<pfm-action-cell-renderer
+  [data]="data"
+  [params]="params"
+  [columnApi]="columnApi"
+  [options]="options"
+  [disabled]="disabled"
+  [extraActions]="extraActions"
+>
+</pfm-action-cell-renderer>
+<ng-template #extraActions>
+  <div class="action">
+    <span>
+      <ng-container *ngIf="data.canView">
+        <fa-icon icon="eye" [title]="'View all details'"></fa-icon>
+      </ng-container>
+      <ng-container *ngIf="data.canViewFundingLine">
+        <fa-icon icon="dollar-sign" [title]="'View funding lines only'"></fa-icon>
+      </ng-container>
+      <ng-container *ngIf="data.canDuplicate">
+        <fa-icon icon="copy" [title]="'Duplicate'"></fa-icon>
+      </ng-container>
+    </span>
+  </div>
+</ng-template>

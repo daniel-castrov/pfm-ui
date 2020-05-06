@@ -11,3 +11,13 @@
     </pfm-primary-button>
   </div>
 </div>
+<div>
+  <pfm-datagrid
+    (gridIsReady)="onGridIsReady($event)"
+    [columns]="columnDefinitions"
+    [rows]="rows"
+    [showAddSingleRow]="false"
+    [showPagination]="false"
+  >
+  </pfm-datagrid>
+</div>
