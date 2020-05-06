@@ -45,6 +45,9 @@ import { AgGridPaginationComponent } from './datagrid/ag-grid-pagination/ag-grid
 import { AtmActionCellRendererComponent } from './datagrid/renderers/atm-action-cell-renderer/atm-action-cell-renderer.component';
 import { MprActionCellRendererComponent } from './datagrid/renderers/mpr-action-cell-renderer/mpr-action-cell-renderer.component';
 import { CActionCellRendererComponent } from './datagrid/renderers/c-action-cell-renderer/c-action-cell-renderer.component';
+import { WkspActionCellRendererComponent } from './datagrid/renderers/wksp-action-cell-renderer/wksp-action-cell-renderer.component';
+import { CheckboxInputComponent } from './form-inputs/checkbox-input/checkbox-input.component';
+import { CheckboxCellRendererComponent } from './datagrid/renderers/checkbox-cell-renderer/checkbox-cell-renderer.component';
 
 @NgModule({
   declarations: [
@@ -83,7 +86,10 @@ import { CActionCellRendererComponent } from './datagrid/renderers/c-action-cell
     AgGridPaginationComponent,
     AtmActionCellRendererComponent,
     MprActionCellRendererComponent,
-    CActionCellRendererComponent
+    CActionCellRendererComponent,
+    WkspActionCellRendererComponent,
+    CheckboxInputComponent,
+    CheckboxCellRendererComponent
   ],
   imports: [
     ToastModule,
@@ -141,7 +147,10 @@ import { CActionCellRendererComponent } from './datagrid/renderers/c-action-cell
     IsVisibleDirective,
     ToggleInputComponent,
     MpActionCellRendererComponent,
-    MprActionCellRendererComponent
+    MprActionCellRendererComponent,
+    WkspActionCellRendererComponent,
+    CheckboxInputComponent,
+    CheckboxCellRendererComponent
   ],
   providers: [MessageService]
 })
