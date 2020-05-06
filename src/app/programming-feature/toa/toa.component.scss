@@ -1,0 +1,112 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+}
+
+.main {
+  display: flex;
+}
+
+/**/
+.section-banner {
+  display: flex;
+  width: 100%;
+  height: 15%;
+}
+
+/*Tabs and tab contents*/
+
+/*A Single Tab*/
+.section-tab {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+}
+
+/*All charts*/
+.section-chart {
+  display: flex;
+  margin: 0 auto;
+  width: 100%;
+  height: 40%;
+}
+
+/*All Data Grids*/
+.section-datagrid {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 40%;
+}
+
+.section-datagrid > div {
+  margin-top: 10px;
+}
+
+.section-datagrid > div > span {
+  margin-left: 15px;
+}
+
+.section-datagrid pfm-secondary-button {
+  float: right;
+  margin-right: 20px;
+}
+
+.grid-container {
+  width: 100%;
+  height: calc(60vh);
+}
+
+.table {
+  display: table;
+  width: 750px;
+}
+.cellleft {
+  display: table-cell;
+  text-align: left;
+  width: 70%;
+}
+.cellright {
+  display: table-cell;
+  text-align: right;
+  width: 55%;
+}
+.datagrid-numeric-class {
+  display: flex;
+  align-items: center;
+  white-space: normal;
+  justify-content: flex-end;
+}
+.add-row-container {
+  display: none !important;
+  justify-content: flex-end;
+}
+
+.table-row {
+  display: table-row;
+  width: 150px;
+}
+.rTableCell {
+  display: table-cell;
+  text-align: left;
+
+  width: 20px;
+  height: 20px;
+}
+
+.rTableCellr {
+  display: table-cell;
+  text-align: center;
+  width: 20px;
+}
+
+.edit-year-blue-link {
+  color: #0000ff;
+}
+
+.reset-button {
+  margin-right: 0 !important;
+}
