@@ -17,4 +17,5 @@ export class MissionPriority {
   // client side only
   attachmentsDisabled: boolean;
   actions: Action;
+  isDisabled?: boolean;
 }

@@ -129,7 +129,7 @@ export class MissionPrioritiesComponent implements OnInit {
   canPerformClosePlanning: boolean;
   canPerformActions: boolean;
   showUploadDialog: boolean;
-  selectedRowId: number;
+  selectedRowIndex: number;
   selectedRow: MissionPriority;
   selectedImportYear: string;
   availableImportYears: ListItem[];
@@ -144,6 +144,7 @@ export class MissionPrioritiesComponent implements OnInit {
   missionDataFromServer: MissionPriority[];
 
   planningData: any[];
+  currentRowDataState: RowDataStateInterface = {};
 
   constructor(
     private appModel: AppModel,
@@ -154,13 +155,11 @@ export class MissionPrioritiesComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // if (this.appModel.visibilityDef['planning-phase-component']) {
     this.canPerformCreatePlanning = !!this.appModel.visibilityDef['planning-phase-component']?.createPlanningPhase;
     this.canPerformOpenPlanning = !!this.appModel.visibilityDef['planning-phase-component']?.openPlanningPhase;
     this.canPerformLockPlanning = !!this.appModel.visibilityDef['planning-phase-component']?.lockPlanningPhase;
     this.canPerformClosePlanning = !!this.appModel.visibilityDef['planning-phase-component']?.closePlanningPhase;
     this.canPerformActions = !!this.appModel.visibilityDef['planning-phase-component']?.performAction;
-    // }
     this.setupGrid();
     // POM Manager is here for demo purpose
     const years: string[] = [];
@@ -323,13 +322,17 @@ export class MissionPrioritiesComponent implements OnInit {
         this.saveRow(cellAction.rowIndex);
         break;
       case 'edit':
-        this.editRow(cellAction.rowIndex);
+        if (!this.currentRowDataState.isEditMode) {
+          this.editRow(cellAction.rowIndex, true);
+        }
         break;
       case 'upload':
         this.addAttachment(cellAction.rowIndex);
         break;
       case 'delete-row':
-        this.deleteRow(cellAction.rowIndex);
+        if (!this.currentRowDataState.isEditMode) {
+          this.deleteRow(cellAction.rowIndex);
+        }
         break;
       case 'delete-attachments':
         this.deleteAttachments(cellAction.rowIndex);
@@ -340,6 +343,13 @@ export class MissionPrioritiesComponent implements OnInit {
       case 'toggle-select':
         this.toggleSelect(cellAction.rowIndex);
         break;
+      case 'cancel':
+        if (this.currentRowDataState.isEditMode && !this.currentRowDataState.isAddMode) {
+          this.cancelRow(cellAction.rowIndex);
+        } else {
+          this.deleteRow(cellAction.rowIndex);
+        }
+        break;
     }
   }
 
@@ -348,7 +358,12 @@ export class MissionPrioritiesComponent implements OnInit {
   }
 
   onAddNewRow(event: any): void {
+    if (this.currentRowDataState.isEditMode) {
+      return;
+    }
     if (event.action === 'add-single-row') {
+      this.currentRowDataState.isAddMode = true;
+      this.currentRowDataState.currentEditingRowData = null;
       const mp = new MissionPriority();
       if (this.missionData.length === 0) {
         mp.order = 1;
@@ -458,9 +473,9 @@ export class MissionPrioritiesComponent implements OnInit {
       // wrap the FileMetaData in an Attachment object
       const attachment: Attachment = new Attachment();
       attachment.file = newFile;
-      attachment.mpId = this.missionData[this.selectedRowId].id;
+      attachment.mpId = this.missionData[this.selectedRowIndex].id;
       // add attachment
-      this.missionData[this.selectedRowId].attachments.push(attachment);
+      this.missionData[this.selectedRowIndex].attachments.push(attachment);
       // update data
       this.gridApi.setRowData(this.missionData);
     }
@@ -487,33 +502,57 @@ export class MissionPrioritiesComponent implements OnInit {
     return items;
   }
 
-  private editMode(rowId: number) {
+  private editMode(rowIndex: number) {
+    this.currentRowDataState.currentEditingRowIndex = rowIndex;
+    this.currentRowDataState.isEditMode = true;
+    this.missionData.forEach((row, index) => {
+      if (rowIndex !== index) {
+        row.isDisabled = true;
+      }
+    });
+    this.gridApi.setSuppressRowDrag(true);
     // toggle actions
-    this.missionData[rowId].actions = this.actionEditSetup();
+    this.missionData[rowIndex].actions = this.actionEditSetup();
     // disable attachments dropdown
-    this.missionData[rowId].attachmentsDisabled = true;
+    this.missionData[rowIndex].attachmentsDisabled = true;
     this.gridApi.setRowData(this.missionData);
+    this.gridApi.startEditingCell({
+      rowIndex,
+      colKey: 'title'
+    });
   }
 
-  private viewMode(rowId: number) {
+  private viewMode(rowIndex: number) {
+    this.currentRowDataState.currentEditingRowIndex = 0;
+    this.currentRowDataState.isEditMode = false;
+    this.currentRowDataState.isAddMode = false;
+    this.missionData.forEach(row => {
+      row.isDisabled = false;
+    });
+    this.gridApi.setSuppressRowDrag(false);
     // Toggle actions
     this.gridApi.stopEditing();
-    this.missionData[rowId].actions = this.actionViewSetup();
+    this.missionData[rowIndex].actions = this.actionViewSetup();
     // Enable attachments dropdown
-    this.missionData[rowId].attachmentsDisabled = false;
+    this.missionData[rowIndex].attachmentsDisabled = false;
     this.gridApi.setRowData(this.missionData);
   }
 
-  private saveRow(rowId: number) {
+  private saveRow(rowIndex: number) {
     let errorMsg = '';
     let isError = false;
 
     // Note stopEditing saves edits to model.  Since changes aren't saved to server if validation fails this is ok.
     this.gridApi.stopEditing();
-    const row: MissionPriority = this.missionData[rowId];
+    const row: MissionPriority = this.missionData[rowIndex];
 
     // Check columns Title max 45 chars, description max 200 chars
-    if (row.title.length <= 45 && row.title.length > 0 && row.description.length <= 200 && row.description.length > 0) {
+    if (
+      row.title?.length <= 45 &&
+      row.title?.length > 0 &&
+      row.description?.length <= 200 &&
+      row.description?.length > 0
+    ) {
       // Convert to server mp
       const serverMp: MissionPriority = this.convertToServerMP(row);
       serverMp.planningPhaseId = this.selectedPlanningPhase.id;
@@ -523,11 +562,11 @@ export class MissionPrioritiesComponent implements OnInit {
         this.planningService.createMissionPriority(serverMp).subscribe(
           resp => {
             this.busy = false;
-            this.missionData[rowId] = (resp as any).result;
-            this.missionData[rowId].actions = this.actionEditSetup();
+            this.missionData[rowIndex] = (resp as any).result;
+            this.missionData[rowIndex].actions = this.actionEditSetup();
 
             // Update view
-            this.viewMode(rowId);
+            this.viewMode(rowIndex);
             this.gridApi.setRowData(this.missionData);
           },
           error => {
@@ -541,7 +580,7 @@ export class MissionPrioritiesComponent implements OnInit {
           resp => {
             this.busy = false;
             // Update view
-            this.viewMode(rowId);
+            this.viewMode(rowIndex);
             this.gridApi.setRowData(this.missionData);
           },
           error => {
@@ -551,97 +590,107 @@ export class MissionPrioritiesComponent implements OnInit {
         );
       }
     } else {
-      if (row.title.length === 0) {
+      if (!row.title?.length) {
         errorMsg = 'The Title is empty. ';
         isError = true;
       }
-      if (row.description.length === 0) {
+      if (!row.description?.length) {
         errorMsg = errorMsg + 'The Description is empty. ';
         isError = true;
       }
-      if (row.title.length > 45) {
+      if (row.title?.length > 45) {
         errorMsg = errorMsg + 'The Title is longer than the max of 45 characters. ';
         isError = true;
       }
-      if (row.description.length > 200) {
+      if (row.description?.length > 200) {
         errorMsg = errorMsg + 'The Description is longer than the max of 200 characters.';
         isError = true;
       }
       if (isError) {
         this.dialogService.displayError(errorMsg);
       }
-      this.editRow(rowId);
+      this.editRow(rowIndex);
     }
   }
 
-  private updateRows(beginRowId: number, endRowId?: number) {
-    this.busy = true;
-    const clientMPs = this.missionData.slice(beginRowId, endRowId);
+  private updateRows(beginRowIndex: number, endRowIndex?: number) {
+    const clientMPs = this.missionData.slice(beginRowIndex, endRowIndex);
     // Ensure there is something to update
     if (clientMPs.length) {
+      this.busy = true;
       // Create copies of updated mps with client only properties excluded, server doesn't know about them
       const updateMps: MissionPriority[] = new Array<MissionPriority>();
       for (const clientMP of clientMPs) {
         updateMps.push(this.convertToServerMP(clientMP));
       }
       this.planningService.updateMissionPriority(updateMps).subscribe(
-        resp => {
-          this.busy = false;
-        },
+        () => {},
         error => {
-          this.busy = false;
           this.dialogService.displayDebug(error);
-        }
+        },
+        () => (this.busy = false)
       );
     }
   }
 
-  private editRow(rowId: number) {
+  private editRow(rowIndex: number, updatePreviousState?: boolean) {
+    if (updatePreviousState) {
+      this.currentRowDataState.currentEditingRowData = {
+        ...JSON.parse(JSON.stringify(this.missionData[rowIndex]))
+      };
+    }
     // edit mode
-    this.editMode(rowId);
-    // edit the title and description
-    this.gridApi.startEditingCell({
-      rowIndex: rowId,
-      colKey: 'title'
-    });
+    this.editMode(rowIndex);
   }
 
-  private deleteRow(rowId: number) {
-    this.selectedRowId = rowId;
-    this.showDeleteRowDialog = true;
+  private deleteRow(rowIndex: number) {
+    if (this.missionData[rowIndex].id) {
+      this.selectedRowIndex = rowIndex;
+      this.showDeleteRowDialog = true;
+    } else {
+      this.performDelete(rowIndex);
+    }
   }
 
-  private onDeleteRow(rowId: number) {
+  onDeleteRow(rowIndex: number) {
     this.busy = true;
-    this.planningService.deleteMissionPriority(this.missionData[rowId].id).subscribe(
+    this.planningService.deleteMissionPriority(this.missionData[rowIndex].id).subscribe(
       resp => {
-        this.missionData.splice(rowId, 1);
-        for (let i = rowId; i < this.missionData.length; i++) {
-          this.missionData[i].order = this.missionData[i].order - 1;
-        }
-        // Update view
-        this.gridApi.setRowData(this.missionData);
-        // Let service know about ordering changes
-        this.updateRows(rowId);
-        this.busy = false;
+        this.performDelete(rowIndex);
       },
       error => {
-        this.busy = false;
         this.dialogService.displayDebug(error);
-      }
+      },
+      () => (this.busy = false)
     );
-
     this.showDeleteRowDialog = false;
   }
 
-  private addAttachment(rowId: number): void {
-    this.selectedRowId = rowId;
+  private performDelete(rowIndex: number) {
+    this.currentRowDataState.currentEditingRowIndex = 0;
+    this.currentRowDataState.isEditMode = false;
+    this.currentRowDataState.isAddMode = false;
+    this.missionData.forEach(row => {
+      row.isDisabled = false;
+    });
+    this.missionData.splice(rowIndex, 1);
+    for (let i = rowIndex; i < this.missionData.length; i++) {
+      this.missionData[i].order = this.missionData[i].order - 1;
+    }
+    // Update view
+    this.gridApi.setRowData(this.missionData);
+    // Let service know about ordering changes
+    this.updateRows(rowIndex);
+  }
+
+  private addAttachment(rowIndex: number): void {
+    this.selectedRowIndex = rowIndex;
     this.showUploadDialog = true;
   }
 
-  private deleteAttachments(rowId: number) {
-    this.selectedRowId = rowId;
-    this.selectedRow = this.missionData[rowId];
+  private deleteAttachments(rowIndex: number) {
+    this.selectedRowIndex = rowIndex;
+    this.selectedRow = this.missionData[rowIndex];
     this.showDeleteAttachmentDialog = true;
   }
 
@@ -658,7 +707,7 @@ export class MissionPrioritiesComponent implements OnInit {
 
     // If the attachment count has changed update the server, otherwise notify the user to select an attachment
     if (attachmentCount !== this.selectedRow.attachments.length) {
-      this.saveRow(this.selectedRowId);
+      this.saveRow(this.selectedRowIndex);
       this.dialogService.displayInfo('Attachment(s) successfully deleted from the mission.');
     } else {
       this.dialogService.displayError('Select one or more attachments.');
@@ -832,4 +881,25 @@ export class MissionPrioritiesComponent implements OnInit {
       ? this.actionState.EDIT
       : null;
   }
+
+  private cancelRow(rowIndex: number) {
+    this.missionData[rowIndex] = this.currentRowDataState.currentEditingRowData;
+    this.viewMode(rowIndex);
+  }
+
+  onMouseDown(mouseEvent: MouseEvent) {
+    if (this.currentRowDataState.isEditMode) {
+      this.gridApi.startEditingCell({
+        rowIndex: this.currentRowDataState.currentEditingRowIndex,
+        colKey: 'title'
+      });
+    }
+  }
+}
+
+export interface RowDataStateInterface {
+  currentEditingRowIndex?: number;
+  isAddMode?: boolean;
+  isEditMode?: boolean;
+  currentEditingRowData?: any;
 }
