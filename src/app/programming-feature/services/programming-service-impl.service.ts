@@ -69,4 +69,8 @@ export class ProgrammingServiceImpl extends ProgrammingService {
   reject(program: Program) {
     return this.put('program/reject', program);
   }
+
+  remove(id: string) {
+    return this.delete('program/' + id);
+  }
 }

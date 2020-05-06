@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { MrdbService } from './mrdb-service';
 import { Program } from '../models/Program';
@@ -18,7 +18,8 @@ export class MrdbServiceImpl extends MrdbService {
   }
 
   getByName(shortName: string): Observable<any> {
-    return this.get('mrdb/name/' + shortName);
+    const shortNameParam = new HttpParams().set('shortName', shortName);
+    return this.get('mrdb/name', shortNameParam);
   }
 
   getPrograms(organizationId: string): Observable<object> {
