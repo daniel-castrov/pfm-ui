@@ -254,7 +254,7 @@ export class ToaComponent implements OnInit {
   getActions(): Action {
     const actions = new Action();
     actions.canDelete = false;
-    actions.canEdit = true;
+    actions.canEdit = false;
     actions.canSave = false;
     actions.canUpload = false;
     return actions;
