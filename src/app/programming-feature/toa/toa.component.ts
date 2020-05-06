@@ -295,8 +295,6 @@ export class ToaComponent implements OnInit {
       minWidth: 140,
       editable: false,
       pinned: 'left',
-      // rowDrag: true,
-      // rowDragManaged: true,
       colSpan(params) {
         return params.value === '1' ? 7 : 1;
       },
@@ -621,7 +619,6 @@ export class ToaComponent implements OnInit {
     this.refreshDeltaRow(deltarow);
 
     this.orgGridApi.setRowData(this.orgData);
-    // toarow['orgid'] = "sub TOA Total Goal"
   }
 
   calculateSubToaTotals(): any {
