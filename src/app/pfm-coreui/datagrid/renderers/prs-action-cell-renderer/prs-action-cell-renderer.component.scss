@@ -5,24 +5,11 @@ div {
 }
 
 .action:hover {
+  color: red;
   cursor: pointer;
 }
 
 fa-icon {
   margin-left: 15px;
   font-size: x-large;
-}
-
-fa-icon:hover {
-  cursor: pointer;
-  color: red;
-}
-
-.disabled {
-  opacity: 0.6;
-}
-
-.disabled:hover {
-  color: inherit;
-  cursor: default;
 }

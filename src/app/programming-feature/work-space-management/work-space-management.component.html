@@ -1,23 +1,25 @@
-<div class="main">
+<div class="main mb-3">
   <h3 class="w-50">POM{{ byYear.toString() | slice: 2:4 }} Workspace Management</h3>
   <div class="w-50 text-right">
     <pfm-primary-button
-      *pfmIsVisible="'planning-phase-component.closePlanningPhase'"
-      [label]="'Compare versions'"
+      [label]="'Compare Versions'"
       [name]="'compare'"
       [id]="'compare'"
       (onClick)="compareVersion()"
+      class="mr-0"
     >
     </pfm-primary-button>
   </div>
 </div>
 <div>
   <pfm-datagrid
+    (cellAction)="handleCellAction($event)"
     (gridIsReady)="onGridIsReady($event)"
     [columns]="columnDefinitions"
     [rows]="rows"
     [showAddSingleRow]="false"
     [showPagination]="false"
+    (mousedown)="onMouseDown($event)"
   >
   </pfm-datagrid>
 </div>

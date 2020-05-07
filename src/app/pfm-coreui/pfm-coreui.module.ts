@@ -48,6 +48,7 @@ import { CActionCellRendererComponent } from './datagrid/renderers/c-action-cell
 import { WkspActionCellRendererComponent } from './datagrid/renderers/wksp-action-cell-renderer/wksp-action-cell-renderer.component';
 import { CheckboxInputComponent } from './form-inputs/checkbox-input/checkbox-input.component';
 import { CheckboxCellRendererComponent } from './datagrid/renderers/checkbox-cell-renderer/checkbox-cell-renderer.component';
+import { PrsActionCellRendererComponent } from './datagrid/renderers/prs-action-cell-renderer/prs-action-cell-renderer.component';
 
 @NgModule({
   declarations: [
@@ -89,7 +90,8 @@ import { CheckboxCellRendererComponent } from './datagrid/renderers/checkbox-cel
     CActionCellRendererComponent,
     WkspActionCellRendererComponent,
     CheckboxInputComponent,
-    CheckboxCellRendererComponent
+    CheckboxCellRendererComponent,
+    PrsActionCellRendererComponent
   ],
   imports: [
     ToastModule,
@@ -111,7 +113,8 @@ import { CheckboxCellRendererComponent } from './datagrid/renderers/checkbox-cel
       DatePickerCellRendererComponent,
       AtmActionCellRendererComponent,
       DropdownCellRendererComponent,
-      CActionCellRendererComponent
+      CActionCellRendererComponent,
+      PrsActionCellRendererComponent
     ]),
     BsDatepickerModule.forRoot()
   ],
