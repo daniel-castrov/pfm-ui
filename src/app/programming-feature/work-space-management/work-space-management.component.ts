@@ -4,6 +4,7 @@ import { GridApi, ColDef } from '@ag-grid-community/all-modules';
 import { formatDate } from '@angular/common';
 import { WkspActionCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/wksp-action-cell-renderer/wksp-action-cell-renderer.component';
 import { CheckboxCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/checkbox-cell-renderer/checkbox-cell-renderer.component';
+import { DataGridMessage } from 'src/app/pfm-coreui/models/DataGridMessage';
 
 @Component({
   selector: 'pfm-programming',
@@ -15,18 +16,33 @@ export class WorkSpaceManagementComponent implements OnInit {
   rows: any;
   columnDefinitions: ColDef[];
   gridApi: GridApi;
+  currentWorkspaceRowDataState: RowDataStateInterface = {};
   gridActionState = {
-    workSpaceActions: {
+    VIEW: {
       canView: true,
       canViewFundingLine: true,
-      canDuplicate: true
+      canDuplicate: true,
+      disabled: false
+    },
+    EDIT: {
+      canEdit: false,
+      canSave: true,
+      disabled: false
     }
   };
   checkboxConfig = {
-    checked: false,
-    label: '',
-    fieldName: 'status',
-    disabled: true
+    active: {
+      checked: true,
+      label: '',
+      fieldName: 'status',
+      disabled: true
+    },
+    inactive: {
+      checked: false,
+      label: '',
+      fieldName: 'status',
+      disabled: true
+    }
   };
 
   constructor() {}
@@ -54,7 +70,7 @@ export class WorkSpaceManagementComponent implements OnInit {
         sortable: false,
         suppressMenu: true,
         cellClass: 'numeric-class',
-        cellStyle: cellStyle.valueOf(),
+        cellStyle,
         maxWidth: 80
       },
       {
@@ -66,7 +82,7 @@ export class WorkSpaceManagementComponent implements OnInit {
         sortable: false,
         suppressMenu: true,
         cellClass: 'text-class',
-        cellStyle: cellStyle.valueOf()
+        cellStyle
       },
       {
         headerName: 'Active',
@@ -77,9 +93,14 @@ export class WorkSpaceManagementComponent implements OnInit {
         sortable: false,
         suppressMenu: true,
         cellClass: 'text-center',
-        cellStyle: cellStyle.valueOf(),
+        cellStyle,
         maxWidth: 80,
-        cellRendererFramework: CheckboxCellRendererComponent
+        cellRendererFramework: CheckboxCellRendererComponent,
+        cellEditorFramework: CheckboxCellRendererComponent,
+        valueSetter: params => {
+          params.data.active = params.newValue ? this.checkboxConfig.active : this.checkboxConfig.inactive;
+          return true;
+        }
       },
       {
         headerName: 'Notes',
@@ -90,7 +111,7 @@ export class WorkSpaceManagementComponent implements OnInit {
         sortable: false,
         suppressMenu: true,
         cellClass: 'text-class',
-        cellStyle: cellStyle.valueOf()
+        cellStyle
       },
       {
         headerName: 'Created Date',
@@ -101,7 +122,7 @@ export class WorkSpaceManagementComponent implements OnInit {
         sortable: false,
         suppressMenu: true,
         cellClass: 'text-class',
-        cellStyle: cellStyle.valueOf()
+        cellStyle
       },
       {
         headerName: 'Last Updated Date',
@@ -112,7 +133,7 @@ export class WorkSpaceManagementComponent implements OnInit {
         sortable: false,
         suppressMenu: true,
         cellClass: 'text-class',
-        cellStyle: cellStyle.valueOf()
+        cellStyle
       },
       {
         headerName: 'Last Updated By',
@@ -123,7 +144,7 @@ export class WorkSpaceManagementComponent implements OnInit {
         sortable: false,
         suppressMenu: true,
         cellClass: 'text-class',
-        cellStyle: cellStyle.valueOf()
+        cellStyle
       },
       {
         headerName: 'Actions',
@@ -133,7 +154,7 @@ export class WorkSpaceManagementComponent implements OnInit {
         filter: false,
         sortable: false,
         suppressMenu: true,
-        cellStyle: cellStyle.valueOf(),
+        cellStyle,
         cellRendererFramework: WkspActionCellRendererComponent,
         maxWidth: 130
       }
@@ -145,15 +166,88 @@ export class WorkSpaceManagementComponent implements OnInit {
       {
         version: 1,
         name: 'POM22Workspace',
-        active: this.checkboxConfig,
+        active: this.checkboxConfig.inactive,
         notes: '',
         createdDate: formatDate(new Date('2020-04-12 10:00'), 'M/d/yyyy HH:mm', 'en-US'),
         lastUpdatedDate: formatDate(new Date('2020-04-12 10:00'), 'M/d/yyyy HH:mm', 'en-US'),
         lastUpdatedBy: 'Mary Smith',
-        action: this.gridActionState.workSpaceActions
+        action: this.gridActionState.VIEW,
+        disabled: false
       }
     ];
   }
 
+  duplicateWorkspace(params) {
+    if (this.currentWorkspaceRowDataState.isEditMode) {
+      return;
+    }
+    this.gridActionState.VIEW.disabled = true;
+    this.currentWorkspaceRowDataState.isEditMode = true;
+    this.rows.push({
+      version: this.rows.length + 1,
+      name: params.name,
+      active: this.checkboxConfig.active,
+      notes: '',
+      createdDate: '',
+      lastUpdatedDate: '',
+      lastUpdatedBy: '',
+      action: this.gridActionState.EDIT,
+      disabled: false
+    });
+    this.gridApi.setRowData(this.rows);
+    this.starEditMode(this.rows.length - 1);
+  }
+
+  private starEditMode(rowIndex: number) {
+    this.gridApi.startEditingCell({
+      rowIndex,
+      colKey: 'name'
+    });
+    this.currentWorkspaceRowDataState.currentEditingRowIndex = rowIndex;
+  }
+
+  onMouseDown(mouseEvent: MouseEvent) {
+    if (this.currentWorkspaceRowDataState.isEditMode) {
+      this.gridApi.startEditingCell({
+        rowIndex: this.currentWorkspaceRowDataState.currentEditingRowIndex,
+        colKey: 'name'
+      });
+    }
+  }
+
+  private cancelEdit() {
+    this.rows.splice(-1, 1);
+    this.gridApi.stopEditing();
+    this.startViewMode();
+  }
+
+  private startViewMode() {
+    this.currentWorkspaceRowDataState.currentEditingRowIndex = 0;
+    this.currentWorkspaceRowDataState.isEditMode = false;
+    this.gridApi.stopEditing();
+    this.gridApi.setRowData(this.rows);
+    this.gridActionState.VIEW.disabled = false;
+  }
+
+  handleCellAction(cellAction: DataGridMessage): void {
+    switch (cellAction.message) {
+      case 'save':
+        break;
+      case 'edit':
+        break;
+      case 'duplicate':
+        this.duplicateWorkspace(cellAction.rowData);
+        break;
+      case 'cancel':
+        this.cancelEdit();
+        break;
+    }
+  }
   compareVersion() {}
+}
+
+export interface RowDataStateInterface {
+  currentEditingRowIndex?: number;
+  isEditMode?: boolean;
+  currentEditingRowData?: any;
 }
