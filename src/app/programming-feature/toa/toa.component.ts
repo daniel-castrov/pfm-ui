@@ -18,6 +18,9 @@ import { Action } from '../../pfm-common-models/Action';
 import { OrganizationService } from '../../services/organization-service';
 import { Router } from '@angular/router';
 import { ToastService } from '../../pfm-coreui/services/toast.service';
+import { VisibilityService } from '../../services/visibility-service';
+import { AppModel } from '../../pfm-common-models/AppModel';
+import { PomStatus } from '../models/enumerations/pom-status.model';
 
 @Component({
   selector: 'pfm-toa',
@@ -64,11 +67,13 @@ export class ToaComponent implements OnInit {
   orgColors: string[] = [];
 
   constructor(
+    public appModel: AppModel,
     private organizationService: OrganizationService,
     private pomService: PomService,
     private dialogService: DialogService,
     private router: Router,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private visibilityService: VisibilityService
   ) {
     this.orgColors['ODASD(CBD)'] = '#dc3e9e';
     this.orgColors['PAIO'] = '#dc3912';
@@ -90,6 +95,7 @@ export class ToaComponent implements OnInit {
 
   ngOnInit() {
     this.busy = true;
+    this.setupVisibility();
     this.byYear = FormatterUtil.getCurrentFiscalYear() + 2;
     this.selectedYear = new ListItem();
     this.selectedYear.id = this.byYear.toString();
@@ -106,6 +112,20 @@ export class ToaComponent implements OnInit {
       },
       () => (this.busy = false)
     );
+  }
+
+  async setupVisibility() {
+    await this.visibilityService
+      .isCurrentlyVisible('toa-component')
+      .toPromise()
+      .then(response => {
+        if (!this.appModel['visibilityDef']) {
+          this.appModel['visibilityDef'] = {};
+        }
+        if ((response as any).result) {
+          this.appModel['visibilityDef']['toa-component'] = (response as any).result;
+        }
+      });
   }
 
   yearSelected(year: ListItem): void {
@@ -161,7 +181,7 @@ export class ToaComponent implements OnInit {
       row[toa.year] = toa.amount;
     });
 
-    const actions = this.getActions();
+    const actions = this.getCommActions();
     this.communityData.push(row);
 
     // Community Toas
@@ -204,7 +224,7 @@ export class ToaComponent implements OnInit {
         row[toa.year] = toa.amount;
       });
 
-      row['Organizationactions'] = this.getActions();
+      row['Organizationactions'] = this.getOrgActions();
       this.orgData.push(row);
     });
 
@@ -251,7 +271,17 @@ export class ToaComponent implements OnInit {
     this.updateCommunityGraphData(this.currentYear);
   }
 
-  getActions(): Action {
+  getCommActions(): Action {
+    const actions = new Action();
+    actions.canDelete = false;
+    actions.canEdit =
+      this.appModel.visibilityDef?.['toa-component']?.editToaCommunity && this.pom.status === PomStatus.OPEN;
+    actions.canSave = false;
+    actions.canUpload = false;
+    return actions;
+  }
+
+  getOrgActions(): Action {
     const actions = new Action();
     actions.canDelete = false;
     actions.canEdit = false;
@@ -729,76 +759,5 @@ export class ToaComponent implements OnInit {
         }
         break;
     }
-  }
-
-  onCreateProgramPhase() {
-    const isOrgDataValid = true;
-    let isDelataRowValid = true;
-
-    for (const row of this.orgData) {
-      for (let i = 0; i < 5; i++) {
-        const cellVal = row[this.byYear + i];
-        /*if ( (cellVal <= 0) && (row["orgid"] != "Delta")){
-            isOrgDataValid = false;
-            break;
-        }*/
-
-        if (cellVal < 0 && row['orgid'] === 'Delta') {
-          isDelataRowValid = false;
-          break;
-        }
-      }
-
-      if (!isOrgDataValid || !isDelataRowValid) {
-        break;
-      }
-    }
-
-    if (!isDelataRowValid) {
-      this.dialogService.displayInfo(
-        'The Delta row in the Organization TOA grid has at least one negative value.' +
-          'All values must be zero or positive'
-      );
-      return;
-    }
-
-    this.createPom();
-  }
-
-  createPom() {
-    const communityToas: TOA[] = [];
-    const commToaRow = this.communityData[1];
-    for (let i = 0; i < 5; i++) {
-      communityToas.push({ year: this.byYear + i, amount: commToaRow[this.byYear + i] });
-    }
-
-    const orgToas: { [key: string]: TOA[] } = {};
-    for (let rowIndx = 0; rowIndx < this.orgData.length - 3; rowIndx++) {
-      const otoa: TOA[] = [];
-      const orgRow = this.orgData[rowIndx];
-      for (let i = 0; i < 5; i++) {
-        otoa.push({ year: this.byYear + i, amount: orgRow[this.byYear + i] });
-      }
-
-      let orgName = orgRow['orgid'];
-      orgName = orgName.replace('<strong><span>', '');
-      orgName = orgName.replace('</span></strong>', '');
-      orgToas[this.getOrgId(orgName)] = otoa;
-    }
-
-    this.pom.communityToas = communityToas;
-    this.pom.orgToas = orgToas;
-
-    this.pomService.createPom(this.byYear, this.pom).subscribe(
-      resp => {
-        // Update POM from server
-        this.pom = (resp as any).result;
-        this.toastService.displaySuccess(`Programming phase for ${this.byYear} successfully created.`);
-        this.router.navigate(['/home']);
-      },
-      error => {
-        this.dialogService.displayInfo(error.error.error);
-      }
-    );
   }
 }
