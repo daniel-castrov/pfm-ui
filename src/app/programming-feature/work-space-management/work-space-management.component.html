@@ -13,11 +13,13 @@
 </div>
 <div>
   <pfm-datagrid
+    (cellAction)="handleCellAction($event)"
     (gridIsReady)="onGridIsReady($event)"
     [columns]="columnDefinitions"
     [rows]="rows"
     [showAddSingleRow]="false"
     [showPagination]="false"
+    (mousedown)="onMouseDown($event)"
   >
   </pfm-datagrid>
 </div>
