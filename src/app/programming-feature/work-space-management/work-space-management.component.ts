@@ -5,6 +5,8 @@ import { formatDate } from '@angular/common';
 import { WkspActionCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/wksp-action-cell-renderer/wksp-action-cell-renderer.component';
 import { CheckboxCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/checkbox-cell-renderer/checkbox-cell-renderer.component';
 import { DataGridMessage } from 'src/app/pfm-coreui/models/DataGridMessage';
+import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
+import { AppModel } from 'src/app/pfm-common-models/AppModel';
 
 @Component({
   selector: 'pfm-programming',
@@ -45,7 +47,7 @@ export class WorkSpaceManagementComponent implements OnInit {
     }
   };
 
-  constructor() {}
+  constructor(private dialogService: DialogService, private appModel: AppModel) {}
 
   ngOnInit() {
     this.byYear = FormatterUtil.getCurrentFiscalYear() + 2;
@@ -162,26 +164,31 @@ export class WorkSpaceManagementComponent implements OnInit {
   }
 
   private loadRows() {
-    this.rows = [
-      {
-        version: 1,
-        name: 'POM22Workspace',
-        active: this.checkboxConfig.inactive,
-        notes: '',
-        createdDate: formatDate(new Date('2020-04-12 10:00'), 'M/d/yyyy HH:mm', 'en-US'),
-        lastUpdatedDate: formatDate(new Date('2020-04-12 10:00'), 'M/d/yyyy HH:mm', 'en-US'),
-        lastUpdatedBy: 'Mary Smith',
-        action: this.gridActionState.VIEW,
-        disabled: false
-      }
-    ];
+    if (JSON.parse(sessionStorage.getItem('wkspGridRows'))) {
+      this.rows = JSON.parse(sessionStorage.getItem('wkspGridRows'));
+    } else {
+      this.rows = [
+        {
+          version: 1,
+          name: 'POM22Workspace',
+          active: this.checkboxConfig.inactive,
+          notes: '',
+          createdDate: formatDate(new Date('2020-04-12 10:00'), 'M/d/yyyy HH:mm', 'en-US'),
+          lastUpdatedDate: formatDate(new Date('2020-04-12 10:00'), 'M/d/yyyy HH:mm', 'en-US'),
+          lastUpdatedBy: 'Mary Smith',
+          action: this.gridActionState.VIEW,
+          disabled: false
+        }
+      ];
+      sessionStorage.setItem('wkspGridRows', JSON.stringify(this.rows));
+    }
   }
 
   duplicateWorkspace(params) {
     if (this.currentWorkspaceRowDataState.isEditMode) {
       return;
     }
-    this.gridActionState.VIEW.disabled = true;
+
     this.currentWorkspaceRowDataState.isEditMode = true;
     this.rows.push({
       version: this.rows.length + 1,
@@ -198,12 +205,38 @@ export class WorkSpaceManagementComponent implements OnInit {
     this.starEditMode(this.rows.length - 1);
   }
 
+  saveRow(rowIndex: number) {
+    this.gridApi.stopEditing();
+    const newRow = this.rows[rowIndex];
+    if (this.validateRow(newRow)) {
+      newRow.action = this.gridActionState.VIEW;
+      const creactionDate = new Date();
+      newRow.createdDate = formatDate(creactionDate, 'M/d/yyyy HH:mm', 'en-US');
+      newRow.lastUpdatedDate = formatDate(creactionDate, 'M/d/yyyy HH:mm', 'en-US');
+      newRow.lastUpdatedBy = this.appModel.userDetails.fullName;
+      this.startViewMode();
+      sessionStorage.setItem('wkspGridRows', JSON.stringify(this.rows));
+    } else {
+      this.starEditMode(rowIndex);
+    }
+  }
+  private validateRow(row) {
+    if (!row.name) {
+      this.dialogService.displayError('Workspace name cannot be empty');
+    }
+    return row.name;
+  }
   private starEditMode(rowIndex: number) {
     this.gridApi.startEditingCell({
       rowIndex,
       colKey: 'name'
     });
     this.currentWorkspaceRowDataState.currentEditingRowIndex = rowIndex;
+    this.rows.forEach((row, index) => {
+      if (rowIndex !== index) {
+        row.action.disabled = true;
+      }
+    });
   }
 
   onMouseDown(mouseEvent: MouseEvent) {
@@ -223,6 +256,9 @@ export class WorkSpaceManagementComponent implements OnInit {
 
   private startViewMode() {
     this.currentWorkspaceRowDataState.currentEditingRowIndex = 0;
+    this.rows.forEach((row, index) => {
+      row.action.disabled = false;
+    });
     this.currentWorkspaceRowDataState.isEditMode = false;
     this.gridApi.stopEditing();
     this.gridApi.setRowData(this.rows);
@@ -232,8 +268,7 @@ export class WorkSpaceManagementComponent implements OnInit {
   handleCellAction(cellAction: DataGridMessage): void {
     switch (cellAction.message) {
       case 'save':
-        break;
-      case 'edit':
+        this.saveRow(cellAction.rowIndex);
         break;
       case 'duplicate':
         this.duplicateWorkspace(cellAction.rowData);
