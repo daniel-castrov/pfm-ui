@@ -22,12 +22,18 @@ export class WorkSpaceManagementComponent implements OnInit {
   gridActionState = {
     VIEW: {
       canView: true,
-      canEdit: true,
+      canUpdate: true,
+      canDuplicate: true,
+      disabled: false
+    },
+    VIEW_NO_EDIT: {
+      canView: true,
+      canUpdate: false,
       canDuplicate: true,
       disabled: false
     },
     EDIT: {
-      canEdit: false,
+      canUpdate: false,
       canSave: true,
       disabled: false
     }
@@ -232,8 +238,9 @@ export class WorkSpaceManagementComponent implements OnInit {
           createdDate: formatDate(new Date('2020-04-12 10:00'), 'M/d/yyyy HH:mm', 'en-US'),
           lastUpdatedDate: formatDate(new Date('2020-04-12 10:00'), 'M/d/yyyy HH:mm', 'en-US'),
           lastUpdatedBy: 'Mary Smith',
-          action: this.gridActionState.VIEW,
-          disabled: false
+          action: this.gridActionState.VIEW_NO_EDIT, // should have this state if it's not created by the user.
+          disabled: false,
+          userCreated: false
         }
       ];
       sessionStorage.setItem('wkspGridRows', JSON.stringify(this.rows));
