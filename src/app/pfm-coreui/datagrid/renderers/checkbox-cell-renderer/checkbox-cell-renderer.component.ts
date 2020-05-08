@@ -27,4 +27,7 @@ export class CheckboxCellRendererComponent implements ICellEditorAngularComp {
   getValue(): any {
     return this.checked;
   }
+  valueChanged(event) {
+    this.checked = event;
+  }
 }

@@ -171,7 +171,7 @@ export class WorkSpaceManagementComponent implements OnInit {
         {
           version: 1,
           name: 'POM22Workspace',
-          active: this.checkboxConfig.inactive,
+          active: { ...this.checkboxConfig.inactive },
           notes: '',
           createdDate: formatDate(new Date('2020-04-12 10:00'), 'M/d/yyyy HH:mm', 'en-US'),
           lastUpdatedDate: formatDate(new Date('2020-04-12 10:00'), 'M/d/yyyy HH:mm', 'en-US'),
@@ -193,7 +193,7 @@ export class WorkSpaceManagementComponent implements OnInit {
     this.rows.push({
       version: this.rows.length + 1,
       name: params.name,
-      active: this.checkboxConfig.active,
+      active: { ...this.checkboxConfig.active },
       notes: '',
       createdDate: '',
       lastUpdatedDate: '',
@@ -201,6 +201,7 @@ export class WorkSpaceManagementComponent implements OnInit {
       action: this.gridActionState.EDIT,
       disabled: false
     });
+    this.rows[this.rows.length - 1].active.disabled = false;
     this.gridApi.setRowData(this.rows);
     this.starEditMode(this.rows.length - 1);
   }
@@ -258,6 +259,7 @@ export class WorkSpaceManagementComponent implements OnInit {
     this.currentWorkspaceRowDataState.currentEditingRowIndex = 0;
     this.rows.forEach((row, index) => {
       row.action.disabled = false;
+      row.active.disabled = true;
     });
     this.currentWorkspaceRowDataState.isEditMode = false;
     this.gridApi.stopEditing();
