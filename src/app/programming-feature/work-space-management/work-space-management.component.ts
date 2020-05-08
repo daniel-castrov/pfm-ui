@@ -71,7 +71,15 @@ export class WorkSpaceManagementComponent implements OnInit {
         filter: false,
         sortable: false,
         suppressMenu: true,
-        cellClass: 'numeric-class',
+        cellClass: params => {
+          return [
+            'numeric-class',
+            this.currentWorkspaceRowDataState.currentEditingRowIndex === params.rowIndex &&
+            this.currentWorkspaceRowDataState.isEditMode
+              ? 'non-editable-cell'
+              : ''
+          ];
+        },
         cellStyle,
         maxWidth: 80
       },
@@ -83,7 +91,15 @@ export class WorkSpaceManagementComponent implements OnInit {
         filter: false,
         sortable: false,
         suppressMenu: true,
-        cellClass: 'text-class',
+        cellClass: params => {
+          return [
+            'text-class',
+            this.currentWorkspaceRowDataState.currentEditingRowIndex === params.rowIndex &&
+            this.currentWorkspaceRowDataState.isEditMode
+              ? 'editable-cell'
+              : ''
+          ];
+        },
         cellStyle
       },
       {
@@ -94,7 +110,15 @@ export class WorkSpaceManagementComponent implements OnInit {
         filter: false,
         sortable: false,
         suppressMenu: true,
-        cellClass: 'text-center',
+        cellClass: params => {
+          return [
+            'text-center',
+            this.currentWorkspaceRowDataState.currentEditingRowIndex === params.rowIndex &&
+            this.currentWorkspaceRowDataState.isEditMode
+              ? 'editable-cell'
+              : ''
+          ];
+        },
         cellStyle,
         maxWidth: 80,
         cellRendererFramework: CheckboxCellRendererComponent,
@@ -112,7 +136,15 @@ export class WorkSpaceManagementComponent implements OnInit {
         filter: false,
         sortable: false,
         suppressMenu: true,
-        cellClass: 'text-class',
+        cellClass: params => {
+          return [
+            'text-class',
+            this.currentWorkspaceRowDataState.currentEditingRowIndex === params.rowIndex &&
+            this.currentWorkspaceRowDataState.isEditMode
+              ? 'editable-cell'
+              : ''
+          ];
+        },
         cellStyle
       },
       {
@@ -123,7 +155,15 @@ export class WorkSpaceManagementComponent implements OnInit {
         filter: false,
         sortable: false,
         suppressMenu: true,
-        cellClass: 'text-class',
+        cellClass: params => {
+          return [
+            'text-class',
+            this.currentWorkspaceRowDataState.currentEditingRowIndex === params.rowIndex &&
+            this.currentWorkspaceRowDataState.isEditMode
+              ? 'non-editable-cell'
+              : ''
+          ];
+        },
         cellStyle
       },
       {
@@ -134,7 +174,15 @@ export class WorkSpaceManagementComponent implements OnInit {
         filter: false,
         sortable: false,
         suppressMenu: true,
-        cellClass: 'text-class',
+        cellClass: params => {
+          return [
+            'text-class',
+            this.currentWorkspaceRowDataState.currentEditingRowIndex === params.rowIndex &&
+            this.currentWorkspaceRowDataState.isEditMode
+              ? 'non-editable-cell'
+              : ''
+          ];
+        },
         cellStyle
       },
       {
@@ -145,7 +193,15 @@ export class WorkSpaceManagementComponent implements OnInit {
         filter: false,
         sortable: false,
         suppressMenu: true,
-        cellClass: 'text-class',
+        cellClass: params => {
+          return [
+            'text-class',
+            this.currentWorkspaceRowDataState.currentEditingRowIndex === params.rowIndex &&
+            this.currentWorkspaceRowDataState.isEditMode
+              ? 'non-editable-cell'
+              : ''
+          ];
+        },
         cellStyle
       },
       {
@@ -189,7 +245,6 @@ export class WorkSpaceManagementComponent implements OnInit {
       return;
     }
 
-    this.currentWorkspaceRowDataState.isEditMode = true;
     this.rows.push({
       version: this.rows.length + 1,
       name: params.name,
@@ -228,11 +283,13 @@ export class WorkSpaceManagementComponent implements OnInit {
     return row.name;
   }
   private starEditMode(rowIndex: number) {
+    this.currentWorkspaceRowDataState.currentEditingRowIndex = rowIndex;
+    this.currentWorkspaceRowDataState.isEditMode = true;
+    this.gridApi.setRowData(this.rows);
     this.gridApi.startEditingCell({
       rowIndex,
       colKey: 'name'
     });
-    this.currentWorkspaceRowDataState.currentEditingRowIndex = rowIndex;
     this.rows.forEach((row, index) => {
       if (rowIndex !== index) {
         row.action.disabled = true;
@@ -256,7 +313,7 @@ export class WorkSpaceManagementComponent implements OnInit {
   }
 
   private startViewMode() {
-    this.currentWorkspaceRowDataState.currentEditingRowIndex = 0;
+    this.currentWorkspaceRowDataState.currentEditingRowIndex = -1;
     this.rows.forEach((row, index) => {
       row.action.disabled = false;
       row.active.disabled = true;
