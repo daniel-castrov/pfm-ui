@@ -1,0 +1,17 @@
+<div>
+  <input
+    type="checkbox"
+    (ngModelChange)="checkboxChange($event)"
+    value="{{ checked }}"
+    id="{{ id }}"
+    name="{{ fieldName }}"
+    [(ngModel)]="checked"
+    [disabled]="isDisabled"
+  />
+  <label for="{{ id }}" *ngIf="showLabel">
+    {{ label }}
+  </label>
+  <div *ngIf="errorMessage" aria-required="true" class="form-alert alert-danger">
+    {{ errorMessage }}
+  </div>
+</div>

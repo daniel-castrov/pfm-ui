@@ -1,0 +1,27 @@
+<div class="pfm-displaydatagrid">
+  <div class="pfm-data">
+    <ag-grid-angular
+      class="w-100 h-100"
+      [columnDefs]="columns"
+      [rowData]="rows"
+      [rowDragManaged]="true"
+      [editType]="'fullRow'"
+      [suppressClickEdit]="true"
+      [defaultColDef]="defaultColDef"
+      [modules]="modules"
+      [suppressRowClickSelection]="true"
+      [animateRows]="true"
+      [tabToNextCell]="tabToNextCell"
+      [rowSelection]="'single'"
+      [rowHeight]="40"
+      (gridReady)="onGridReady($event)"
+      (rowDragEnd)="onRowDragEnd($event)"
+      (cellClicked)="onCellClicked($event)"
+      (modelUpdated)="onModelUpdated()"
+      (modelUpdated)="onModelUpdated()"
+      (gridSizeChanged)="onGridSizeChanged()"
+      (columnResized)="onColumnResized($event)"
+    >
+    </ag-grid-angular>
+  </div>
+</div>

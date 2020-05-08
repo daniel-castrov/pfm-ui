@@ -1,0 +1,145 @@
+/* The side navigation menu */
+.sidenav {
+  height: 100%; /* 100% Full-height */
+  width: 64px; /* 0 width - change this with JavaScript */
+  position: absolute; /* Stay in place */
+  left: 0;
+  background-color: #bbced7;
+  overflow-x: hidden; /* Disable horizontal scroll */
+  transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+}
+
+.menu-toggle {
+  color: #25527a;
+  font-size: 18px;
+  margin-left: 4px;
+  cursor: pointer !important;
+}
+
+ul {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+}
+
+li {
+  list-style: none;
+  display: flex;
+  color: #25527a;
+  width: 100%;
+  justify-content: center;
+  height: 50px;
+  align-items: center;
+}
+
+li.menu-item:hover > fa,
+.semi-active > span {
+  color: white;
+}
+
+.semi-active {
+  background-color: #2e719e;
+  opacity: 0.8;
+}
+
+li:hover {
+  cursor: pointer !important;
+  background-color: #2e719e;
+  color: white;
+  opacity: 0.8;
+}
+
+.active {
+  background-color: #2e719e;
+  color: white;
+  opacity: 1 !important;
+}
+
+.inner-menu-divider {
+  height: 0;
+  overflow: hidden;
+  border-top: 1px solid #e9ecef;
+}
+
+.inner-menu-item {
+  padding: 10px;
+}
+
+.inner-menu-item.active-link {
+  background-color: #2e719e;
+  color: white;
+  opacity: 1;
+}
+
+.inner-menu-item:hover {
+  background-color: #2e719e;
+  color: white;
+}
+
+.menu-item {
+  display: flex;
+}
+
+span {
+  padding-left: 8px;
+  width: 120px;
+  padding-top: 2px;
+}
+
+fa-icon {
+  color: #25527a;
+  font-size: 18px;
+  margin-left: 4px;
+}
+
+.menu-item.active > fa-icon,
+.menu-item.semi-active > fa-icon {
+  color: white;
+}
+
+span {
+  display: none;
+}
+
+.open {
+  width: 200px;
+}
+
+.open span {
+  display: block;
+}
+
+.inner-menu {
+  display: flex;
+  flex-direction: column;
+  background-color: #bbced7;
+}
+
+.menu-display-container {
+  border: 0;
+}
+
+.menu-display-container .arrow::after {
+  display: none;
+}
+
+::ng-deep .popover-body {
+  padding: 0;
+}
+
+/* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+#main {
+  transition: margin-left 0.5s;
+  padding: 20px;
+}
+
+/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+  .sidenav {
+    padding-top: 15px;
+  }
+  .sidenav a {
+    font-size: 18px;
+  }
+}

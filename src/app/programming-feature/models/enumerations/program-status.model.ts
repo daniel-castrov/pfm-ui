@@ -1,0 +1,7 @@
+export const enum ProgramStatus {
+  OUTSTANDING = 'OUTSTANDING',
+  SAVED = 'SAVED',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
+  COMPLETED = 'COMPLETED'
+}

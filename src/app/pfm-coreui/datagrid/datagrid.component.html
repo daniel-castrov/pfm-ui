@@ -1,0 +1,84 @@
+<div class="pfm-datagrid">
+  <div class="pfm-datagrid-extras">
+    <ng-container *ngTemplateOutlet="extras"></ng-container>
+
+    <div class="pagination-container">
+      <div class="pagination" *ngIf="showPagination">
+        <p>Show</p>
+        <select [(ngModel)]="pageSize" (ngModelChange)="handlePageSizeChanged($event)">
+          <option value="20">20</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+          <option value="250">250</option>
+          <option value="500">500</option>
+        </select>
+        <p>Entries</p>
+      </div>
+    </div>
+
+    <div class="add-row-container">
+      <div title="Add" *ngIf="showAddDropdownCta">
+        <pfm-dropdown
+          (selectionChanged)="handleAddDropdownCta($event)"
+          [title]="addDropdownCtaTooltip"
+          [type]="'iconDropdown'"
+          [iconName]="'plus'"
+          [required]="true"
+          [fieldName]="'name'"
+          [fieldLabel]="'name'"
+          [options]="options"
+          [showPrompt]="false"
+          [disabled]="api?.getEditingCells().length"
+        >
+        </pfm-dropdown>
+      </div>
+      <div title="Add" *ngIf="showAddSingleRow" (click)="handleAddCta('add-single-row')">
+        <fa-icon [icon]="'plus'" title="Add" [class.disabled]="api?.getEditingCells().length"></fa-icon>
+      </div>
+    </div>
+  </div>
+  <div class="pfm-data">
+    <ag-grid-angular
+      #agGrid
+      class="w-100 pb-1 ag-grid"
+      [suppressKeyboardEvent]="onSuppressKeyboardEvent"
+      [columnDefs]="columns"
+      [rowData]="rows"
+      [editType]="'fullRow'"
+      [suppressClickEdit]="true"
+      [defaultColDef]="defaultColDef"
+      [modules]="modules"
+      [suppressRowClickSelection]="false"
+      [animateRows]="true"
+      [tabToNextCell]="tabToNextCell"
+      [rowSelection]="'single'"
+      [rowHeight]="40"
+      [context]="this"
+      [excelStyles]="excelStyles"
+      [pagination]="showPagination"
+      [paginationPageSize]="pageSize"
+      [isExternalFilterPresent]="isExternalFilterPresent"
+      [doesExternalFilterPass]="doesExternalFilterPass"
+      [getContextMenuItems]="getContextMenuItems"
+      [rowDragManaged]="rowDragManaged"
+      (gridReady)="onGridReady($event)"
+      (rowDragEnter)="onRowDragEnter($event)"
+      (rowDragLeave)="onRowDragLeave($event)"
+      (rowDragEnd)="onRowDragEnd($event)"
+      (cellClicked)="onCellClicked($event)"
+      (modelUpdated)="onModelUpdated()"
+      (gridSizeChanged)="onGridSizeChanged()"
+      (columnResized)="onColumnResized($event)"
+      [suppressAggFuncInHeader]="true"
+      [groupSuppressAutoColumn]="true"
+      [rememberGroupStateWhenNewData]="true"
+      [groupIncludeTotalFooter]="showGrandTotal"
+      [suppressPaginationPanel]="true"
+      (paginationChanged)="agGridPagination.onPaginationChanged($event)"
+      domLayout="autoHeight"
+      [pinnedTopRowData]="pinnedTopRowData"
+    >
+    </ag-grid-angular>
+    <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
+  </div>
+</div>

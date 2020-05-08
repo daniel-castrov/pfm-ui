@@ -1,0 +1,38 @@
+<div class="grid-container">
+  <pfm-datagrid
+    (gridIsReady)="onGridIsReady($event)"
+    (columnIsReady)="onColumnIsReady($event)"
+    (cellAction)="handleCellAction($event)"
+    (addCtaEvent)="onAddProgram($event)"
+    [showAddDropdownCta]="true"
+    [addDropdownCtaOptions]="dropdownOptions"
+    [addDropdownCtaTooltip]="'Add Programming Request for'"
+    [columns]="columns"
+    [rows]="gridData"
+    [isExternalFilterPresent]="isExternalFilterPresent"
+    [doesExternalFilterPass]="doesExternalFilterPass"
+  ></pfm-datagrid>
+</div>
+
+<ng-container *ngIf="deleteDialog.display">
+  <pfm-custom-dialog
+    [title]="deleteDialog.title"
+    [body]="deleteBody"
+    [actions]="deleteActions"
+    (onCancelDialog)="onCancelDeleteDialog()"
+  ></pfm-custom-dialog>
+
+  <ng-template #deleteBody>
+    <span>{{ deleteDialog.bodyText }}</span>
+  </ng-template>
+
+  <ng-template #deleteActions>
+    <div class="pull-left">
+      <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onDeleteData()">Delete</button>
+    </div>
+
+    <div class="pull-right">
+      <pfm-cancel-cta (onCancelClicked)="onCancelDeleteDialog()"></pfm-cancel-cta>
+    </div>
+  </ng-template>
+</ng-container>

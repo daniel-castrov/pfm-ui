@@ -1,0 +1,38 @@
+div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action:hover {
+  cursor: pointer;
+}
+
+fa-icon {
+  margin-left: 15px;
+  font-size: x-large;
+}
+
+.disabled {
+  opacity: 0.6;
+}
+
+.disabled:hover {
+  color: black;
+  cursor: default;
+}
+
+i .fa-check-circle {
+  color: #ff9900 !important;
+}
+
+.amber-color {
+  color: #ff9900 !important;
+}
+
+.green-color {
+  color: #009e0f !important;
+}
+.red-color {
+  color: red !important;
+}

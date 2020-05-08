@@ -1,1 +1,52 @@
-@import '../variables';
+$primary-color: #25527a;
+$dark-grey: #848282;
+$light-grey: #eae9e9;
+
+:host {
+  display: block;
+  margin: 0 auto;
+}
+
+.sticky {
+  position: fixed;
+  top: 0;
+  height: 100%;
+  width: 74px;
+}
+
+.main_content {
+  height: 100%;
+  width: 93%;
+  margin-left: 74px; /* Same as the width of the sidenav + 10px for gutter*/
+  transition: margin-left 0.5s;
+  margin-top: 10px;
+}
+
+.side_menu_open {
+  margin-left: 210px;
+}
+
+@media (max-width: 1200px) {
+  :host {
+    max-width: none;
+    margin: 0 25px;
+  }
+}
+
+.plugins {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 20px -10px;
+
+  ::ng-deep {
+    > * {
+      width: calc((100% - 80px) / 2);
+      margin: 0 10px 20px 10px;
+      padding: 20px;
+      border-radius: 6px;
+      background: #fff;
+      box-shadow: 0 2px 12px 0 #dfe3eb;
+      box-sizing: border-box;
+    }
+  }
+}

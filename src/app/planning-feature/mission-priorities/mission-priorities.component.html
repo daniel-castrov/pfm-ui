@@ -1,0 +1,204 @@
+<div class="main">
+  <div class="float-left">
+    <h3>
+      Mission Priorities
+      <ng-container *ngIf="selectedPlanningPhase">
+        <span>
+          -
+          <span *ngIf="selectedPlanningPhase.state === 'CREATED'">Created</span>
+          <span *ngIf="selectedPlanningPhase.state === 'OPEN'">Opened</span>
+          <span *ngIf="selectedPlanningPhase.state === 'LOCKED'">Locked</span>
+          <span *ngIf="selectedPlanningPhase.state === 'CLOSED'">Closed</span>
+        </span>
+      </ng-container>
+    </h3>
+  </div>
+  <ng-container>
+    <div *ngIf="canShowOpenCTA">
+      <button
+        *pfmIsVisible="'planning-phase-component.openPlanningPhase'"
+        type="button"
+        class="btn btn-primary float-right"
+        (click)="openPlanningPhase()"
+      >
+        Open Planning Phase
+      </button>
+    </div>
+    <div *ngIf="canShowLockCTA">
+      <button
+        *pfmIsVisible="'planning-phase-component.lockPlanningPhase'"
+        type="button"
+        class="btn btn-primary float-right"
+        (click)="lockPlanningPhase()"
+      >
+        Lock Planning Phase
+      </button>
+    </div>
+    <div *ngIf="canShowCloseCTA">
+      <button
+        *pfmIsVisible="'planning-phase-component.closePlanningPhase'"
+        type="button"
+        class="btn btn-primary float-right"
+        (click)="closePlanningPhase()"
+      >
+        Close Planning Phase
+      </button>
+    </div>
+  </ng-container>
+</div>
+
+<br />
+<br />
+
+<ng-container *ngIf="availableYears" class="float-left">
+  <pfm-dropdown
+    (selectionChanged)="yearSelected($event)"
+    [type]="'labelDropdown'"
+    [label]="'For:'"
+    [required]="true"
+    [id]="id"
+    [fieldName]="'name'"
+    [fieldLabel]="'name'"
+    [options]="availableYears"
+  ></pfm-dropdown>
+</ng-container>
+
+<div *ngIf="selectedPlanningPhase">
+  <div class="grid-container">
+    <pfm-datagrid
+      (gridIsReady)="onGridIsReady($event)"
+      (columnIsReady)="onColumnIsReady($event)"
+      (rowDragEnterEvent)="onRowDragEnter($event)"
+      (rowDragLeaveEvent)="onRowDragLeave($event)"
+      (rowDragEndEvent)="onRowDragEnd($event)"
+      (addCtaEvent)="onAddNewRow($event)"
+      (cellAction)="handleCellAction($event)"
+      [showPagination]="false"
+      [showAddDropdownCta]="canAddNewRow"
+      [columns]="columns"
+      [rows]="missionData"
+      [tabToNextCell]="tabToNextCell.bind(this)"
+      [addDropdownCtaOptions]="ctaOptions"
+      (mousedown)="onMouseDown($event)"
+    ></pfm-datagrid>
+  </div>
+</div>
+
+<ng-container *ngIf="showDeleteAttachmentDialog">
+  <pfm-custom-dialog
+    [title]="'Delete Attachment'"
+    [body]="deleteAttachmentBody"
+    [actions]="deleteAttachmentActions"
+    (onCancelDialog)="cancelDialog()"
+  ></pfm-custom-dialog>
+
+  <ng-template #deleteAttachmentBody>
+    <span>{{ activeMessage | json }}</span>
+    <div *ngFor="let attachment of selectedRow.attachments">
+      <input
+        type="checkbox"
+        [(ngModel)]="attachment.selectedForDelete"
+        [name]="attachment.file.id"
+        [value]="attachment.file.id"
+      />
+      {{ attachment.file.name }} <br />
+    </div>
+  </ng-template>
+
+  <ng-template #deleteAttachmentActions>
+    <div class="pull-left">
+      <button
+        type="button"
+        class="btn btn-primary"
+        data-dismiss="modal"
+        (click)="showDeleteAttachmentDialog = false; onDeleteAttachments()"
+      >
+        Delete
+      </button>
+    </div>
+
+    <div class="pull-right">
+      <pfm-cancel-cta (onCancelClicked)="showDeleteAttachmentDialog = false"></pfm-cancel-cta>
+    </div>
+  </ng-template>
+</ng-container>
+
+<ng-container *ngIf="showDeleteRowDialog">
+  <pfm-custom-dialog
+    [title]="'Delete Row'"
+    [body]="deleteRowBody"
+    [actions]="deleteRowActions"
+    (onCancelDialog)="showDeleteRowDialog = false"
+  ></pfm-custom-dialog>
+
+  <ng-template #deleteRowBody>
+    <p>
+      You will be permanently deleting the row and all attachments from the grid. Are you sure you want to delete this
+      row?
+    </p>
+  </ng-template>
+
+  <ng-template #deleteRowActions>
+    <div class="pull-left">
+      <button
+        type="button"
+        class="btn btn-primary"
+        data-dismiss="modal"
+        (click)="showDeleteAttachmentDialog = false; onDeleteRow(selectedRowIndex)"
+      >
+        Delete
+      </button>
+    </div>
+
+    <div class="pull-right">
+      <pfm-cancel-cta (onCancelClicked)="showDeleteRowDialog = false"></pfm-cancel-cta>
+    </div>
+  </ng-template>
+</ng-container>
+
+<ng-container *ngIf="showImportYearDialog">
+  <pfm-custom-dialog
+    [title]="'Choose the year for Import'"
+    [body]="importYearBody"
+    [actions]="importYearActions"
+    (onCancelDialog)="cancelDialog()"
+  ></pfm-custom-dialog>
+
+  <ng-template #importYearBody>
+    <pfm-dropdown
+      (selectionChanged)="importYearSelected($event)"
+      [type]="'labelDropdown'"
+      [label]="''"
+      [required]="true"
+      [id]="id"
+      [fieldName]="'name'"
+      [fieldLabel]="'name'"
+      [options]="availableImportYears"
+    >
+    </pfm-dropdown>
+  </ng-template>
+
+  <ng-template #importYearActions>
+    <div class="pull-left">
+      <button
+        type="button"
+        class="btn btn-primary"
+        data-dismiss="modal"
+        (click)="showImportYearDialog = false; onImportYear()"
+      >
+        Import
+      </button>
+    </div>
+    <div class="pull-right">
+      <pfm-cancel-cta (onCancelClicked)="showImportYearDialog = false"></pfm-cancel-cta>
+    </div>
+  </ng-template>
+</ng-container>
+
+<ng-container *ngIf="showUploadDialog">
+  <pfm-secure-upload (onFilesUploaded)="handleNewAttachments($event)"></pfm-secure-upload>
+</ng-container>
+
+<pfm-secure-download></pfm-secure-download>
+
+<pfm-busy [busy]="busy"></pfm-busy>

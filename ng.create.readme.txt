@@ -1,0 +1,111 @@
+#
+##use this pattern to create new components for the HomeModule
+#
+ng g component pfm-home-module/welcome-pod --module pfm-home-module/pfm-home-module.module --export=false --prefix=pfm --selector=pfm-welcome-pod --style=scss
+ng g component pfm-home-module/latest-news-pod --module pfm-home-module/pfm-home-module.module --export=false --prefix=pfm --selector=pfm-latest-news-pod --style=scss
+ng g component pfm-home-module/baseline-breakdown-pod --module pfm-home-module/pfm-home-module.module --export=false --prefix=pfm --selector=pfm-baseline-breakdown-pod --style=scss
+ng g component pfm-home-module/my-todo-list-pod --module pfm-home-module/pfm-home-module.module --export=false --prefix=pfm --selector=pfm-my-todo-list-pod --style=scss
+ng g component pfm-home-module/my-current-activity-pod --module pfm-home-module/pfm-home-module.module --export=false --prefix=pfm --selector=pfm-my-current-activity-pod --style=scss
+ng g component pfm-home-module/dashboard-pod --module pfm-home-module/pfm-home-module.module --export=false --prefix=pfm --selector=pfm-dashboard-pod --style=scss
+ng g component pfm-home-module/dialog-demo-pod --module pfm-home-module/pfm-home-module.module --export=false --prefix=pfm --selector=pfm-dialog-demo-pod --style=scss
+
+#
+##use this pattern to create new (none-lazy-loaded:that-does-not-have-routes) modules for the PFM Application
+#
+ng g module pfm-dashboard-module --route=false
+ng g component pfm-dashboard-module/dashboard --module pfm-dashboard-module/pfm-dashboard-module.module --entryComponent=true --export=false --prefix=pfm --selector=pfm-dashboard --style=scss
+ng g component pfm-dashboard-module/widgets/demo-widget-one --module pfm-dashboard-module/pfm-dashboard-module.module --export=false --prefix=pfm --selector=pfm-dashboard-widget-one --style=scss
+ng g component pfm-dashboard-module/widgets/demo-widget-two --module pfm-dashboard-module/pfm-dashboard-module.module --export=false --prefix=pfm --selector=pfm-dashboard-widget-two --style=scss
+ng g component pfm-dashboard-module/widgets/demo-widget-three --module pfm-dashboard-module/pfm-dashboard-module.module --export=false --prefix=pfm --selector=pfm-dashboard-widget-three --style=scss
+ng g component pfm-dashboard-module/widgets/demo-widget-four --module pfm-dashboard-module/pfm-dashboard-module.module --export=false --prefix=pfm --selector=pfm-dashboard-widget-four --style=scss
+
+#
+##use this pattern to add now core ui components to PFM
+#
+ng g component pfm-coreui/form-inputs/cancel-cta --module pfm-coreui/pfm-coreui.module --export=true --prefix=pfm --selector=pfm-cancel-cta --style=scss
+ng g component pfm-coreui/card --module pfm-coreui/pfm-coreui.module --export=true --prefix=pfm --selector=pfm-card --style=scss
+ng g component pfm-coreui/custom-dialog --module pfm-coreui/pfm-coreui.module --export=true --prefix=pfm --selector=pfm-custom-dialog --style=scss
+ng g component pfm-coreui/datagrid --module pfm-coreui/pfm-coreui.module --export=true --prefix=pfm --selector=pfm-datagrid --style=scss
+ng g component pfm-coreui/tree-datagrid --module pfm-coreui/pfm-coreui.module --export=true --prefix=pfm --selector=pfm-tree-datagrid --style=scss
+
+
+ng g component pfm-coreui/datagrid/renderers/action-cell-renderer --module pfm-coreui/pfm-coreui.module --export=true --prefix=pfm --selector=pfm-action-cell-renderer --style=scss
+ng g component pfm-coreui/datagrid/renderers/attachment-cell-renderer --module pfm-coreui/pfm-coreui.module --export=true --prefix=pfm --selector=pfm-attachment-cell-renderer --style=scss
+ng g component pfm-coreui/datagrid/renderers/text-cell-editor --module pfm-coreui/pfm-coreui.module --export=true --prefix=pfm --selector=text-cell-editor --style=scss
+ng g component pfm-coreui/datagrid/renderers/text-cell-renderer --module pfm-coreui/pfm-coreui.module --export=true --prefix=pfm --selector=text-cell-renderer --style=scss
+ng g component pfm-coreui/datagrid/renderers/tree-cell-renderer --module pfm-coreui/pfm-coreui.module --export=true --prefix=pfm --selector=tree-cell-renderer --style=scss
+
+
+
+ng g component programming-feature/create-programming --module programming-feature/programming-feature.module --export=false --prefix=pfm --selector=pfm-programming --style=scss
+ng g component programming-feature/open-programming --module programming-feature/programming-feature.module --export=false --prefix=pfm --selector=pfm-programming --style=scss
+ng g component programming-feature/lock-programming --module programming-feature/programming-feature.module --export=false --prefix=pfm --selector=pfm-programming --style=scss
+ng g component programming-feature/close-programming --module programming-feature/programming-feature.module --export=false --prefix=pfm --selector=pfm-programming --style=scss
+
+ng g component programming-feature/toa --module programming-feature/programming-feature.module --export=false --prefix=pfm --selector=pfm-programming --style=scss
+ng g component programming-feature/requests --module programming-feature/programming-feature.module --export=false --prefix=pfm --selector=pfm-programming --style=scss
+ng g component programming-feature/requests_approval --module programming-feature/programming-feature.module --export=false --prefix=pfm --selector=pfm-programming --style=scss
+ng g component programming-feature/ufr_requests --module programming-feature/programming-feature.module --export=false --prefix=pfm --selector=pfm-programming --style=scss
+ng g component programming-feature/ufr_requests_approval --module programming-feature/programming-feature.module --export=false --prefix=pfm --selector=pfm-programming --style=scss
+ng g component programming-feature/total_appropriation_priority --module programming-feature/programming-feature.module --export=false --prefix=pfm --selector=pfm-programming --style=scss
+ng g component programming-feature/work_space_management --module programming-feature/programming-feature.module --export=false --prefix=pfm --selector=pfm-programming --style=scss
+
+#sub components for programming-feature/requests
+ng g component programming-feature/requests/requests-details --module programming-feature/programming-feature.module --export=false --prefix=pfm --style=scss
+ng g component programming-feature/requests/requests-details/schedule --module programming-feature/programming-feature.module --export=false --prefix=pfm --style=scss
+ng g component programming-feature/requests/requests-summary --module programming-feature/programming-feature.module --export=false --prefix=pfm --style=scss
+
+ng g component programming-feature/requests/summary/requests-summary-grid --module programming-feature/programming-feature.module --export=false --prefix=pfm --style=scss
+ng g component programming-feature/requests/summary/requests-summary-org-widget --module programming-feature/programming-feature.module --export=false --prefix=pfm --style=scss
+ng g component programming-feature/requests/summary/requests-summary-toa-widget --module programming-feature/programming-feature.module --export=false --prefix=pfm --style=scss
+
+
+
+
+
+
+##
+####ignore the below samples - these will be used a little later for dynamicly loading customized screens without an application/client release
+##
+
+#1, for planning, create components in the planning-feature.module, this are boiler plates that load the external plugin
+ng g component planning-feature/create-planning --module planning-feature/planning-feature.module --export=false --prefix=pfm --selector=pfm-planning --style=scss
+ng g component planning-feature/open-planning --module planning-feature/planning-feature.module --export=false --prefix=pfm --selector=pfm-planning --style=scss
+ng g component planning-feature/mission-priorities --module planning-feature/planning-feature.module --export=false --prefix=pfm --selector=pfm-planning --style=scss
+ng g component planning-feature/lock-planning --module planning-feature/planning-feature.module --export=false --prefix=pfm --selector=pfm-planning --style=scss
+ng g component planning-feature/close-planning --module planning-feature/planning-feature.module --export=false --prefix=pfm --selector=pfm-planning --style=scss
+
+#2, create modules and an entry components for the plugins
+ng g module planning/open-planning --project=plugins
+ng g component planning/open-planning --project=plugins --module planning/open-planning/open-planning.module --entryComponent=true --export=false --prefix=pfm --selector=pfm-planning-open --style=scss
+
+#2, create modules and an entry components for the plugins
+ng g module planning/lock-planning --project=plugins
+ng g component planning/lock-planning --project=plugins --module planning/lock-planning/lock-planning.module --entryComponent=true --export=false --prefix=pfm --selector=pfm-planning-lock --style=scss
+
+#3, update the assets/plugins-config.json
+## add the plugin into the plugins config file
+  "planning-close": {
+    "name": "PlanningClose",
+    "path": "/assets/plugins/planning-close.js"
+  }
+
+#4, update the feature component (use others as an exmaple, these are boiler plates)
+#   use the plugin key from the plugins-config.json as the
+##examle
+    this.loadPlugin("planning-close");
+
+#5, update the package.json to build the new plugin
+"build:planning-close": "ng build --project plugins --prod --modulePath=./app/planning/close-planning/close-planning.module#ClosePlanningModule --pluginName=planning-close --outputPath=./src/assets/plugins",
+
+
+ng g module planning/close-planning --project=plugins
+ng g component planning/close-planning --project=plugins --module planning/close-planning/close-planning.module --entryComponent=true --export=false --prefix=pfm --selector=pfm-planning-close --style=scss
+
+##added the static entry for the new plugin component
+static entry = ClosePlanningComponent;
+
+
+
+ng g module planning/mission-priorities --project=plugins
+ng g component planning/mission-priorities --project=plugins --module planning/mission-priorities/mission-priorities.module --entryComponent=true --export=false --prefix=pfm --selector=pfm-planning-mission-priorities --style=scss

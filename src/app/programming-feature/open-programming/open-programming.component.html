@@ -1,0 +1,53 @@
+<div class="main section-banner row col-12 p-0 m-0">
+  <div class="title-line row col-12 p-0 m-0">
+    <div class="col-6" *ngIf="pomYear">
+      <h3>Review Program Requests for POM{{ pomYear % 100 }}</h3>
+    </div>
+    <div class="button-container col-6 text-right p-0">
+      <div class="div-button-return">
+        <button type="button" class="btn btn-primary" (click)="onOpenProgrammingPhase()">
+          Open Programming Phase
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-container *ngIf="availableToaCharts?.length">
+  <div class="section-pods">
+    <gridster [options]="options">
+      <gridster-item #orgWidgetItem [item]="gridster[0]">
+        <div class="gridster-item-content">
+          <pfm-requests-summary-org-widget
+            #orgWidget
+            [griddata]="gridData"
+            [orgs]="orgs"
+            [roles]="programmingModel.roles"
+            [baBlinSummary]="baBlinSummary"
+          >
+          </pfm-requests-summary-org-widget>
+        </div>
+      </gridster-item>
+
+      <gridster-item #toaWidgetItem [item]="gridster[1]">
+        <div class="gridster-item-content">
+          <pfm-requests-summary-toa-widget
+            #toaWidget
+            [availableCharts]="availableToaCharts"
+            [pomYear]="pomYear"
+            [selectedOrg]="defaultOrganizationSelection"
+            [programmingModel]="programmingModel"
+            [griddata]="gridData"
+          >
+          </pfm-requests-summary-toa-widget>
+        </div>
+      </gridster-item>
+    </gridster>
+  </div>
+
+  <div class="section-datagrid">
+    <div class="datagrid">
+      <pfm-datagrid (gridIsReady)="onGridIsReady($event)" [columns]="columns" [rows]="gridData"></pfm-datagrid>
+    </div>
+  </div>
+</ng-container>

@@ -1,0 +1,108 @@
+<ng-container *ngIf="toastMessageList && toastMessageList.length > 0">
+  <ng-container *ngFor="let toast of toastMessageList">
+    <ng-container *ngIf="toast.type === 'INFO'">
+      <div class="alert alert-success" role="alert">
+        {{ toast.body }}
+        <button
+          type="button"
+          class="close"
+          data-dismiss="alert"
+          aria-label="Close"
+          (click)="onToastMessageDismissed(toast)"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="toast.type === 'ERROR'">
+      <div class="alert alert-danger" role="alert">
+        {{ toast.body }}
+        <button
+          type="button"
+          class="close"
+          data-dismiss="alert"
+          aria-label="Close"
+          (click)="onToastMessageDismissed(toast)"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </ng-container>
+  </ng-container>
+</ng-container>
+
+<ng-container *ngIf="displayDialog && activeMessage">
+  <ng-container>
+    <div class="modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header" [class.error]="activeMessage.type === 'ERROR'">
+            <h5 class="modal-title">{{ activeMessage.title }}</h5>
+            <ng-container *ngIf="activeMessage.type !== 'CONFIRMATION'">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="onDialogClose()">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </ng-container>
+            <ng-container *ngIf="activeMessage.type === 'CONFIRMATION'">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="onDialogCancel()">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </ng-container>
+          </div>
+
+          <div class="modal-body">
+            <ng-container *ngIf="activeMessage.type === 'INFO'">
+              <p>{{ activeMessage.body }}</p>
+            </ng-container>
+            <ng-container *ngIf="activeMessage.type === 'ERROR'">
+              <p>{{ activeMessage.body }}</p>
+            </ng-container>
+            <ng-container *ngIf="activeMessage.type === 'DEBUG'">
+              <span>before</span>
+              <ng-container *ngTemplateOutlet="activeMessage.customTemplate"></ng-container>
+              <span>after</span>
+            </ng-container>
+            <ng-container *ngIf="activeMessage.type === 'DEBUG'">
+              <textarea>{{ activeMessage.debug | json }}</textarea>
+            </ng-container>
+            <ng-container *ngIf="activeMessage.type === 'CONFIRMATION'">
+              <p>{{ activeMessage.body }}</p>
+            </ng-container>
+            <ng-container *ngIf="activeMessage.type === 'CHECKSELECTION'">
+              <form action="">
+                <span>{{ activeMessage | json }}</span>
+                <div *ngFor="let attachment of activeMessage.data">
+                  <input
+                    type="checkbox"
+                    [(ngModel)]="attachment.selectedForDelete"
+                    [name]="attachment.name"
+                    [value]="attachment.name"
+                  />
+                  {{ attachment.name }} <br />
+                </div>
+              </form>
+            </ng-container>
+          </div>
+
+          <div class="modal-footer justify-content-between">
+            <ng-container *ngIf="activeMessage.type !== 'CONFIRMATION' && activeMessage.type !== 'CHECKSELECTION'">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="onDialogClose()">
+                {{ activeMessage.labelForOk }}
+              </button>
+            </ng-container>
+            <ng-container *ngIf="activeMessage.type === 'CONFIRMATION' || activeMessage.type === 'CHECKSELECTION'">
+              <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onDialogOk()">
+                {{ activeMessage.labelForOk }}
+              </button>
+              <pfm-cancel-cta
+                data-dismiss="modal"
+                [label]="activeMessage.labelForCancel"
+                (onCancelClicked)="onDialogCancel()"
+              ></pfm-cancel-cta>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ng-container>

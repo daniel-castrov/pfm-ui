@@ -1,0 +1,22 @@
+{
+  "programming-request": {
+    "name": "PlanningCreate",
+    "path": "/assets/plugins/planning-create.js"
+  },
+  "planning-open": {
+    "name": "PlanningOpen",
+    "path": "/assets/plugins/planning-open.js"
+  },
+  "planning-close": {
+    "name": "PlanningClose",
+    "path": "/assets/plugins/planning-close.js"
+  },
+  "planning-lock": {
+    "name": "PlanningLock",
+    "path": "/assets/plugins/planning-lock.js"
+  },
+  "planning-mission-priorities": {
+    "name": "PlanningMissionPriorities",
+    "path": "/assets/plugins/planning-mission-priorities.js"
+  }
+}

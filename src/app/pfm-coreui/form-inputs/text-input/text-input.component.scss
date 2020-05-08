@@ -1,0 +1,22 @@
+.cell_input {
+  height: 100%;
+  width: 100%;
+  line-height: normal;
+}
+
+.ag-input-wrapper-error {
+  height: 100%;
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  border-width: 1px;
+  border-style: solid;
+}
+
+::ng-deep .tooltip.show {
+  opacity: 1 !important;
+}
+
+.text-wrap {
+  word-wrap: normal;
+}

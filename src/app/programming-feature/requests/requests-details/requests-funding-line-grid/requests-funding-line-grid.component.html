@@ -1,0 +1,142 @@
+<div>
+  <div class="row col-12">
+    <google-chart #googleChart [data]="chartData"></google-chart>
+    <div class="row col-12 mx-auto">
+      <pfm-dropdown
+        #displayDropdown
+        class="col-2"
+        (selectionChanged)="onDisplayDropdownChange($event)"
+        [fieldName]="'name'"
+        [fieldLabel]="'name'"
+        [defaultOption]="displayDropdownOptions[0]"
+        [options]="displayDropdownOptions"
+        [label]="'Display'"
+        [showPrompt]="false"
+      >
+      </pfm-dropdown>
+      <pfm-dropdown
+        #appropriationDropdown
+        class="col-1"
+        (selectionChanged)="onAppropiationDropdownChange($event)"
+        [fieldName]="'name'"
+        [fieldLabel]="'name'"
+        [options]="appropriationDropdownOptions"
+        [visible]="appropriationDropdownOptions.length > 2"
+        [showPrompt]="false"
+      >
+      </pfm-dropdown>
+      <pfm-dropdown
+        #bablinDropdown
+        class="col-1"
+        (selectionChanged)="onBablinDropdownChange($event)"
+        [fieldName]="'name'"
+        [fieldLabel]="'name'"
+        [defaultOption]="'Select'"
+        [options]="bablinDropdownOptions"
+        [visible]="bablinDropdownOptions.length > 2"
+        [showPrompt]="false"
+      >
+      </pfm-dropdown>
+      <pfm-dropdown
+        #sagDropdown
+        class="col-1"
+        (selectionChanged)="onSagDropdownChange($event)"
+        [fieldName]="'name'"
+        [fieldLabel]="'name'"
+        [defaultOption]="'Select'"
+        [options]="sagDropdownOptions"
+        [visible]="sagDropdownOptions.length > 2"
+        [showPrompt]="false"
+      >
+      </pfm-dropdown>
+      <pfm-dropdown
+        #wucdDropdown
+        class="col-1"
+        (selectionChanged)="onWucdDropdownChange($event)"
+        [fieldName]="'name'"
+        [fieldLabel]="'name'"
+        [defaultOption]="'Select'"
+        [options]="wucdDropdownOptions"
+        [visible]="wucdDropdownOptions.length > 2"
+        [showPrompt]="false"
+      >
+      </pfm-dropdown>
+      <pfm-dropdown
+        #expTypeDropdown
+        class="col-1"
+        [fieldName]="'name'"
+        [fieldLabel]="'name'"
+        [defaultOption]="'Select'"
+        [options]="expTypeDropdownOptions"
+        [visible]="expTypeDropdownOptions.length > 2"
+        [showPrompt]="false"
+      >
+      </pfm-dropdown>
+      <button class="col-1" type="button" class="btn btn-primary" (click)="drawLineChart()">
+        Go
+      </button>
+    </div>
+  </div>
+  <div class="mt-5">
+    <pfm-toggle-input
+      [checked]="showSubtotals"
+      [label]="'Show Subtotals'"
+      (valueChanged)="onToggleValueChanged($event)"
+    >
+    </pfm-toggle-input>
+  </div>
+  <div class="grid-container" *ngIf="showSubtotals">
+    <pfm-datagrid
+      [extras]="expandCollapse"
+      (gridIsReady)="onSummaryGridReady($event)"
+      [columns]="summaryFundingLineColumnsDefinition"
+      [rows]="summaryFundingLineRows"
+      (cellAction)="onSummaryCellAction($event)"
+      [showPagination]="false"
+      (mousedown)="onSummaryMouseDown($event)"
+    >
+    </pfm-datagrid>
+  </div>
+  <div class="grid-container" *ngIf="!showSubtotals">
+    <pfm-datagrid
+      (gridIsReady)="onNonSummaryGridIsReady($event)"
+      (cellAction)="onNonSummaryCellAction($event)"
+      [columns]="nonSummaryFundingLineColumnsDefinition"
+      [rows]="nonSummaryFundingLineRows"
+      [showAddSingleRow]="true"
+      [showPagination]="false"
+      (addCtaEvent)="onNonSummaryRowAdd($event)"
+      (mousedown)="onNonSummaryMouseDown($event)"
+    >
+    </pfm-datagrid>
+  </div>
+</div>
+<ng-container *ngIf="deleteDialog.display">
+  <pfm-custom-dialog
+    [title]="deleteDialog.title"
+    [body]="deleteBody"
+    [actions]="deleteActions"
+    (onCancelDialog)="onCancelDeleteDialog()"
+  ></pfm-custom-dialog>
+
+  <ng-template #deleteBody>
+    <span>{{ deleteDialog.bodyText }}</span>
+  </ng-template>
+
+  <ng-template #deleteActions>
+    <div class="pull-left">
+      <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onDeleteData()">Delete</button>
+    </div>
+
+    <div class="pull-right">
+      <pfm-cancel-cta (onCancelClicked)="onCancelDeleteDialog()"></pfm-cancel-cta>
+    </div>
+  </ng-template>
+</ng-container>
+
+<ng-template #expandCollapse>
+  <div>
+    <fa-icon [icon]="'angle-double-down'" title="Expand all rows" *ngIf="!expanded" (click)="expand()"></fa-icon>
+    <fa-icon [icon]="'angle-double-up'" title="Collapse all rows" *ngIf="expanded" (click)="collapse()"></fa-icon>
+  </div>
+</ng-template>

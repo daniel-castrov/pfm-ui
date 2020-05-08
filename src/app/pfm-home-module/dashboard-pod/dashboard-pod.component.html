@@ -1,0 +1,8 @@
+<div class="card parent-card">
+  <div class="header">
+    <span class="d-inline pull-right user-admin-controls" title="Add" (click)="showDialog = true">
+      <i class="fa fa-plus" aria-hidden="true"></i>
+    </span>
+    <pfm-dashboard (hideDialog)="showDialog = false" [showDialog]="showDialog"></pfm-dashboard>
+  </div>
+</div>

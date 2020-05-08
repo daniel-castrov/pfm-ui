@@ -1,0 +1,35 @@
+$assigned-color: #6fb567;
+$outstanding-color: #e5ae60;
+$completed-color: #4a77b1;
+
+.bg-assigned {
+  background-color: $assigned-color;
+}
+.bg-outstanding {
+  background-color: $outstanding-color;
+}
+.bg-completed {
+  background-color: $completed-color;
+}
+.border-assigned {
+  border-color: $assigned-color;
+}
+.border-outstanding {
+  border-color: $outstanding-color;
+}
+.border-completed {
+  border-color: $completed-color;
+}
+.color-assigned {
+  color: $assigned-color;
+}
+.color-outstanding {
+  color: $outstanding-color;
+}
+.color-completed {
+  color: $completed-color;
+}
+
+.card {
+  width: 20rem;
+}

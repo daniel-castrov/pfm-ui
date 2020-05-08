@@ -1,0 +1,29 @@
+<pfm-action-cell-renderer
+  [data]="data"
+  [params]="params"
+  [columnApi]="columnApi"
+  [options]="options"
+  [disabled]="disabled"
+  [extraActions]="extraActions"
+>
+</pfm-action-cell-renderer>
+
+<ng-template #extraActions>
+  <div
+    *ngIf="!data.hideCheckmark"
+    [class.action]="!switchCheckmark"
+    [class.green-color]="params.data.selected"
+    [class.amber-color]="!params.data.selected && !switchCheckmark"
+    [class.red-color]="!params.data.selected && switchCheckmark"
+    (click)="switchCheckmark ? null : onSelected('toggle-select')"
+  >
+    <span [title]="title">
+      <ng-container *ngIf="switchCheckmark && !params.data.selected">
+        <fa-icon [icon]="'times-circle'"></fa-icon>
+      </ng-container>
+      <ng-container *ngIf="!switchCheckmark || params.data.selected">
+        <fa-icon [icon]="'check-circle'"></fa-icon>
+      </ng-container>
+    </span>
+  </div>
+</ng-template>

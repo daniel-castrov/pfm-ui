@@ -1,0 +1,14 @@
+div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fa {
+  margin-left: 15px;
+  color: grey;
+}
+
+.fa:hover {
+  cursor: pointer;
+}

@@ -1,0 +1,48 @@
+.pfm-dropdown-section {
+  display: flex;
+  flex-direction: row;
+}
+
+.pfm-label {
+  display: flex;
+  padding-right: 5px;
+}
+
+label {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.pfm-dropdown {
+  display: flex;
+  width: 200px;
+}
+
+.pfm-dropdown-long {
+  display: flex;
+  width: 400px;
+}
+
+option {
+  background-color: #bbced7;
+}
+
+.icon-dropown,
+.icon-dropown > button:enabled {
+  cursor: pointer;
+}
+
+.icon-dropown:hover > :not(button),
+.icon-dropown:hover > button:enabled {
+  color: red;
+}
+
+fa-icon {
+  font-size: x-large;
+}
+
+.icon-option:hover {
+  color: white;
+  background-color: #1e90ff;
+}
