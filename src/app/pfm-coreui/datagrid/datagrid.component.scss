@@ -32,6 +32,14 @@ fa-icon:hover {
   display: flex;
 }
 
+ag-grid-pagination ::ng-deep .pagination > .page-item {
+  cursor: pointer;
+}
+
+ag-grid-pagination ::ng-deep .pagination > .page-link {
+  cursor: default;
+}
+
 .add-row-container {
   display: flex;
 }

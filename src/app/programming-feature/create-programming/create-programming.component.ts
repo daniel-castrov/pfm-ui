@@ -79,6 +79,8 @@ export class CreateProgrammingComponent implements OnInit {
     this.orgColors['JSTO-CBD'] = '#ff9900';
     this.orgColors['JPEO-CBRND'] = '#990099';
     this.orgColors['JRO-CBRND'] = '#109618';
+    this.orgColors['ODASD(CBD)'] = '#dc3e9e';
+    this.orgColors['ECBC'] = '#dcdb2b';
 
     this.subToasData = [];
 
@@ -210,10 +212,10 @@ export class CreateProgrammingComponent implements OnInit {
     let row = null;
     const toarow = this.subToasData[0];
     // Org TOAs
-    Object.keys(this.pom.orgToas).forEach(key => {
+    this.orgs.forEach(organization => {
       row = {};
-      row['orgid'] = '<strong><span>' + this.getOrgName(key) + '</span></strong>';
-      this.pom.orgToas[key].forEach((toa: TOA) => {
+      row['orgid'] = '<strong><span>' + organization.abbreviation + '</span></strong>';
+      this.pom.orgToas[organization.id]?.forEach((toa: TOA) => {
         row[toa.year] = toa.amount;
       });
 
