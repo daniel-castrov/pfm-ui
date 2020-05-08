@@ -39,4 +39,8 @@ export class PomServiceImpl extends PomService {
   getPomYearsByStatus(status: string[]): Observable<object> {
     return this.get('pom/years/by-status/' + status);
   }
+
+  openPom(pom: Pom): Observable<object> {
+    return this.put('pom/open', pom);
+  }
 }

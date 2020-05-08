@@ -17,6 +17,8 @@ import { Role } from 'src/app/pfm-common-models/Role';
 import { RoleService } from 'src/app/services/role-service';
 import { switchMap, map, catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
+import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'pfm-programming',
@@ -52,7 +54,9 @@ export class OpenProgrammingComponent implements OnInit {
     private programmingService: ProgrammingService,
     private pomService: PomService,
     private roleService: RoleService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private toastService: ToastService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -95,7 +99,20 @@ export class OpenProgrammingComponent implements OnInit {
     ];
   }
 
-  onOpenProgrammingPhase() {}
+  onOpenProgrammingPhase() {
+    this.busy = true;
+    this.pomService.openPom(this.programmingModel.pom).subscribe(
+      resp => {
+        this.programmingModel.pom = (resp as any).result;
+        this.toastService.displaySuccess(`Programming phase for ${this.programmingModel.pom.fy} successfully opened.`);
+        this.router.navigate(['/home']);
+      },
+      error => {
+        this.dialogService.displayError(error.error.error);
+      },
+      () => (this.busy = false)
+    );
+  }
 
   private loadData() {
     this.busy = true;
