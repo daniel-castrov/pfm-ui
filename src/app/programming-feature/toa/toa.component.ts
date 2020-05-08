@@ -114,18 +114,15 @@ export class ToaComponent implements OnInit {
     );
   }
 
-  async setupVisibility() {
-    await this.visibilityService
-      .isCurrentlyVisible('toa-component')
-      .toPromise()
-      .then(response => {
-        if (!this.appModel['visibilityDef']) {
-          this.appModel['visibilityDef'] = {};
-        }
-        if ((response as any).result) {
-          this.appModel['visibilityDef']['toa-component'] = (response as any).result;
-        }
-      });
+  setupVisibility() {
+    this.visibilityService.isCurrentlyVisible('toa-component').subscribe(response => {
+      if (!this.appModel['visibilityDef']) {
+        this.appModel['visibilityDef'] = {};
+      }
+      if ((response as any).result) {
+        this.appModel['visibilityDef']['toa-component'] = (response as any).result;
+      }
+    });
   }
 
   yearSelected(year: ListItem): void {
