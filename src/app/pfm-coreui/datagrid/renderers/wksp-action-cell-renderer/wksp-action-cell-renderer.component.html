@@ -13,9 +13,6 @@
       <ng-container *ngIf="data.canView">
         <fa-icon icon="eye" [title]="'View all details'" [class.disabled]="data.disabled"></fa-icon>
       </ng-container>
-      <ng-container *ngIf="data.canViewFundingLine">
-        <fa-icon icon="dollar-sign" [title]="'View funding lines only'" [class.disabled]="data.disabled"></fa-icon>
-      </ng-container>
       <ng-container *ngIf="data.canDuplicate">
         <fa-icon
           icon="copy"
