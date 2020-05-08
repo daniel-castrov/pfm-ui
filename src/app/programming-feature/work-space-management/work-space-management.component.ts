@@ -22,7 +22,7 @@ export class WorkSpaceManagementComponent implements OnInit {
   gridActionState = {
     VIEW: {
       canView: true,
-      canViewFundingLine: true,
+      canEdit: true,
       canDuplicate: true,
       disabled: false
     },
@@ -240,11 +240,22 @@ export class WorkSpaceManagementComponent implements OnInit {
     }
   }
 
+  editWorkSpace(rowIndex: number, updatePreviousState?: boolean) {
+    if (updatePreviousState) {
+      this.currentWorkspaceRowDataState.currentEditingRowData = { ...this.rows[rowIndex] };
+    }
+    const editRow = this.rows[rowIndex];
+    editRow.action = this.gridActionState.EDIT;
+    editRow.active.disabled = false;
+    this.starEditMode(rowIndex);
+  }
+
   duplicateWorkspace(params) {
     if (this.currentWorkspaceRowDataState.isEditMode) {
       return;
     }
 
+    this.currentWorkspaceRowDataState.isDuplicateMode = true;
     this.rows.push({
       version: this.rows.length + 1,
       name: params.name,
@@ -267,8 +278,10 @@ export class WorkSpaceManagementComponent implements OnInit {
     if (this.validateRow(newRow)) {
       newRow.action = this.gridActionState.VIEW;
       const creactionDate = new Date();
-      newRow.createdDate = formatDate(creactionDate, 'M/d/yyyy HH:mm', 'en-US');
-      newRow.lastUpdatedDate = formatDate(creactionDate, 'M/d/yyyy HH:mm', 'en-US');
+      if (this.currentWorkspaceRowDataState.isDuplicateMode) {
+        newRow.createdDate = formatDate(creactionDate, 'M/d/yyyy HH:mm', 'en-US');
+        newRow.lastUpdatedDate = formatDate(creactionDate, 'M/d/yyyy HH:mm', 'en-US');
+      }
       newRow.lastUpdatedBy = this.appModel.userDetails.fullName;
       this.startViewMode();
       sessionStorage.setItem('wkspGridRows', JSON.stringify(this.rows));
@@ -276,12 +289,14 @@ export class WorkSpaceManagementComponent implements OnInit {
       this.starEditMode(rowIndex);
     }
   }
+
   private validateRow(row) {
     if (!row.name) {
       this.dialogService.displayError('Workspace name cannot be empty');
     }
     return row.name;
   }
+
   private starEditMode(rowIndex: number) {
     this.currentWorkspaceRowDataState.currentEditingRowIndex = rowIndex;
     this.currentWorkspaceRowDataState.isEditMode = true;
@@ -307,7 +322,13 @@ export class WorkSpaceManagementComponent implements OnInit {
   }
 
   private cancelEdit() {
-    this.rows.splice(-1, 1);
+    if (this.currentWorkspaceRowDataState.isDuplicateMode) {
+      this.rows.splice(-1, 1);
+    } else {
+      this.rows[
+        this.currentWorkspaceRowDataState.currentEditingRowIndex
+      ] = this.currentWorkspaceRowDataState.currentEditingRowData;
+    }
     this.gridApi.stopEditing();
     this.startViewMode();
   }
@@ -319,6 +340,7 @@ export class WorkSpaceManagementComponent implements OnInit {
       row.active.disabled = true;
     });
     this.currentWorkspaceRowDataState.isEditMode = false;
+    this.currentWorkspaceRowDataState.isDuplicateMode = false;
     this.gridApi.stopEditing();
     this.gridApi.setRowData(this.rows);
     this.gridActionState.VIEW.disabled = false;
@@ -332,6 +354,9 @@ export class WorkSpaceManagementComponent implements OnInit {
       case 'duplicate':
         this.duplicateWorkspace(cellAction.rowData);
         break;
+      case 'edit':
+        this.editWorkSpace(cellAction.rowIndex, true);
+        break;
       case 'cancel':
         this.cancelEdit();
         break;
@@ -343,5 +368,6 @@ export class WorkSpaceManagementComponent implements OnInit {
 export interface RowDataStateInterface {
   currentEditingRowIndex?: number;
   isEditMode?: boolean;
+  isDuplicateMode?: boolean;
   currentEditingRowData?: any;
 }
