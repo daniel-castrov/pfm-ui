@@ -1,0 +1,14 @@
+.section-pods {
+  display: flex;
+  width: 100%;
+  height: 340px;
+}
+
+:host ::ng-deep .pfm-data .sub-header {
+  background-color: #ffffff;
+  color: black;
+}
+
+.button-container .btn {
+  margin-right: 0 !important;
+}

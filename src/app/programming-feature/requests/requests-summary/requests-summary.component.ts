@@ -253,25 +253,6 @@ export class RequestsSummaryComponent implements OnInit {
     }
   }
 
-  private getPreferences(): void {
-    this.busy = true;
-    this.dashboardService.getWidgetPreferences('programming-requests-summary').subscribe(
-      data => {
-        this.busy = false;
-        if (data) {
-          const list: Array<GridsterItem> = data as any;
-          if (list && list.length > 0) {
-            this.dashboard = list;
-          }
-        }
-      },
-      error => {
-        this.busy = false;
-        this.dialogService.displayDebug(error);
-      }
-    );
-  }
-
   private saveWidgetLayout(): void {
     this.dashboardService.saveWidgetPreferences('programming-requests-summary', this.dashboard).subscribe(
       data => {},
