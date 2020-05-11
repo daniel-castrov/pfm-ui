@@ -90,9 +90,6 @@ export class ScopeComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.budget = 210000000;
-    this.schedule = 'Oct. 1, 2020 - Nov. 30, 2022';
-
     this.loadForm();
     this.loadExternalInfo();
     this.updateForm(this.program);
@@ -130,10 +127,14 @@ export class ScopeComponent implements OnInit {
   }
 
   loadScheduleRange(schedules: Array<Schedule>) {
-    const startDate = schedules.map(x => x.startDate).sort((a, b) => a.diff(b))[0];
-    const endDate = schedules.map(x => x.endDate).sort((a, b) => b.diff(a))[0];
+    if (schedules?.length) {
+      const startDate = schedules.map(x => x.startDate).sort((a, b) => a.diff(b))[0];
+      const endDate = schedules.map(x => x.endDate).sort((a, b) => b.diff(a))[0];
 
-    this.schedule = `${startDate.format('MMM. D, YYYY')} - ${endDate.format('MMM. D, YYYY')}`;
+      this.schedule = `${startDate.format('MMM. D, YYYY')} - ${endDate.format('MMM. D, YYYY')}`;
+    } else {
+      this.schedule = '';
+    }
   }
 
   downloadAttachment(file: ListItem) {
