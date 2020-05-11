@@ -16,6 +16,9 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { SecureDownloadComponent } from 'src/app/pfm-secure-filedownload/secure-download/secure-download.component';
 import { ListItem } from 'src/app/pfm-common-models/ListItem';
 import { DropdownCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/dropdown-cell-renderer/dropdown-cell-renderer.component';
+import { ProgrammingService } from '../../../services/programming-service';
+import { Schedule } from '../../../models/schedule.model';
+import { FundingLine } from '../../../models/funding-line.model';
 
 @Component({
   selector: 'pfm-scope',
@@ -27,6 +30,8 @@ export class ScopeComponent implements OnInit {
   secureDownloadComponent: SecureDownloadComponent;
 
   @Input() program: Program;
+
+  @Input() pomYear: number;
 
   form: FormGroup;
 
@@ -80,7 +85,8 @@ export class ScopeComponent implements OnInit {
     private evaluationMeasureService: EvaluationMeasureService,
     private processPrioritizationService: ProcessPrioritizationService,
     private teamLeadService: TeamLeadService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private programmingService: ProgrammingService
   ) {}
 
   ngOnInit() {
@@ -88,6 +94,7 @@ export class ScopeComponent implements OnInit {
     this.schedule = 'Oct. 1, 2020 - Nov. 30, 2022';
 
     this.loadForm();
+    this.loadExternalInfo();
     this.updateForm(this.program);
 
     this.setupEvaluationMeasureGrid();
@@ -102,6 +109,31 @@ export class ScopeComponent implements OnInit {
       quality: new FormControl(''),
       other: new FormControl('')
     });
+  }
+
+  loadExternalInfo() {
+    this.programmingService.getProgramById(this.program.id).subscribe(resp => {
+      const program = resp.result as Program;
+      this.loadBudget(program.fundingLines);
+      this.loadScheduleRange(program.schedules);
+    });
+  }
+
+  loadBudget(fundingLines: Array<FundingLine>) {
+    let total = 0;
+    fundingLines.forEach(fundingLine => {
+      for (let i = this.pomYear; i < this.pomYear + 5; i++) {
+        total += Number(fundingLine.funds[i] ?? 0);
+      }
+    });
+    this.budget = total;
+  }
+
+  loadScheduleRange(schedules: Array<Schedule>) {
+    const startDate = schedules.map(x => x.startDate).sort((a, b) => a.diff(b))[0];
+    const endDate = schedules.map(x => x.endDate).sort((a, b) => b.diff(a))[0];
+
+    this.schedule = `${startDate.format('MMM. D, YYYY')} - ${endDate.format('MMM. D, YYYY')}`;
   }
 
   downloadAttachment(file: ListItem) {

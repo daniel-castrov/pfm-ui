@@ -3,6 +3,7 @@ import { Milestone } from './Milestone';
 import { ProgramStatus } from './enumerations/program-status.model';
 import { Attachment } from '../../pfm-common-models/Attachment';
 import { Asset } from './asset.model';
+import { Schedule } from './schedule.model';
 
 export class Program {
   created: any;
@@ -28,6 +29,7 @@ export class Program {
   impactN: string;
   execution: string;
   fundingLines: Array<FundingLine>;
+  schedules: Array<Schedule>;
   assets: Array<Asset>;
   milestones: Array<Milestone>;
   primaryCapability: string;
