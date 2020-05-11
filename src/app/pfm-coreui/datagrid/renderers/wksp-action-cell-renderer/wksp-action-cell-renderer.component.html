@@ -10,6 +10,14 @@
 <ng-template #extraActions>
   <div class="action">
     <span>
+      <ng-container *ngIf="data.canUpdate">
+        <fa-icon
+          [icon]="'pencil-alt'"
+          title="Edit"
+          (click)="onSelected('edit')"
+          [class.disabled]="data.disabled"
+        ></fa-icon>
+      </ng-container>
       <ng-container *ngIf="data.canView">
         <fa-icon icon="eye" [title]="'View all details'" [class.disabled]="data.disabled"></fa-icon>
       </ng-container>
