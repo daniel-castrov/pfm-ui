@@ -291,6 +291,7 @@ export class RequestsDetailsComponent implements OnInit {
         this.currentSelectedTab = 2;
         break;
       case 'scope':
+        this.scopeComponent.loadExternalInfo();
         this.currentSelectedTab = 3;
         break;
       case 'assets':
