@@ -110,7 +110,13 @@ export class ToaComponent implements OnInit {
       error => {
         this.dialogService.displayInfo(error.error.error);
       },
-      () => (this.busy = false)
+      () => {
+        let yearItem = this.pomYears.find(x => this.selectedYear.id === x.id);
+        if (yearItem) {
+          this.yearSelected(yearItem);
+        }
+        this.busy = false;
+      }
     );
   }
 
