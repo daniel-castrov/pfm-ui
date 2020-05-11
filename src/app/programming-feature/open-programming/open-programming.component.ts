@@ -108,7 +108,7 @@ export class OpenProgrammingComponent implements OnInit {
         this.router.navigate(['/home']);
       },
       error => {
-        this.dialogService.displayError(error.error.error);
+        this.toastService.displayError(error.error.error);
       },
       () => (this.busy = false)
     );
