@@ -87,7 +87,8 @@ export class WorkSpaceManagementComponent implements OnInit {
           ];
         },
         cellStyle,
-        maxWidth: 80
+        maxWidth: 80,
+        minWidth: 80
       },
       {
         headerName: 'Workspace Name',
@@ -106,7 +107,9 @@ export class WorkSpaceManagementComponent implements OnInit {
               : ''
           ];
         },
-        cellStyle
+        cellStyle,
+        maxWidth: 150,
+        minWidth: 150
       },
       {
         headerName: 'Active',
@@ -127,6 +130,7 @@ export class WorkSpaceManagementComponent implements OnInit {
         },
         cellStyle,
         maxWidth: 80,
+        minWidth: 80,
         cellRendererFramework: CheckboxCellRendererComponent,
         cellEditorFramework: CheckboxCellRendererComponent,
         valueSetter: params => {
@@ -151,7 +155,9 @@ export class WorkSpaceManagementComponent implements OnInit {
               : ''
           ];
         },
-        cellStyle
+        cellStyle,
+        autoHeight: true,
+        minWidth: 300
       },
       {
         headerName: 'Created Date',
@@ -170,7 +176,9 @@ export class WorkSpaceManagementComponent implements OnInit {
               : ''
           ];
         },
-        cellStyle
+        cellStyle,
+        maxWidth: 130,
+        minWidth: 130
       },
       {
         headerName: 'Last Updated Date',
@@ -189,7 +197,9 @@ export class WorkSpaceManagementComponent implements OnInit {
               : ''
           ];
         },
-        cellStyle
+        cellStyle,
+        maxWidth: 140,
+        minWidth: 140
       },
       {
         headerName: 'Last Updated By',
@@ -208,7 +218,9 @@ export class WorkSpaceManagementComponent implements OnInit {
               : ''
           ];
         },
-        cellStyle
+        cellStyle,
+        maxWidth: 130,
+        minWidth: 130
       },
       {
         headerName: 'Actions',
@@ -220,7 +232,8 @@ export class WorkSpaceManagementComponent implements OnInit {
         suppressMenu: true,
         cellStyle,
         cellRendererFramework: WkspActionCellRendererComponent,
-        maxWidth: 130
+        maxWidth: 130,
+        minWidth: 130
       }
     ];
   }
@@ -369,6 +382,11 @@ export class WorkSpaceManagementComponent implements OnInit {
         break;
     }
   }
+
+  onColumnResized(params) {
+    params.api.resetRowHeights();
+  }
+
   compareVersion() {}
 }
 
