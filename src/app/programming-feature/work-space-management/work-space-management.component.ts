@@ -108,8 +108,8 @@ export class WorkSpaceManagementComponent implements OnInit {
           ];
         },
         cellStyle,
-        maxWidth: 150,
-        minWidth: 150
+        maxWidth: 200,
+        minWidth: 200
       },
       {
         headerName: 'Active',
