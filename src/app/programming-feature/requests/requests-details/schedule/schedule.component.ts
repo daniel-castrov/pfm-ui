@@ -28,10 +28,10 @@ export class ScheduleComponent implements OnInit {
   @Input() program: Program;
   @Input() pomYear: number;
 
+  currentFiscalYear: number;
+
   @ViewChild('googleChart')
   chart: GoogleChartComponent;
-
-  currentFiscalYear = 2019;
 
   fundingGridActionState = {
     VIEW: {
@@ -94,6 +94,7 @@ export class ScheduleComponent implements OnInit {
   ngOnInit() {
     this.loadFundingLines();
     this.loadSchedulesGrid();
+    this.currentFiscalYear = this.pomYear;
   }
 
   loadFundingLines() {
@@ -178,7 +179,7 @@ export class ScheduleComponent implements OnInit {
   }
 
   onScheduleRowAdd(event: any) {
-    if (this.currentRowDataState.isEditMode) {
+    if (this.currentRowDataState.isEditMode || !this.currentFiscalYear) {
       return;
     }
     const maxOrder = this.schedulesData.length
@@ -194,7 +195,7 @@ export class ScheduleComponent implements OnInit {
           ? this.selectedFundingFilter
           : '',
       startDate: formatDate(new Date(this.currentFiscalYear + '-01-01 00:00:00'), 'MM/dd/yyyy', 'en-US'),
-      endDate: formatDate(new Date(this.currentFiscalYear + 5 + '-12-31  00:00:00'), 'MM/dd/yyyy', 'en-US'),
+      endDate: formatDate(new Date(this.currentFiscalYear + 4 + '-12-31  00:00:00'), 'MM/dd/yyyy', 'en-US'),
       order: maxOrder + 1,
       action: this.fundingGridActionState.EDIT
     });
@@ -204,6 +205,9 @@ export class ScheduleComponent implements OnInit {
   }
 
   drawGanttChart(redraw?: boolean) {
+    if (!this.currentFiscalYear) {
+      return;
+    }
     const data: any[] = [
       ['Task ID', 'Task Name', 'Start Date', 'End Date', 'Duration', 'Percent Complete', 'Dependencies']
     ];
@@ -211,7 +215,7 @@ export class ScheduleComponent implements OnInit {
       '0',
       '',
       new Date(this.currentFiscalYear + '-01-01 00:00:00'),
-      new Date(this.currentFiscalYear + 5 + '-12-31 00:00:00'),
+      new Date(this.currentFiscalYear + 4 + '-12-31 00:00:00'),
       0,
       100,
       null
@@ -512,6 +516,9 @@ export class ScheduleComponent implements OnInit {
   }
 
   private validateRowData(row: ScheduleDataInterface) {
+    if (!this.currentFiscalYear) {
+      return;
+    }
     let errorMessage = '';
     if (!row.taskDescription?.length) {
       errorMessage = 'Task Description cannot be empty.';
@@ -525,13 +532,13 @@ export class ScheduleComponent implements OnInit {
       errorMessage = 'Start Date cannot be greater than End Date.';
     } else if (
       new Date(row.startDate).getFullYear() < this.currentFiscalYear ||
-      new Date(row.endDate).getFullYear() > this.currentFiscalYear + 5
+      new Date(row.endDate).getFullYear() > this.currentFiscalYear + 4
     ) {
       errorMessage =
         'Start Date cannot be less than the current fiscal year (' +
         this.currentFiscalYear +
         ') and End Date cannot greater than ' +
-        (this.currentFiscalYear + 5) +
+        (this.currentFiscalYear + 4) +
         '.';
     }
     if (errorMessage.length) {
