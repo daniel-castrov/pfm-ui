@@ -65,6 +65,17 @@ export class ToaComponent implements OnInit {
   pom: Pom;
   activeTab: TabDirective;
   orgColors: string[] = [];
+  currentRowDataState: ToaRowDataStateInterface = {};
+
+  saveConfirmationDlg = {
+    title: 'Caution',
+    bodyText: `Saving the TOA values after the Programming phase has been opened will not only update the TOA values,
+    but will also revert all Program Requests back to the "Funds Requestor Saved" state.
+    Do you want to continue?
+    `,
+    continueAction: null,
+    display: false
+  };
 
   constructor(
     public appModel: AppModel,
@@ -554,9 +565,26 @@ export class ToaComponent implements OnInit {
 
       this.orgGridApi.setRowData(this.orgData);
     } else {
-      this.communityData[rowId].actions = editAction;
-      this.communityGridApi.stopEditing();
-      this.onCommunityToaChange(rowId);
+      this.saveConfirmationDlg.display = true;
+      this.saveConfirmationDlg.continueAction = () => {
+        this.saveConfirmationDlg.display = false;
+        let communityDatum = this.communityData[rowId];
+        communityDatum.actions = editAction;
+        this.communityGridApi.stopEditing();
+        this.pom.communityToas.forEach(ct => {
+          ct.amount = communityDatum[ct.year] ?? 0;
+        });
+        debugger;
+        this.pomService.updatePom(this.pom).subscribe(
+          resp => {},
+          error => {
+            this.busy = false;
+            this.dialogService.displayDebug(error);
+          }
+        );
+        this.onCommunityToaChange(rowId);
+        this.updateCommunityGraphData(this.currentYear);
+      };
     }
 
     this.updateCommunityGraphData(this.currentYear);
@@ -572,10 +600,23 @@ export class ToaComponent implements OnInit {
         colKey: this.byYear
       });
     } else {
+      this.currentRowDataState.currentEditingRowData = { ...this.communityData[rowId] };
+      this.currentRowDataState.currentEditingRowIndex = rowId;
       this.communityGridApi.startEditingCell({
         rowIndex: rowId,
         colKey: this.byYear
       });
+    }
+  }
+
+  private cancelRow(rowIdx: number, gridType: string) {
+    debugger;
+    const editAction = this.onSaveAction(rowIdx, gridType);
+    if (gridType === 'community') {
+      this.communityGridApi.stopEditing();
+      this.communityData[rowIdx] = this.currentRowDataState.currentEditingRowData;
+      this.communityData[rowIdx].actions = editAction;
+      this.communityGridApi.setRowData(this.communityData);
     }
   }
 
@@ -763,4 +804,16 @@ export class ToaComponent implements OnInit {
         break;
     }
   }
+
+  onCancelSaveConfirmationDlg() {
+    this.saveConfirmationDlg.display = false;
+    this.cancelRow(this.currentRowDataState.currentEditingRowIndex, 'community');
+  }
+}
+
+export interface ToaRowDataStateInterface {
+  currentEditingRowIndex?: number;
+  isAddMode?: boolean;
+  isEditMode?: boolean;
+  currentEditingRowData?: TOA;
 }

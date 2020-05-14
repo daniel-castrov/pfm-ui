@@ -23,4 +23,6 @@ export abstract class PomService extends BaseRestService {
   abstract getPomYearsByStatus(status: string[]): Observable<object>;
 
   abstract openPom(pom: Pom): Observable<object>;
+
+  abstract updatePom(pom: Pom): Observable<object>;
 }
