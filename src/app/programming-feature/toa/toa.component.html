@@ -106,4 +106,29 @@
   </div>
 </div>
 
+<ng-container *ngIf="saveConfirmationDlg.display">
+  <pfm-custom-dialog
+    [title]="saveConfirmationDlg.title"
+    [body]="yearSkipBody"
+    [actions]="yearSkipActions"
+    (onCancelDialog)="onCancelSaveConfirmationDlg()"
+  ></pfm-custom-dialog>
+
+  <ng-template #yearSkipBody>
+    <span>{{ saveConfirmationDlg.bodyText }}</span>
+  </ng-template>
+
+  <ng-template #yearSkipActions>
+    <div class="pull-left">
+      <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="saveConfirmationDlg.continueAction()">
+        OK
+      </button>
+    </div>
+
+    <div class="pull-right">
+      <pfm-cancel-cta (onCancelClicked)="onCancelSaveConfirmationDlg()"></pfm-cancel-cta>
+    </div>
+  </ng-template>
+</ng-container>
+
 <pfm-busy [busy]="busy"></pfm-busy>
