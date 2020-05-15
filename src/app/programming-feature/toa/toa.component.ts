@@ -574,7 +574,6 @@ export class ToaComponent implements OnInit {
         this.pom.communityToas.forEach(ct => {
           ct.amount = communityDatum[ct.year] ?? 0;
         });
-        debugger;
         this.pomService.updatePom(this.pom).subscribe(
           resp => {},
           error => {
@@ -610,7 +609,6 @@ export class ToaComponent implements OnInit {
   }
 
   private cancelRow(rowIdx: number, gridType: string) {
-    debugger;
     const editAction = this.onSaveAction(rowIdx, gridType);
     if (gridType === 'community') {
       this.communityGridApi.stopEditing();
