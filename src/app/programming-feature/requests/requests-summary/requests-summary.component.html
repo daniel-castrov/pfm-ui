@@ -210,7 +210,7 @@
               formControlName="organizationId"
               [class.form-control-plaintext]=""
             >
-              <option value="" disabled>Select...</option>
+              <option value="" disabled>Select</option>
               <option *ngFor="let org of orgs" [value]="org.id">{{ org.abbreviation }}</option>
             </select>
             <p class="error-message col align-self-end" *ngIf="organizationErrorMessage">

@@ -19,6 +19,7 @@ import { Tag } from 'src/app/programming-feature/models/Tag';
 import { AssetSummary } from 'src/app/programming-feature/models/asset-summary.model';
 import { AssetSummaryService } from 'src/app/programming-feature/services/asset-summary.service';
 import { DropdownCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/dropdown-cell-renderer/dropdown-cell-renderer.component';
+import { ListItem } from 'src/app/pfm-common-models/ListItem';
 
 @Component({
   selector: 'pfm-assets',
@@ -54,7 +55,7 @@ export class AssetsComponent implements OnInit {
   toBeUsedByOptions: Tag[] = [];
   contractorOrManufacturerOptions: Tag[] = [];
 
-  fundingLineOptions: any[] = [];
+  fundingLineOptions: ListItem[];
   selectedAsset: Asset;
   selectedFundingLine: string;
 
@@ -141,7 +142,7 @@ export class AssetsComponent implements OnInit {
   }
 
   onChangeFundingLine(event: any) {
-    this.form.get('fundingLineSelect').setValue(event.target.value, {
+    this.form.get('fundingLineSelect').setValue(event.value, {
       onlySelf: true
     });
     this.selectedFundingLine = this.form.get('fundingLineSelect').value;
@@ -201,8 +202,15 @@ export class AssetsComponent implements OnInit {
       .toPromise()
       .then(
         resp => {
-          this.fundingLineOptions = resp;
-          this.fundingLineOptions.forEach(option => {
+          const fundingLine = resp;
+          this.fundingLineOptions = new Array<ListItem>();
+          fundingLine.forEach(fl => {
+            const item = new ListItem();
+            item.value = fl.id;
+            item.name = fl.value;
+            this.fundingLineOptions.push(item);
+          });
+          fundingLine.forEach(option => {
             const asset = this.program.assets && this.program.assets.find(a => a.fundingLineId === option.id);
             if (!asset) {
               this.assetService.obtainAssetByFundingLineId(option.id).subscribe(
@@ -219,7 +227,7 @@ export class AssetsComponent implements OnInit {
             this.program.assets = [];
           }
           if (this.selectedAsset) {
-            const asset = this.fundingLineOptions.find(option => option.id === this.selectedAsset.fundingLineId);
+            const asset = fundingLine.find(option => option.id === this.selectedAsset.fundingLineId);
             if (!asset) {
               this.form.controls.fundingLineSelect.patchValue(0);
               this.assetSummaryRows = [];
