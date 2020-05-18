@@ -1260,7 +1260,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
     if (dropdown.selectedItem.toLowerCase() === 'all') {
       const current = [];
       downpdownOptions
-        .filter((option, index) => index > 1)
+        .filter((option, index) => index > 0)
         .forEach(option => {
           funds = [];
           const legends = this.retrieveChartLegend();
