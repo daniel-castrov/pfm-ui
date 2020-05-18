@@ -88,6 +88,7 @@ export class RequestsSummaryComponent implements OnInit {
   programErrorMessage: string;
   programNameErrorMessage: string;
   organizationErrorMessage: string;
+  containerId: string;
 
   constructor(
     private programmingModel: ProgrammingModel,
@@ -293,7 +294,11 @@ export class RequestsSummaryComponent implements OnInit {
     this.selectedOrg = organization;
     if (this.selectedOrg.name !== 'Select') {
       if (this.programmingModel.pom.status !== PlanningStatus.CLOSED) {
-        this.getPRs(this.programmingModel.pom.workspaceId, this.selectedOrg.value);
+        this.containerId =
+          this.programmingModel.pom.status === PlanningStatus.CREATED
+            ? this.programmingModel.pom.id
+            : this.programmingModel.pom.workspaceId;
+        this.getPRs(this.containerId, this.selectedOrg.value);
         // Depending on organization selection change options visible and default chart shown
         if (organization.id === 'Show All') {
           const chartOptions: string[] = ['Community Status', 'Community TOA Difference', 'Funding Line Status'];
@@ -420,12 +425,7 @@ export class RequestsSummaryComponent implements OnInit {
 
   approveOrganization(skipToaValidation?: boolean) {
     this.programmingService
-      .processPRsForContainer(
-        this.programmingModel.pom.workspaceId,
-        'Approve Organization',
-        this.selectedOrg.value,
-        skipToaValidation
-      )
+      .processPRsForContainer(this.containerId, 'Approve Organization', this.selectedOrg.value, skipToaValidation)
       .subscribe(
         resp => {
           this.organizationSelected(this.selectedOrg);
@@ -440,7 +440,7 @@ export class RequestsSummaryComponent implements OnInit {
 
   onReturnOrganization(): void {
     this.programmingService
-      .processPRsForContainer(this.programmingModel.pom.workspaceId, 'Return Organization', this.selectedOrg.value)
+      .processPRsForContainer(this.containerId, 'Return Organization', this.selectedOrg.value)
       .subscribe(
         resp => {
           this.organizationSelected(this.selectedOrg);
@@ -459,12 +459,7 @@ export class RequestsSummaryComponent implements OnInit {
 
   advanceOrganization(skipToaValidation?: boolean) {
     this.programmingService
-      .processPRsForContainer(
-        this.programmingModel.pom.workspaceId,
-        'Advance Organization',
-        this.selectedOrg.value,
-        skipToaValidation
-      )
+      .processPRsForContainer(this.containerId, 'Advance Organization', this.selectedOrg.value, skipToaValidation)
       .subscribe(
         resp => {
           this.organizationSelected(this.selectedOrg);
@@ -483,7 +478,7 @@ export class RequestsSummaryComponent implements OnInit {
 
   approveAllPRs(skipToaValidation?: boolean): void {
     this.programmingService
-      .processPRsForContainer(this.programmingModel.pom.workspaceId, 'Approve All PRs', undefined, skipToaValidation)
+      .processPRsForContainer(this.containerId, 'Approve All PRs', undefined, skipToaValidation)
       .subscribe(
         resp => {
           this.organizationSelected(this.selectedOrg);
