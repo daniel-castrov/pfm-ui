@@ -1177,7 +1177,6 @@ export class RequestsFundingLineGridComponent implements OnInit {
 
       appnDropdownComponent.change.subscribe(() => {
         const list = [
-          'Select',
           ...this.allBaBlins.filter(x => appnDropdownComponent.selectedValue === x.appropriation).map(x => x.code)
         ];
         baBlinDropdownComponent.updateList(list);
