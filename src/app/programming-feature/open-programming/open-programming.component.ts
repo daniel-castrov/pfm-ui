@@ -1,11 +1,11 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { PlanningStatus } from 'src/app/planning-feature/models/enumerators/planning-status.model';
 import { ProgrammingModel } from '../models/ProgrammingModel';
 import { ProgrammingService } from '../services/programming-service';
 import { IntIntMap } from '../models/IntIntMap';
 import { ListItemHelper } from '../../util/ListItemHelper';
 import { ListItem } from 'src/app/pfm-common-models/ListItem';
-import { GridsterItem, GridsterConfig } from 'angular-gridster2';
+import { GridsterConfig, GridsterItem } from 'angular-gridster2';
 import { ProgramSummary } from '../models/ProgramSummary';
 import { PomService } from '../services/pom-service';
 import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
@@ -15,7 +15,7 @@ import { Organization } from 'src/app/pfm-common-models/Organization';
 import { GridApi } from '@ag-grid-community/all-modules';
 import { Role } from 'src/app/pfm-common-models/Role';
 import { RoleService } from 'src/app/services/role-service';
-import { switchMap, map, catchError } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
 import { Router } from '@angular/router';
@@ -124,7 +124,7 @@ export class OpenProgrammingComponent implements OnInit {
           if (this.programmingModel.pom.status === PlanningStatus.CREATED) {
             this.pomYear = this.programmingModel.pom.fy;
             return this.programmingService
-              .getPRsForContainer(this.programmingModel.pom.workspaceId, null)
+              .getPRsForContainer(this.programmingModel.pom.id, null)
               .pipe(map(programs => (this.programmingModel.programs = (programs as any).result)));
           }
           return throwError('POM should be in CREATED status.');
@@ -136,7 +136,7 @@ export class OpenProgrammingComponent implements OnInit {
       .pipe(
         switchMap(() => {
           return this.programmingService
-            .getBaBlinSummary(this.programmingModel.pom.workspaceId, null)
+            .getBaBlinSummary(this.programmingModel.pom.id, null)
             .pipe(map(bablin => (this.baBlinSummary = (bablin as any).result)));
         }),
         catchError(error => {
