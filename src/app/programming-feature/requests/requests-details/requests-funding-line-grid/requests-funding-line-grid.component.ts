@@ -628,7 +628,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
             cellEditorFramework: DropdownCellRendererComponent,
             cellEditorParams: params => {
               return {
-                values: ['Select', ...this.appnOptions]
+                values: [...this.appnOptions]
               };
             }
           },
@@ -653,10 +653,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
             cellEditorFramework: DropdownCellRendererComponent,
             cellEditorParams: params => {
               return {
-                values: [
-                  'Select',
-                  ...this.allBaBlins.filter(x => params.data.appropriation === x.appropriation).map(x => x.code)
-                ]
+                values: [...this.allBaBlins.filter(x => params.data.appropriation === x.appropriation).map(x => x.code)]
               };
             }
           },
@@ -676,7 +673,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
             cellEditorFramework: DropdownCellRendererComponent,
             cellEditorParams: params => {
               return {
-                values: ['Select', ...new Set(this.sagOptions)]
+                values: [...new Set(this.sagOptions)]
               };
             }
           },
@@ -696,7 +693,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
             cellEditorFramework: DropdownCellRendererComponent,
             cellEditorParams: params => {
               return {
-                values: ['Select', ...this.wucdOptions]
+                values: [...this.wucdOptions]
               };
             }
           },
@@ -716,7 +713,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
             cellEditorFramework: DropdownCellRendererComponent,
             cellEditorParams: params => {
               return {
-                values: ['Select', ...this.expTypeOptions]
+                values: [...this.expTypeOptions]
               };
             }
           }
@@ -1480,13 +1477,6 @@ export class RequestsFundingLineGridComponent implements OnInit {
   }
 
   private insertDefaultOptions(options: ListItem[], setSelected?: boolean) {
-    options.push({
-      id: 'Select',
-      name: 'Select',
-      rawData: 'Select',
-      value: 'Select',
-      isSelected: setSelected
-    });
     options.push({
       id: 'All',
       name: 'All',

@@ -21,8 +21,8 @@
         [fieldName]="'name'"
         [fieldLabel]="'name'"
         [options]="appropriationDropdownOptions"
-        [visible]="appropriationDropdownOptions.length > 2"
-        [showPrompt]="false"
+        [visible]="appropriationDropdownOptions.length > 1"
+        [disablePrompt]="false"
       >
       </pfm-dropdown>
       <pfm-dropdown
@@ -31,10 +31,9 @@
         (selectionChanged)="onBablinDropdownChange($event)"
         [fieldName]="'name'"
         [fieldLabel]="'name'"
-        [defaultOption]="'Select'"
         [options]="bablinDropdownOptions"
-        [visible]="bablinDropdownOptions.length > 2"
-        [showPrompt]="false"
+        [visible]="bablinDropdownOptions.length > 1"
+        [disablePrompt]="false"
       >
       </pfm-dropdown>
       <pfm-dropdown
@@ -43,10 +42,9 @@
         (selectionChanged)="onSagDropdownChange($event)"
         [fieldName]="'name'"
         [fieldLabel]="'name'"
-        [defaultOption]="'Select'"
         [options]="sagDropdownOptions"
-        [visible]="sagDropdownOptions.length > 2"
-        [showPrompt]="false"
+        [visible]="sagDropdownOptions.length > 1"
+        [disablePrompt]="false"
       >
       </pfm-dropdown>
       <pfm-dropdown
@@ -55,10 +53,9 @@
         (selectionChanged)="onWucdDropdownChange($event)"
         [fieldName]="'name'"
         [fieldLabel]="'name'"
-        [defaultOption]="'Select'"
         [options]="wucdDropdownOptions"
-        [visible]="wucdDropdownOptions.length > 2"
-        [showPrompt]="false"
+        [visible]="wucdDropdownOptions.length > 1"
+        [disablePrompt]="false"
       >
       </pfm-dropdown>
       <pfm-dropdown
@@ -66,10 +63,9 @@
         class="col-1"
         [fieldName]="'name'"
         [fieldLabel]="'name'"
-        [defaultOption]="'Select'"
         [options]="expTypeDropdownOptions"
-        [visible]="expTypeDropdownOptions.length > 2"
-        [showPrompt]="false"
+        [visible]="expTypeDropdownOptions.length > 1"
+        [disablePrompt]="false"
       >
       </pfm-dropdown>
       <button class="col-1" type="button" class="btn btn-primary" (click)="drawLineChart()">

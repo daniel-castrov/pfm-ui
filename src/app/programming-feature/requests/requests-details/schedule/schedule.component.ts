@@ -343,7 +343,6 @@ export class ScheduleComponent implements OnInit {
           return {
             cellHeight: 50,
             values: [
-              ['Select', ''],
               ...this.fundingGridAssociations.map(x => {
                 return [x.name, x.value];
               })

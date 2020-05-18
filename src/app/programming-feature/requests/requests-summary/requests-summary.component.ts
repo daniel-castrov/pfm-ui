@@ -45,11 +45,11 @@ export class RequestsSummaryComponent implements OnInit {
   griddata: ProgramSummary[];
   availableOrgs: ListItem[];
   selectedOrg: ListItem = {
-    id: 'Please select',
-    name: 'Please select',
-    value: 'Please select',
+    id: 'Select',
+    name: 'Select',
+    value: 'Select',
     isSelected: false,
-    rawData: 'Please select'
+    rawData: 'Select'
   };
   programmingModelReady: boolean;
   pomDisplayYear: string;
@@ -291,7 +291,7 @@ export class RequestsSummaryComponent implements OnInit {
   // control view on selection from dropdown
   organizationSelected(organization: ListItem) {
     this.selectedOrg = organization;
-    if (this.selectedOrg.name !== 'Please select') {
+    if (this.selectedOrg.name !== 'Select') {
       if (this.programmingModel.pom.status !== PlanningStatus.CLOSED) {
         this.getPRs(this.programmingModel.pom.workspaceId, this.selectedOrg.value);
         // Depending on organization selection change options visible and default chart shown

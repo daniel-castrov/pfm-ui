@@ -29,7 +29,7 @@
             <div *ngIf="addMode || isPreviousYear">
               <span class="col-10">
                 <select class="form-control-sm" formControlName="organizationId">
-                  <option value="" disabled>Select...</option>
+                  <option value="" disabled>Select</option>
                   <option *ngFor="let org of organizations" [value]="org.abbreviation">{{ org.abbreviation }}</option>
                 </select>
               </span>
@@ -39,7 +39,7 @@
             <label class="col-2">Division</label>
             <span class="col-10">
               <select class="form-control-sm" formControlName="divisionId">
-                <option [ngValue]="null" disabled>Select...</option>
+                <option [ngValue]="null" disabled>Select</option>
                 <option [ngValue]="option.id" *ngFor="let option of divisions">{{ option.name }}</option>
               </select>
             </span>
@@ -61,7 +61,7 @@
                   formControlName="missionPriorityId"
                   (change)="onChangeMissionPriority($event)"
                 >
-                  <option [ngValue]="null">Select...</option>
+                  <option [ngValue]="null">Select</option>
                   <option [ngValue]="item.id" *ngFor="let item of missionPriorities">{{ item.title }}</option>
                 </select>
               </ng-container>
@@ -76,7 +76,7 @@
             <label class="col-2">Agency Priority</label>
             <span class="col-10">
               <select class="form-control-sm" formControlName="agencyPriority">
-                <option [ngValue]="null" disabled>Select...</option>
+                <option [ngValue]="null" disabled>Select</option>
                 <option [ngValue]="item" *ngFor="let item of agencyPriorities">{{ item }}</option>
               </select>
             </span>
@@ -85,7 +85,7 @@
             <label class="col-2">Directorate Priority</label>
             <span class="col-10">
               <select class="form-control-sm" formControlName="directoratePriority">
-                <option [ngValue]="null" disabled>Select...</option>
+                <option [ngValue]="null" disabled>Select</option>
                 <option [ngValue]="item" *ngFor="let item of directoratePriorities">{{ item }}</option>
               </select>
             </span>
@@ -98,7 +98,7 @@
             <label class="col-2 my-auto mx-0">SecDef LOE</label>
             <span class="col-10">
               <select class="form-control-sm" formControlName="secDefLOEId">
-                <option [ngValue]="null" disabled>Select...</option>
+                <option [ngValue]="null" disabled>Select</option>
                 <option [ngValue]="option.id" *ngFor="let option of secDefLOE">{{ option.name }}</option>
               </select>
             </span>
@@ -107,7 +107,7 @@
             <label class="col-2 my-auto mx-0">Strategic Imperative</label>
             <span class="col-10">
               <select class="form-control-sm" formControlName="strategicImperativeId">
-                <option [ngValue]="null" disabled>Select...</option>
+                <option [ngValue]="null" disabled>Select</option>
                 <option [ngValue]="option.id" *ngFor="let option of strategicImperatives">{{ option.name }}</option>
               </select>
             </span>
@@ -116,7 +116,7 @@
             <label class="col-2 my-auto mx-0">Agency Objective</label>
             <span class="col-10">
               <select class="form-control-sm" formControlName="agencyObjectiveId">
-                <option [ngValue]="null" disabled>Select...</option>
+                <option [ngValue]="null" disabled>Select</option>
                 <option [ngValue]="option.id" *ngFor="let option of agencyObjectives">{{ option.name }}</option>
               </select>
             </span>

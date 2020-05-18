@@ -2,17 +2,18 @@
   <form [formGroup]="form">
     <div class="form-group row col-12">
       <label for="fundingLineSelect" class="col-2 my-auto">Select Funding Line to View</label>
-      <select
-        id="fundingLineSelect"
-        formControlName="fundingLineSelect"
-        (change)="onChangeFundingLine($event)"
-        class="form-control col-4"
+      <pfm-dropdown
+        *ngIf="fundingLineOptions"
+        (selectionChanged)="onChangeFundingLine($event)"
+        [label]="''"
+        [id]="'fundingLineSelect'"
+        [fieldName]="'value'"
+        [fieldLabel]="'name'"
+        [options]="fundingLineOptions"
+        [disablePrompt]="false"
+        [promptValue]="'0'"
       >
-        <option value="0">Select</option>
-        <option *ngFor="let fundingLine of fundingLineOptions" [value]="fundingLine.id">
-          {{ fundingLine.value }}
-        </option>
-      </select>
+      </pfm-dropdown>
     </div>
     <div class="funding-detail-container" *ngIf="showAssetGrid">
       <div class="grid-container">
