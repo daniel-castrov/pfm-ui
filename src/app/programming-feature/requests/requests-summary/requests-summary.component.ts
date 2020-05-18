@@ -27,6 +27,7 @@ import { ProgramStatus } from '../../models/enumerations/program-status.model';
 import { RoleConstants } from 'src/app/pfm-common-models/role-contants.model';
 import { map } from 'rxjs/operators';
 import { OrganizationService } from 'src/app/services/organization-service';
+import { PomStatus } from '../../models/enumerations/pom-status.model';
 
 @Component({
   selector: 'pfm-requests-summary',
@@ -295,7 +296,7 @@ export class RequestsSummaryComponent implements OnInit {
     if (this.selectedOrg.name !== 'Select') {
       if (this.programmingModel.pom.status !== PlanningStatus.CLOSED) {
         this.containerId =
-          this.programmingModel.pom.status === PlanningStatus.CREATED
+          this.programmingModel.pom.status === PomStatus.CREATED
             ? this.programmingModel.pom.id
             : this.programmingModel.pom.workspaceId;
         this.getPRs(this.containerId, this.selectedOrg.value);
