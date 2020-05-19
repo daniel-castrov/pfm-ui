@@ -26,6 +26,7 @@ export class DatagridComponent implements OnInit {
   @Input() suppressKeyboardEvent = true;
   @Input() rowDragManaged = true;
   @Input() pinnedTopRowData = [];
+  @Input() overlayNoRowsTemplate;
 
   private dropdownCtaOptions: ListItem[];
 

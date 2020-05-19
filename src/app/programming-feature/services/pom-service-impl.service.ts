@@ -47,4 +47,8 @@ export class PomServiceImpl extends PomService {
   updatePom(pom: Pom): Observable<object> {
     return this.put('pom', pom);
   }
+
+  getOpenPom(): Observable<object> {
+    return this.get('pom/open');
+  }
 }

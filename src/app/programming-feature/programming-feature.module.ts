@@ -69,6 +69,8 @@ import { PropertyService } from './services/property.service';
 import { PropertyServiceImpl } from './services/property-impl.service';
 import { ScheduleService } from './services/schedule.service';
 import { ScheduleServiceImpl } from './services/schedule-impl.service';
+import { WorkspaceService } from './services/workspace.service';
+import { WorkspaceServiceImpl } from './services/workspace-impl.service';
 
 @NgModule({
   declarations: [
@@ -128,6 +130,7 @@ import { ScheduleServiceImpl } from './services/schedule-impl.service';
     { provide: AssetSummaryService, useClass: AssetSummaryServiceImpl },
     { provide: PropertyService, useClass: PropertyServiceImpl },
     { provide: ScheduleService, useClass: ScheduleServiceImpl },
+    { provide: WorkspaceService, useClass: WorkspaceServiceImpl },
     ProgrammingModel,
     RequestSummaryNavigationHistoryService
   ]
