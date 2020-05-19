@@ -565,25 +565,9 @@ export class ToaComponent implements OnInit {
 
       this.orgGridApi.setRowData(this.orgData);
     } else {
-      this.saveConfirmationDlg.display = true;
-      this.saveConfirmationDlg.continueAction = () => {
-        this.saveConfirmationDlg.display = false;
-        let communityDatum = this.communityData[rowId];
-        communityDatum.actions = editAction;
-        this.communityGridApi.stopEditing();
-        this.pom.communityToas.forEach(ct => {
-          ct.amount = communityDatum[ct.year] ?? 0;
-        });
-        this.pomService.updatePom(this.pom).subscribe(
-          resp => {},
-          error => {
-            this.busy = false;
-            this.dialogService.displayDebug(error);
-          }
-        );
-        this.onCommunityToaChange(rowId);
-        this.updateCommunityGraphData(this.currentYear);
-      };
+      this.communityData[rowId].actions = editAction;
+      this.communityGridApi.stopEditing();
+      this.onCommunityToaChange(rowId);
     }
 
     this.updateCommunityGraphData(this.currentYear);
