@@ -11,8 +11,12 @@ export class WorkspaceServiceImpl extends WorkspaceService {
     super(httpClient);
   }
 
-  getByPomId(pomId: string): Observable<object> {
-    return this.get('workspaces/container/' + pomId);
+  getByContainerId(containerId: string): Observable<object> {
+    return this.get('workspaces/container/' + containerId);
+  }
+
+  getByContainerIdAndActive(containerId: string, active: boolean): Observable<object> {
+    return this.get('workspaces/container/' + containerId + '?active=' + active);
   }
 
   duplicate(workspace: any): Observable<object> {

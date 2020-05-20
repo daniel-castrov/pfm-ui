@@ -7,7 +7,9 @@ export abstract class WorkspaceService extends BaseRestService {
     super(httpClient);
   }
 
-  abstract getByPomId(pomId: string): Observable<object>;
+  abstract getByContainerId(containerId: string): Observable<object>;
+
+  abstract getByContainerIdAndActive(containerId: string, active: boolean): Observable<object>;
 
   abstract duplicate(workspace: any): Observable<object>;
 
