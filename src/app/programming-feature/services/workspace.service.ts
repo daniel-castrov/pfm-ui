@@ -8,4 +8,8 @@ export abstract class WorkspaceService extends BaseRestService {
   }
 
   abstract getByPomId(pomId: string): Observable<object>;
+
+  abstract duplicate(workspace: any): Observable<object>;
+
+  abstract updateWorkspace(workspace: any): Observable<object>;
 }

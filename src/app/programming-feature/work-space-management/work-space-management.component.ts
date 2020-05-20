@@ -11,6 +11,7 @@ import { WorkspaceService } from '../services/workspace.service';
 import { PomService } from '../services/pom-service';
 import { Pom } from '../models/Pom';
 import { RoleConstants } from 'src/app/pfm-common-models/role-contants.model';
+import * as moment from 'moment';
 
 @Component({
   selector: 'pfm-programming',
@@ -157,7 +158,9 @@ export class WorkSpaceManagementComponent implements OnInit {
         cellRendererFramework: CheckboxCellRendererComponent,
         cellEditorFramework: CheckboxCellRendererComponent,
         valueSetter: params => {
-          params.data.active = params.newValue ? this.checkboxConfig.active : this.checkboxConfig.inactive;
+          const disableState = params.data.active.disabled;
+          params.data.active = { ...(params.newValue ? this.checkboxConfig.active : this.checkboxConfig.inactive) };
+          params.data.active.disabled = disableState;
           return true;
         }
       },
@@ -312,15 +315,17 @@ export class WorkSpaceManagementComponent implements OnInit {
 
     this.currentWorkspaceRowDataState.isDuplicateMode = true;
     this.rows.push({
-      version: this.rows.length + 1,
+      id: params.id,
+      version: null,
       name: params.name,
       active: { ...this.checkboxConfig.active },
-      notes: '',
-      createdDate: '',
-      lastUpdatedDate: '',
-      lastUpdatedBy: '',
+      notes: null,
+      createdDate: null,
+      lastUpdatedDate: null,
+      lastUpdatedBy: null,
       action: this.gridActionState.EDIT,
-      disabled: false
+      disabled: false,
+      phaseType: params.phaseType
     });
     this.rows[this.rows.length - 1].active.disabled = false;
     this.gridApi.setRowData(this.rows);
@@ -329,17 +334,71 @@ export class WorkSpaceManagementComponent implements OnInit {
 
   saveRow(rowIndex: number) {
     this.gridApi.stopEditing();
-    const newRow = this.rows[rowIndex];
+    let newRow = this.rows[rowIndex];
     if (this.validateRow(newRow)) {
       newRow.action = this.gridActionState.VIEW;
-      const creactionDate = new Date();
       if (this.currentWorkspaceRowDataState.isDuplicateMode) {
-        newRow.created = formatDate(creactionDate, 'M/d/yyyy HH:mm', 'en-US');
-        newRow.modified = formatDate(creactionDate, 'M/d/yyyy HH:mm', 'en-US');
+        const newWorkspace = { ...newRow };
+        newWorkspace.active = newRow.active.checked;
+        this.workspaceService.duplicate(newWorkspace).subscribe(
+          resp => {
+            const wkspValue = (resp as any).result;
+            const workspace = wkspValue.firstElement;
+            workspace.created = formatDate(workspace.created, 'M/d/yyyy HH:mm', 'en-US');
+            workspace.modified = formatDate(workspace.modified, 'M/d/yyyy HH:mm', 'en-US');
+            workspace.fullnameModifiedBy = wkspValue.secondElement;
+            workspace.active = { ...(workspace.active ? this.checkboxConfig.active : this.checkboxConfig.inactive) };
+            newRow = {
+              ...workspace,
+              action: {
+                ...(!this.appModel.userDetails.roles.includes(RoleConstants.POM_MANAGER)
+                  ? this.gridActionState.NO_ACTIONS
+                  : workspace.version === 1
+                  ? this.gridActionState.DUPLICATE_ONLY
+                  : this.gridActionState.VIEW)
+              },
+              disabled: false
+            };
+            this.rows[rowIndex] = newRow;
+            this.gridApi.setRowData(this.rows);
+          },
+          error => {
+            this.dialogService.displayError(error.error.error);
+          }
+        );
+      } else {
+        const newWorkspace = { ...newRow };
+        newWorkspace.active = newRow.active.checked;
+        newWorkspace.created = moment(newWorkspace.created, 'M/d/yyyy HH:mm', 'en-US');
+        newWorkspace.modified = null;
+        this.workspaceService.updateWorkspace(newWorkspace).subscribe(
+          resp => {
+            const wkspValue = (resp as any).result;
+            const workspace = wkspValue.firstElement;
+            workspace.created = formatDate(workspace.created, 'M/d/yyyy HH:mm', 'en-US');
+            workspace.modified = formatDate(workspace.modified, 'M/d/yyyy HH:mm', 'en-US');
+            workspace.fullnameModifiedBy = wkspValue.secondElement;
+            workspace.active = { ...(workspace.active ? this.checkboxConfig.active : this.checkboxConfig.inactive) };
+            newRow = {
+              ...workspace,
+              action: {
+                ...(!this.appModel.userDetails.roles.includes(RoleConstants.POM_MANAGER)
+                  ? this.gridActionState.NO_ACTIONS
+                  : workspace.version === 1
+                  ? this.gridActionState.DUPLICATE_ONLY
+                  : this.gridActionState.VIEW)
+              },
+              disabled: false
+            };
+            this.rows[rowIndex] = newRow;
+            this.gridApi.setRowData(this.rows);
+          },
+          error => {
+            this.dialogService.displayDebug(error);
+          }
+        );
       }
-      newRow.modifiedBy = this.appModel.userDetails.fullName;
       this.startViewMode();
-      sessionStorage.setItem('wkspGridRows', JSON.stringify(this.rows));
     } else {
       this.starEditMode(rowIndex);
     }
