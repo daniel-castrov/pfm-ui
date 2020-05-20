@@ -12,6 +12,14 @@ export class WorkspaceServiceImpl extends WorkspaceService {
   }
 
   getByPomId(pomId: string): Observable<object> {
-    return this.get('workspaces/pom/' + pomId);
+    return this.get('workspaces/container/' + pomId);
+  }
+
+  duplicate(workspace: any): Observable<object> {
+    return this.put('workspaces/duplicate', workspace);
+  }
+
+  updateWorkspace(workspace: any): Observable<object> {
+    return this.put('workspaces', workspace);
   }
 }
