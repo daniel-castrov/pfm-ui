@@ -267,7 +267,7 @@ export class WorkSpaceManagementComponent implements OnInit {
 
   private loadRows() {
     if (this.pom) {
-      this.workspaceService.getByPomId(this.pom.id).subscribe(
+      this.workspaceService.getByContainerId(this.pom.id).subscribe(
         resp => {
           const wskpWalues = (resp as any).result;
           this.rows = [];

@@ -28,6 +28,7 @@ import { RoleConstants } from 'src/app/pfm-common-models/role-contants.model';
 import { map } from 'rxjs/operators';
 import { OrganizationService } from 'src/app/services/organization-service';
 import { PomStatus } from '../../models/enumerations/pom-status.model';
+import { WorkspaceService } from '../../services/workspace.service';
 
 @Component({
   selector: 'pfm-requests-summary',
@@ -90,6 +91,8 @@ export class RequestsSummaryComponent implements OnInit {
   programNameErrorMessage: string;
   organizationErrorMessage: string;
   containerId: string;
+  workspaces: ListItem[];
+  selectedWorkspace: any;
 
   constructor(
     private programmingModel: ProgrammingModel,
@@ -104,10 +107,56 @@ export class RequestsSummaryComponent implements OnInit {
     private visibilityService: VisibilityService,
     public appModel: AppModel,
     private toastService: ToastService,
-    private organizationService: OrganizationService
+    private organizationService: OrganizationService,
+    private workspaceService: WorkspaceService
   ) {}
 
   async ngOnInit() {
+    // Get latest POM
+    await this.setupVisibility();
+    this.pomService.getLatestPom().subscribe(
+      resp => {
+        this.programmingModel.pom = (resp as any).result;
+        if (this.programmingModel.pom.status !== PomStatus.CLOSED) {
+          this.pomDisplayYear = this.programmingModel.pom.fy.toString().substr(2);
+          this.pomYear = this.programmingModel.pom.fy;
+        }
+
+        if (this.programmingModel.pom.status === PomStatus.OPEN) {
+          this.setupWorkspacesDropDown();
+        } else {
+          this.setupResquestSummary();
+          this.setupDropDown();
+        }
+      },
+      error => {
+        this.dialogService.displayDebug(error);
+      }
+    );
+  }
+
+  private setupWorkspacesDropDown() {
+    this.workspaceService.getByContainerIdAndActive(this.programmingModel.pom.id, true).subscribe(
+      resp => {
+        const workspaces = (resp as any).result;
+        const items = new Array<ListItem>();
+        let item: ListItem;
+        for (const workspace of workspaces) {
+          item = new ListItem();
+          item.value = workspace.firstElement.id;
+          item.rawData = workspace.firstElement;
+          item.name = `Workspace ${workspace.firstElement.version} - ${workspace.firstElement.name}`;
+          item.id = workspace.firstElement.id;
+          items.push(item);
+        }
+        this.workspaces = items;
+      },
+      error => {
+        this.dialogService.displayDebug(error);
+      }
+    );
+  }
+  private setupResquestSummary() {
     this.options = {
       minCols: 8,
       maxCols: 8,
@@ -147,8 +196,6 @@ export class RequestsSummaryComponent implements OnInit {
       }
     ];
 
-    await this.setupVisibility();
-
     // Populate dropdown options
     const item: ListItem = new ListItem();
     item.name = 'Previously Funded Program';
@@ -163,21 +210,6 @@ export class RequestsSummaryComponent implements OnInit {
     } else {
       this.addOptions = [item2];
     }
-
-    // Get latest POM
-    this.pomService.getLatestPom().subscribe(
-      resp => {
-        this.programmingModel.pom = (resp as any).result;
-        if (this.programmingModel.pom.status !== PlanningStatus.CLOSED) {
-          this.pomDisplayYear = this.programmingModel.pom.fy.toString().substr(2);
-          this.pomYear = this.programmingModel.pom.fy;
-        }
-        this.setupDropDown();
-      },
-      error => {
-        this.dialogService.displayDebug(error);
-      }
-    );
 
     this.roleService.getMap().subscribe(
       resp => {
@@ -315,6 +347,13 @@ export class RequestsSummaryComponent implements OnInit {
     this.requestSummaryNavigationHistoryService.updateRequestSummaryNavigationHistory({
       selectedOrganization: this.selectedOrg.id.toLowerCase() === 'show all' ? 'show all' : this.selectedOrg.value
     });
+  }
+
+  onWorkspaceChange(selected: ListItem) {
+    this.selectedWorkspace = selected.rawData;
+    this.programmingModel.pom.workspaceId = this.selectedWorkspace.id;
+    this.setupResquestSummary();
+    this.setupDropDown();
   }
 
   private async getPRs(containerId: string, organizationId: string): Promise<void> {
