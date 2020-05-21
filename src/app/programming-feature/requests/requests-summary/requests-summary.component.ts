@@ -17,7 +17,7 @@ import { MrdbService } from '../../services/mrdb-service';
 import { Program } from '../../models/Program';
 import { RequestSummaryNavigationHistoryService } from './requests-summary-navigation-history.service';
 import { VisibilityService } from '../../../services/visibility-service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AppModel } from '../../../pfm-common-models/AppModel';
 import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
 import { PlanningStatus } from 'src/app/planning-feature/models/enumerators/planning-status.model';
@@ -108,12 +108,14 @@ export class RequestsSummaryComponent implements OnInit {
     public appModel: AppModel,
     private toastService: ToastService,
     private organizationService: OrganizationService,
-    private workspaceService: WorkspaceService
+    private workspaceService: WorkspaceService,
+    private route: ActivatedRoute
   ) {}
 
   async ngOnInit() {
     // Get latest POM
     await this.setupVisibility();
+    this.containerId = this.route.snapshot.paramMap.get('id');
     this.pomService.getLatestPom().subscribe(
       resp => {
         this.programmingModel.pom = (resp as any).result;
@@ -147,6 +149,10 @@ export class RequestsSummaryComponent implements OnInit {
           item.rawData = workspace.firstElement;
           item.name = `Workspace ${workspace.firstElement.version} - ${workspace.firstElement.name}`;
           item.id = workspace.firstElement.id;
+          item.isSelected = this.containerId === workspace.firstElement.id;
+          if (item.isSelected) {
+            this.onWorkspaceChange(item);
+          }
           items.push(item);
         }
         this.workspaces = items;

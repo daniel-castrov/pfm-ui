@@ -19,7 +19,12 @@
         ></fa-icon>
       </ng-container>
       <ng-container *ngIf="data.canView">
-        <fa-icon icon="eye" [title]="'View all details'" [class.disabled]="data.disabled"></fa-icon>
+        <fa-icon
+          icon="eye"
+          [title]="'View all details'"
+          (click)="onSelected('view')"
+          [class.disabled]="data.disabled"
+        ></fa-icon>
       </ng-container>
       <ng-container *ngIf="data.canDuplicate">
         <fa-icon

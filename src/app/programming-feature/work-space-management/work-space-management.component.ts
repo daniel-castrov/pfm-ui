@@ -12,6 +12,7 @@ import { PomService } from '../services/pom-service';
 import { Pom } from '../models/Pom';
 import { RoleConstants } from 'src/app/pfm-common-models/role-contants.model';
 import * as moment from 'moment';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'pfm-programming',
@@ -69,7 +70,8 @@ export class WorkSpaceManagementComponent implements OnInit {
     private dialogService: DialogService,
     private appModel: AppModel,
     private workspaceService: WorkspaceService,
-    private pomService: PomService
+    private pomService: PomService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -404,6 +406,10 @@ export class WorkSpaceManagementComponent implements OnInit {
     }
   }
 
+  viewWorkspace(params) {
+    this.router.navigate(['/programming/requests/' + params['id']]);
+  }
+
   private validateRow(row) {
     if (!row.name) {
       this.dialogService.displayError('Workspace name cannot be empty');
@@ -473,6 +479,9 @@ export class WorkSpaceManagementComponent implements OnInit {
         break;
       case 'cancel':
         this.cancelEdit();
+        break;
+      case 'view':
+        this.viewWorkspace(cellAction.rowData);
         break;
     }
   }
