@@ -110,12 +110,6 @@ export class AssetsComponent implements OnInit {
       .getByType(this.TO_BE_USED_BY)
       .toPromise()
       .then(resp => {
-        this.toBeUsedByOptions.push({
-          id: null,
-          abbr: 'NONE',
-          name: 'Select',
-          type: 'NONE'
-        });
         this.toBeUsedByOptions.push(...(resp.result as Tag[]));
         this.toBeUsedByOptions.push({
           id: null,
@@ -131,12 +125,6 @@ export class AssetsComponent implements OnInit {
       .getByType(this.CONTRACTOR_OR_MANUFACTURER)
       .toPromise()
       .then(resp => {
-        this.contractorOrManufacturerOptions.push({
-          id: null,
-          abbr: 'NONE',
-          name: 'Select',
-          type: 'NONE'
-        });
         this.contractorOrManufacturerOptions.push(...(resp.result as Tag[]));
       });
   }
