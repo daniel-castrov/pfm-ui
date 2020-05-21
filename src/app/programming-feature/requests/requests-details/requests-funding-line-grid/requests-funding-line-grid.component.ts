@@ -7,7 +7,7 @@ import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
 import { Program } from 'src/app/programming-feature/models/Program';
 import { FundingLineService } from 'src/app/programming-feature/services/funding-line.service';
 import { FundingData } from 'src/app/programming-feature/models/funding-data.model';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { FundingLine } from 'src/app/programming-feature/models/funding-line.model';
 import { Observable } from 'rxjs';
 import { PropertyService } from '../../../services/property.service';
@@ -24,6 +24,12 @@ import { GoogleChartComponent, GoogleChartInterface } from 'ng2-google-charts';
 import { ListItem } from 'src/app/pfm-common-models/ListItem';
 import { DropdownComponent } from 'src/app/pfm-coreui/form-inputs/dropdown/dropdown.component';
 import { ProgramStatus } from 'src/app/programming-feature/models/enumerations/program-status.model';
+import { FormGroup, FormControl } from '@angular/forms';
+import { ProgrammingModel } from 'src/app/programming-feature/models/ProgrammingModel';
+import { FundingLineHistoryService } from 'src/app/programming-feature/services/funding-line-history.service';
+import { PomStatus } from 'src/app/programming-feature/models/enumerations/pom-status.model';
+import { FundingLineHistory } from 'src/app/programming-feature/models/funding-line-history.model';
+import { PomService } from 'src/app/programming-feature/services/pom-service';
 
 @Component({
   selector: 'pfm-requests-funding-line-grid',
@@ -139,10 +145,18 @@ export class RequestsFundingLineGridComponent implements OnInit {
   wucdDropdownOptions: ListItem[] = [];
   expTypeDropdownOptions: ListItem[] = [];
 
+  historyReasonForm: FormGroup;
+  historyReasonDialog: HistoryReasonDialogInterface = { title: 'Enter Update Reason' };
+  historyReasonDialogError: boolean;
+
+  fundingLineHistories: FundingLineHistory[];
+
   constructor(
+    private programmingModel: ProgrammingModel,
     private dialogService: DialogService,
     private propertyService: PropertyService,
-    private fundingLineService: FundingLineService
+    private fundingLineService: FundingLineService,
+    private fundingLineHistoryService: FundingLineHistoryService
   ) {}
 
   ngOnInit() {
@@ -276,6 +290,9 @@ export class RequestsFundingLineGridComponent implements OnInit {
         this.nonSummaryFundingLineGridApi.hideOverlay();
         this.drawLineChart();
       });
+    this.fundingLineHistoryService.getFundingLineHistoriesByProgramId(this.program.id).subscribe(resp => {
+      this.fundingLineHistories = resp.result as FundingLineHistory[];
+    });
   }
 
   private convertFundsToFiscalYear(response: any) {
@@ -805,26 +822,35 @@ export class RequestsFundingLineGridComponent implements OnInit {
 
   private saveRow(rowIndex: number) {
     this.nonSummaryFundingLineGridApi.stopEditing();
-    const row = this.nonSummaryFundingLineRows[rowIndex];
     const canSave = this.validateNonSummaryRowData(rowIndex);
     if (canSave) {
-      const fundingLine = this.convertFiscalYearToFunds(row);
-      fundingLine.programId = this.program.id;
-      if (this.currentNonSummaryRowDataState.isAddMode) {
-        this.performNonSummarySave(
-          this.fundingLineService.createFundingLine.bind(this.fundingLineService),
-          fundingLine,
-          rowIndex
-        );
+      if (this.programmingModel.pom.status === PomStatus.OPEN) {
+        const row = this.nonSummaryFundingLineRows[rowIndex];
+        this.displayHistoryReasonDialog(rowIndex, this.prepareNonSummarySave.bind(this));
       } else {
-        this.performNonSummarySave(
-          this.fundingLineService.updateFundingLine.bind(this.fundingLineService),
-          fundingLine,
-          rowIndex
-        );
+        this.prepareNonSummarySave(rowIndex);
       }
     } else {
       this.editRow(rowIndex);
+    }
+  }
+
+  private prepareNonSummarySave(rowIndex: number) {
+    const row = this.nonSummaryFundingLineRows[rowIndex];
+    const fundingLine = this.convertFiscalYearToFunds(row);
+    fundingLine.programId = this.program.id;
+    if (this.currentNonSummaryRowDataState.isAddMode) {
+      this.performNonSummarySave(
+        this.fundingLineService.createFundingLine.bind(this.fundingLineService),
+        fundingLine,
+        rowIndex
+      );
+    } else {
+      this.performNonSummarySave(
+        this.fundingLineService.updateFundingLine.bind(this.fundingLineService),
+        fundingLine,
+        rowIndex
+      );
     }
   }
 
@@ -834,7 +860,12 @@ export class RequestsFundingLineGridComponent implements OnInit {
     rowIndex: number
   ) {
     saveOrUpdate(fundingLine)
-      .pipe(map(resp => this.fundingLineToFundingData(resp.result)))
+      .pipe(
+        map(resp => {
+          this.historyReasonDialog.fundingLine = resp.result;
+          return this.fundingLineToFundingData(resp.result);
+        })
+      )
       .subscribe(
         fundingData => {
           this.nonSummaryFundingLineRows[rowIndex] = fundingData;
@@ -843,11 +874,21 @@ export class RequestsFundingLineGridComponent implements OnInit {
           this.reloadDropdownOptions();
           this.drawLineChart();
           this.program.programStatus = ProgramStatus.SAVED;
+
+          if (this.programmingModel.pom.status === PomStatus.OPEN) {
+            const reason = this.historyReasonForm.get('reason').value;
+            if (reason?.length) {
+              this.performSaveFundingLineHistory(reason);
+            } else {
+              this.historyReasonDialogError = true;
+            }
+          }
         },
         error => {
           this.dialogService.displayDebug(error);
           this.editRow(rowIndex);
-        }
+        },
+        () => new Observable<void>()
       );
   }
 
@@ -942,18 +983,35 @@ export class RequestsFundingLineGridComponent implements OnInit {
   }
 
   private deleteRow(rowIndex: number) {
-    if (this.nonSummaryFundingLineRows[rowIndex].id) {
-      this.fundingLineService.removeFundingLineById(this.nonSummaryFundingLineRows[rowIndex].id).subscribe(
-        () => {
-          this.performNonSummaryDelete(rowIndex);
-          this.updateTotalFields(this.nonSummaryFundingLineGridApi, this.nonSummaryFundingLineRows);
-          this.reloadDropdownOptions();
-          this.drawLineChart();
-        },
-        error => {
-          this.dialogService.displayDebug(error);
-        }
-      );
+    const fundingLineId = this.nonSummaryFundingLineRows[rowIndex].id;
+    if (fundingLineId) {
+      if (this.programmingModel.pom.status === PomStatus.OPEN) {
+        this.fundingLineHistoryService.deleteFundingLineHistory(fundingLineId).subscribe(() => {
+          this.fundingLineService.removeFundingLineById(fundingLineId).subscribe(
+            () => {
+              this.performNonSummaryDelete(rowIndex);
+              this.updateTotalFields(this.nonSummaryFundingLineGridApi, this.nonSummaryFundingLineRows);
+              this.reloadDropdownOptions();
+              this.drawLineChart();
+            },
+            error => {
+              this.dialogService.displayDebug(error);
+            }
+          );
+        });
+      } else {
+        this.fundingLineService.removeFundingLineById(fundingLineId).subscribe(
+          () => {
+            this.performNonSummaryDelete(rowIndex);
+            this.updateTotalFields(this.nonSummaryFundingLineGridApi, this.nonSummaryFundingLineRows);
+            this.reloadDropdownOptions();
+            this.drawLineChart();
+          },
+          error => {
+            this.dialogService.displayDebug(error);
+          }
+        );
+      }
     } else {
       this.performNonSummaryDelete(rowIndex);
     }
@@ -1006,26 +1064,41 @@ export class RequestsFundingLineGridComponent implements OnInit {
 
   private saveSummaryRow(rowIndex: number, gridApiRowIndex: number) {
     this.summaryFundingLineGridApi.stopEditing();
+    if (this.currentSummaryRowDataState.isEditMode) {
+      if (this.programmingModel.pom.status === PomStatus.OPEN) {
+        this.historyReasonDialog.gridApiRowIndex = gridApiRowIndex;
+        const row = this.summaryFundingLineRows[rowIndex];
+        this.displayHistoryReasonDialog(rowIndex, this.prepareSummarySave.bind(this));
+      } else {
+        this.prepareSummarySave(rowIndex);
+      }
+    }
+  }
+
+  private prepareSummarySave(rowIndex: number) {
     const row = this.summaryFundingLineRows[rowIndex];
     const fundingLine = this.convertFiscalYearToFunds(row);
-    if (this.currentSummaryRowDataState.isEditMode) {
-      this.fundingLineService
-        .updateFundingLine(fundingLine)
-        .pipe(map(resp => this.fundingLineToFundingData(resp.result)))
-        .subscribe(
-          fundingData => {
-            this.summaryFundingLineRows[rowIndex] = fundingData;
-            this.updateTotalFields(this.summaryFundingLineGridApi, this.summaryFundingLineRows);
-            this.viewSummaryMode(rowIndex);
-            this.reloadDropdownOptions();
-            this.drawLineChart();
-          },
-          error => {
-            this.dialogService.displayDebug(error);
-            this.editSummaryRow(rowIndex, gridApiRowIndex);
-          }
-        );
-    }
+    this.fundingLineService
+      .updateFundingLine(fundingLine)
+      .pipe(
+        map(resp => {
+          this.historyReasonDialog.fundingLine = resp.result;
+          return this.fundingLineToFundingData(resp.result);
+        })
+      )
+      .subscribe(
+        fundingData => {
+          this.summaryFundingLineRows[rowIndex] = fundingData;
+          this.updateTotalFields(this.summaryFundingLineGridApi, this.summaryFundingLineRows);
+          this.viewSummaryMode(rowIndex);
+          this.reloadDropdownOptions();
+          this.drawLineChart();
+        },
+        error => {
+          this.dialogService.displayDebug(error);
+          this.editSummaryRow(rowIndex, this.historyReasonDialog.gridApiRowIndex);
+        }
+      );
   }
 
   private cancelSummaryRow(rowIndex: number) {
@@ -1041,8 +1114,12 @@ export class RequestsFundingLineGridComponent implements OnInit {
   }
 
   private deleteSummaryRow(rowIndex: number) {
-    if (this.summaryFundingLineRows[rowIndex].id) {
-      this.fundingLineService.removeFundingLineById(this.summaryFundingLineRows[rowIndex].id).subscribe(
+    const fundingLineId = this.summaryFundingLineRows[rowIndex]?.id;
+    if (fundingLineId) {
+      if (this.programmingModel.pom.status === PomStatus.OPEN) {
+        this.fundingLineHistoryService.deleteFundingLineHistory(fundingLineId).subscribe(resp => {});
+      }
+      this.fundingLineService.removeFundingLineById(fundingLineId).subscribe(
         () => {
           this.summaryFundingLineRows.splice(rowIndex, 1);
           this.updateTotalFields(this.summaryFundingLineGridApi, this.summaryFundingLineRows);
@@ -1108,6 +1185,10 @@ export class RequestsFundingLineGridComponent implements OnInit {
   }
 
   onNonSummaryMouseDown(mouseEvent: MouseEvent) {
+    this.undoNonSummaryCells();
+  }
+
+  private undoNonSummaryCells() {
     if (this.currentNonSummaryRowDataState.isEditMode) {
       this.nonSummaryFundingLineGridApi.startEditingCell({
         rowIndex: this.currentNonSummaryRowDataState.currentEditingRowIndex,
@@ -1643,6 +1724,61 @@ export class RequestsFundingLineGridComponent implements OnInit {
         })
       );
   }
+
+  private displayHistoryReasonDialog(
+    row: number,
+    saveOrUpdate: (rowIndex: number, gridApiRowIndex?: number) => Observable<any>
+  ) {
+    this.historyReasonForm = new FormGroup({
+      reason: new FormControl('')
+    });
+    this.historyReasonDialog.save = saveOrUpdate;
+    this.historyReasonDialog.rowIndex = row;
+    this.historyReasonDialog.display = true;
+  }
+
+  onCancelHistoryReasonDialog() {
+    this.closeHistoryReasonDialog();
+  }
+
+  private closeHistoryReasonDialog() {
+    this.historyReasonDialog.save = null;
+    this.historyReasonDialog.rowIndex = null;
+    this.historyReasonDialog.gridApiRowIndex = null;
+    this.historyReasonDialog.fundingLine = null;
+    this.historyReasonDialog.display = false;
+    this.historyReasonDialogError = false;
+    this.undoNonSummaryCells();
+  }
+
+  async onSaveHistoryReason() {
+    const reason = this.historyReasonForm.get('reason').value;
+    if (reason?.length) {
+      this.historyReasonDialog.save(this.historyReasonDialog.rowIndex);
+    } else {
+      this.historyReasonDialogError = true;
+    }
+  }
+
+  private performSaveFundingLineHistory(reason: string) {
+    const fundingLine = this.historyReasonDialog.fundingLine;
+    const fundingLineHistory: FundingLineHistory = {
+      reason,
+      fundingLineId: fundingLine.id,
+      appropriation: fundingLine.appropriation,
+      baOrBlin: fundingLine.baOrBlin,
+      sag: fundingLine.sag,
+      wucd: fundingLine.wucd,
+      expenditureType: fundingLine.expenditureType,
+      ctc: fundingLine.ctc,
+      funds: fundingLine.funds
+    };
+    this.fundingLineHistoryService.createFundingLineHistory(fundingLineHistory).subscribe(
+      () => {},
+      () => {},
+      () => this.closeHistoryReasonDialog()
+    );
+  }
 }
 
 export interface RowDataStateInterface {
@@ -1658,4 +1794,14 @@ export interface DeleteDialogInterface {
   display?: boolean;
   cellAction?: DataGridMessage;
   delete?: (rowIndex: number) => void;
+}
+
+export interface HistoryReasonDialogInterface {
+  title: string;
+  bodyText?: string;
+  display?: boolean;
+  rowIndex?: number;
+  gridApiRowIndex?: number;
+  fundingLine?: FundingLine;
+  save?: (rowIndex: number) => Observable<void>;
 }

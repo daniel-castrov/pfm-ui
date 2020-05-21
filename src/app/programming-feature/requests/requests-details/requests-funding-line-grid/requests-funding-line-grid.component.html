@@ -107,6 +107,7 @@
     </pfm-datagrid>
   </div>
 </div>
+
 <ng-container *ngIf="deleteDialog.display">
   <pfm-custom-dialog
     [title]="deleteDialog.title"
@@ -136,3 +137,42 @@
     <fa-icon [icon]="'angle-double-up'" title="Collapse all rows" *ngIf="expanded" (click)="collapse()"></fa-icon>
   </div>
 </ng-template>
+
+<ng-container *ngIf="historyReasonDialog.display">
+  <pfm-custom-dialog
+    [title]="historyReasonDialog.title"
+    [body]="historyReasonBody"
+    [actions]="historyReasonActions"
+    (onCancelDialog)="onCancelHistoryReasonDialog()"
+  ></pfm-custom-dialog>
+
+  <ng-template #historyReasonBody>
+    <span>
+      <form [formGroup]="historyReasonForm">
+        <div class="form-group row">
+          <label for="reason" class="col-sm-2 col-form-label">*Reason</label>
+          <div class="col-sm-10">
+            <textarea
+              class="form-control reason-text-area"
+              [class.input-error]="historyReasonDialogError"
+              formControlName="reason"
+            ></textarea>
+            <p class="error-message col align-self-end m-0" *ngIf="historyReasonDialogError">
+              Reason field is required.
+            </p>
+          </div>
+        </div>
+      </form>
+    </span>
+  </ng-template>
+
+  <ng-template #historyReasonActions>
+    <div class="pull-left">
+      <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onSaveHistoryReason()">Save</button>
+    </div>
+
+    <div class="pull-right">
+      <pfm-cancel-cta (onCancelClicked)="onCancelHistoryReasonDialog()"></pfm-cancel-cta>
+    </div>
+  </ng-template>
+</ng-container>
