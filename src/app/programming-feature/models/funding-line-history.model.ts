@@ -1,8 +1,7 @@
 import { Variant } from './Variant';
 import { IntIntMap } from './IntIntMap';
-import { FundingLineHistory } from './funding-line-history.model';
 
-export class FundingLine {
+export class FundingLineHistory {
   created?: any;
   createdBy?: string;
   modified?: any;
@@ -11,6 +10,7 @@ export class FundingLine {
   emphases?: Array<string>;
 
   id?: string;
+  fundingLineId?: string;
   programId?: string;
   appropriation?: string;
   baOrBlin?: string;
@@ -25,7 +25,7 @@ export class FundingLine {
   funds?: IntIntMap;
   ctc?: number;
   variants?: Array<Variant>;
-  fundingLineHistories?: Array<FundingLineHistory>;
+  reason: string;
 
   constructor() {}
 }

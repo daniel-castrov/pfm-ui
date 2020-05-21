@@ -1101,3 +1101,13 @@ body {
   color: black;
   cursor: default;
 }
+
+.error-message {
+  font-size: small;
+  color: #aa4342;
+}
+
+.input-error,
+pfm-dropdown.input-error .pfm-dropdown > select {
+  border-color: #aa4342;
+}
