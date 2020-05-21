@@ -290,9 +290,6 @@ export class RequestsFundingLineGridComponent implements OnInit {
         this.nonSummaryFundingLineGridApi.hideOverlay();
         this.drawLineChart();
       });
-    this.fundingLineHistoryService.getFundingLineHistoriesByProgramId(this.program.id).subscribe(resp => {
-      this.fundingLineHistories = resp.result as FundingLineHistory[];
-    });
   }
 
   private convertFundsToFiscalYear(response: any) {
