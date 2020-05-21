@@ -33,6 +33,7 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         children: [
           { path: '', component: RequestsSummaryComponent, canActivate: [AuthGuard] },
+          { path: ':id', component: RequestsSummaryComponent, canActivate: [AuthGuard] },
           { path: 'details/:id', component: RequestsDetailsComponent, canActivate: [AuthGuard] }
         ]
       },
