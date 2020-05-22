@@ -145,11 +145,11 @@ export class RequestsSummaryComponent implements OnInit {
         let item: ListItem;
         for (const workspace of workspaces) {
           item = new ListItem();
-          item.value = workspace.firstElement.id;
-          item.rawData = workspace.firstElement;
-          item.name = `Workspace ${workspace.firstElement.version} - ${workspace.firstElement.name}`;
-          item.id = workspace.firstElement.id;
-          item.isSelected = this.containerId === workspace.firstElement.id;
+          item.value = workspace.id;
+          item.rawData = workspace;
+          item.name = `Workspace ${workspace.version} - ${workspace.name}`;
+          item.id = workspace.id;
+          item.isSelected = this.containerId === workspace.id;
           if (item.isSelected) {
             this.onWorkspaceChange(item);
           }
