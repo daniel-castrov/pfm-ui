@@ -73,6 +73,8 @@ import { WorkspaceService } from './services/workspace.service';
 import { WorkspaceServiceImpl } from './services/workspace-impl.service';
 import { FundingLineHistoryServiceImpl } from './services/funding-line-history-impl.service';
 import { FundingLineHistoryService } from './services/funding-line-history.service';
+import { UserService } from '../services/user-impl-service';
+import { UserServiceImpl } from '../services/user-service';
 
 @NgModule({
   declarations: [
@@ -134,6 +136,7 @@ import { FundingLineHistoryService } from './services/funding-line-history.servi
     { provide: ScheduleService, useClass: ScheduleServiceImpl },
     { provide: WorkspaceService, useClass: WorkspaceServiceImpl },
     { provide: FundingLineHistoryService, useClass: FundingLineHistoryServiceImpl },
+    { provide: UserService, useClass: UserServiceImpl },
     ProgrammingModel,
     RequestSummaryNavigationHistoryService
   ]
