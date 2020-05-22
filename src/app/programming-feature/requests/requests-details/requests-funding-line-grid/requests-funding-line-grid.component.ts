@@ -1312,7 +1312,9 @@ export class RequestsFundingLineGridComponent implements OnInit {
       this.summaryFundingLineGridApi.hideOverlay();
     } else {
       this.nonSummaryFundingLineGridApi.forEachNode(node => {
-        node.setExpanded(false);
+        if (node.data.fundingLineHistories) {
+          node.setExpanded(false);
+        }
       });
     }
   }
@@ -1324,7 +1326,9 @@ export class RequestsFundingLineGridComponent implements OnInit {
       this.summaryFundingLineGridApi.hideOverlay();
     } else {
       this.nonSummaryFundingLineGridApi.forEachNode(node => {
-        node.setExpanded(true);
+        if (node.data.fundingLineHistories) {
+          node.setExpanded(true);
+        }
       });
     }
   }
@@ -1967,7 +1971,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
       getDetailRowData: params => {
         const fundingLineHistories: FundingLineHistory[] = params.data.fundingLineHistories;
         const fundingLineMasterDetail = [];
-        fundingLineHistories.forEach((fundingLineHistory, index) => {
+        fundingLineHistories?.forEach((fundingLineHistory, index) => {
           let total = 0;
           const byFields = [];
           for (let i = this.pomYear, x = 0; i < this.pomYear + 5; i++, x++) {
