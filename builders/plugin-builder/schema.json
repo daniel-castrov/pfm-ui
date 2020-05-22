@@ -223,12 +223,7 @@
       "type": "string",
       "description": "Define the output filename cache-busting hashing mode.",
       "default": "none",
-      "enum": [
-        "none",
-        "all",
-        "media",
-        "bundles"
-      ]
+      "enum": ["none", "all", "media", "bundles"]
     },
     "poll": {
       "type": "number",
@@ -337,12 +332,7 @@
     }
   },
   "additionalProperties": false,
-  "required": [
-    "outputPath",
-    "index",
-    "main",
-    "tsConfig"
-  ],
+  "required": ["outputPath", "index", "main", "tsConfig"],
   "definitions": {
     "assetPattern": {
       "oneOf": [
@@ -370,11 +360,7 @@
             }
           },
           "additionalProperties": false,
-          "required": [
-            "glob",
-            "input",
-            "output"
-          ]
+          "required": ["glob", "input", "output"]
         },
         {
           "type": "string"
@@ -394,10 +380,7 @@
             }
           },
           "additionalProperties": false,
-          "required": [
-            "src",
-            "replaceWith"
-          ]
+          "required": ["src", "replaceWith"]
         },
         {
           "type": "object",
@@ -410,10 +393,7 @@
             }
           },
           "additionalProperties": false,
-          "required": [
-            "replace",
-            "with"
-          ]
+          "required": ["replace", "with"]
         }
       ]
     },
@@ -437,9 +417,7 @@
             }
           },
           "additionalProperties": false,
-          "required": [
-            "input"
-          ]
+          "required": ["input"]
         },
         {
           "type": "string",
@@ -453,14 +431,7 @@
         "type": {
           "type": "string",
           "description": "The type of budget.",
-          "enum": [
-            "all",
-            "allScript",
-            "any",
-            "anyScript",
-            "bundle",
-            "initial"
-          ]
+          "enum": ["all", "allScript", "any", "anyScript", "bundle", "initial"]
         },
         "name": {
           "type": "string",
@@ -496,9 +467,7 @@
         }
       },
       "additionalProperties": false,
-      "required": [
-        "type"
-      ]
+      "required": ["type"]
     }
   }
 }
