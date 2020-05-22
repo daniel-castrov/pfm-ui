@@ -78,6 +78,8 @@
       domLayout="autoHeight"
       [pinnedTopRowData]="pinnedTopRowData"
       [overlayNoRowsTemplate]="overlayNoRowsTemplate"
+      [masterDetail]="isMasterDetail"
+      [detailCellRendererParams]="detailCellRendererParams"
     >
     </ag-grid-angular>
     <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
