@@ -1,3 +1,5 @@
+import { FundingLineHistory } from './funding-line-history.model';
+
 export class FundingData {
   id?: string;
   programId?: string;
@@ -7,6 +9,7 @@ export class FundingData {
   wucd?: string;
   expenditureType?: string;
   userCreated?: boolean;
+  fundingLineHistories?: Array<FundingLineHistory>;
 
   py1: number;
   py: number;

@@ -29,6 +29,10 @@ const routes: Routes = [
     path: 'user',
     canActivate: [AuthGuard],
     loadChildren: () => import('./pfm-user-profile/pfm-user-profile.module').then(m => m.PfmUserProfileModule)
+  },
+  {
+    path: 'execution',
+    loadChildren: () => import('./execution-feature/execution-feature.module').then(m => m.ExecutionFeatureModule)
   }
 ];
 

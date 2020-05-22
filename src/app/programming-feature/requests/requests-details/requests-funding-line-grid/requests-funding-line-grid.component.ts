@@ -7,9 +7,9 @@ import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
 import { Program } from 'src/app/programming-feature/models/Program';
 import { FundingLineService } from 'src/app/programming-feature/services/funding-line.service';
 import { FundingData } from 'src/app/programming-feature/models/funding-data.model';
-import { map, switchMap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { FundingLine } from 'src/app/programming-feature/models/funding-line.model';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { PropertyService } from '../../../services/property.service';
 import { PropertyType } from '../../../models/enumerations/property-type.model';
 import { Property } from '../../../models/property.model';
@@ -29,7 +29,9 @@ import { ProgrammingModel } from 'src/app/programming-feature/models/Programming
 import { FundingLineHistoryService } from 'src/app/programming-feature/services/funding-line-history.service';
 import { PomStatus } from 'src/app/programming-feature/models/enumerations/pom-status.model';
 import { FundingLineHistory } from 'src/app/programming-feature/models/funding-line-history.model';
-import { PomService } from 'src/app/programming-feature/services/pom-service';
+import { FundingLineActionCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/funding-line-action-cell-renderer/funding-line-action-cell-renderer.component';
+import { formatDate } from '@angular/common';
+import { UserService } from 'src/app/services/user-impl-service';
 
 @Component({
   selector: 'pfm-requests-funding-line-grid',
@@ -60,21 +62,24 @@ export class RequestsFundingLineGridComponent implements OnInit {
       canEdit: true,
       canDelete: true,
       canUpload: false,
-      isSingleDelete: true
+      isSingleDelete: true,
+      hasHistory: false
     },
     VIEW_NO_DELETE: {
       canSave: false,
       canEdit: true,
       canDelete: false,
       canUpload: false,
-      isSingleDelete: true
+      isSingleDelete: true,
+      hasHistory: false
     },
     EDIT: {
       canEdit: false,
       canSave: true,
       canDelete: true,
       canUpload: false,
-      isSingleDelete: true
+      isSingleDelete: true,
+      hasHistory: false
     }
   };
 
@@ -150,13 +155,17 @@ export class RequestsFundingLineGridComponent implements OnInit {
   historyReasonDialogError: boolean;
 
   fundingLineHistories: FundingLineHistory[];
+  detailCellRendererParams: any;
+
+  usersFullNameMap: { [key: string]: string } = {};
 
   constructor(
     private programmingModel: ProgrammingModel,
     private dialogService: DialogService,
     private propertyService: PropertyService,
     private fundingLineService: FundingLineService,
-    private fundingLineHistoryService: FundingLineHistoryService
+    private fundingLineHistoryService: FundingLineHistoryService,
+    private userService: UserService
   ) {}
 
   ngOnInit() {
@@ -189,7 +198,9 @@ export class RequestsFundingLineGridComponent implements OnInit {
       if (this.nonSummaryFundingLineGridApi.getEditingCells().length) {
         this.performNonSummaryCancel(this.nonSummaryFundingLineGridApi.getEditingCells()[0].rowIndex);
       }
-      this.summaryFundingLineGridApi.hideOverlay();
+      if (this.summaryFundingLineGridApi) {
+        this.summaryFundingLineGridApi.hideOverlay();
+      }
     } else {
       if (this.summaryFundingLineGridApi.getEditingCells().length) {
         const gridApiRowIndex = this.summaryFundingLineGridApi.getEditingCells()[0].rowIndex;
@@ -283,13 +294,37 @@ export class RequestsFundingLineGridComponent implements OnInit {
       .obtainFundingLinesByProgramId(this.program.id)
       .pipe(map(resp => this.convertFundsToFiscalYear(resp)))
       .subscribe(resp => {
-        const fundingLine = resp as FundingData[];
-        this.nonSummaryFundingLineRows.push(...fundingLine);
+        const fundingLines = resp as FundingData[];
+        this.nonSummaryFundingLineRows.push(...fundingLines);
         this.updateTotalFields(this.nonSummaryFundingLineGridApi, this.nonSummaryFundingLineRows);
         this.nonSummaryFundingLineGridApi.setRowData(this.nonSummaryFundingLineRows);
         this.nonSummaryFundingLineGridApi.hideOverlay();
         this.drawLineChart();
+
+        if (this.programmingModel.pom.status === PomStatus.OPEN) {
+          this.storeUserFullNameFromHistory(fundingLines);
+          this.loadMasterDetail();
+        }
       });
+  }
+
+  private storeUserFullNameFromHistory(fundingLines: FundingData[]) {
+    let cacIds = [];
+    fundingLines.forEach(fundingLine => {
+      cacIds = [
+        ...new Set(
+          fundingLine.fundingLineHistories?.filter(history => history.createdBy).map(history => history.createdBy)
+        )
+      ];
+    });
+    this.lookupUserCacIds(cacIds);
+  }
+
+  private lookupUserCacIds(cacIds: string[]) {
+    this.userService.getFullNameFromCacIdList(cacIds).subscribe(userResp => {
+      const fullNames = userResp.result;
+      this.usersFullNameMap = fullNames;
+    });
   }
 
   private convertFundsToFiscalYear(response: any) {
@@ -314,7 +349,10 @@ export class RequestsFundingLineGridComponent implements OnInit {
       ).toLowerCase();
       fundingData[headerName] = funds[i] ? funds[i] : 0;
     }
-    fundingData.action = fundingLine.userCreated ? this.actionState.VIEW : this.actionState.VIEW_NO_DELETE;
+    fundingData.action = {
+      ...(fundingLine.userCreated ? this.actionState.VIEW : this.actionState.VIEW_NO_DELETE),
+      hasHistory: !!fundingData.fundingLineHistories?.length
+    };
     return fundingData;
   }
 
@@ -433,7 +471,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
       },
       {
         colId: 4,
-        headerName: 'Exp Type',
+        headerName: 'EXP Type',
         field: 'expenditureType',
         editable: false,
         suppressMovable: true,
@@ -534,6 +572,16 @@ export class RequestsFundingLineGridComponent implements OnInit {
       case 'cancel':
         this.performNonSummaryCancel(cellAction.rowIndex);
         break;
+      case 'history-grid':
+        this.nonSummaryFundingLineGridApi.forEachNode(node => {
+          if (node.childIndex === cellAction.rowIndex) {
+            node.setExpanded(!node.expanded);
+          }
+        });
+        break;
+      case 'history-graph':
+        this.performNonSummaryCancel(cellAction.rowIndex);
+        break;
     }
   }
 
@@ -612,7 +660,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
             suppressMenu: true,
             cellClass: params => ['numeric-class', 'regular-cell'],
             cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
-            minWidth: 80,
+            minWidth: 75,
             cellEditor: NumericCellEditor.create({ returnUndefinedOnZero: false }),
             valueFormatter: params => this.currencyFormatter(params.data[params.colDef.field])
           }
@@ -744,7 +792,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
         suppressMenu: true,
         cellClass: params => ['numeric-class', 'regular-cell'],
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
-        minWidth: 80,
+        minWidth: 75,
         valueFormatter: params => this.currencyFormatter(params.data[params.colDef.field])
       },
       {
@@ -757,7 +805,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
         suppressMenu: true,
         cellClass: params => ['numeric-class', 'regular-cell'],
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
-        minWidth: 80,
+        minWidth: 75,
         cellEditor: NumericCellEditor.create({ returnUndefinedOnZero: false }),
         valueFormatter: params => this.currencyFormatter(params.data[params.colDef.field])
       },
@@ -770,8 +818,9 @@ export class RequestsFundingLineGridComponent implements OnInit {
         sortable: false,
         suppressMenu: true,
         cellClass: params => 'regular-cell',
-        cellRendererFramework: ActionCellRendererComponent,
-        minWidth: 120
+        cellRendererFramework: FundingLineActionCellRendererComponent,
+        minWidth: 180,
+        maxWidth: 180
       }
     ];
     this.updateTotalFields(this.nonSummaryFundingLineGridApi, this.nonSummaryFundingLineRows);
@@ -822,7 +871,6 @@ export class RequestsFundingLineGridComponent implements OnInit {
     const canSave = this.validateNonSummaryRowData(rowIndex);
     if (canSave) {
       if (this.programmingModel.pom.status === PomStatus.OPEN) {
-        const row = this.nonSummaryFundingLineRows[rowIndex];
         this.displayHistoryReasonDialog(rowIndex, this.prepareNonSummarySave.bind(this));
       } else {
         this.prepareNonSummarySave(rowIndex);
@@ -859,7 +907,11 @@ export class RequestsFundingLineGridComponent implements OnInit {
     saveOrUpdate(fundingLine)
       .pipe(
         map(resp => {
-          this.historyReasonDialog.fundingLine = resp.result;
+          const data = resp.result as FundingLine;
+          if (!data.fundingLineHistories) {
+            data.fundingLineHistories = [];
+          }
+          this.historyReasonDialog.fundingLine = data;
           return this.fundingLineToFundingData(resp.result);
         })
       )
@@ -867,7 +919,6 @@ export class RequestsFundingLineGridComponent implements OnInit {
         fundingData => {
           this.nonSummaryFundingLineRows[rowIndex] = fundingData;
           this.updateTotalFields(this.nonSummaryFundingLineGridApi, this.nonSummaryFundingLineRows);
-          this.viewNonSummaryMode(rowIndex);
           this.reloadDropdownOptions();
           this.drawLineChart();
           this.program.programStatus = ProgramStatus.SAVED;
@@ -875,17 +926,19 @@ export class RequestsFundingLineGridComponent implements OnInit {
           if (this.programmingModel.pom.status === PomStatus.OPEN) {
             const reason = this.historyReasonForm.get('reason').value;
             if (reason?.length) {
-              this.performSaveFundingLineHistory(reason);
+              this.historyReasonDialog.rowIndex = rowIndex;
+              this.performSaveFundingLineHistory(reason, this.viewNonSummaryMode.bind(this));
             } else {
               this.historyReasonDialogError = true;
             }
+          } else {
+            this.viewNonSummaryMode(rowIndex);
           }
         },
         error => {
           this.dialogService.displayDebug(error);
           this.editRow(rowIndex);
-        },
-        () => new Observable<void>()
+        }
       );
   }
 
@@ -945,7 +998,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
     } else if (row.wucd && (!row.wucd.length || row.wucd.toLowerCase() === 'select')) {
       errorMessage = 'Please, select a WUCD.';
     } else if (row.expenditureType && (!row.expenditureType.length || row.expenditureType.toLowerCase() === 'select')) {
-      errorMessage = 'Please, select a Exp Type.';
+      errorMessage = 'Please, select a EXP Type.';
     } else if (
       this.nonSummaryFundingLineRows.some((fundingLine, idx) => {
         return (
@@ -1032,9 +1085,13 @@ export class RequestsFundingLineGridComponent implements OnInit {
     this.currentNonSummaryRowDataState.isEditMode = false;
     this.currentNonSummaryRowDataState.isAddMode = false;
     this.nonSummaryFundingLineGridApi.stopEditing();
-    this.nonSummaryFundingLineRows[rowIndex].action = this.nonSummaryFundingLineRows[rowIndex].userCreated
-      ? this.actionState.VIEW
-      : this.actionState.VIEW_NO_DELETE;
+
+    this.nonSummaryFundingLineRows[rowIndex].action = {
+      ...(this.nonSummaryFundingLineRows[rowIndex].userCreated
+        ? this.actionState.VIEW
+        : this.actionState.VIEW_NO_DELETE),
+      hasHistory: !!this.nonSummaryFundingLineRows[rowIndex].fundingLineHistories?.length
+    };
     this.nonSummaryFundingLineRows.forEach(row => {
       row.isDisabled = false;
     });
@@ -1062,9 +1119,8 @@ export class RequestsFundingLineGridComponent implements OnInit {
   private saveSummaryRow(rowIndex: number, gridApiRowIndex: number) {
     this.summaryFundingLineGridApi.stopEditing();
     if (this.currentSummaryRowDataState.isEditMode) {
+      this.historyReasonDialog.gridApiRowIndex = gridApiRowIndex;
       if (this.programmingModel.pom.status === PomStatus.OPEN) {
-        this.historyReasonDialog.gridApiRowIndex = gridApiRowIndex;
-        const row = this.summaryFundingLineRows[rowIndex];
         this.displayHistoryReasonDialog(rowIndex, this.prepareSummarySave.bind(this));
       } else {
         this.prepareSummarySave(rowIndex);
@@ -1075,21 +1131,33 @@ export class RequestsFundingLineGridComponent implements OnInit {
   private prepareSummarySave(rowIndex: number) {
     const row = this.summaryFundingLineRows[rowIndex];
     const fundingLine = this.convertFiscalYearToFunds(row);
+
     this.fundingLineService
       .updateFundingLine(fundingLine)
       .pipe(
         map(resp => {
-          this.historyReasonDialog.fundingLine = resp.result;
-          return this.fundingLineToFundingData(resp.result);
+          const data = resp.result as FundingLine;
+          if (!data.fundingLineHistories) {
+            data.fundingLineHistories = [];
+          }
+          this.historyReasonDialog.fundingLine = data;
+          return this.fundingLineToFundingData(data);
         })
       )
       .subscribe(
         fundingData => {
           this.summaryFundingLineRows[rowIndex] = fundingData;
           this.updateTotalFields(this.summaryFundingLineGridApi, this.summaryFundingLineRows);
-          this.viewSummaryMode(rowIndex);
           this.reloadDropdownOptions();
           this.drawLineChart();
+
+          if (this.programmingModel.pom.status === PomStatus.OPEN) {
+            this.historyReasonDialog.rowIndex = rowIndex;
+            const reason = this.historyReasonForm.get('reason').value;
+            this.performSaveFundingLineHistory(reason, this.viewSummaryMode.bind(this));
+          } else {
+            this.viewSummaryMode(rowIndex);
+          }
         },
         error => {
           this.dialogService.displayDebug(error);
@@ -1138,9 +1206,12 @@ export class RequestsFundingLineGridComponent implements OnInit {
     this.currentSummaryRowDataState.isEditMode = false;
     this.currentSummaryRowDataState.isAddMode = false;
     this.summaryFundingLineGridApi.stopEditing();
-    this.summaryFundingLineRows[rowIndex].action = this.summaryFundingLineRows[rowIndex].userCreated
-      ? this.actionState.VIEW
-      : this.actionState.VIEW_NO_DELETE;
+
+    const fundingData = this.summaryFundingLineRows[rowIndex];
+    fundingData.action = {
+      ...(fundingData.userCreated ? this.actionState.VIEW : this.actionState.VIEW_NO_DELETE),
+      hasHistory: !!fundingData.fundingLineHistories?.length
+    };
     this.summaryFundingLineRows.forEach(row => {
       row.isDisabled = false;
     });
@@ -1204,6 +1275,15 @@ export class RequestsFundingLineGridComponent implements OnInit {
     }
   }
 
+  private undoSummaryCells() {
+    if (this.currentSummaryRowDataState.isEditMode) {
+      this.summaryFundingLineGridApi.startEditingCell({
+        rowIndex: this.currentSummaryRowDataState.currentEditingRowIndex,
+        colKey: '8'
+      });
+    }
+  }
+
   private displayDeleteDialog(cellAction: DataGridMessage, deleteFunction: (rowIndex: number) => void) {
     this.deleteDialog.cellAction = cellAction;
     this.deleteDialog.delete = deleteFunction;
@@ -1227,14 +1307,30 @@ export class RequestsFundingLineGridComponent implements OnInit {
 
   collapse() {
     this.expanded = false;
-    this.summaryFundingLineGridApi.collapseAll();
-    this.summaryFundingLineGridApi.hideOverlay();
+    if (this.showSubtotals) {
+      this.summaryFundingLineGridApi.collapseAll();
+      this.summaryFundingLineGridApi.hideOverlay();
+    } else {
+      this.nonSummaryFundingLineGridApi.forEachNode(node => {
+        if (node.data.fundingLineHistories) {
+          node.setExpanded(false);
+        }
+      });
+    }
   }
 
   expand() {
     this.expanded = true;
-    this.summaryFundingLineGridApi.expandAll();
-    this.summaryFundingLineGridApi.hideOverlay();
+    if (this.showSubtotals) {
+      this.summaryFundingLineGridApi.expandAll();
+      this.summaryFundingLineGridApi.hideOverlay();
+    } else {
+      this.nonSummaryFundingLineGridApi.forEachNode(node => {
+        if (node.data.fundingLineHistories) {
+          node.setExpanded(true);
+        }
+      });
+    }
   }
 
   setupAppnDependency() {
@@ -1723,14 +1819,14 @@ export class RequestsFundingLineGridComponent implements OnInit {
   }
 
   private displayHistoryReasonDialog(
-    row: number,
+    rowIndex: number,
     saveOrUpdate: (rowIndex: number, gridApiRowIndex?: number) => Observable<any>
   ) {
     this.historyReasonForm = new FormGroup({
       reason: new FormControl('')
     });
     this.historyReasonDialog.save = saveOrUpdate;
-    this.historyReasonDialog.rowIndex = row;
+    this.historyReasonDialog.rowIndex = rowIndex;
     this.historyReasonDialog.display = true;
   }
 
@@ -1745,7 +1841,11 @@ export class RequestsFundingLineGridComponent implements OnInit {
     this.historyReasonDialog.fundingLine = null;
     this.historyReasonDialog.display = false;
     this.historyReasonDialogError = false;
-    this.undoNonSummaryCells();
+    if (this.showSubtotals) {
+      this.undoSummaryCells();
+    } else {
+      this.undoNonSummaryCells();
+    }
   }
 
   async onSaveHistoryReason() {
@@ -1757,7 +1857,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
     }
   }
 
-  private performSaveFundingLineHistory(reason: string) {
+  private performSaveFundingLineHistory(reason: string, viewMode: (rowIndex: number) => void) {
     const fundingLine = this.historyReasonDialog.fundingLine;
     const fundingLineHistory: FundingLineHistory = {
       reason,
@@ -1771,10 +1871,128 @@ export class RequestsFundingLineGridComponent implements OnInit {
       funds: fundingLine.funds
     };
     this.fundingLineHistoryService.createFundingLineHistory(fundingLineHistory).subscribe(
-      () => {},
-      () => {},
-      () => this.closeHistoryReasonDialog()
+      async resp => {
+        const fundingLineHistoryResult = resp.result as FundingLineHistory;
+        if (!fundingLine.fundingLineHistories?.length) {
+          await this.fundingLineService
+            .obtainFundingLineById(fundingLine.id)
+            .toPromise()
+            .then(fundingLineResp => {
+              fundingLine.fundingLineHistories.push(...(fundingLineResp.result as FundingLine).fundingLineHistories);
+            });
+        } else {
+          fundingLine.fundingLineHistories.push(fundingLineHistoryResult);
+        }
+        if (!this.usersFullNameMap[fundingLineHistoryResult.createdBy]) {
+          this.lookupUserCacIds([fundingLineHistoryResult.createdBy]);
+        }
+        of(viewMode(this.historyReasonDialog.rowIndex)).subscribe(() => {
+          this.closeHistoryReasonDialog();
+        });
+      },
+      () => {}
     );
+  }
+
+  private loadMasterDetail() {
+    const fyFields = [];
+    for (let i = this.pomYear, x = 0; i < this.pomYear + 5; i++, x++) {
+      fyFields.push({
+        editable: false,
+        suppressMovable: true,
+        filter: false,
+        sortable: false,
+        suppressMenu: true,
+        field: 'by' + (x > 0 ? x : ''),
+        headerName: 'FY' + (i % 100),
+        cellClass: params => ['numeric-class'],
+        cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
+        minWidth: 75,
+        valueFormatter: params => this.currencyFormatter(params.data[params.colDef.field])
+      });
+    }
+
+    this.detailCellRendererParams = {
+      detailGridOptions: {
+        columnDefs: [
+          {
+            editable: false,
+            suppressMovable: true,
+            filter: false,
+            sortable: false,
+            suppressMenu: true,
+            field: 'update',
+            headerName: 'Update'
+          },
+          {
+            editable: false,
+            suppressMovable: true,
+            filter: false,
+            sortable: false,
+            suppressMenu: true,
+            field: 'updatedDate',
+            headerName: 'Updated Date'
+          },
+          {
+            editable: false,
+            suppressMovable: true,
+            filter: false,
+            sortable: false,
+            suppressMenu: true,
+            field: 'reason',
+            headerName: 'Reason'
+          },
+          {
+            editable: false,
+            suppressMovable: true,
+            filter: false,
+            sortable: false,
+            suppressMenu: true,
+            field: 'updatedBy',
+            headerName: 'Updated By'
+          },
+          ...fyFields,
+          {
+            editable: false,
+            suppressMovable: true,
+            filter: false,
+            sortable: false,
+            suppressMenu: true,
+            field: 'byTotal',
+            headerName: 'FYDP Total',
+            cellClass: params => ['numeric-class'],
+            cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
+            minWidth: 75,
+            valueFormatter: params => this.currencyFormatter(params.data[params.colDef.field])
+          }
+        ],
+        defaultColDef: { flex: 1 }
+      },
+      getDetailRowData: params => {
+        const fundingLineHistories: FundingLineHistory[] = params.data.fundingLineHistories;
+        const fundingLineMasterDetail = [];
+        fundingLineHistories?.forEach((fundingLineHistory, index) => {
+          let total = 0;
+          const byFields = [];
+          for (let i = this.pomYear, x = 0; i < this.pomYear + 5; i++, x++) {
+            byFields.push({
+              ['by' + (x > 0 ? x : '')]: fundingLineHistory.funds[i]
+            });
+            total += fundingLineHistory.funds[i];
+          }
+          const fundingLineHistoryEntry = {
+            update: index + 1,
+            updatedDate: formatDate(fundingLineHistory.created, 'MM/d/yyyy H:mm', 'en-US'),
+            reason: fundingLineHistory.reason,
+            updatedBy: this.usersFullNameMap[fundingLineHistory.createdBy],
+            byTotal: total
+          };
+          Object.assign(fundingLineHistoryEntry, ...byFields);
+          fundingLineMasterDetail.push(fundingLineHistoryEntry);
+        });
+        params.successCallback(fundingLineMasterDetail);
+      }
+    };
   }
 }
 

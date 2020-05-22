@@ -82,3 +82,15 @@ p {
 .ag-grid::ng-deep .ag-root.ag-layout-auto-height {
   padding-bottom: 10px;
 }
+
+:host ::ng-deep .ag-details-row {
+  padding: 3rem;
+}
+
+:host ::ng-deep .ag-details-grid .ag-header-cell {
+  border-right: solid white 1px;
+}
+
+:host ::ng-deep .ag-details-row .ag-row {
+  background: white;
+}

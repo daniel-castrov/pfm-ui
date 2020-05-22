@@ -14,7 +14,6 @@ import { ToaComponent } from './toa/toa.component';
 import { RequestsComponent } from './requests/requests.component';
 import { RequestsApprovalComponent } from './requests-approval/requests-approval.component';
 import { UfrRequestsComponent } from './ufr-requests/ufr-requests.component';
-import { UfrRequestsApprovalComponent } from './ufr-requests-approval/ufr-requests-approval.component';
 import { TotalAppropriationPriorityComponent } from './total-appropriation-priority/total-appropriation-priority.component';
 import { WorkSpaceManagementComponent } from './work-space-management/work-space-management.component';
 import { RequestsSummaryGridComponent } from './requests/requests-summary/requests-summary-grid/requests-summary-grid.component';
@@ -74,6 +73,8 @@ import { WorkspaceServiceImpl } from './services/workspace-impl.service';
 import { FundingLineHistoryServiceImpl } from './services/funding-line-history-impl.service';
 import { FundingLineHistoryService } from './services/funding-line-history.service';
 import { CompareWorkSpacesComponent } from './work-space-management/compare-work-spaces/compare-work-spaces.component';
+import { UserService } from '../services/user-impl-service';
+import { UserServiceImpl } from '../services/user-service';
 
 @NgModule({
   declarations: [
@@ -86,7 +87,6 @@ import { CompareWorkSpacesComponent } from './work-space-management/compare-work
     RequestsComponent,
     RequestsApprovalComponent,
     UfrRequestsComponent,
-    UfrRequestsApprovalComponent,
     TotalAppropriationPriorityComponent,
     WorkSpaceManagementComponent,
     CompareWorkSpacesComponent,
@@ -136,6 +136,7 @@ import { CompareWorkSpacesComponent } from './work-space-management/compare-work
     { provide: ScheduleService, useClass: ScheduleServiceImpl },
     { provide: WorkspaceService, useClass: WorkspaceServiceImpl },
     { provide: FundingLineHistoryService, useClass: FundingLineHistoryServiceImpl },
+    { provide: UserService, useClass: UserServiceImpl },
     ProgrammingModel,
     RequestSummaryNavigationHistoryService
   ]

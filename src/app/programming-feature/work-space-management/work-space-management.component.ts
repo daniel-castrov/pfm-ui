@@ -231,7 +231,7 @@ export class WorkSpaceManagementComponent implements OnInit {
       },
       {
         headerName: 'Last Updated By',
-        field: 'fullnameModifiedBy',
+        field: 'fullNameModifiedBy',
         editable: false,
         suppressMovable: true,
         filter: false,
@@ -274,10 +274,10 @@ export class WorkSpaceManagementComponent implements OnInit {
           const wskpWalues = (resp as any).result;
           this.rows = [];
           for (const wkspValue of wskpWalues) {
-            const workspace = wkspValue.firstElement;
+            const workspace = wkspValue;
             workspace.created = formatDate(workspace.created, 'M/d/yyyy HH:mm', 'en-US');
             workspace.modified = formatDate(workspace.modified, 'M/d/yyyy HH:mm', 'en-US');
-            workspace.fullnameModifiedBy = wkspValue.secondElement;
+            workspace.fullNameModifiedBy = wkspValue.fullNameModifiedBy;
             const currentRow = {
               ...workspace,
               action: {
@@ -345,10 +345,10 @@ export class WorkSpaceManagementComponent implements OnInit {
         this.workspaceService.duplicate(newWorkspace).subscribe(
           resp => {
             const wkspValue = (resp as any).result;
-            const workspace = wkspValue.firstElement;
+            const workspace = wkspValue;
             workspace.created = formatDate(workspace.created, 'M/d/yyyy HH:mm', 'en-US');
             workspace.modified = formatDate(workspace.modified, 'M/d/yyyy HH:mm', 'en-US');
-            workspace.fullnameModifiedBy = wkspValue.secondElement;
+            workspace.fullNameModifiedBy = wkspValue.fullNameModifiedBy;
             workspace.active = { ...(workspace.active ? this.checkboxConfig.active : this.checkboxConfig.inactive) };
             newRow = {
               ...workspace,
@@ -376,10 +376,10 @@ export class WorkSpaceManagementComponent implements OnInit {
         this.workspaceService.updateWorkspace(newWorkspace).subscribe(
           resp => {
             const wkspValue = (resp as any).result;
-            const workspace = wkspValue.firstElement;
+            const workspace = wkspValue;
             workspace.created = formatDate(workspace.created, 'M/d/yyyy HH:mm', 'en-US');
             workspace.modified = formatDate(workspace.modified, 'M/d/yyyy HH:mm', 'en-US');
-            workspace.fullnameModifiedBy = wkspValue.secondElement;
+            workspace.fullNameModifiedBy = wkspValue.fullNameModifiedBy;
             workspace.active = { ...(workspace.active ? this.checkboxConfig.active : this.checkboxConfig.inactive) };
             newRow = {
               ...workspace,
