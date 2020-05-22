@@ -1,11 +1,10 @@
 import { BrowserBuilderOutput, executeBrowserBuilder, ExecutionTransformer } from '@angular-devkit/build-angular';
 import { JsonObject } from '@angular-devkit/core';
-import { createBuilder, BuilderContext } from '@angular-devkit/architect';
+import { BuilderContext, createBuilder } from '@angular-devkit/architect';
 import * as fs from 'fs';
 import * as webpack from 'webpack';
 import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-
 
 interface Options extends JsonObject {
   /**
@@ -26,11 +25,13 @@ interface Options extends JsonObject {
 
 let entryPointPath;
 
-function buildPlugin(options: Options,
-                     context: BuilderContext,
-                     transforms: {
-                         webpackConfiguration?: ExecutionTransformer<webpack.Configuration>,
-                     } = {}): Observable<BrowserBuilderOutput> {
+function buildPlugin(
+  options: Options,
+  context: BuilderContext,
+  transforms: {
+    webpackConfiguration?: ExecutionTransformer<webpack.Configuration>;
+  } = {}
+): Observable<BrowserBuilderOutput> {
   options.deleteOutputPath = false;
 
   validateOptions(options);
@@ -44,9 +45,11 @@ function buildPlugin(options: Options,
 
   const result = executeBrowserBuilder(options as any, context, transforms);
 
-  return result.pipe(tap(() => {
-    patchEntryPoint('');
-  }));
+  return result.pipe(
+    tap(() => {
+      patchEntryPoint('');
+    })
+  );
 }
 
 function patchEntryPoint(contents: string) {
@@ -113,9 +116,7 @@ function patchWebpackConfig(config: webpack.Configuration, options: Options) {
 
   const [modulePath, moduleName] = options.modulePath.split('#');
 
-  const factoryPath = `${
-    modulePath.includes('.') ? modulePath : `${modulePath}/${modulePath}`
-    }.ngfactory`;
+  const factoryPath = `${modulePath.includes('.') ? modulePath : `${modulePath}/${modulePath}`}.ngfactory`;
   const entryPointContents = `
        export * from '${modulePath}';
        export * from '${factoryPath}';

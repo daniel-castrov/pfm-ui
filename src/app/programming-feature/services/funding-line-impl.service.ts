@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { FundingLineService } from './funding-line.service';
 import { FundingLine } from '../models/funding-line.model';
+import { HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -25,5 +26,12 @@ export class FundingLineServiceImpl extends FundingLineService {
 
   removeFundingLineById(fundingLineId: string): Observable<any> {
     return this.delete('funding-line/' + fundingLineId);
+  }
+
+  getByProgramContainerIds(programContainerIds: string[]): Observable<any> {
+    return this.get(
+      'funding-line/program/container/ids',
+      new HttpParams().set('programContainerIds', programContainerIds.join(','))
+    );
   }
 }

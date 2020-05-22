@@ -1,0 +1,78 @@
+<div>
+  <h3 class="w-50">Workspace Comparisons</h3>
+
+  <div class="row col-12">
+    <google-chart #googleChart [data]="chartData"></google-chart>
+    <div class="row col-12 mx-auto">
+      <pfm-dropdown
+        #displayDropdown
+        class="col-2"
+        (selectionChanged)="onDisplayDropdownChange($event)"
+        [fieldName]="'name'"
+        [fieldLabel]="'name'"
+        [defaultOption]="displayDropdownOptions[0]"
+        [options]="displayDropdownOptions"
+        [label]="'Display'"
+        [showPrompt]="false"
+      >
+      </pfm-dropdown>
+      <pfm-dropdown
+        #appropriationDropdown
+        class="col-1"
+        (selectionChanged)="onAppropiationDropdownChange($event)"
+        [fieldName]="'name'"
+        [fieldLabel]="'name'"
+        [options]="appropriationDropdownOptions"
+        [visible]="appropriationDropdownOptions.length > 1"
+        [disablePrompt]="false"
+      >
+      </pfm-dropdown>
+      <pfm-dropdown
+        #bablinDropdown
+        class="col-1"
+        (selectionChanged)="onBablinDropdownChange($event)"
+        [fieldName]="'name'"
+        [fieldLabel]="'name'"
+        [options]="bablinDropdownOptions"
+        [visible]="bablinDropdownOptions.length > 1"
+        [disablePrompt]="false"
+      >
+      </pfm-dropdown>
+      <pfm-dropdown
+        #sagDropdown
+        class="col-1"
+        (selectionChanged)="onSagDropdownChange($event)"
+        [fieldName]="'name'"
+        [fieldLabel]="'name'"
+        [options]="sagDropdownOptions"
+        [visible]="sagDropdownOptions.length > 1"
+        [disablePrompt]="false"
+      >
+      </pfm-dropdown>
+      <pfm-dropdown
+        #wucdDropdown
+        class="col-1"
+        (selectionChanged)="onWucdDropdownChange($event)"
+        [fieldName]="'name'"
+        [fieldLabel]="'name'"
+        [options]="wucdDropdownOptions"
+        [visible]="wucdDropdownOptions.length > 1"
+        [disablePrompt]="false"
+      >
+      </pfm-dropdown>
+      <pfm-dropdown
+        #expTypeDropdown
+        class="col-1"
+        [fieldName]="'name'"
+        [fieldLabel]="'name'"
+        [options]="expTypeDropdownOptions"
+        [visible]="expTypeDropdownOptions.length > 1"
+        [disablePrompt]="false"
+      >
+      </pfm-dropdown>
+      <button class="col-1" type="button" class="btn btn-primary" (click)="drawLineChart()">
+        Go
+      </button>
+    </div>
+  </div>
+</div>
