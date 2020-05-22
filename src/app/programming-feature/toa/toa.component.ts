@@ -108,12 +108,8 @@ export class ToaComponent implements OnInit {
     this.busy = true;
     this.setupVisibility();
     this.byYear = FormatterUtil.getCurrentFiscalYear() + 2;
-    this.selectedYear = new ListItem();
-    this.selectedYear.id = this.byYear.toString();
-    this.selectedYear.name = this.byYear.toString();
-    this.selectedYear.value = this.byYear.toString();
     this.programYearSelected = 'undefined';
-    this.pomService.getPomYearsByStatus(['OPEN', 'LOCKED', 'CLOSED']).subscribe(
+    this.pomService.getPomYearsByStatus(['CREATED', 'OPEN', 'LOCKED', 'CLOSED']).subscribe(
       resp => {
         const years: string[] = (resp as any).result.map(String);
         this.pomYears = ListItemHelper.generateListItemFromArray(years);
@@ -122,8 +118,12 @@ export class ToaComponent implements OnInit {
         this.dialogService.displayInfo(error.error.error);
       },
       () => {
-        let yearItem = this.pomYears.find(x => this.selectedYear.id === x.id);
+        const yearItem = this.pomYears.find(x => this.byYear.toString() === x.id);
         if (yearItem) {
+          this.selectedYear = new ListItem();
+          this.selectedYear.id = this.byYear.toString();
+          this.selectedYear.name = this.byYear.toString();
+          this.selectedYear.value = this.byYear.toString();
           this.yearSelected(yearItem);
         }
         this.busy = false;
