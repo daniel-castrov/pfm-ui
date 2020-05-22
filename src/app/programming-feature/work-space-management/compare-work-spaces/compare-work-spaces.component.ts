@@ -206,6 +206,9 @@ export class CompareWorkSpacesComponent implements OnInit {
       },
       error => {
         this.dialogService.displayError(error.error.error);
+      },
+      () => {
+        this.drawLineChart();
       }
     );
   }
@@ -333,7 +336,7 @@ export class CompareWorkSpacesComponent implements OnInit {
         this.updateTotalFields(this.nonSummaryFundingLineGridApi, this.nonSummaryFundingLineRows);
         this.nonSummaryFundingLineGridApi.setRowData(this.nonSummaryFundingLineRows);
         this.nonSummaryFundingLineGridApi.hideOverlay();
-        this.drawLineChart();
+        // this.drawLineChart();
       });
   }
 
@@ -1291,20 +1294,25 @@ export class CompareWorkSpacesComponent implements OnInit {
     }
 
     if (!hasData) {
-      data = [['Fiscal Year', 'Total Funding']];
-      const funds: number[] = [];
-      const fundingLineRows = this.summaryFundingLineGridApi
-        ? this.summaryFundingLineRows
-        : this.nonSummaryFundingLineRows;
-      fundingLineRows.forEach(row => {
-        const fundingLine = this.convertFiscalYearToFunds(row);
-        for (const year of Object.keys(fundingLine.funds)) {
-          funds[year] = funds[year] ?? 0;
-          funds[year] += Number(fundingLine.funds[year]) ?? 0;
+      data = [['Fiscal Year']];
+      const funds: { [key: string]: number[] } = {};
+      for (const workspace of this.workspaces) {
+        funds[workspace.id] = [];
+        data[0].push(workspace.name);
+        this.fundingLines[workspace.id].forEach(fundingLine => {
+          for (const year of Object.keys(fundingLine.funds)) {
+            funds[workspace.id][year] = funds[year] ?? 0;
+            funds[workspace.id][year] += Number(fundingLine.funds[year]) ?? 0;
+          }
+        });
+      }
+
+      for (let i = this.pomYear, x = 0; i < this.pomYear + 5; i++) {
+        const items: any[] = [`${i}`];
+        for (const workspace of this.workspaces) {
+          items.push(funds[workspace.id][i] ?? 0);
         }
-      });
-      for (let i = this.pomYear - 3, x = 0; i < this.pomYear + 5; i++) {
-        data.push([`${i}`, funds[i] ?? 0]);
+        data.push(items);
       }
     }
 
