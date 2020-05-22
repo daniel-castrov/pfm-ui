@@ -10,4 +10,5 @@ export abstract class FundingLineService extends BaseRestService {
   abstract createFundingLine(fundingLine: FundingLine): Observable<any>;
   abstract updateFundingLine(fundingLine: FundingLine): Observable<any>;
   abstract removeFundingLineById(fundingLineId: string): Observable<any>;
+  abstract getByProgramContainerIds(programContainerIds: string[]): Observable<any>;
 }

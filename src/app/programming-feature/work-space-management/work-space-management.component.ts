@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormatterUtil } from 'src/app/util/formatterUtil';
-import { GridApi, ColDef } from '@ag-grid-community/all-modules';
+import { ColDef, GridApi } from '@ag-grid-community/all-modules';
 import { formatDate } from '@angular/common';
 import { WkspActionCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/wksp-action-cell-renderer/wksp-action-cell-renderer.component';
 import { CheckboxCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/checkbox-cell-renderer/checkbox-cell-renderer.component';
@@ -490,7 +490,9 @@ export class WorkSpaceManagementComponent implements OnInit {
     params.api.resetRowHeights();
   }
 
-  compareVersion() {}
+  compareVersion() {
+    this.router.navigate(['/programming/compare-work-spaces']);
+  }
 }
 
 export interface RowDataStateInterface {

@@ -73,6 +73,7 @@ import { WorkspaceService } from './services/workspace.service';
 import { WorkspaceServiceImpl } from './services/workspace-impl.service';
 import { FundingLineHistoryServiceImpl } from './services/funding-line-history-impl.service';
 import { FundingLineHistoryService } from './services/funding-line-history.service';
+import { CompareWorkSpacesComponent } from './work-space-management/compare-work-spaces/compare-work-spaces.component';
 
 @NgModule({
   declarations: [
@@ -88,6 +89,7 @@ import { FundingLineHistoryService } from './services/funding-line-history.servi
     UfrRequestsApprovalComponent,
     TotalAppropriationPriorityComponent,
     WorkSpaceManagementComponent,
+    CompareWorkSpacesComponent,
     RequestsSummaryGridComponent,
     RequestsSummaryOrgWidgetComponent,
     RequestsSummaryToaWidgetComponent,

@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 
 import { ProgrammingFeatureComponent } from './programming-feature.component';
 import { AuthGuard } from '../pfm-auth-module/services/auth-guard';
@@ -16,6 +16,7 @@ import { TotalAppropriationPriorityComponent } from './total-appropriation-prior
 import { WorkSpaceManagementComponent } from './work-space-management/work-space-management.component';
 import { RequestsSummaryComponent } from './requests/requests-summary/requests-summary.component';
 import { RequestsDetailsComponent } from './requests/requests-details/requests-details.component';
+import { CompareWorkSpacesComponent } from './work-space-management/compare-work-spaces/compare-work-spaces.component';
 
 const routes: Routes = [
   {
@@ -46,7 +47,12 @@ const routes: Routes = [
         component: TotalAppropriationPriorityComponent,
         canActivate: [AuthGuard]
       },
-      { path: 'work-space-management', component: WorkSpaceManagementComponent, canActivate: [AuthGuard] }
+      {
+        path: 'work-space-management',
+        component: WorkSpaceManagementComponent,
+        canActivate: [AuthGuard]
+      },
+      { path: 'compare-work-spaces', component: CompareWorkSpacesComponent, canActivate: [AuthGuard] }
     ]
   }
 ];
