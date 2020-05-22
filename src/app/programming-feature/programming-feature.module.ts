@@ -14,7 +14,6 @@ import { ToaComponent } from './toa/toa.component';
 import { RequestsComponent } from './requests/requests.component';
 import { RequestsApprovalComponent } from './requests-approval/requests-approval.component';
 import { UfrRequestsComponent } from './ufr-requests/ufr-requests.component';
-import { UfrRequestsApprovalComponent } from './ufr-requests-approval/ufr-requests-approval.component';
 import { TotalAppropriationPriorityComponent } from './total-appropriation-priority/total-appropriation-priority.component';
 import { WorkSpaceManagementComponent } from './work-space-management/work-space-management.component';
 import { RequestsSummaryGridComponent } from './requests/requests-summary/requests-summary-grid/requests-summary-grid.component';
@@ -87,7 +86,6 @@ import { UserServiceImpl } from '../services/user-service';
     RequestsComponent,
     RequestsApprovalComponent,
     UfrRequestsComponent,
-    UfrRequestsApprovalComponent,
     TotalAppropriationPriorityComponent,
     WorkSpaceManagementComponent,
     RequestsSummaryGridComponent,
