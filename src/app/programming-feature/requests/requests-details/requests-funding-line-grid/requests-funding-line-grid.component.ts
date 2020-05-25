@@ -1914,6 +1914,10 @@ export class RequestsFundingLineGridComponent implements OnInit {
 
     this.detailCellRendererParams = {
       detailGridOptions: {
+        getRowHeight: params => {
+          return params.node.detail ? 40 : (Number(params.data.reason.length / 20) + 1) * 27;
+        },
+        enableBrowserTooltips: true,
         columnDefs: [
           {
             editable: false,
@@ -1939,8 +1943,11 @@ export class RequestsFundingLineGridComponent implements OnInit {
             filter: false,
             sortable: false,
             suppressMenu: true,
+            autoHeight: true,
             field: 'reason',
-            headerName: 'Reason'
+            tooltipField: 'reason',
+            headerName: 'Reason',
+            cellClass: 'word-break'
           },
           {
             editable: false,
@@ -1976,9 +1983,9 @@ export class RequestsFundingLineGridComponent implements OnInit {
           const byFields = [];
           for (let i = this.pomYear, x = 0; i < this.pomYear + 5; i++, x++) {
             byFields.push({
-              ['by' + (x > 0 ? x : '')]: fundingLineHistory.funds[i]
+              ['by' + (x > 0 ? x : '')]: fundingLineHistory.funds[i] ?? 0
             });
-            total += fundingLineHistory.funds[i];
+            total += fundingLineHistory.funds[i] ?? 0;
           }
           const fundingLineHistoryEntry = {
             update: index + 1,

@@ -3,36 +3,46 @@ fa-icon {
   padding-left: 8px;
 }
 
+.reason-text-area {
+  height: 98px;
+}
+
 :host {
   width: 100%;
   height: 100%;
 }
 
-:host ::ng-deep .pfm-data {
-  height: 100vh !important;
-}
+:host ::ng-deep {
+  .pfm-data {
+    height: 100vh !important;
+  }
 
-:host ::ng-deep .pfm-data .main-header,
-:host ::ng-deep .pfm-data .ag-header-group-cell.ag-header-group-cell-no-group {
-  background: white;
-  color: black;
-  border-left: solid 1px #0000002b;
-}
+  .pfm-data .main-header,
+  .pfm-data .ag-header-group-cell.ag-header-group-cell-no-group {
+    background: white;
+    color: black;
+    border-left: solid 1px #0000002b;
+  }
 
-:host ::ng-deep .modal-footer {
-  display: flex;
-  flex-grow: 1;
-}
+  .modal-footer {
+    display: flex;
+    flex-grow: 1;
+  }
 
-:host ::ng-deep .pfm-data .ag-body-viewport .aggregate-cell,
-:host ::ng-deep .pfm-data .ag-row-pinned {
-  background-color: #ffeb3b59;
-}
+  .pfm-data .ag-body-viewport .aggregate-cell,
+  .pfm-data .ag-row-pinned {
+    background-color: #ffeb3b59;
+  }
 
-:host ::ng-deep .pfm-data .ag-body-viewport .regular-cell {
-  background-color: #bbced7;
-}
+  .pfm-data .ag-body-viewport .regular-cell {
+    background-color: #bbced7;
+  }
 
-.reason-text-area {
-  height: 98px;
+  .ag-row-level-1 {
+    height: 200px !important;
+  }
+
+  .wrap-text {
+    white-space: normal;
+  }
 }

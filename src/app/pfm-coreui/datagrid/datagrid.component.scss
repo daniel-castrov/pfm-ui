@@ -84,7 +84,12 @@ p {
 }
 
 :host ::ng-deep .ag-details-row {
-  padding: 3rem;
+  padding: 1rem 3rem;
+  border-left: 1px solid #7b8389 !important;
+}
+
+:host ::ng-deep .ag-details-grid {
+  border-bottom: 1px solid #7b8389;
 }
 
 :host ::ng-deep .ag-details-grid .ag-header-cell {
@@ -93,4 +98,9 @@ p {
 
 :host ::ng-deep .ag-details-row .ag-row {
   background: white;
+}
+
+:host ::ng-deep .ag-details-row .word-break {
+  word-break: break-word;
+  white-space: break-spaces;
 }
