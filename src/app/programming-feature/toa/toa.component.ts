@@ -298,10 +298,14 @@ export class ToaComponent implements OnInit {
   getOrgActions(): Action {
     const actions = new Action();
     actions.canDelete = false;
-    actions.canEdit = false;
+    actions.canEdit = this.canEditOrganization();
     actions.canSave = false;
     actions.canUpload = false;
     return actions;
+  }
+
+  canEditOrganization(): boolean {
+    return this.appModel.visibilityDef?.['toa-component']?.editToaOrganization && this.pom.status === PomStatus.CREATED;
   }
 
   getOrgName(orgId: string): string {
