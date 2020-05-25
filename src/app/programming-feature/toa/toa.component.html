@@ -72,6 +72,14 @@
           <div class="section-datagrid">
             <div>
               <span>&nbsp;Set TOAs for Organization ($K)&nbsp;</span>
+              <pfm-secondary-button
+                [label]="' Reset'"
+                *ngIf="canEditOrganization()"
+                class="reset-button"
+                [icon]="'fa fa-refresh reset-button'"
+                (click)="onResetOrgData()"
+              >
+              </pfm-secondary-button>
             </div>
             <!--<div style="height:300px;width:98%">-->
             <div class="grid-container">
