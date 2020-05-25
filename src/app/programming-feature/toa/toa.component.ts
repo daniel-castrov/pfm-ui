@@ -289,7 +289,7 @@ export class ToaComponent implements OnInit {
     const actions = new Action();
     actions.canDelete = false;
     actions.canEdit =
-      this.appModel.visibilityDef?.['toa-component']?.editToaCommunity && this.pom.status === PomStatus.OPEN;
+      this.appModel.visibilityDef?.['toa-component']?.editToaCommunity && this.pom.status === PomStatus.CREATED;
     actions.canSave = false;
     actions.canUpload = false;
     return actions;
