@@ -1917,7 +1917,6 @@ export class RequestsFundingLineGridComponent implements OnInit {
         getRowHeight: params => {
           return params.node.detail ? 40 : (Number(params.data.reason.length / 20) + 1) * 27;
         },
-        enableBrowserTooltips: true,
         columnDefs: [
           {
             editable: false,
@@ -1943,9 +1942,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
             filter: false,
             sortable: false,
             suppressMenu: true,
-            autoHeight: true,
             field: 'reason',
-            tooltipField: 'reason',
             headerName: 'Reason',
             cellClass: 'word-break'
           },
