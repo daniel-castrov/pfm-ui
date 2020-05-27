@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { PomService } from './pom-service';
 import { Pom } from '../models/Pom';
@@ -44,8 +44,8 @@ export class PomServiceImpl extends PomService {
     return this.put('pom/open', pom);
   }
 
-  updatePom(pom: Pom): Observable<object> {
-    return this.put('pom', pom);
+  updatePom(pom: Pom, returnPrsToFr: boolean = false): Observable<object> {
+    return this.put('pom', pom, new HttpParams().set('returnPrsToFr', `${returnPrsToFr}`));
   }
 
   getOpenPom(): Observable<object> {

@@ -1,8 +1,18 @@
 <div class="section-banner">
   <div class="table w-100">
     <div class="table-row w-100">
-      <div>
+      <div></div>
+    </div>
+    <div class="table-row w-100">
+      <div class="float-left">
         <h3>TOAs</h3>
+      </div>
+      <div style="float: right;">
+        <pfm-primary-button
+          *ngIf="canUpdateToas()"
+          [label]="'Update TOAs'"
+          (onClick)="showUpdateDlg()"
+        ></pfm-primary-button>
       </div>
     </div>
     <div class="table mt-2">
@@ -128,8 +138,11 @@
 
   <ng-template #yearSkipActions>
     <div class="pull-left">
-      <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="saveConfirmationDlg.continueAction()">
-        OK
+      <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="updatePom(false)">
+        Save TOAs only
+      </button>
+      <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="updatePom(true)">
+        Save TOAs & Reassign all PRs
       </button>
     </div>
 
