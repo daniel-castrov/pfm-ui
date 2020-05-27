@@ -3,6 +3,7 @@ import { ListItem } from 'src/app/pfm-common-models/ListItem';
 import { ListItemHelper } from 'src/app/util/ListItemHelper';
 import { FileMetaData } from 'src/app/pfm-common-models/FileMetaData';
 import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
+import { ExecutionService } from '../services/execution.service';
 
 @Component({
   selector: 'pfm-create-execution',
@@ -15,10 +16,15 @@ export class CreateExecutionComponent implements OnInit {
   showUploadDialog: boolean;
   filename: string;
 
-  constructor(private dialogService: DialogService) {}
+  constructor(private dialogService: DialogService, private executionService: ExecutionService) {}
 
   ngOnInit(): void {
-    this.years = ListItemHelper.generateListItemFromArray(['FY19', 'FY20', 'FY21']);
+    this.executionService.getYearsReadyForExecution().subscribe(resp => {
+      const years = (resp as any).result;
+      this.years = ListItemHelper.generateListItemFromArray(
+        years.map(y => ['FY' + y.toString().substring(2, 4), y.toString()])
+      );
+    });
   }
 
   handleAttachments(newFile: FileMetaData) {
