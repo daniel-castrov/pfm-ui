@@ -6,9 +6,12 @@ import { ExecutionFeatureComponent } from './execution-feature.component';
 import { CreateExecutionComponent } from './create-execution/create-execution.component';
 import { PfmCoreuiModule } from '../pfm-coreui/pfm-coreui.module';
 import { PfmSecureFileuploadModule } from '../pfm-secure-fileupload/pfm-secure-fileupload.module';
+import { ExecutionService } from './services/execution.service';
+import { ExecutionServiceServiceImpl } from './services/execution-service.service-impl';
 
 @NgModule({
   declarations: [ExecutionFeatureComponent, CreateExecutionComponent],
-  imports: [CommonModule, ExecutionFeatureRoutingModule, PfmCoreuiModule, PfmSecureFileuploadModule]
+  imports: [CommonModule, ExecutionFeatureRoutingModule, PfmCoreuiModule, PfmSecureFileuploadModule],
+  providers: [{ provide: ExecutionService, useClass: ExecutionServiceServiceImpl }]
 })
 export class ExecutionFeatureModule {}
