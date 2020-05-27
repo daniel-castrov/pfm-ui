@@ -24,7 +24,7 @@ import { GoogleChartComponent, GoogleChartInterface } from 'ng2-google-charts';
 import { ListItem } from 'src/app/pfm-common-models/ListItem';
 import { DropdownComponent } from 'src/app/pfm-coreui/form-inputs/dropdown/dropdown.component';
 import { ProgramStatus } from 'src/app/programming-feature/models/enumerations/program-status.model';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { ProgrammingModel } from 'src/app/programming-feature/models/ProgrammingModel';
 import { FundingLineHistoryService } from 'src/app/programming-feature/services/funding-line-history.service';
 import { PomStatus } from 'src/app/programming-feature/models/enumerations/pom-status.model';
@@ -994,15 +994,15 @@ export class RequestsFundingLineGridComponent implements OnInit {
       errorMessage = 'Please, select a BA/BLIN.';
     } else if (row.userCreated) {
       if (!row.sag || !row.sag?.length || row.sag?.toLowerCase() === 'select') {
-      errorMessage = 'Please, select a SAG.';
+        errorMessage = 'Please, select a SAG.';
       } else if (!row.wucd || !row.wucd?.length || row.wucd?.toLowerCase() === 'select') {
-      errorMessage = 'Please, select a WUCD.';
-    } else if (
+        errorMessage = 'Please, select a WUCD.';
+      } else if (
         !row.expenditureType ||
         !row.expenditureType?.length ||
         row.expenditureType?.toLowerCase() === 'select'
-    ) {
-      errorMessage = 'Please, select a EXP Type.';
+      ) {
+        errorMessage = 'Please, select a EXP Type.';
       }
     } else if (
       this.nonSummaryFundingLineRows.some((fundingLine, idx) => {
