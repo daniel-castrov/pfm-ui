@@ -29,6 +29,7 @@ export class UfrRequestsComponent implements OnInit {
     this.gridAddOptions = ListItemHelper.generateListItemFromArray([
       ['Previosly Funded Program', 'prev'],
       ['Program Request', 'pr'],
+      ['New Increment', 'ni'],
       ['New FoS', 'nfos'],
       ['New Program', 'np']
     ]);
