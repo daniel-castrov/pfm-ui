@@ -50,6 +50,7 @@ import { CheckboxInputComponent } from './form-inputs/checkbox-input/checkbox-in
 import { CheckboxCellRendererComponent } from './datagrid/renderers/checkbox-cell-renderer/checkbox-cell-renderer.component';
 import { PrsActionCellRendererComponent } from './datagrid/renderers/prs-action-cell-renderer/prs-action-cell-renderer.component';
 import { FundingLineActionCellRendererComponent } from './datagrid/renderers/funding-line-action-cell-renderer/funding-line-action-cell-renderer.component';
+import { UfrActionCellRendererComponent } from './datagrid/renderers/ufr-action-cell-renderer/ufr-action-cell-renderer.component';
 
 @NgModule({
   declarations: [
@@ -93,7 +94,8 @@ import { FundingLineActionCellRendererComponent } from './datagrid/renderers/fun
     CheckboxInputComponent,
     CheckboxCellRendererComponent,
     PrsActionCellRendererComponent,
-    FundingLineActionCellRendererComponent
+    FundingLineActionCellRendererComponent,
+    UfrActionCellRendererComponent
   ],
   imports: [
     ToastModule,
@@ -156,7 +158,8 @@ import { FundingLineActionCellRendererComponent } from './datagrid/renderers/fun
     MprActionCellRendererComponent,
     WkspActionCellRendererComponent,
     CheckboxInputComponent,
-    CheckboxCellRendererComponent
+    CheckboxCellRendererComponent,
+    UfrActionCellRendererComponent
   ],
   providers: [MessageService]
 })
