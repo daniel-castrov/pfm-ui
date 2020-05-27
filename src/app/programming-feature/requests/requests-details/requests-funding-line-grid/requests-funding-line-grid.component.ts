@@ -988,19 +988,22 @@ export class RequestsFundingLineGridComponent implements OnInit {
   private validateNonSummaryRowData(rowIndex: any) {
     const row = this.nonSummaryFundingLineRows[rowIndex];
     let errorMessage = '';
-    if (!row.appropriation && (!row.appropriation?.length || row.appropriation?.toLowerCase() === 'select')) {
+    if (!row.appropriation || !row.appropriation?.length || row.appropriation?.toLowerCase() === 'select') {
       errorMessage = 'Please, select an APPN.';
-    } else if (!row.baOrBlin && (!row.baOrBlin?.length || row.baOrBlin?.toLowerCase() === 'select')) {
+    } else if (!row.baOrBlin || !row.baOrBlin?.length || row.baOrBlin?.toLowerCase() === 'select') {
       errorMessage = 'Please, select a BA/BLIN.';
-    } else if (!row.sag && (!row.sag?.length || row.sag?.toLowerCase() === 'select')) {
+    } else if (row.userCreated) {
+      if (!row.sag || !row.sag?.length || row.sag?.toLowerCase() === 'select') {
       errorMessage = 'Please, select a SAG.';
-    } else if (!row.wucd && (!row.wucd?.length || row.wucd?.toLowerCase() === 'select')) {
+      } else if (!row.wucd || !row.wucd?.length || row.wucd?.toLowerCase() === 'select') {
       errorMessage = 'Please, select a WUCD.';
     } else if (
-      !row.expenditureType &&
-      (!row.expenditureType?.length || row.expenditureType?.toLowerCase() === 'select')
+        !row.expenditureType ||
+        !row.expenditureType?.length ||
+        row.expenditureType?.toLowerCase() === 'select'
     ) {
       errorMessage = 'Please, select a EXP Type.';
+      }
     } else if (
       this.nonSummaryFundingLineRows.some((fundingLine, idx) => {
         return (
