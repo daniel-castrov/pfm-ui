@@ -988,19 +988,22 @@ export class RequestsFundingLineGridComponent implements OnInit {
   private validateNonSummaryRowData(rowIndex: any) {
     const row = this.nonSummaryFundingLineRows[rowIndex];
     let errorMessage = '';
-    if (!row.appropriation && (!row.appropriation?.length || row.appropriation?.toLowerCase() === 'select')) {
+    if (!row.appropriation || !row.appropriation?.length || row.appropriation?.toLowerCase() === 'select') {
       errorMessage = 'Please, select an APPN.';
-    } else if (!row.baOrBlin && (!row.baOrBlin?.length || row.baOrBlin?.toLowerCase() === 'select')) {
+    } else if (!row.baOrBlin || !row.baOrBlin?.length || row.baOrBlin?.toLowerCase() === 'select') {
       errorMessage = 'Please, select a BA/BLIN.';
-    } else if (!row.sag && (!row.sag?.length || row.sag?.toLowerCase() === 'select')) {
+    } else if (row.userCreated) {
+      if (!row.sag || !row.sag?.length || row.sag?.toLowerCase() === 'select') {
       errorMessage = 'Please, select a SAG.';
-    } else if (!row.wucd && (!row.wucd?.length || row.wucd?.toLowerCase() === 'select')) {
+      } else if (!row.wucd || !row.wucd?.length || row.wucd?.toLowerCase() === 'select') {
       errorMessage = 'Please, select a WUCD.';
     } else if (
-      !row.expenditureType &&
-      (!row.expenditureType?.length || row.expenditureType?.toLowerCase() === 'select')
+        !row.expenditureType ||
+        !row.expenditureType?.length ||
+        row.expenditureType?.toLowerCase() === 'select'
     ) {
       errorMessage = 'Please, select a EXP Type.';
+      }
     } else if (
       this.nonSummaryFundingLineRows.some((fundingLine, idx) => {
         return (
@@ -1910,6 +1913,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
         cellClass: params => ['numeric-class'],
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
         minWidth: 75,
+        maxWidth: 75,
         valueFormatter: params => this.currencyFormatter(params.data[params.colDef.field])
       });
     }
@@ -1917,7 +1921,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
     this.detailCellRendererParams = {
       detailGridOptions: {
         getRowHeight: params => {
-          return params.node.detail ? 40 : (Number(params.data.reason.length / 20) + 1) * 27;
+          return params.data.reason.length < 90 ? 40 : (Number(params.data.reason.length / 90) + 1) * 25;
         },
         columnDefs: [
           {
@@ -1927,7 +1931,10 @@ export class RequestsFundingLineGridComponent implements OnInit {
             sortable: false,
             suppressMenu: true,
             field: 'update',
-            headerName: 'Update'
+            headerName: 'Update',
+            cellStyle: { display: 'flex', 'align-items': 'center' },
+            minWidth: 75,
+            maxWidth: 75
           },
           {
             editable: false,
@@ -1936,7 +1943,10 @@ export class RequestsFundingLineGridComponent implements OnInit {
             sortable: false,
             suppressMenu: true,
             field: 'updatedDate',
-            headerName: 'Updated Date'
+            headerName: 'Updated Date',
+            cellStyle: { display: 'flex', 'align-items': 'center' },
+            minWidth: 150,
+            maxWidth: 150
           },
           {
             editable: false,
@@ -1946,7 +1956,8 @@ export class RequestsFundingLineGridComponent implements OnInit {
             suppressMenu: true,
             field: 'reason',
             headerName: 'Reason',
-            cellClass: 'word-break'
+            cellClass: 'word-break',
+            cellStyle: { display: 'flex', 'align-items': 'center' }
           },
           {
             editable: false,
@@ -1955,7 +1966,10 @@ export class RequestsFundingLineGridComponent implements OnInit {
             sortable: false,
             suppressMenu: true,
             field: 'updatedBy',
-            headerName: 'Updated By'
+            headerName: 'Updated By',
+            cellStyle: { display: 'flex', 'align-items': 'center' },
+            minWidth: 150,
+            maxWidth: 150
           },
           ...fyFields,
           {
@@ -1969,6 +1983,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
             cellClass: params => ['numeric-class'],
             cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
             minWidth: 75,
+            maxWidth: 75,
             valueFormatter: params => this.currencyFormatter(params.data[params.colDef.field])
           }
         ],
