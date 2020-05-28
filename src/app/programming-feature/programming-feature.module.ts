@@ -42,7 +42,7 @@ import { RequestSummaryNavigationHistoryService } from './requests/requests-summ
 import { VisibilityService } from '../services/visibility-service';
 import { VisibilityServiceImpl } from '../services/visibility-service-impl.service';
 import { RequestsDetailsFormComponent } from './requests/requests-details/requests-details-form/requests-details-form.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { JustificationComponent } from './requests/requests-details/justification/justification.component';
 import { ScopeComponent } from './requests/requests-details/scope/scope.component';
@@ -75,6 +75,7 @@ import { FundingLineHistoryService } from './services/funding-line-history.servi
 import { CompareWorkSpacesComponent } from './work-space-management/compare-work-spaces/compare-work-spaces.component';
 import { UserService } from '../services/user-impl-service';
 import { UserServiceImpl } from '../services/user-service';
+import { SpinnerModule } from 'primeng/spinner';
 
 @NgModule({
   declarations: [
@@ -108,6 +109,7 @@ import { UserServiceImpl } from '../services/user-service';
     CommonModule,
     HttpClientModule,
     ReactiveFormsModule,
+    FormsModule,
     GridsterModule,
     Ng2GoogleChartsModule,
     PfmCoreuiModule,
@@ -115,7 +117,8 @@ import { UserServiceImpl } from '../services/user-service';
     PfmSecureFiledownloadModule,
     TabsModule.forRoot(),
     ProgrammingFeatureRoutingModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    SpinnerModule
   ],
   providers: [
     { provide: ProgrammingService, useClass: ProgrammingServiceImpl },
