@@ -833,7 +833,7 @@ export class CreateProgrammingComponent implements OnInit {
 
     if (!isDelataRowValid) {
       this.dialogService.displayInfo(
-        'The Delta row in the Organization TOA grid has at least one negative value.' +
+        'The Delta row in the Organization TOA grid has at least one negative value. ' +
           'All values must be zero or positive'
       );
       return;
