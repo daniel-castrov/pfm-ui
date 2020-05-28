@@ -4,7 +4,7 @@ div {
   justify-content: center;
 }
 
-.action:hover {
+.action fa-icon:hover {
   color: red;
   cursor: pointer;
 }
@@ -12,4 +12,14 @@ div {
 fa-icon {
   margin-left: 15px;
   font-size: x-large;
+}
+
+.disabled,
+.icon-dropdown > button:disabled {
+  opacity: 0.6;
+}
+
+.action fa-icon.disabled:hover {
+  color: inherit;
+  cursor: default;
 }

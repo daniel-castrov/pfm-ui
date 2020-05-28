@@ -28,12 +28,16 @@
           [fieldLabel]="'name'"
           [options]="options"
           [showPrompt]="false"
-          [disabled]="api?.getEditingCells().length"
+          [disabled]="api?.getEditingCells().length || disableAddRow"
         >
         </pfm-dropdown>
       </div>
       <div title="Add" *ngIf="showAddSingleRow" (click)="handleAddCta('add-single-row')">
-        <fa-icon [icon]="'plus'" title="Add" [class.disabled]="api?.getEditingCells().length"></fa-icon>
+        <fa-icon
+          [icon]="'plus'"
+          title="Add"
+          [class.disabled]="api?.getEditingCells().length || disableAddRow"
+        ></fa-icon>
       </div>
     </div>
   </div>

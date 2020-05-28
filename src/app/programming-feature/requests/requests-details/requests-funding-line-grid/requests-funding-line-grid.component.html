@@ -73,13 +73,60 @@
       </button>
     </div>
   </div>
-  <div class="mt-5">
+  <div class="mt-5 mb-1">
     <pfm-toggle-input
       [checked]="showSubtotals"
       [label]="'Show Subtotals'"
       (valueChanged)="onToggleValueChanged($event)"
     >
     </pfm-toggle-input>
+  </div>
+  <div *ngIf="!showSubtotals && isPomOpenStatus" class="bulk-change-container form-control row col-12 m-0 h-100">
+    <div class="col-4 d-inline-block p-0">
+      <pfm-dropdown
+        #bulkDropdown
+        (selectionChanged)="onBulkDropdownChange($event)"
+        [fieldName]="'name'"
+        [fieldLabel]="'name'"
+        [options]="bulkDropdownOptions"
+        [label]="'Bulk change these funding lines'"
+        [disablePrompt]="false"
+      >
+      </pfm-dropdown>
+    </div>
+    <div class="col-2 d-inline-block align-middle p-0">
+      <pfm-dropdown
+        #bulkFilterDropdown
+        class="row col-12"
+        (selectionChanged)="onBulkFilterDropdownChange($event)"
+        [fieldName]="'name'"
+        [fieldLabel]="'name'"
+        [options]="bulkFilterDropdownOptions"
+        [visible]="bulkFilterDropdownOptions.length > 1"
+        [disablePrompt]="false"
+      >
+      </pfm-dropdown>
+    </div>
+    <div class="col-1 d-inline-block align-middle p-0">
+      <p-spinner size="8" [(ngModel)]="bulkChangeAmount"></p-spinner>
+    </div>
+    <div class="col-1 d-inline-block align-middle">
+      <pfm-toggle-input
+        [checked]="showPercent"
+        [onOffLabel]="showPercent ? '%' : '$'"
+        [activeClass]="''"
+        (valueChanged)="onCurrencyDisplayChanged($event)"
+      >
+      </pfm-toggle-input>
+    </div>
+    <div class="col-1 d-inline-block align-middle">
+      <button type="button" class="btn btn-primary mx-0-auto" (click)="onBlukApplyChange()">
+        Apply
+      </button>
+    </div>
+    <button type="button" class="btn-anchor" (click)="onBulkClearFilter()">
+      Clear Filter
+    </button>
   </div>
   <div class="grid-container" *ngIf="showSubtotals">
     <pfm-datagrid
@@ -106,6 +153,7 @@
       (mousedown)="onNonSummaryMouseDown($event)"
       [isMasterDetail]="true"
       [detailCellRendererParams]="detailCellRendererParams"
+      [disableAddRow]="isFiltered"
     >
     </pfm-datagrid>
   </div>
