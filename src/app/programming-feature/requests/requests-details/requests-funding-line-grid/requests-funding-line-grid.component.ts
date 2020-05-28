@@ -2067,6 +2067,20 @@ export class RequestsFundingLineGridComponent implements OnInit {
             minWidth: 75,
             maxWidth: 75,
             valueFormatter: params => this.currencyFormatter(params.data[params.colDef.field])
+          },
+          {
+            editable: false,
+            suppressMovable: true,
+            filter: false,
+            sortable: false,
+            suppressMenu: true,
+            field: 'ctc',
+            headerName: 'CTC',
+            cellClass: params => ['numeric-class'],
+            cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
+            minWidth: 75,
+            maxWidth: 75,
+            valueFormatter: params => this.currencyFormatter(params.data[params.colDef.field])
           }
         ],
         defaultColDef: { flex: 1 }
@@ -2088,7 +2102,8 @@ export class RequestsFundingLineGridComponent implements OnInit {
             updatedDate: formatDate(fundingLineHistory.created, 'MM/d/yyyy H:mm', 'en-US'),
             reason: fundingLineHistory.reason,
             updatedBy: this.usersFullNameMap[fundingLineHistory.createdBy],
-            byTotal: total
+            byTotal: total,
+            ctc: fundingLineHistory.ctc
           };
           Object.assign(fundingLineHistoryEntry, ...byFields);
           fundingLineMasterDetail.push(fundingLineHistoryEntry);
