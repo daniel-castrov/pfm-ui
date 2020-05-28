@@ -41,6 +41,8 @@ import { UserService } from 'src/app/services/user-impl-service';
 export class RequestsFundingLineGridComponent implements OnInit {
   @ViewChild('googleChart')
   chart: GoogleChartComponent;
+  @ViewChild('historyChart')
+  historyChart: GoogleChartComponent;
   @ViewChild('displayDropdown')
   displayDropdown: DropdownComponent;
   @ViewChild('appropriationDropdown')
@@ -121,6 +123,39 @@ export class RequestsFundingLineGridComponent implements OnInit {
     }
   };
 
+  historyChartData: GoogleChartInterface = {
+    chartType: 'LineChart',
+    options: {
+      title: 'Update History for ',
+      width: 575,
+      height: 350,
+      chartArea: {
+        width: '80%',
+        height: '70%',
+        left: '0%'
+      },
+      series: {
+        0: {
+          type: 'line'
+        },
+        1: {
+          type: 'line'
+        }
+      },
+      vAxis: {
+        format: '$#,###',
+        gridlines: {
+          count: 10
+        }
+      },
+      animation: {
+        duration: 500,
+        easing: 'out',
+        startup: true
+      }
+    }
+  };
+
   showSubtotals: boolean;
 
   summaryFundingLineRows: any[] = [];
@@ -172,6 +207,9 @@ export class RequestsFundingLineGridComponent implements OnInit {
   showPercent: boolean;
   originalNonSummaryFundingLineRows: FundingData[] = [];
   isFiltered: boolean;
+
+  showHistoryGraph = false;
+  currentRowHistoryGraph = -1;
 
   constructor(
     private programmingModel: ProgrammingModel,
@@ -658,7 +696,12 @@ export class RequestsFundingLineGridComponent implements OnInit {
         break;
       case 'history-graph':
         if (!this.currentNonSummaryRowDataState.isEditMode) {
-          this.performNonSummaryCancel(cellAction.rowIndex);
+          if (this.showHistoryGraph && cellAction.rowIndex === this.currentRowHistoryGraph) {
+            this.showHistoryGraph = false;
+            this.currentRowHistoryGraph = -1;
+          } else {
+            this.drawHistoryChart(cellAction.rowIndex);
+          }
         }
         break;
     }
@@ -1972,6 +2015,9 @@ export class RequestsFundingLineGridComponent implements OnInit {
           this.lookupUserCacIds([fundingLineHistoryResult.createdBy]);
         }
         if (viewMode) {
+          if (this.historyReasonDialog.rowIndex === this.currentRowHistoryGraph) {
+            this.drawHistoryChart(this.historyReasonDialog.rowIndex);
+          }
           of(viewMode(this.historyReasonDialog.rowIndex)).subscribe(() => {
             this.closeHistoryReasonDialog();
           });
@@ -2272,6 +2318,51 @@ export class RequestsFundingLineGridComponent implements OnInit {
     this.historyReasonDialog.update = update;
     this.historyReasonDialog.bulk = bulk;
     this.historyReasonDialog.display = true;
+  }
+
+  drawHistoryChart(rowIndex: number) {
+    this.showHistoryGraph = true;
+    this.currentRowHistoryGraph = rowIndex;
+    const data = this.computeHistoryChartData(rowIndex);
+    this.historyChartData.dataTable = data;
+    if (this.historyChart && this.historyChart.wrapper) {
+      this.historyChart.draw();
+    }
+  }
+
+  computeHistoryChartData(rowIndex: number) {
+    const fundingLineRow = this.nonSummaryFundingLineRows[rowIndex];
+    this.historyChartData.options.title = 'Update History for ' + this.getFundingLineName(fundingLineRow);
+    const data: any[] = [['Fiscal Year']];
+    const funds: any[] = [];
+    const histories = fundingLineRow.fundingLineHistories;
+    histories.forEach(historyRow => {
+      funds[historyRow.id] = [];
+      data[0].push(historyRow.reason);
+      for (const year of Object.keys(historyRow.funds)) {
+        funds[historyRow.id][year] = funds[historyRow.id][year] ?? 0;
+        funds[historyRow.id][year] += Number(historyRow.funds[year]) ?? 0;
+      }
+    });
+    for (let i = this.pomYear; i < this.pomYear + 5; i++) {
+      const singleData = ['FY' + (i % 100)];
+      histories.forEach(historyRow => {
+        singleData.push(funds[historyRow.id][i] ?? 0);
+      });
+      data.push(singleData);
+    }
+
+    return data;
+  }
+
+  private getFundingLineName(fundingLine: FundingLine): string {
+    const props = [];
+    props.push(fundingLine.appropriation);
+    props.push(fundingLine.baOrBlin);
+    props.push(fundingLine.sag);
+    props.push(fundingLine.wucd);
+    props.push(fundingLine.expenditureType);
+    return props.join('/');
   }
 }
 

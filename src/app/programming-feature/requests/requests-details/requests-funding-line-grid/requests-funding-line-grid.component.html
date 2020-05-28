@@ -1,76 +1,84 @@
 <div>
   <div class="row col-12">
-    <google-chart #googleChart [data]="chartData"></google-chart>
-    <div class="row col-12 mx-auto">
-      <pfm-dropdown
-        #displayDropdown
-        class="col-2"
-        (selectionChanged)="onDisplayDropdownChange($event)"
-        [fieldName]="'name'"
-        [fieldLabel]="'name'"
-        [defaultOption]="displayDropdownOptions[0]"
-        [options]="displayDropdownOptions"
-        [label]="'Display'"
-        [showPrompt]="false"
-      >
-      </pfm-dropdown>
-      <pfm-dropdown
-        #appropriationDropdown
-        class="col-1"
-        (selectionChanged)="onAppropiationDropdownChange($event)"
-        [fieldName]="'name'"
-        [fieldLabel]="'name'"
-        [options]="appropriationDropdownOptions"
-        [visible]="appropriationDropdownOptions.length > 1"
-        [disablePrompt]="false"
-      >
-      </pfm-dropdown>
-      <pfm-dropdown
-        #bablinDropdown
-        class="col-1"
-        (selectionChanged)="onBablinDropdownChange($event)"
-        [fieldName]="'name'"
-        [fieldLabel]="'name'"
-        [options]="bablinDropdownOptions"
-        [visible]="bablinDropdownOptions.length > 1"
-        [disablePrompt]="false"
-      >
-      </pfm-dropdown>
-      <pfm-dropdown
-        #sagDropdown
-        class="col-1"
-        (selectionChanged)="onSagDropdownChange($event)"
-        [fieldName]="'name'"
-        [fieldLabel]="'name'"
-        [options]="sagDropdownOptions"
-        [visible]="sagDropdownOptions.length > 1"
-        [disablePrompt]="false"
-      >
-      </pfm-dropdown>
-      <pfm-dropdown
-        #wucdDropdown
-        class="col-1"
-        (selectionChanged)="onWucdDropdownChange($event)"
-        [fieldName]="'name'"
-        [fieldLabel]="'name'"
-        [options]="wucdDropdownOptions"
-        [visible]="wucdDropdownOptions.length > 1"
-        [disablePrompt]="false"
-      >
-      </pfm-dropdown>
-      <pfm-dropdown
-        #expTypeDropdown
-        class="col-1"
-        [fieldName]="'name'"
-        [fieldLabel]="'name'"
-        [options]="expTypeDropdownOptions"
-        [visible]="expTypeDropdownOptions.length > 1"
-        [disablePrompt]="false"
-      >
-      </pfm-dropdown>
-      <button class="col-1" type="button" class="btn btn-primary" (click)="drawLineChart()">
-        Go
-      </button>
+    <div class="col-8">
+      <google-chart #googleChart [data]="chartData"></google-chart>
+      <div class="row mx-auto">
+        <div class="row col-11">
+          <pfm-dropdown
+            #displayDropdown
+            class="col-2"
+            (selectionChanged)="onDisplayDropdownChange($event)"
+            [fieldName]="'name'"
+            [fieldLabel]="'name'"
+            [defaultOption]="displayDropdownOptions[0]"
+            [options]="displayDropdownOptions"
+            [label]="'Display'"
+            [showPrompt]="false"
+          >
+          </pfm-dropdown>
+          <pfm-dropdown
+            #appropriationDropdown
+            class="col-2"
+            (selectionChanged)="onAppropiationDropdownChange($event)"
+            [fieldName]="'name'"
+            [fieldLabel]="'name'"
+            [options]="appropriationDropdownOptions"
+            [visible]="appropriationDropdownOptions.length > 1"
+            [disablePrompt]="false"
+          >
+          </pfm-dropdown>
+          <pfm-dropdown
+            #bablinDropdown
+            class="col-2"
+            (selectionChanged)="onBablinDropdownChange($event)"
+            [fieldName]="'name'"
+            [fieldLabel]="'name'"
+            [options]="bablinDropdownOptions"
+            [visible]="bablinDropdownOptions.length > 1"
+            [disablePrompt]="false"
+          >
+          </pfm-dropdown>
+          <pfm-dropdown
+            #sagDropdown
+            class="col-2"
+            (selectionChanged)="onSagDropdownChange($event)"
+            [fieldName]="'name'"
+            [fieldLabel]="'name'"
+            [options]="sagDropdownOptions"
+            [visible]="sagDropdownOptions.length > 1"
+            [disablePrompt]="false"
+          >
+          </pfm-dropdown>
+          <pfm-dropdown
+            #wucdDropdown
+            class="col-2"
+            (selectionChanged)="onWucdDropdownChange($event)"
+            [fieldName]="'name'"
+            [fieldLabel]="'name'"
+            [options]="wucdDropdownOptions"
+            [visible]="wucdDropdownOptions.length > 1"
+            [disablePrompt]="false"
+          >
+          </pfm-dropdown>
+          <pfm-dropdown
+            #expTypeDropdown
+            class="col-2"
+            [fieldName]="'name'"
+            [fieldLabel]="'name'"
+            [options]="expTypeDropdownOptions"
+            [visible]="expTypeDropdownOptions.length > 1"
+            [disablePrompt]="false"
+          >
+          </pfm-dropdown>
+        </div>
+
+        <button type="button" class="btn btn-primary pull-right" (click)="drawLineChart()">
+          Go
+        </button>
+      </div>
+    </div>
+    <div class="col-4" *ngIf="showHistoryGraph">
+      <google-chart #historyChart [data]="historyChartData"></google-chart>
     </div>
   </div>
   <div class="mt-5 mb-1">
