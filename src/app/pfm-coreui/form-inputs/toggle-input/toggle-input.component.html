@@ -3,7 +3,7 @@
     {{ label }}
   </label>
   <label class="switch">
-    <input type="checkbox" class="primary" [(ngModel)]="checked" (ngModelChange)="onChange($event)" />
-    <span class="slider round"></span>
+    <input type="checkbox" [ngClass]="activeClass" [(ngModel)]="checked" (ngModelChange)="onChange($event)" />
+    <span class="slider round" [attr.data-content]="onOffLabel"></span>
   </label>
 </div>

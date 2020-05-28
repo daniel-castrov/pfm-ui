@@ -5,7 +5,7 @@
   position: relative;
   width: 60px;
   height: 34px;
-  float: 'right';
+  margin: 0;
 }
 
 /* Hide default HTML checkbox */
@@ -36,6 +36,20 @@
   background-color: white;
   -webkit-transition: 0.4s;
   transition: 0.4s;
+}
+
+input:not(:checked) + .slider:after {
+  content: attr(data-content);
+  position: absolute;
+  right: 12px;
+  top: 5px;
+}
+
+input:checked + .slider:after {
+  content: attr(data-content);
+  position: absolute;
+  left: 12px;
+  top: 5px;
 }
 
 input.default:checked + .slider {
@@ -71,4 +85,5 @@ input:checked + .slider:before {
 .toggle-container > .title {
   align-self: center;
   margin-right: 2%;
+  margin-top: 5px;
 }

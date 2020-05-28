@@ -12,14 +12,14 @@
   <div class="action" (click)="onSelected('history-grid')">
     <span title="View History Grid">
       <ng-container *ngIf="data.hasHistory">
-        <fa-icon icon="history"></fa-icon>
+        <fa-icon icon="history" [class.disabled]="params.data.isDisabled"></fa-icon>
       </ng-container>
     </span>
   </div>
   <div class="action" (click)="onSelected('history-grap')">
     <span title="View History Graph">
       <ng-container *ngIf="data.hasHistory">
-        <fa-icon icon="chart-line"></fa-icon>
+        <fa-icon icon="chart-line" [class.disabled]="params.data.isDisabled"></fa-icon>
       </ng-container>
     </span>
   </div>
