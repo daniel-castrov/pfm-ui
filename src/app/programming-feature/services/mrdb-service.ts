@@ -36,4 +36,8 @@ export abstract class MrdbService extends BaseRestService {
    * @param pRs - Existing Program Requests to filter against
    */
   abstract getProgramsMinusPrs(organizationId: string, pRs: Program[]): Observable<object>;
+
+  abstract getPrevFundedProgramsValidForUFR(): Observable<object>;
+
+  abstract getProgramRequestValidForURF(): Observable<object>;
 }
