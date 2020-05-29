@@ -84,3 +84,11 @@ h3 {
 .cancel {
   display: flex;
 }
+
+:host #workspaceDropDown::ng-deep .pfm-dropdown {
+  margin-left: 11px;
+}
+
+:host ::ng-deep .pfm-dropdown {
+  width: 350px !important;
+}

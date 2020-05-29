@@ -34,7 +34,7 @@
       *ngIf="workspaces"
       (selectionChanged)="onWorkspaceChange($event)"
       [type]="'labelDropdown'"
-      [label]="'Select workspace to view:'"
+      [label]="'Select Workspace to View:'"
       [required]="true"
       [id]="'workspaceDropDown'"
       [defaultOption]="dropdownDefault"
@@ -43,7 +43,7 @@
       [options]="workspaces"
       class="d-inline-block"
     ></pfm-dropdown>
-    <span *ngIf="selectedWorkspace">
+    <span *ngIf="selectedWorkspace" class="ml-3">
       Last updated on {{ selectedWorkspace.modified | date: 'M/d/yyyy HH:mm':undefined:'en-US' }}
     </span>
   </div>
