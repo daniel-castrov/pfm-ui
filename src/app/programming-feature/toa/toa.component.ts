@@ -351,7 +351,7 @@ export class ToaComponent implements OnInit {
 
     if (!isDeltaRowValid) {
       this.toastService.displayError(
-        'The Delta row in the Organization TOA grid has at least one negative value.' +
+        'The Delta row in the Organization TOA grid has at least one negative value. ' +
           'All values must be zero or positive'
       );
       return false;

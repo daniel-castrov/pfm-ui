@@ -88,10 +88,6 @@ p {
   border-left: 1px solid #7b8389 !important;
 }
 
-:host ::ng-deep .ag-details-grid {
-  border-bottom: 1px solid #7b8389;
-}
-
 :host ::ng-deep .ag-details-grid .ag-header-cell {
   border-right: solid white 1px;
 }

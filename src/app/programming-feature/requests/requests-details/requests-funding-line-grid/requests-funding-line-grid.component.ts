@@ -32,6 +32,7 @@ import { FundingLineHistory } from 'src/app/programming-feature/models/funding-l
 import { FundingLineActionCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/funding-line-action-cell-renderer/funding-line-action-cell-renderer.component';
 import { formatDate } from '@angular/common';
 import { UserService } from 'src/app/services/user-impl-service';
+import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
 
 @Component({
   selector: 'pfm-requests-funding-line-grid',
@@ -41,6 +42,8 @@ import { UserService } from 'src/app/services/user-impl-service';
 export class RequestsFundingLineGridComponent implements OnInit {
   @ViewChild('googleChart')
   chart: GoogleChartComponent;
+  @ViewChild('historyChart')
+  historyChart: GoogleChartComponent;
   @ViewChild('displayDropdown')
   displayDropdown: DropdownComponent;
   @ViewChild('appropriationDropdown')
@@ -53,6 +56,11 @@ export class RequestsFundingLineGridComponent implements OnInit {
   wucdDropdown: DropdownComponent;
   @ViewChild('expTypeDropdown')
   expTypeDropdown: DropdownComponent;
+  @ViewChild('bulkDropdown')
+  bulkDropdown: DropdownComponent;
+  @ViewChild('bulkFilterDropdown')
+  bulkFilterDropdown: DropdownComponent;
+
   @Input() pomYear: number;
   @Input() program: Program;
 
@@ -116,6 +124,39 @@ export class RequestsFundingLineGridComponent implements OnInit {
     }
   };
 
+  historyChartData: GoogleChartInterface = {
+    chartType: 'LineChart',
+    options: {
+      title: 'Update History for ',
+      width: 515,
+      height: 350,
+      chartArea: {
+        width: '70%',
+        height: '70%',
+        left: '10%'
+      },
+      series: {
+        0: {
+          type: 'line'
+        },
+        1: {
+          type: 'line'
+        }
+      },
+      vAxis: {
+        format: '$#,###',
+        gridlines: {
+          count: 10
+        }
+      },
+      animation: {
+        duration: 500,
+        easing: 'out',
+        startup: true
+      }
+    }
+  };
+
   showSubtotals: boolean;
 
   summaryFundingLineRows: any[] = [];
@@ -150,6 +191,8 @@ export class RequestsFundingLineGridComponent implements OnInit {
   wucdDropdownOptions: ListItem[] = [];
   expTypeDropdownOptions: ListItem[] = [];
 
+  isPomOpenStatus: boolean;
+
   historyReasonForm: FormGroup;
   historyReasonDialog: HistoryReasonDialogInterface = { title: 'Enter Update Reason' };
   historyReasonDialogError: boolean;
@@ -159,16 +202,28 @@ export class RequestsFundingLineGridComponent implements OnInit {
 
   usersFullNameMap: { [key: string]: string } = {};
 
+  bulkDropdownOptions: ListItem[] = [];
+  bulkFilterDropdownOptions: ListItem[] = [];
+  bulkChangeAmount = 0;
+  showPercent: boolean;
+  originalNonSummaryFundingLineRows: FundingData[] = [];
+  isFiltered: boolean;
+
+  showHistoryGraph = false;
+  currentRowHistoryGraph = -1;
+
   constructor(
     private programmingModel: ProgrammingModel,
     private dialogService: DialogService,
     private propertyService: PropertyService,
     private fundingLineService: FundingLineService,
     private fundingLineHistoryService: FundingLineHistoryService,
-    private userService: UserService
+    private userService: UserService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit() {
+    this.isPomOpenStatus = this.programmingModel.pom.status === PomStatus.OPEN;
     this.setupSummaryFundingLineGrid();
     this.setupNonSummaryFundingLineGrid();
     this.loadDropDownValues();
@@ -182,6 +237,8 @@ export class RequestsFundingLineGridComponent implements OnInit {
     if (!this.nonSummaryFundingLineRows.length) {
       this.loadDataFromProgram();
     }
+    this.loadBulkDropdownValue();
+    this.performBulkFilter();
   }
 
   onSummaryGridReady(api: GridApi) {
@@ -282,11 +339,67 @@ export class RequestsFundingLineGridComponent implements OnInit {
         isSelected: false
       }
     ];
+
     this.insertDefaultOptions(this.appropriationDropdownOptions);
     this.insertDefaultOptions(this.bablinDropdownOptions);
     this.insertDefaultOptions(this.sagDropdownOptions);
     this.insertDefaultOptions(this.wucdDropdownOptions);
     this.insertDefaultOptions(this.expTypeDropdownOptions);
+  }
+
+  private loadBulkDropdownValue() {
+    if (!this.isPomOpenStatus) {
+      return;
+    }
+    this.bulkDropdownOptions = [
+      {
+        id: 'ALL',
+        name: 'ALL',
+        value: 'ALL',
+        rawData: 'ALL',
+        isSelected: false
+      },
+      {
+        id: 'APPN',
+        name: 'APPN',
+        value: 'APPN',
+        rawData: 'APPN',
+        isSelected: false
+      },
+      {
+        id: 'BA/BLIN',
+        name: 'BA/BLIN',
+        value: 'BA/BLIN',
+        rawData: 'BA/BLIN',
+        isSelected: false
+      }
+    ];
+    const hasSag = this.nonSummaryFundingLineRows.filter(fundingLine => fundingLine.sag).length;
+    if (hasSag) {
+      this.bulkDropdownOptions.push(
+        {
+          id: 'SAG',
+          name: 'SAG',
+          value: 'SAG',
+          rawData: 'SAG',
+          isSelected: false
+        },
+        {
+          id: 'WUCD',
+          name: 'WUCD',
+          value: 'WUCD',
+          rawData: 'WUCD',
+          isSelected: false
+        },
+        {
+          id: 'EXP Type',
+          name: 'EXP Type',
+          value: 'EXP Type',
+          rawData: 'EXP Type',
+          isSelected: false
+        }
+      );
+    }
   }
 
   private loadDataFromProgram() {
@@ -301,10 +414,12 @@ export class RequestsFundingLineGridComponent implements OnInit {
         this.nonSummaryFundingLineGridApi.hideOverlay();
         this.drawLineChart();
 
-        if (this.programmingModel.pom.status === PomStatus.OPEN) {
+        if (this.isPomOpenStatus) {
           this.storeUserFullNameFromHistory(fundingLines);
           this.loadMasterDetail();
+          this.loadBulkDropdownValue();
         }
+        this.originalNonSummaryFundingLineRows = JSON.parse(JSON.stringify(this.nonSummaryFundingLineRows));
       });
   }
 
@@ -573,14 +688,23 @@ export class RequestsFundingLineGridComponent implements OnInit {
         this.performNonSummaryCancel(cellAction.rowIndex);
         break;
       case 'history-grid':
-        this.nonSummaryFundingLineGridApi.forEachNode(node => {
-          if (node.childIndex === cellAction.rowIndex) {
-            node.setExpanded(!node.expanded);
-          }
-        });
+        if (!this.currentNonSummaryRowDataState.isEditMode) {
+          this.nonSummaryFundingLineGridApi.forEachNode(node => {
+            if (node.childIndex === cellAction.rowIndex) {
+              node.setExpanded(!node.expanded);
+            }
+          });
+        }
         break;
       case 'history-graph':
-        this.performNonSummaryCancel(cellAction.rowIndex);
+        if (!this.currentNonSummaryRowDataState.isEditMode) {
+          if (this.showHistoryGraph && cellAction.rowIndex === this.currentRowHistoryGraph) {
+            this.showHistoryGraph = false;
+            this.currentRowHistoryGraph = -1;
+          } else {
+            this.drawHistoryChart(cellAction.rowIndex);
+          }
+        }
         break;
     }
   }
@@ -605,17 +729,6 @@ export class RequestsFundingLineGridComponent implements OnInit {
           if (!this.currentSummaryRowDataState.isEditMode) {
             this.editSummaryRow(rowIndex, cellAction.rowIndex, true);
           }
-          break;
-        case 'delete-row':
-          if (!this.currentSummaryRowDataState.isEditMode) {
-            cellAction.rowIndex = rowIndex;
-            this.deleteDialog.bodyText =
-              'You will be permanently deleting the row from the grid.  Are you sure you want to delete this row?';
-            this.displayDeleteDialog(cellAction, this.deleteSummaryRow.bind(this));
-          }
-          break;
-        case 'cancel':
-          this.performSummaryCancel(cellAction.rowIndex);
           break;
       }
     }
@@ -678,7 +791,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
             colId: 0,
             headerName: 'APPN',
             field: 'appropriation',
-            editable: params => params.data.userCreated,
+            editable: params => this.currentNonSummaryRowDataState.isAddMode,
             suppressMovable: true,
             filter: false,
             sortable: false,
@@ -698,7 +811,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
             colId: 1,
             headerName: 'BA/BLIN',
             field: 'baOrBlin',
-            editable: params => params.data.userCreated,
+            editable: params => this.currentNonSummaryRowDataState.isAddMode,
             suppressMovable: true,
             filter: false,
             sortable: false,
@@ -723,7 +836,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
             colId: 2,
             headerName: 'SAG',
             field: 'sag',
-            editable: params => params.data.userCreated,
+            editable: params => this.currentNonSummaryRowDataState.isAddMode,
             suppressMovable: true,
             filter: false,
             sortable: false,
@@ -743,7 +856,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
             colId: 3,
             headerName: 'WUCD',
             field: 'wucd',
-            editable: params => params.data.userCreated,
+            editable: params => this.currentNonSummaryRowDataState.isAddMode,
             suppressMovable: true,
             filter: false,
             sortable: false,
@@ -763,7 +876,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
             colId: 4,
             headerName: 'EXP Type',
             field: 'expenditureType',
-            editable: params => params.data.userCreated,
+            editable: params => this.currentNonSummaryRowDataState.isAddMode,
             suppressMovable: true,
             filter: false,
             sortable: false,
@@ -836,7 +949,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
   }
 
   onNonSummaryRowAdd(params) {
-    if (this.currentNonSummaryRowDataState.isEditMode) {
+    if (this.currentNonSummaryRowDataState.isEditMode || this.isFiltered) {
       return;
     }
     this.nonSummaryFundingLineRows.push({
@@ -870,7 +983,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
     this.nonSummaryFundingLineGridApi.stopEditing();
     const canSave = this.validateNonSummaryRowData(rowIndex);
     if (canSave) {
-      if (this.programmingModel.pom.status === PomStatus.OPEN) {
+      if (this.isPomOpenStatus) {
         this.displayHistoryReasonDialog(rowIndex, this.prepareNonSummarySave.bind(this));
       } else {
         this.prepareNonSummarySave(rowIndex);
@@ -919,11 +1032,10 @@ export class RequestsFundingLineGridComponent implements OnInit {
         fundingData => {
           this.nonSummaryFundingLineRows[rowIndex] = fundingData;
           this.updateTotalFields(this.nonSummaryFundingLineGridApi, this.nonSummaryFundingLineRows);
-          this.reloadDropdownOptions();
           this.drawLineChart();
           this.program.programStatus = ProgramStatus.SAVED;
 
-          if (this.programmingModel.pom.status === PomStatus.OPEN) {
+          if (this.isPomOpenStatus) {
             const reason = this.historyReasonForm.get('reason').value;
             if (reason?.length) {
               this.historyReasonDialog.rowIndex = rowIndex;
@@ -934,6 +1046,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
           } else {
             this.viewNonSummaryMode(rowIndex);
           }
+          this.updateOriginalNonSummaryFundingLines(fundingData);
         },
         error => {
           this.dialogService.displayDebug(error);
@@ -1004,20 +1117,37 @@ export class RequestsFundingLineGridComponent implements OnInit {
       ) {
         errorMessage = 'Please, select a EXP Type.';
       }
-    } else if (
-      this.nonSummaryFundingLineRows.some((fundingLine, idx) => {
-        return (
-          idx !== rowIndex &&
-          fundingLine.appropriation === row.appropriation &&
-          fundingLine.baOrBlin === row.baOrBlin &&
-          fundingLine.sag === row.sag &&
-          fundingLine.wucd === row.wucd &&
-          fundingLine.expenditureType === row.expenditureType
-        );
-      })
-    ) {
-      errorMessage = 'You have repeated an existing funding line. Please delete this row and edit the existing line.';
     }
+    if (this.isFiltered) {
+      if (
+        this.originalNonSummaryFundingLineRows.filter(
+          fundingLine =>
+            fundingLine.appropriation === row.appropriation &&
+            fundingLine.baOrBlin === row.baOrBlin &&
+            fundingLine.sag === row.sag &&
+            fundingLine.wucd === row.wucd &&
+            fundingLine.expenditureType === row.expenditureType
+        ).length > 1
+      ) {
+        errorMessage = 'You have repeated an existing funding line. Please delete this row and edit the existing line.';
+      }
+    } else {
+      if (
+        this.nonSummaryFundingLineRows.some((fundingLine, idx) => {
+          return (
+            idx !== rowIndex &&
+            fundingLine.appropriation === row.appropriation &&
+            fundingLine.baOrBlin === row.baOrBlin &&
+            fundingLine.sag === row.sag &&
+            fundingLine.wucd === row.wucd &&
+            fundingLine.expenditureType === row.expenditureType
+          );
+        })
+      ) {
+        errorMessage = 'You have repeated an existing funding line. Please delete this row and edit the existing line.';
+      }
+    }
+
     if (errorMessage.length) {
       this.dialogService.displayError(errorMessage);
     }
@@ -1040,7 +1170,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
   private deleteRow(rowIndex: number) {
     const fundingLineId = this.nonSummaryFundingLineRows[rowIndex].id;
     if (fundingLineId) {
-      if (this.programmingModel.pom.status === PomStatus.OPEN) {
+      if (this.isPomOpenStatus) {
         this.fundingLineHistoryService.deleteFundingLineHistory(fundingLineId).subscribe(() => {
           this.fundingLineService.removeFundingLineById(fundingLineId).subscribe(
             () => {
@@ -1048,6 +1178,12 @@ export class RequestsFundingLineGridComponent implements OnInit {
               this.updateTotalFields(this.nonSummaryFundingLineGridApi, this.nonSummaryFundingLineRows);
               this.reloadDropdownOptions();
               this.drawLineChart();
+              this.performReloadFilterDropdown();
+              this.performBulkFilter();
+              this.originalNonSummaryFundingLineRows.splice(
+                this.originalNonSummaryFundingLineRows.findIndex(fundingLine => fundingLine.id === fundingLineId),
+                1
+              );
             },
             error => {
               this.dialogService.displayDebug(error);
@@ -1086,7 +1222,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
   }
 
   private viewNonSummaryMode(rowIndex: number) {
-    this.currentNonSummaryRowDataState.currentEditingRowIndex = 0;
+    this.currentNonSummaryRowDataState.currentEditingRowIndex = -1;
     this.currentNonSummaryRowDataState.isEditMode = false;
     this.currentNonSummaryRowDataState.isAddMode = false;
     this.nonSummaryFundingLineGridApi.stopEditing();
@@ -1100,8 +1236,10 @@ export class RequestsFundingLineGridComponent implements OnInit {
     this.nonSummaryFundingLineRows.forEach(row => {
       row.isDisabled = false;
     });
+    this.updateOriginalNonSummaryFundingLines(this.nonSummaryFundingLineRows[rowIndex]);
     this.nonSummaryFundingLineGridApi.setRowData(this.nonSummaryFundingLineRows);
     this.nonSummaryFundingLineGridApi.hideOverlay();
+    this.performBulkFilter();
   }
 
   private editNonSummaryMode(rowIndex: number) {
@@ -1125,7 +1263,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
     this.summaryFundingLineGridApi.stopEditing();
     if (this.currentSummaryRowDataState.isEditMode) {
       this.historyReasonDialog.gridApiRowIndex = gridApiRowIndex;
-      if (this.programmingModel.pom.status === PomStatus.OPEN) {
+      if (this.isPomOpenStatus) {
         this.displayHistoryReasonDialog(rowIndex, this.prepareSummarySave.bind(this));
       } else {
         this.prepareSummarySave(rowIndex);
@@ -1156,13 +1294,14 @@ export class RequestsFundingLineGridComponent implements OnInit {
           this.reloadDropdownOptions();
           this.drawLineChart();
 
-          if (this.programmingModel.pom.status === PomStatus.OPEN) {
+          if (this.isPomOpenStatus) {
             this.historyReasonDialog.rowIndex = rowIndex;
             const reason = this.historyReasonForm.get('reason').value;
             this.performSaveFundingLineHistory(reason, this.viewSummaryMode.bind(this));
           } else {
             this.viewSummaryMode(rowIndex);
           }
+          this.updateOriginalNonSummaryFundingLines(fundingData);
         },
         error => {
           this.dialogService.displayDebug(error);
@@ -1181,29 +1320,6 @@ export class RequestsFundingLineGridComponent implements OnInit {
       this.currentSummaryRowDataState.currentEditingRowData = { ...this.summaryFundingLineRows[rowIndex] };
     }
     this.editSummaryMode(rowIndex, gridApiRowIndex);
-  }
-
-  private deleteSummaryRow(rowIndex: number) {
-    const fundingLineId = this.summaryFundingLineRows[rowIndex]?.id;
-    if (fundingLineId) {
-      if (this.programmingModel.pom.status === PomStatus.OPEN) {
-        this.fundingLineHistoryService.deleteFundingLineHistory(fundingLineId).subscribe(resp => {});
-      }
-      this.fundingLineService.removeFundingLineById(fundingLineId).subscribe(
-        () => {
-          this.summaryFundingLineRows.splice(rowIndex, 1);
-          this.updateTotalFields(this.summaryFundingLineGridApi, this.summaryFundingLineRows);
-          this.summaryFundingLineGridApi.setRowData(this.summaryFundingLineRows);
-          this.summaryFundingLineGridApi.hideOverlay();
-          this.summaryFundingLineGridApi.refreshClientSideRowModel('aggregate');
-          this.reloadDropdownOptions();
-          this.drawLineChart();
-        },
-        error => {
-          this.dialogService.displayDebug(error);
-        }
-      );
-    }
   }
 
   private viewSummaryMode(rowIndex: number) {
@@ -1787,6 +1903,9 @@ export class RequestsFundingLineGridComponent implements OnInit {
         }
       }
     }
+    if (this.isPomOpenStatus) {
+      this.performReloadFilterDropdown();
+    }
   }
 
   private updateChartOptionDifferences(options: ListItem[], field: string) {
@@ -1841,7 +1960,9 @@ export class RequestsFundingLineGridComponent implements OnInit {
 
   private closeHistoryReasonDialog() {
     this.historyReasonDialog.save = null;
+    this.historyReasonDialog.update = null;
     this.historyReasonDialog.rowIndex = null;
+    this.historyReasonDialog.bulk = null;
     this.historyReasonDialog.gridApiRowIndex = null;
     this.historyReasonDialog.fundingLine = null;
     this.historyReasonDialog.display = false;
@@ -1856,13 +1977,17 @@ export class RequestsFundingLineGridComponent implements OnInit {
   async onSaveHistoryReason() {
     const reason = this.historyReasonForm.get('reason').value;
     if (reason?.length) {
-      this.historyReasonDialog.save(this.historyReasonDialog.rowIndex);
+      if (this.historyReasonDialog.bulk) {
+        this.historyReasonDialog.update(this.historyReasonDialog.bulk);
+      } else {
+        this.historyReasonDialog.save(this.historyReasonDialog.rowIndex);
+      }
     } else {
       this.historyReasonDialogError = true;
     }
   }
 
-  private performSaveFundingLineHistory(reason: string, viewMode: (rowIndex: number) => void) {
+  private performSaveFundingLineHistory(reason: string, viewMode?: (rowIndex: number) => void) {
     const fundingLine = this.historyReasonDialog.fundingLine;
     const fundingLineHistory: FundingLineHistory = {
       reason,
@@ -1891,9 +2016,14 @@ export class RequestsFundingLineGridComponent implements OnInit {
         if (!this.usersFullNameMap[fundingLineHistoryResult.createdBy]) {
           this.lookupUserCacIds([fundingLineHistoryResult.createdBy]);
         }
-        of(viewMode(this.historyReasonDialog.rowIndex)).subscribe(() => {
-          this.closeHistoryReasonDialog();
-        });
+        if (viewMode) {
+          if (this.historyReasonDialog.rowIndex === this.currentRowHistoryGraph) {
+            this.drawHistoryChart(this.historyReasonDialog.rowIndex);
+          }
+          of(viewMode(this.historyReasonDialog.rowIndex)).subscribe(() => {
+            this.closeHistoryReasonDialog();
+          });
+        }
       },
       () => {}
     );
@@ -1985,6 +2115,20 @@ export class RequestsFundingLineGridComponent implements OnInit {
             minWidth: 75,
             maxWidth: 75,
             valueFormatter: params => this.currencyFormatter(params.data[params.colDef.field])
+          },
+          {
+            editable: false,
+            suppressMovable: true,
+            filter: false,
+            sortable: false,
+            suppressMenu: true,
+            field: 'ctc',
+            headerName: 'CTC',
+            cellClass: params => ['numeric-class'],
+            cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
+            minWidth: 75,
+            maxWidth: 75,
+            valueFormatter: params => this.currencyFormatter(params.data[params.colDef.field])
           }
         ],
         defaultColDef: { flex: 1 }
@@ -2006,7 +2150,8 @@ export class RequestsFundingLineGridComponent implements OnInit {
             updatedDate: formatDate(fundingLineHistory.created, 'MM/d/yyyy H:mm', 'en-US'),
             reason: fundingLineHistory.reason,
             updatedBy: this.usersFullNameMap[fundingLineHistory.createdBy],
-            byTotal: total
+            byTotal: total,
+            ctc: fundingLineHistory.ctc
           };
           Object.assign(fundingLineHistoryEntry, ...byFields);
           fundingLineMasterDetail.push(fundingLineHistoryEntry);
@@ -2014,6 +2159,213 @@ export class RequestsFundingLineGridComponent implements OnInit {
         params.successCallback(fundingLineMasterDetail);
       }
     };
+  }
+
+  onBulkDropdownChange(event) {
+    if (this.nonSummaryFundingLineGridApi.getEditingCells().length) {
+      this.performNonSummaryCancel(this.nonSummaryFundingLineGridApi.getEditingCells()[0].rowIndex);
+    }
+    this.isFiltered = false;
+    this.nonSummaryFundingLineRows = this.originalNonSummaryFundingLineRows;
+    this.performReloadFilterDropdown();
+  }
+
+  performReloadFilterDropdown() {
+    this.clearOptions(this.bulkFilterDropdownOptions, this.bulkFilterDropdown);
+    switch (this.bulkDropdown.selectedItem.toUpperCase()) {
+      case 'APPN':
+        this.loadChartDropdown(this.bulkFilterDropdownOptions, 'appropriation');
+        break;
+      case 'BA/BLIN':
+        this.loadChartDropdown(this.bulkFilterDropdownOptions, 'baOrBlin');
+        break;
+      case 'SAG':
+        this.loadChartDropdown(this.bulkFilterDropdownOptions, 'sag');
+        break;
+      case 'WUCD':
+        this.loadChartDropdown(this.bulkFilterDropdownOptions, 'wucd');
+        break;
+      case 'EXP TYPE':
+        this.loadChartDropdown(this.bulkFilterDropdownOptions, 'expenditureType');
+        break;
+    }
+  }
+
+  onBulkFilterDropdownChange(event) {
+    if (this.nonSummaryFundingLineGridApi.getEditingCells().length) {
+      this.performNonSummaryCancel(this.nonSummaryFundingLineGridApi.getEditingCells()[0].rowIndex);
+    }
+    if (event.value.toLowerCase() === 'select' || event.value.toLowerCase() === 'all') {
+      this.isFiltered = false;
+      this.nonSummaryFundingLineRows = this.originalNonSummaryFundingLineRows;
+    } else {
+      this.isFiltered = true;
+      this.performBulkFilter();
+    }
+  }
+
+  performBulkFilter() {
+    if (this.isFiltered) {
+      let field: string;
+      switch (this.bulkDropdown.selectedItem.toUpperCase()) {
+        case 'APPN':
+          field = 'appropriation';
+          break;
+        case 'BA/BLIN':
+          field = 'baOrBlin';
+          break;
+        case 'SAG':
+          field = 'sag';
+          break;
+        case 'WUCD':
+          field = 'wucd';
+          break;
+        case 'EXP TYPE':
+          field = 'expenditureType';
+          break;
+      }
+      this.nonSummaryFundingLineRows = this.originalNonSummaryFundingLineRows.filter(
+        fundingLine => fundingLine[field] === this.bulkFilterDropdown.selectedItem
+      );
+    }
+  }
+
+  onCurrencyDisplayChanged(value) {
+    this.showPercent = value;
+  }
+
+  onBulkClearFilter() {
+    if (this.nonSummaryFundingLineGridApi.getEditingCells().length) {
+      this.performNonSummaryCancel(this.nonSummaryFundingLineGridApi.getEditingCells()[0].rowIndex);
+    }
+    this.nonSummaryFundingLineRows = this.originalNonSummaryFundingLineRows;
+    this.bulkDropdown.selectedItem = 'Select';
+    this.bulkFilterDropdown.selectedItem = 'Select';
+    this.bulkFilterDropdownOptions = [];
+    this.bulkChangeAmount = 0;
+    this.showPercent = false;
+    this.isFiltered = false;
+  }
+
+  private updateOriginalNonSummaryFundingLines(fundingData: FundingData) {
+    const fundingLineIndex = this.originalNonSummaryFundingLineRows.findIndex(data => data.id === fundingData.id);
+    if (fundingLineIndex > -1) {
+      this.originalNonSummaryFundingLineRows[fundingLineIndex] = fundingData;
+    } else {
+      this.originalNonSummaryFundingLineRows.push(fundingData);
+    }
+  }
+
+  onBlukApplyChange() {
+    if (
+      this.bulkDropdown.selectedItem.toLowerCase() === 'select' ||
+      (this.bulkFilterDropdown.visible && this.bulkFilterDropdown.selectedItem.toLowerCase() === 'select')
+    ) {
+      return;
+    }
+    const bulk = JSON.parse(JSON.stringify(this.nonSummaryFundingLineRows)) as FundingData[];
+    if (this.showPercent) {
+      bulk.forEach(fundingLine => {
+        fundingLine.by = +(fundingLine.by * (this.bulkChangeAmount / 100 + 1)).toFixed(5);
+        fundingLine.by1 = +(fundingLine.by1 * (this.bulkChangeAmount / 100 + 1)).toFixed(5);
+        fundingLine.by2 = +(fundingLine.by2 * (this.bulkChangeAmount / 100 + 1)).toFixed(5);
+        fundingLine.by3 = +(fundingLine.by3 * (this.bulkChangeAmount / 100 + 1)).toFixed(5);
+        fundingLine.by4 = +(fundingLine.by4 * (this.bulkChangeAmount / 100 + 1)).toFixed(5);
+      });
+    } else {
+      bulk.forEach(fundingLine => {
+        fundingLine.by += this.bulkChangeAmount;
+        fundingLine.by1 += this.bulkChangeAmount;
+        fundingLine.by2 += this.bulkChangeAmount;
+        fundingLine.by3 += this.bulkChangeAmount;
+        fundingLine.by4 += this.bulkChangeAmount;
+      });
+    }
+    this.displayBulkHistoryReasonDialog(bulk, this.performBulkApplyChange.bind(this));
+  }
+
+  private performBulkApplyChange(bulk: FundingData[]) {
+    const fundingLineFiscalYear: FundingLine[] = [];
+    bulk.forEach(fundingData => {
+      fundingLineFiscalYear.push(this.convertFiscalYearToFunds(fundingData));
+    });
+    this.fundingLineService
+      .updateFundingLineBulk(fundingLineFiscalYear)
+      .pipe(
+        map(resp => {
+          const fundingLines: FundingData[] = [];
+          const dataList = resp.result as FundingLine[];
+          const reason = this.historyReasonForm.get('reason').value;
+          dataList.forEach(data => {
+            fundingLines.push(this.fundingLineToFundingData(data));
+            this.historyReasonDialog.fundingLine = data;
+            this.performSaveFundingLineHistory(reason);
+          });
+          return fundingLines;
+        })
+      )
+      .subscribe(fundingLines => {
+        this.nonSummaryFundingLineRows = fundingLines;
+        fundingLines.forEach(this.updateOriginalNonSummaryFundingLines.bind(this));
+        this.updateTotalFields(this.nonSummaryFundingLineGridApi, this.nonSummaryFundingLineRows);
+        this.drawLineChart();
+        this.closeHistoryReasonDialog();
+        this.toastService.displaySuccess(`Bulk changes successfully applied.`);
+      });
+  }
+
+  private displayBulkHistoryReasonDialog(bulk: FundingData[], update: (bulk: FundingData[]) => Observable<any>) {
+    this.historyReasonForm = new FormGroup({
+      reason: new FormControl('')
+    });
+    this.historyReasonDialog.update = update;
+    this.historyReasonDialog.bulk = bulk;
+    this.historyReasonDialog.display = true;
+  }
+
+  drawHistoryChart(rowIndex: number) {
+    this.showHistoryGraph = true;
+    this.currentRowHistoryGraph = rowIndex;
+    const data = this.computeHistoryChartData(rowIndex);
+    this.historyChartData.dataTable = data;
+    if (this.historyChart && this.historyChart.wrapper) {
+      this.historyChart.draw();
+    }
+  }
+
+  computeHistoryChartData(rowIndex: number) {
+    const fundingLineRow = this.nonSummaryFundingLineRows[rowIndex];
+    this.historyChartData.options.title = 'Update History for ' + this.getFundingLineName(fundingLineRow);
+    const data: any[] = [['Fiscal Year']];
+    const funds: any[] = [];
+    const histories = fundingLineRow.fundingLineHistories;
+    histories.forEach((historyRow, i) => {
+      funds[historyRow.id] = [];
+      data[0].push('Update ' + (i + 1));
+      for (const year of Object.keys(historyRow.funds)) {
+        funds[historyRow.id][year] = funds[historyRow.id][year] ?? 0;
+        funds[historyRow.id][year] += Number(historyRow.funds[year]) ?? 0;
+      }
+    });
+    for (let i = this.pomYear; i < this.pomYear + 5; i++) {
+      const singleData = ['FY' + (i % 100)];
+      histories.forEach(historyRow => {
+        singleData.push(funds[historyRow.id][i] ?? 0);
+      });
+      data.push(singleData);
+    }
+
+    return data;
+  }
+
+  private getFundingLineName(fundingLine: FundingLine): string {
+    const props = [];
+    props.push(fundingLine.appropriation);
+    props.push(fundingLine.baOrBlin);
+    props.push(fundingLine.sag);
+    props.push(fundingLine.wucd);
+    props.push(fundingLine.expenditureType);
+    return props.join('/');
   }
 }
 
@@ -2039,5 +2391,7 @@ export interface HistoryReasonDialogInterface {
   rowIndex?: number;
   gridApiRowIndex?: number;
   fundingLine?: FundingLine;
+  bulk?: FundingData[];
   save?: (rowIndex: number) => Observable<void>;
+  update?: (bulk: FundingData[]) => Observable<void>;
 }
