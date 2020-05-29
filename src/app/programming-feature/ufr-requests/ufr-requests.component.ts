@@ -53,7 +53,7 @@ export class UfrRequestsComponent implements OnInit {
   ngOnInit() {
     this.pomService.getPomYearsByStatus(['CREATED', 'OPEN', 'LOCKED', 'CLOSED']).subscribe(resp => {
       const years = (resp as any).result;
-      this.years = ListItemHelper.generateListItemFromArray(years.map(y => ['POM ' + y, y]));
+      this.years = ListItemHelper.generateListItemFromArray(years.map(y => ['POM ' + y, y.toString()]));
     });
 
     this.selectedOrg = {
@@ -448,8 +448,8 @@ export class UfrRequestsComponent implements OnInit {
     }
   }
 
-  onYearChanged(event: any) {
-    this.selectedYear = event;
+  onYearChanged(year: ListItem) {
+    this.selectedYear = year;
   }
 
   onParentProgramChanged(event: any) {
