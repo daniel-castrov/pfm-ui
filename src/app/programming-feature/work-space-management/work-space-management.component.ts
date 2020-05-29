@@ -134,6 +134,7 @@ export class WorkSpaceManagementComponent implements OnInit {
           ];
         },
         cellStyle,
+        autoHeight: true,
         maxWidth: 200,
         minWidth: 200
       },
@@ -247,6 +248,7 @@ export class WorkSpaceManagementComponent implements OnInit {
           ];
         },
         cellStyle,
+        autoHeight: true,
         maxWidth: 130,
         minWidth: 130
       },
