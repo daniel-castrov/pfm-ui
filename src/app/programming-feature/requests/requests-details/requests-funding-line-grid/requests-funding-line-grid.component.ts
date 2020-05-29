@@ -32,6 +32,7 @@ import { FundingLineHistory } from 'src/app/programming-feature/models/funding-l
 import { FundingLineActionCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/funding-line-action-cell-renderer/funding-line-action-cell-renderer.component';
 import { formatDate } from '@angular/common';
 import { UserService } from 'src/app/services/user-impl-service';
+import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
 
 @Component({
   selector: 'pfm-requests-funding-line-grid',
@@ -217,7 +218,8 @@ export class RequestsFundingLineGridComponent implements OnInit {
     private propertyService: PropertyService,
     private fundingLineService: FundingLineService,
     private fundingLineHistoryService: FundingLineHistoryService,
-    private userService: UserService
+    private userService: UserService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit() {
@@ -2308,6 +2310,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
         this.updateTotalFields(this.nonSummaryFundingLineGridApi, this.nonSummaryFundingLineRows);
         this.drawLineChart();
         this.closeHistoryReasonDialog();
+        this.toastService.displaySuccess(`Bulk changes successfully applied.`);
       });
   }
 
