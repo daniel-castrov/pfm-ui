@@ -127,12 +127,12 @@ export class RequestsFundingLineGridComponent implements OnInit {
     chartType: 'LineChart',
     options: {
       title: 'Update History for ',
-      width: 575,
+      width: 515,
       height: 350,
       chartArea: {
-        width: '80%',
+        width: '70%',
         height: '70%',
-        left: '0%'
+        left: '10%'
       },
       series: {
         0: {
