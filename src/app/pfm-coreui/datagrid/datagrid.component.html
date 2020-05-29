@@ -35,7 +35,9 @@
       <div title="Add" *ngIf="showAddSingleRow" (click)="handleAddCta('add-single-row')">
         <fa-icon
           [icon]="'plus'"
-          title="Add"
+          [title]="addRowTooltip ? '' : 'Add'"
+          [attr.placement]="addRowTooltip ? 'left' : null"
+          [ngbTooltip]="addRowTooltip ? addRowTooltip : null"
           [class.disabled]="api?.getEditingCells().length || disableAddRow"
         ></fa-icon>
       </div>

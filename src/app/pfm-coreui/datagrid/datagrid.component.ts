@@ -30,6 +30,7 @@ export class DatagridComponent implements OnInit {
   @Input() isMasterDetail = false;
   @Input() detailCellRendererParams = null;
   @Input() disableAddRow: boolean;
+  @Input() addRowTooltip: string;
 
   private dropdownCtaOptions: ListItem[];
 
