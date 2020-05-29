@@ -14,4 +14,6 @@ export abstract class WorkspaceService extends BaseRestService {
   abstract duplicate(workspace: any): Observable<object>;
 
   abstract updateWorkspace(workspace: any): Observable<object>;
+
+  abstract getByProgramShortName(shortName: string): Observable<object>;
 }
