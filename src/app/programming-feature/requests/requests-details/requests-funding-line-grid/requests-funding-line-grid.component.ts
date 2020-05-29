@@ -2336,9 +2336,9 @@ export class RequestsFundingLineGridComponent implements OnInit {
     const data: any[] = [['Fiscal Year']];
     const funds: any[] = [];
     const histories = fundingLineRow.fundingLineHistories;
-    histories.forEach(historyRow => {
+    histories.forEach((historyRow, i) => {
       funds[historyRow.id] = [];
-      data[0].push(historyRow.reason);
+      data[0].push('Update ' + i + 1);
       for (const year of Object.keys(historyRow.funds)) {
         funds[historyRow.id][year] = funds[historyRow.id][year] ?? 0;
         funds[historyRow.id][year] += Number(historyRow.funds[year]) ?? 0;
