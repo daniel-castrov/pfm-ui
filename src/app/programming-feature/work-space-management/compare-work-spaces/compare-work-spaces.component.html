@@ -1,7 +1,8 @@
+<pfm-cancel-cta [label]="'Back'" (onCancelClicked)="onBack()"></pfm-cancel-cta>
 <div>
   <h3 class="w-50">Workspace Comparisons</h3>
 
-  <div class="row col-12">
+  <div class="row col-12" *ngIf="workspaces.length != 0">
     <google-chart #googleChart [data]="chartData"></google-chart>
     <div class="row col-12 mx-auto">
       <pfm-dropdown
@@ -75,4 +76,10 @@
       </button>
     </div>
   </div>
+
+  <div class="alert alert-info" role="alert" *ngIf="!workspaces.length && !busy">
+    Cannot draw chart as no workspaces have been created.
+  </div>
 </div>
+
+<pfm-busy [busy]="busy"></pfm-busy>
