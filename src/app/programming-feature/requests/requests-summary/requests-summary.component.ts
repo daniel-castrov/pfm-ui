@@ -17,7 +17,7 @@ import { MrdbService } from '../../services/mrdb-service';
 import { Program } from '../../models/Program';
 import { RequestSummaryNavigationHistoryService } from './requests-summary-navigation-history.service';
 import { VisibilityService } from '../../../services/visibility-service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AppModel } from '../../../pfm-common-models/AppModel';
 import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
 import { PlanningStatus } from 'src/app/planning-feature/models/enumerators/planning-status.model';
@@ -29,6 +29,7 @@ import { map } from 'rxjs/operators';
 import { OrganizationService } from 'src/app/services/organization-service';
 import { PomStatus } from '../../models/enumerations/pom-status.model';
 import { WorkspaceService } from '../../services/workspace.service';
+import { ProgramType } from '../../models/enumerations/program-type.model';
 
 @Component({
   selector: 'pfm-requests-summary',
@@ -583,6 +584,7 @@ export class RequestsSummaryComponent implements OnInit {
     } as Program;
     program.containerId = this.programmingModel.pom.workspaceId;
     program.programStatus = ProgramStatus.SAVED;
+    program.type = ProgramType.PROGRAM;
     const canSave = this.createProgramDialog.form.valid;
     if (canSave) {
       if ((await this.checkProgramAlreadyExists(program)) || (await this.checkProgramExistInMaster(program))) {
