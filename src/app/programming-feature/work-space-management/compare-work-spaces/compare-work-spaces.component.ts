@@ -249,7 +249,7 @@ export class CompareWorkSpacesComponent implements OnInit {
       const funds: { [key: string]: number[] } = {};
       for (const workspace of this.workspaces) {
         funds[workspace.id] = [];
-        data[0].push(workspace.name);
+        data[0].push(`Workspace ${workspace.version}`);
         this.fundingLinesByWrksp[workspace.id].forEach(fundingLine => {
           for (const year of Object.keys(fundingLine.funds)) {
             funds[workspace.id][year] = funds[workspace.id][year] ?? 0;
@@ -282,7 +282,7 @@ export class CompareWorkSpacesComponent implements OnInit {
           .forEach(option => {
             const funds: number[] = [];
             const legends = this.retrieveChartLegend();
-            data[0].push(workspace.name + ', ' + (legends.length ? legends + '/' : '') + option.name);
+            data[0].push(`Workspace ${workspace.version}` + ', ' + (legends.length ? legends + '/' : '') + option.name);
             fundingLineRows = this.fundingLinesByWrksp[workspace.id];
             const fundingLineFiltered = this.filterFundingLineRow(fundingLineRows);
             if (!this.isSingleChartDropdown()) {
@@ -313,7 +313,7 @@ export class CompareWorkSpacesComponent implements OnInit {
       const funds: { [key: string]: number[] } = {};
       for (const workspace of this.workspaces) {
         funds[workspace.id] = [];
-        data[0].push(workspace.name + ', ' + this.retrieveChartLegend());
+        data[0].push(`Workspace ${workspace.version}` + ', ' + this.retrieveChartLegend());
 
         const fundingLineFiltered = this.filterFundingLineRow(this.fundingLinesByWrksp[workspace.id]);
         fundingLineFiltered.forEach(fundingLine => {
