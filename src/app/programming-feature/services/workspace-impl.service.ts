@@ -26,4 +26,8 @@ export class WorkspaceServiceImpl extends WorkspaceService {
   updateWorkspace(workspace: any): Observable<object> {
     return this.put('workspaces', workspace);
   }
+
+  getByProgramShortName(shortName: string) {
+    return this.get('workspaces/program-short-name/' + shortName);
+  }
 }

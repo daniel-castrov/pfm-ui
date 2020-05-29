@@ -4,6 +4,16 @@ import { ListItemHelper } from 'src/app/util/ListItemHelper';
 import { ColDef, GridApi } from '@ag-grid-community/all-modules';
 import { PomService } from '../services/pom-service';
 import { UfrActionCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/ufr-action-cell-renderer/ufr-action-cell-renderer.component';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { ProgrammingService } from '../services/programming-service';
+import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
+import { Organization } from 'src/app/pfm-common-models/Organization';
+import { Program } from '../models/Program';
+import { Pom } from '../models/Pom';
+import { MrdbService } from '../services/mrdb-service';
+import { OrganizationService } from 'src/app/services/organization-service';
+import { WorkspaceService } from '../services/workspace.service';
+import { PomStatus } from '../models/enumerations/pom-status.model';
 
 @Component({
   selector: 'pfm-programming',
@@ -18,25 +28,60 @@ export class UfrRequestsComponent implements OnInit {
   gridApi: GridApi;
   selectedYear: ListItem;
   gridAddOptions: ListItem[];
+  createProgramDialog: any;
+  prevFundedProgramDialog: any;
+  createNewIncOrFosDialog: any;
+  orgs: Organization[];
+  selectedOrg: ListItem;
+  availablePrograms: Program[];
+  shortNameErrorMessage: string;
+  pom: Pom;
+  SelectedProgram: Program;
+  showInfoIcon: boolean;
+  infoIconMessage: string;
+  showValidationErrors: boolean;
 
-  constructor(private pomService: PomService) {}
+  constructor(
+    private pomService: PomService,
+    private programmingService: ProgrammingService,
+    private dialogService: DialogService,
+    private workspaceService: WorkspaceService,
+    private mrdbService: MrdbService,
+    private organizationService: OrganizationService
+  ) {}
 
   ngOnInit() {
     this.pomService.getPomYearsByStatus(['CREATED', 'OPEN', 'LOCKED', 'CLOSED']).subscribe(resp => {
       const years = (resp as any).result;
       this.years = ListItemHelper.generateListItemFromArray(years.map(y => ['POM ' + y, y]));
     });
-    this.gridAddOptions = ListItemHelper.generateListItemFromArray([
-      ['Previosly Funded Program', 'prev'],
-      ['Program Request', 'pr'],
-      ['New Increment', 'ni'],
-      ['New FoS', 'nfos'],
-      ['New Program', 'np']
-    ]);
+
+    this.selectedOrg = {
+      id: 'Select',
+      name: 'Select',
+      value: 'Select',
+      isSelected: false,
+      rawData: 'Select'
+    };
     this.setupGrid();
+    this.setupOrgDropDown();
+    this.setupForms();
+
+    this.pomService.getLatestPom().subscribe(resp => {
+      this.pom = (resp as any).result as Pom;
+    });
+    this.infoIconMessage = 'Values in dropdown vary based on "UFR created for" value in + dropdown';
   }
 
   private setupGrid() {
+    this.gridAddOptions = ListItemHelper.generateListItemFromArray([
+      ['Previosly Funded Program', 'prev', 'prev'],
+      ['Program Request', 'pr', 'pr'],
+      ['New Increment', 'ni', 'ni'],
+      ['New FoS', 'nfos', 'nfos'],
+      ['New Program', 'np', 'np']
+    ]);
+
     const cellStyle = { display: 'flex', 'align-items': 'center', 'white-space': 'normal' };
     this.columnDefinitions = [
       {
@@ -193,14 +238,284 @@ export class UfrRequestsComponent implements OnInit {
         cellStyle,
         maxWidth: 80,
         minWidth: 80,
-        cellRendererFramework: UfrActionCellRendererComponent,
-        autoHeight: true
+        cellRendererFramework: UfrActionCellRendererComponent
       }
     ];
+  }
+
+  private setupForms() {
+    this.createProgramDialog = {
+      title: 'Add New Program',
+      form: new FormGroup({
+        shortName: new FormControl('', [Validators.required]),
+        longName: new FormControl('', [Validators.required]),
+        organizationId: new FormControl('', [Validators.required])
+      }),
+      display: false
+    };
+    this.prevFundedProgramDialog = {
+      title: 'Select a Program',
+      form: new FormGroup({
+        program: new FormControl('', [Validators.required])
+      }),
+      display: false
+    };
+
+    this.createNewIncOrFosDialog = {
+      title: 'Add UFR Program',
+      form: new FormGroup({
+        program: new FormControl('', [Validators.required]),
+        shortName: new FormControl('', [Validators.required]),
+        longName: new FormControl('', [Validators.required]),
+        organizationId: new FormControl({ value: '', disabled: true }, [Validators.required])
+      }),
+      display: false
+    };
   }
 
   onGridIsReady(gridApi: GridApi) {
     this.gridApi = gridApi;
     this.rows = [];
+  }
+
+  handleGridAdd(event: any) {
+    this.busy = true;
+    this.showInfoIcon = false;
+    this.showValidationErrors = false;
+    switch (event.action) {
+      case 'prev': {
+        this.prevFundedProgramDialog.display = true;
+        this.prevFundedProgramDialog.form.reset();
+        this.prevFundedProgramDialog.form.patchValue({ program: '' });
+        this.mrdbService.getPrevFundedProgramsValidForUFR().subscribe(
+          resp => {
+            this.availablePrograms = (resp as any).result;
+          },
+          error => {},
+          () => (this.busy = false)
+        );
+        break;
+      }
+      case 'pr': {
+        this.prevFundedProgramDialog.display = true;
+        this.prevFundedProgramDialog.form.reset();
+        this.prevFundedProgramDialog.form.patchValue({ program: '' });
+        this.showInfoIcon = true;
+        this.mrdbService.getProgramRequestValidForURF().subscribe(
+          resp => {
+            this.availablePrograms = (resp as any).result;
+          },
+          error => this.dialogService.displayDebug(error),
+          () => (this.busy = false)
+        );
+        break;
+      }
+      case 'ni': {
+        this.shortNameErrorMessage = null;
+        this.createNewIncOrFosDialog.form.reset();
+        this.createNewIncOrFosDialog.title = 'Add UFR for new Increment';
+        this.createNewIncOrFosDialog.form.patchValue({
+          program: '',
+          shortName: '',
+          longName: '',
+          organizationId: ''
+        });
+        this.createNewIncOrFosDialog.display = true;
+        this.showInfoIcon = true;
+        this.mrdbService.getProgramRequestValidForURF().subscribe(
+          resp => {
+            this.availablePrograms = (resp as any).result;
+          },
+          error => this.dialogService.displayDebug(error),
+          () => (this.busy = false)
+        );
+        break;
+      }
+      case 'nfos': {
+        this.shortNameErrorMessage = null;
+        this.createNewIncOrFosDialog.form.reset();
+        this.createNewIncOrFosDialog.title = 'Add UFR for new Incremente of FoS';
+        this.createNewIncOrFosDialog.display = true;
+        this.createNewIncOrFosDialog.form.patchValue({
+          program: '',
+          shortName: '',
+          longName: '',
+          organizationId: ''
+        });
+        this.showInfoIcon = true;
+        this.mrdbService.getProgramRequestValidForURF().subscribe(
+          resp => {
+            this.availablePrograms = (resp as any).result;
+          },
+          error => this.dialogService.displayDebug(error),
+          () => (this.busy = false)
+        );
+        break;
+      }
+      case 'np': {
+        this.createProgramDialog.form.reset();
+        this.createProgramDialog.form.patchValue({
+          shortName: '',
+          longName: '',
+          organizationId: ''
+        });
+        this.createProgramDialog.display = true;
+        this.busy = false;
+        break;
+      }
+    }
+  }
+
+  setupOrgDropDown() {
+    this.programmingService.getPermittedOrganizations().subscribe(
+      resp => {
+        const orgs = (resp as any).result;
+        this.orgs = orgs;
+      },
+      error => {
+        this.dialogService.displayDebug(error);
+      }
+    );
+  }
+
+  async onCreateProgramAction() {
+    this.showValidationErrors = false;
+    if (this.createProgramDialog.form.valid) {
+      const program = {
+        shortName: this.createProgramDialog.form.get(['shortName']).value,
+        longName: this.createProgramDialog.form.get(['longName']).value,
+        organizationId: this.createProgramDialog.form.get(['organizationId']).value
+      } as Program;
+      if (await this.checkProgramExistInMaster(program)) {
+        this.showValidationErrors = true;
+        return;
+      }
+      if (this.pom.status === PomStatus.CREATED) {
+        if (await this.checkProgramAlreadyExistsInPom(program)) {
+          this.showValidationErrors = true;
+          return;
+        }
+      } else {
+        if (await this.checkProgramExistInWorkspaces(program)) {
+          this.showValidationErrors = true;
+          return;
+        }
+      }
+    } else {
+      this.showValidationErrors = true;
+    }
+  }
+
+  checkValidationCreateProgram(controlName: string, errorName: string) {
+    return this.createProgramDialog.form.get(controlName).hasError(errorName) && this.showValidationErrors;
+  }
+
+  checkValidationPrevFundedProgram(controlName: string, errorName: string) {
+    return this.prevFundedProgramDialog.form.get(controlName).hasError(errorName) && this.showValidationErrors;
+  }
+
+  checkValidationNewUFR(controlName: string, errorName: string) {
+    return this.createNewIncOrFosDialog.form.get(controlName).hasError(errorName) && this.showValidationErrors;
+  }
+
+  onImportProgram() {
+    if (this.prevFundedProgramDialog.form.valid) {
+    } else {
+      this.showValidationErrors = true;
+    }
+  }
+
+  async onCreateNewUFRAction() {
+    this.showValidationErrors = false;
+    if (this.createNewIncOrFosDialog.form.valid) {
+      if (await this.checkProgramExistInMaster(this.SelectedProgram)) {
+        this.showValidationErrors = true;
+        return;
+      }
+      if (this.pom.status === PomStatus.CREATED) {
+        if (await this.checkProgramAlreadyExistsInPom(this.SelectedProgram)) {
+          this.showValidationErrors = true;
+          return;
+        }
+      } else {
+        if (await this.checkProgramExistInWorkspaces(this.SelectedProgram)) {
+          this.showValidationErrors = true;
+          return;
+        }
+      }
+    } else {
+      this.showValidationErrors = true;
+    }
+  }
+
+  onYearChanged(event: any) {
+    this.selectedYear = event;
+  }
+
+  onParentProgramChanged(event: any) {
+    this.SelectedProgram = this.availablePrograms.find(p => p.id === event.target.value);
+    this.createNewIncOrFosDialog.form.get('organizationId').patchValue(this.SelectedProgram.organizationId);
+  }
+
+  private async checkProgramExistInMaster(program: Program) {
+    let ret = false;
+    let masterProgram: Program;
+    await this.mrdbService
+      .getByName(program.shortName)
+      .toPromise()
+      .then(resp => {
+        masterProgram = resp.result as Program;
+      });
+    if (masterProgram) {
+      ret = true;
+      this.shortNameErrorMessage =
+        'The program ID entered already exists as a previously funded program. ' +
+        'Please cancel out of this and click the + button to add a Previously Funded Program.';
+    }
+    return ret;
+  }
+
+  private async checkProgramAlreadyExistsInPom(program: Program) {
+    let ret = false;
+    let databaseProgram: Program;
+    await this.programmingService
+      .findByShortNameAndContainerId(program.containerId, program.shortName)
+      .toPromise()
+      .then(resp => {
+        databaseProgram = resp.result as Program;
+      });
+    if (databaseProgram) {
+      let organizationAbbreviation: string;
+      await this.organizationService
+        .getById(databaseProgram.organizationId)
+        .toPromise()
+        .then(resp => {
+          const organization = resp.result as Organization;
+          organizationAbbreviation = organization.abbreviation;
+        });
+      this.shortNameErrorMessage =
+        'The program ID entered already exists on the POM in the ' + organizationAbbreviation + ' organization.';
+      ret = true;
+    }
+    return ret;
+  }
+
+  private async checkProgramExistInWorkspaces(program: Program) {
+    let ret = false;
+    let workspaces: any;
+    await this.workspaceService
+      .getByProgramShortName(program.shortName)
+      .toPromise()
+      .then(resp => {
+        workspaces = (resp as any).result;
+      });
+    if (workspaces) {
+      this.shortNameErrorMessage =
+        'The program ID entered already exists on Workspace(s)  ' +
+        workspaces.map(w => 'ID ' + w.version).join(' ') +
+        '.';
+      ret = true;
+    }
+    return ret;
   }
 }
