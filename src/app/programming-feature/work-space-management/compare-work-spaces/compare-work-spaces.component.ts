@@ -12,6 +12,7 @@ import { SAG } from '../../models/sag.model';
 import { PropertyService } from '../../services/property.service';
 import { FundingLineService } from '../../services/funding-line.service';
 import { Workspace } from '../../models/workspace';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'pfm-compare-work-spaces',
@@ -87,15 +88,21 @@ export class CompareWorkSpacesComponent implements OnInit {
     private workspaceService: WorkspaceService,
     private pomService: PomService,
     private propertyService: PropertyService,
-    private fundingLineService: FundingLineService
+    private fundingLineService: FundingLineService,
+    private router: Router
   ) {}
 
   ngOnInit() {
+    this.busy = true;
     this.pomService.getOpenPom().subscribe(
       resp => {
         this.pom = (resp as any).result;
-        this.pomYear = this.pom.fy;
-        this.loadWorkspaces();
+        if (this.pom != null) {
+          this.pomYear = this.pom.fy;
+          this.loadWorkspaces();
+        } else {
+          this.busy = false;
+        }
       },
       error => {
         this.dialogService.displayDebug(error);
@@ -104,18 +111,19 @@ export class CompareWorkSpacesComponent implements OnInit {
     this.loadDropDownValues();
   }
 
+  onBack() {
+    this.router.navigate(['/programming/work-space-management']);
+  }
+
   private loadWorkspaces() {
     if (this.pom) {
       this.workspaceService.getByContainerId(this.pom.id).subscribe(
         resp => {
-          const wskpPairs = (resp as any).result;
-          this.workspaces = wskpPairs.map(x => x.firstElement);
+          this.workspaces = (resp as any).result;
+          this.loadFundingLines();
         },
         error => {
           this.dialogService.displayError(error.error.error);
-        },
-        () => {
-          this.loadFundingLines();
         }
       );
     }
@@ -126,12 +134,13 @@ export class CompareWorkSpacesComponent implements OnInit {
     this.fundingLineService.getByProgramContainerIds(containerIds).subscribe(
       resp => {
         this.fundingLinesByWrksp = (resp as any).result;
+        this.drawLineChart();
       },
       error => {
         this.dialogService.displayError(error.error.error);
       },
       () => {
-        this.drawLineChart();
+        this.busy = false;
       }
     );
   }
@@ -240,7 +249,7 @@ export class CompareWorkSpacesComponent implements OnInit {
       const funds: { [key: string]: number[] } = {};
       for (const workspace of this.workspaces) {
         funds[workspace.id] = [];
-        data[0].push(workspace.name);
+        data[0].push(`Workspace ${workspace.version} - ${workspace.name}`);
         this.fundingLinesByWrksp[workspace.id].forEach(fundingLine => {
           for (const year of Object.keys(fundingLine.funds)) {
             funds[workspace.id][year] = funds[workspace.id][year] ?? 0;
@@ -273,7 +282,7 @@ export class CompareWorkSpacesComponent implements OnInit {
           .forEach(option => {
             const funds: number[] = [];
             const legends = this.retrieveChartLegend();
-            data[0].push(workspace.name + ', ' + (legends.length ? legends + '/' : '') + option.name);
+            data[0].push(`Workspace ${workspace.version} - ${workspace.name}` + ', ' + (legends.length ? legends + '/' : '') + option.name);
             fundingLineRows = this.fundingLinesByWrksp[workspace.id];
             const fundingLineFiltered = this.filterFundingLineRow(fundingLineRows);
             if (!this.isSingleChartDropdown()) {
@@ -304,7 +313,7 @@ export class CompareWorkSpacesComponent implements OnInit {
       const funds: { [key: string]: number[] } = {};
       for (const workspace of this.workspaces) {
         funds[workspace.id] = [];
-        data[0].push(workspace.name + ', ' + this.retrieveChartLegend());
+        data[0].push(`Workspace ${workspace.version} - ${workspace.name}` + ', ' + this.retrieveChartLegend());
 
         const fundingLineFiltered = this.filterFundingLineRow(this.fundingLinesByWrksp[workspace.id]);
         fundingLineFiltered.forEach(fundingLine => {
