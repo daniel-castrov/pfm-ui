@@ -16,6 +16,8 @@ import { WorkSpaceManagementComponent } from './work-space-management/work-space
 import { RequestsSummaryComponent } from './requests/requests-summary/requests-summary.component';
 import { RequestsDetailsComponent } from './requests/requests-details/requests-details.component';
 import { CompareWorkSpacesComponent } from './work-space-management/compare-work-spaces/compare-work-spaces.component';
+import { UfrRequestsDetailComponent } from './ufr-requests/ufr-requests-detail/ufr-requests-detail.component';
+import { UfrRequestsSummaryComponent } from './ufr-requests/ufr-requests-summary/ufr-requests-summary.component';
 
 const routes: Routes = [
   {
@@ -38,7 +40,15 @@ const routes: Routes = [
         ]
       },
       { path: 'requests-approval', component: RequestsApprovalComponent, canActivate: [AuthGuard] },
-      { path: 'ufr-requests', component: UfrRequestsComponent, canActivate: [AuthGuard] },
+      {
+        path: 'ufr-requests',
+        component: UfrRequestsComponent,
+        canActivate: [AuthGuard],
+        children: [
+          { path: '', component: UfrRequestsSummaryComponent, canActivate: [AuthGuard] },
+          { path: 'details/:id', component: UfrRequestsDetailComponent, canActivate: [AuthGuard] }
+        ]
+      },
       { path: 'toa', component: ToaComponent, canActivate: [AuthGuard] },
       {
         path: 'total-appropriation-priority',

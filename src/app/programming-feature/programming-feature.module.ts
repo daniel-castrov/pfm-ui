@@ -76,6 +76,8 @@ import { CompareWorkSpacesComponent } from './work-space-management/compare-work
 import { UserService } from '../services/user-impl-service';
 import { UserServiceImpl } from '../services/user-service';
 import { SpinnerModule } from 'primeng/spinner';
+import { UfrRequestsDetailComponent } from './ufr-requests/ufr-requests-detail/ufr-requests-detail.component';
+import { UfrRequestsSummaryComponent } from './ufr-requests/ufr-requests-summary/ufr-requests-summary.component';
 
 @NgModule({
   declarations: [
@@ -103,7 +105,9 @@ import { SpinnerModule } from 'primeng/spinner';
     JustificationComponent,
     RequestsDetailsFormComponent,
     ScopeComponent,
-    AssetsComponent
+    AssetsComponent,
+    UfrRequestsDetailComponent,
+    UfrRequestsSummaryComponent
   ],
   imports: [
     CommonModule,

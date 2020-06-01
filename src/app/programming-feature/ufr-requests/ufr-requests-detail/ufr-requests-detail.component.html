@@ -1,0 +1,64 @@
+<pfm-cancel-cta [label]="'Back'" (onCancelClicked)="goBack()"></pfm-cancel-cta>
+<div class="title-line">
+  <div class="float-left w-70">
+    <h3 *ngIf="ufr">
+      POM{{ pomYear % 100 }} UFR Details:
+      <span *ngIf="ufr.name">{{ ufr.name }}</span>
+    </h3>
+  </div>
+  <div class="div-buttons" *ngIf="appModel.visibilityDef['ufr-requests-detail-component']">
+    <ng-container *ngIf="showSaveButton">
+      <div class="div-button" *pfmIsVisible="'ufr-requests-detail-component.setDisposition'">
+        <button (click)="onSetDisposition()" class="btn btn-success">
+          <i class="fa fa-check"></i>
+          Set Disposition
+        </button>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="showSubmitButton">
+      <div class="div-button" *pfmIsVisible="'ufr-requests-detail-component.submit'">
+        <button (click)="onSubmit()" class="btn btn-success">
+          <i class="fa fa-check"></i>
+          Submit
+        </button>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="showSetDisposition">
+      <div class="div-button" *pfmIsVisible="'ufr-requests-detail-component.save'">
+        <button (click)="onSave()" class="btn btn-primary">
+          Save
+        </button>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+<tabset class="program-tab-style" *ngIf="ufr" destroyOnHide="true">
+  <tab heading="UFR" [active]="currentSelectedTab === 0" class="w-100 h-100" (selectTab)="onSelectTab($event)">
+    <div class="section-tab"></div>
+  </tab>
+  <tab heading="Program" [active]="currentSelectedTab === 1" class="w-100 h-100" (selectTab)="onSelectTab($event)">
+    <div class="section-tab"></div>
+  </tab>
+  <tab heading="Funds" [active]="currentSelectedTab === 2" class="w-100 h-100" (selectTab)="onSelectTab($event)">
+    <div class="section-tab"></div>
+  </tab>
+  <tab heading="Schedule" [active]="currentSelectedTab === 3" class="w-100 h-100" (selectTab)="onSelectTab($event)">
+    <div class="section-tab"></div>
+  </tab>
+  <tab heading="Scope" [active]="currentSelectedTab === 4" class="w-100 h-100" (selectTab)="onSelectTab($event)">
+    <div class="section-tab"></div>
+  </tab>
+  <tab heading="Assets" [active]="currentSelectedTab === 5" class="w-100 h-100" (selectTab)="onSelectTab($event)">
+    <div class="section-tab"></div>
+  </tab>
+  <tab
+    heading="Justification"
+    [active]="currentSelectedTab === 6"
+    class="w-100 h-100"
+    (selectTab)="onSelectTab($event)"
+  >
+    <div class="section-tab"></div>
+  </tab>
+</tabset>
+<pfm-busy [busy]="busy"></pfm-busy>
