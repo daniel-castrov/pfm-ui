@@ -1,4 +1,10 @@
-.info-circle {
-  font-size: x-large;
-  color: #2a78e4;
+:host {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+}
+
+.main {
+  display: flex;
 }
