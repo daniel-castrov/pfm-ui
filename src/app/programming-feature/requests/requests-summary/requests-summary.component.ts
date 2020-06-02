@@ -163,6 +163,7 @@ export class RequestsSummaryComponent implements OnInit {
       }
     );
   }
+
   private setupResquestSummary() {
     this.options = {
       minCols: 8,
