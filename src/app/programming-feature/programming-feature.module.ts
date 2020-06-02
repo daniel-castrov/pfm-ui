@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, TitleCasePipe } from '@angular/common';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ProgrammingFeatureRoutingModule } from './programming-feature-routing.module';
 import { ProgrammingFeatureComponent } from './programming-feature.component';
@@ -81,6 +81,7 @@ import { UfrRequestsSummaryComponent } from './ufr-requests/ufr-requests-summary
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { UfrServiceImpl } from './services/ufr-service-impl.service';
 import { UfrService } from './services/ufr-service';
+import { UfrFormComponent } from './ufr-requests/ufr-requests-detail/ufr-form/ufr-form.component';
 
 @NgModule({
   declarations: [
@@ -110,7 +111,8 @@ import { UfrService } from './services/ufr-service';
     ScopeComponent,
     AssetsComponent,
     UfrRequestsDetailComponent,
-    UfrRequestsSummaryComponent
+    UfrRequestsSummaryComponent,
+    UfrFormComponent
   ],
   imports: [
     CommonModule,
@@ -150,7 +152,8 @@ import { UfrService } from './services/ufr-service';
     { provide: UserService, useClass: UserServiceImpl },
     { provide: UfrService, useClass: UfrServiceImpl },
     ProgrammingModel,
-    RequestSummaryNavigationHistoryService
+    RequestSummaryNavigationHistoryService,
+    TitleCasePipe
   ]
 })
 export class ProgrammingFeatureModule {}
