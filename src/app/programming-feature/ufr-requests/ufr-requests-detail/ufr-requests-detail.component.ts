@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Program } from '../../models/Program';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PomService } from '../../services/pom-service';
 import { Pom } from '../../models/Pom';
@@ -7,9 +6,12 @@ import { AppModel } from 'src/app/pfm-common-models/AppModel';
 import { VisibilityService } from 'src/app/services/visibility-service';
 import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
 import { PomStatus } from '../../models/enumerations/pom-status.model';
-import { ProgramStatus } from '../../models/enumerations/program-status.model';
 import { UFR } from '../../models/ufr.model';
 import { UFRStatus } from '../../models/enumerations/ufr-status.model';
+import { ShortyType } from '../../models/enumerations/shorty-type.model';
+import { UfrService } from '../../services/ufr-service';
+import { switchMap, catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 @Component({
   selector: 'pfm-ufr-requests-detail',
@@ -27,6 +29,7 @@ export class UfrRequestsDetailComponent implements OnInit {
   showSaveButton: boolean;
   showSetDisposition: boolean;
   clickedReviewForApproval: boolean;
+  selectUfrId: string;
 
   constructor(
     private route: ActivatedRoute,
@@ -34,27 +37,47 @@ export class UfrRequestsDetailComponent implements OnInit {
     public appModel: AppModel,
     private visibilityService: VisibilityService,
     private dialogService: DialogService,
-    private router: Router
+    private router: Router,
+    private ufrService: UfrService
   ) {}
 
   ngOnInit(): void {
-    this.busy = true;
     this.pomYear = Number(this.route.snapshot.paramMap.get('pomYear'));
-    // TODO Remove next 2 lines.It's a fake implemation. Use data required when data available. See PFM-487
+    // TODO Remove fake implemation below. Use data required when data available. See PFM-487
     this.clickedReviewForApproval = true;
-    this.ufr = { name: 'test', ufrStatus: UFRStatus.SAVED } as UFR;
+
+    this.selectUfrId = this.route.snapshot.paramMap.get('id');
+    this.ufrService
+      .getById(this.selectUfrId)
+      .pipe(
+        switchMap(resp => {
+          this.ufr = (resp as any).result as UFR;
+          return this.pomService.getPomForYear(this.pomYear);
+        }),
+        catchError(error => {
+          return throwError(error);
+        })
+      )
+      .subscribe(
+        resp => {
+          this.pom = (resp as any).result;
+          this.showSaveButton = this.isPomCreatedOrOpen() && this.ufr.ufrStatus === UFRStatus.SAVED;
+          this.showSubmitButton = this.isPomCreatedOrOpen() && this.ufr.ufrStatus === UFRStatus.SAVED;
+          this.showSetDisposition =
+            this.isPomCreatedOrOpen() && this.ufr.ufrStatus === UFRStatus.SAVED && this.clickedReviewForApproval;
+        },
+        error => {
+          this.dialogService.displayDebug(error);
+          // TODO This prabably should probably go when loading real data
+          if (!this.ufr) {
+            this.ufr = new UFR();
+            this.ufr.created = new Date();
+            this.ufr.modified = new Date();
+          }
+        }
+      );
+
     this.setupVisibility();
-    this.pomService.getPomForYear(this.pomYear).subscribe(
-      resp => {
-        this.pom = (resp as any).result;
-        this.showSaveButton = this.isPomCreatedOrOpen() && this.ufr.ufrStatus === UFRStatus.SAVED;
-        this.showSubmitButton = this.isPomCreatedOrOpen() && this.ufr.ufrStatus === UFRStatus.SAVED;
-        this.showSetDisposition =
-          this.isPomCreatedOrOpen() && this.ufr.ufrStatus === UFRStatus.SAVED && this.clickedReviewForApproval;
-      },
-      error => this.dialogService.displayDebug(error),
-      () => (this.busy = false)
-    );
   }
 
   setupVisibility() {

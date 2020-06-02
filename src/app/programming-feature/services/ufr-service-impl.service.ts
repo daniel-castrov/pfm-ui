@@ -11,7 +11,11 @@ export class UfrServiceImpl extends UfrService {
     super(httpClient);
   }
 
-  getBYProgramShortName(shortName: string): Observable<object> {
+  getByProgramShortName(shortName: string): Observable<object> {
     return this.get('ufr/program/short-name/' + shortName);
+  }
+
+  getById(id: string): Observable<object> {
+    return this.get('ufr/' + id);
   }
 }

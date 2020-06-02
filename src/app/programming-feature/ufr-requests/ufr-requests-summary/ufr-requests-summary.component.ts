@@ -488,7 +488,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
     let ret = false;
     let ufr;
     await this.ufrService
-      .getBYProgramShortName(program.shortName)
+      .getByProgramShortName(program.shortName)
       .toPromise()
       .then(resp => {
         ufr = (resp as any).result;

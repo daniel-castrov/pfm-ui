@@ -1,0 +1,63 @@
+<div class="section-main">
+  <div class="section-form">
+    <form *ngIf="form" [formGroup]="form">
+      <fieldset class="match-height">
+        <legend>UFR Identification</legend>
+        <div class="padding">
+          <div class="row">
+            <div class="col-2">
+              <label>UFR #</label>
+            </div>
+            <span class="col-10"><input type="text" formControlName="requestNumber" /></span>
+          </div>
+          <div class="row">
+            <div class="col-2">
+              <label>UFR for</label>
+            </div>
+            <span class="col-10"><input type="text" formControlName="ShortyType" /></span>
+          </div>
+          <div class="row">
+            <label class="col-2">*UFR Name</label>
+            <span class="col-10"><input type="text" formControlName="ufrName" /></span>
+          </div>
+          <div class="row">
+            <label class="col-2">*Description</label>
+            <span class="col-10"><textarea class="form-control col-10" formControlName="notes"></textarea></span>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Status Information</legend>
+        <div class="row">
+          <label class="col-2">Status/Disposition</label>
+          <span class="col-10"><input type="text" formControlName="ufrStatus_disposition" /></span>
+        </div>
+        <div class="row">
+          <label class="col-2">Disposition Explanation</label>
+          <span class="col-10"><input type="text" formControlName="dispositionExplanation" /></span>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Audit Information</legend>
+        <div class="row">
+          <label class="col-2">Create Date</label>
+          <span class="col-10"><input type="text" formControlName="created" /></span>
+        </div>
+        <div class="row">
+          <label class="col-2">Created</label>
+          <span class="col-10"><input type="text" formControlName="createdBy" /></span>
+        </div>
+        <div class="row">
+          <label class="col-2">Last Updated Date</label>
+          <span class="col-10"><input type="text" formControlName="modified" /></span>
+        </div>
+        <div class="row">
+          <label class="col-2">Last Updated By</label>
+          <span class="col-10"><input type="text" formControlName="modifiedBy" /></span>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</div>
