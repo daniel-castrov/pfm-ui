@@ -78,6 +78,9 @@ import { UserServiceImpl } from '../services/user-service';
 import { SpinnerModule } from 'primeng/spinner';
 import { UfrRequestsDetailComponent } from './ufr-requests/ufr-requests-detail/ufr-requests-detail.component';
 import { UfrRequestsSummaryComponent } from './ufr-requests/ufr-requests-summary/ufr-requests-summary.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { UfrServiceImpl } from './services/ufr-service-impl.service';
+import { UfrService } from './services/ufr-service';
 
 @NgModule({
   declarations: [
@@ -122,7 +125,8 @@ import { UfrRequestsSummaryComponent } from './ufr-requests/ufr-requests-summary
     TabsModule.forRoot(),
     ProgrammingFeatureRoutingModule,
     FontAwesomeModule,
-    SpinnerModule
+    SpinnerModule,
+    NgbModule
   ],
   providers: [
     { provide: ProgrammingService, useClass: ProgrammingServiceImpl },
@@ -144,6 +148,7 @@ import { UfrRequestsSummaryComponent } from './ufr-requests/ufr-requests-summary
     { provide: WorkspaceService, useClass: WorkspaceServiceImpl },
     { provide: FundingLineHistoryService, useClass: FundingLineHistoryServiceImpl },
     { provide: UserService, useClass: UserServiceImpl },
+    { provide: UfrService, useClass: UfrServiceImpl },
     ProgrammingModel,
     RequestSummaryNavigationHistoryService
   ]

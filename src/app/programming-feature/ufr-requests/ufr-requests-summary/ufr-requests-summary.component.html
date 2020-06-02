@@ -21,7 +21,7 @@
     [columns]="columnDefinitions"
     [rows]="rows"
     [showPagination]="false"
-    [showAddDropdownCta]="true"
+    [showAddDropdownCta]="showGridAddCta"
     [addDropdownCtaOptions]="gridAddOptions"
     [addDropdownCtaTooltip]="'Add UFR for'"
   >
@@ -138,11 +138,12 @@
               Value required.
             </p>
           </div>
-          <div class="col-sm-1 p-0">
+          <div class="col-sm-1 p-0 d-contents">
             <fa-icon
               [icon]="'info-circle'"
               class="info-circle"
-              [title]="infoIconMessage"
+              [ngbTooltip]="infoIconMessage"
+              [attr.placement]="'top-right'"
               *ngIf="showInfoIcon"
             ></fa-icon>
           </div>
@@ -192,11 +193,12 @@
               Value required.
             </p>
           </div>
-          <div class="col-sm-1 p-0">
+          <div class="col-sm-1 p-0 d-contents">
             <fa-icon
               [icon]="'info-circle'"
               class="info-circle"
-              [title]="infoIconMessage"
+              [ngbTooltip]="infoIconMessage"
+              [attr.placement]="'right-top'"
               *ngIf="showInfoIcon"
             ></fa-icon>
           </div>
