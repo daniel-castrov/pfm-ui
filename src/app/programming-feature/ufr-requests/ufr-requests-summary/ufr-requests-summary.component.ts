@@ -14,6 +14,7 @@ import { Pom } from '../../models/Pom';
 import { WorkspaceService } from '../../services/workspace.service';
 import { MrdbService } from '../../services/mrdb-service';
 import { PomStatus } from '../../models/enumerations/pom-status.model';
+import { UfrService } from '../../services/ufr-service';
 
 @Component({
   selector: 'pfm-ufr-requests-summary',
@@ -40,6 +41,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
   showInfoIcon: boolean;
   infoIconMessage: string;
   showValidationErrors: boolean;
+  showGridAddCta: boolean;
 
   constructor(
     private pomService: PomService,
@@ -47,6 +49,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
     private dialogService: DialogService,
     private workspaceService: WorkspaceService,
     private mrdbService: MrdbService,
+    private ufrService: UfrService,
     private organizationService: OrganizationService
   ) {}
 
@@ -69,13 +72,15 @@ export class UfrRequestsSummaryComponent implements OnInit {
 
     this.pomService.getLatestPom().subscribe(resp => {
       this.pom = (resp as any).result as Pom;
+      this.showGridAddCta = this.pom.status === PomStatus.CREATED || this.pom.status === PomStatus.OPEN;
     });
-    this.infoIconMessage = 'Values in dropdown vary based on "UFR created for" value in + dropdown';
+    this.infoIconMessage =
+      'Only those programs that are not assigned to the Funds Requestor appear in the dropdown list.';
   }
 
   private setupGrid() {
     this.gridAddOptions = ListItemHelper.generateListItemFromArray([
-      ['previously Funded Program', 'prev', 'prev'],
+      ['Previously Funded Program', 'prev', 'prev'],
       ['Program Request', 'pr', 'pr'],
       ['New Increment', 'ni', 'ni'],
       ['New FoS', 'nfos', 'nfos'],
@@ -390,6 +395,10 @@ export class UfrRequestsSummaryComponent implements OnInit {
         this.showValidationErrors = true;
         return;
       }
+      if (await this.checkProgramExistInUFR(program)) {
+        this.showValidationErrors = true;
+        return;
+      }
       if (this.pom.status === PomStatus.CREATED) {
         if (await this.checkProgramAlreadyExistsInPom(program)) {
           this.showValidationErrors = true;
@@ -471,6 +480,22 @@ export class UfrRequestsSummaryComponent implements OnInit {
       this.shortNameErrorMessage =
         'The program ID entered already exists as a previously funded program. ' +
         'Please cancel out of this and click the + button to add a Previously Funded Program.';
+    }
+    return ret;
+  }
+
+  private async checkProgramExistInUFR(program: Program) {
+    let ret = false;
+    let ufr;
+    await this.ufrService
+      .getBYProgramShortName(program.shortName)
+      .toPromise()
+      .then(resp => {
+        ufr = (resp as any).result;
+      });
+    if (ufr) {
+      ret = true;
+      this.shortNameErrorMessage = 'The program ID entered already exists in a UFR: "' + ufr.ufrName + '"';
     }
     return ret;
   }
