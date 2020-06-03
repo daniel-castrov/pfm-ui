@@ -298,13 +298,15 @@ export class UfrRequestsSummaryComponent implements OnInit {
         this.prevFundedProgramDialog.display = true;
         this.prevFundedProgramDialog.form.reset();
         this.prevFundedProgramDialog.form.patchValue({ program: '' });
-        this.mrdbService.getPrevFundedProgramsValidForUFR().subscribe(
-          resp => {
-            this.availablePrograms = (resp as any).result;
-          },
-          error => {},
-          () => (this.busy = false)
-        );
+        this.mrdbService
+          .getPrevFundedProgramsValidForUFR()
+          .subscribe(
+            resp => {
+              this.availablePrograms = (resp as any).result;
+            },
+            error => {}
+          )
+          .add(() => (this.busy = false));
         break;
       }
       case 'pr': {
@@ -312,13 +314,15 @@ export class UfrRequestsSummaryComponent implements OnInit {
         this.prevFundedProgramDialog.form.reset();
         this.prevFundedProgramDialog.form.patchValue({ program: '' });
         this.showInfoIcon = true;
-        this.mrdbService.getProgramRequestValidForURF().subscribe(
-          resp => {
-            this.availablePrograms = (resp as any).result;
-          },
-          error => this.dialogService.displayDebug(error),
-          () => (this.busy = false)
-        );
+        this.mrdbService
+          .getProgramRequestValidForURF()
+          .subscribe(
+            resp => {
+              this.availablePrograms = (resp as any).result;
+            },
+            error => this.dialogService.displayDebug(error)
+          )
+          .add(() => (this.busy = false));
         break;
       }
       case 'ni': {
@@ -333,13 +337,15 @@ export class UfrRequestsSummaryComponent implements OnInit {
         });
         this.createNewIncOrFosDialog.display = true;
         this.showInfoIcon = true;
-        this.mrdbService.getProgramRequestValidForURF().subscribe(
-          resp => {
-            this.availablePrograms = (resp as any).result;
-          },
-          error => this.dialogService.displayDebug(error),
-          () => (this.busy = false)
-        );
+        this.mrdbService
+          .getPRsAndMrdbPRsValidForURF()
+          .subscribe(
+            resp => {
+              this.availablePrograms = (resp as any).result;
+            },
+            error => this.dialogService.displayDebug(error)
+          )
+          .add(() => (this.busy = false));
         break;
       }
       case 'nfos': {
@@ -354,13 +360,15 @@ export class UfrRequestsSummaryComponent implements OnInit {
           organizationId: ''
         });
         this.showInfoIcon = true;
-        this.mrdbService.getProgramRequestValidForURF().subscribe(
-          resp => {
-            this.availablePrograms = (resp as any).result;
-          },
-          error => this.dialogService.displayDebug(error),
-          () => (this.busy = false)
-        );
+        this.mrdbService
+          .getPRsAndMrdbPRsValidForURF()
+          .subscribe(
+            resp => {
+              this.availablePrograms = (resp as any).result;
+            },
+            error => this.dialogService.displayDebug(error)
+          )
+          .add(() => (this.busy = false));
         break;
       }
       case 'np': {
