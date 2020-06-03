@@ -18,6 +18,10 @@ import { catchError, map, switchMap } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { WorkspaceService } from '../services/workspace.service';
 import { PomStatus } from '../models/enumerations/pom-status.model';
+import { VisibilityService } from '../../services/visibility-service';
+import { AppModel } from '../../pfm-common-models/AppModel';
+import { Workspace } from '../models/workspace';
+import { ToastService } from '../../pfm-coreui/services/toast.service';
 
 @Component({
   selector: 'pfm-programming',
@@ -51,7 +55,13 @@ export class LockProgrammingComponent implements OnInit {
 
   containerId: string;
   workspaces: ListItem[];
-  selectedWorkspace: any;
+  selectedWorkspace: Workspace;
+
+  lockConfirmationDlg = {
+    title: 'Lock POM Session',
+    continueAction: null,
+    display: false
+  };
 
   constructor(
     public programmingModel: ProgrammingModel,
@@ -59,11 +69,29 @@ export class LockProgrammingComponent implements OnInit {
     private pomService: PomService,
     private roleService: RoleService,
     private dialogService: DialogService,
+    private visibilityService: VisibilityService,
+    private toastService: ToastService,
+    public appModel: AppModel,
     private workspaceService: WorkspaceService
   ) {}
 
   ngOnInit() {
+    this.setupVisibility();
     this.loadPOMData();
+  }
+
+  setupVisibility() {
+    this.visibilityService
+      .isCurrentlyVisible('programming-phase-component')
+      .toPromise()
+      .then(response => {
+        if ((response as any).result) {
+          if (!this.appModel['visibilityDef']) {
+            this.appModel['visibilityDef'] = {};
+          }
+          this.appModel['visibilityDef']['programming-phase-component'] = (response as any).result;
+        }
+      });
   }
 
   private setupGridster() {
@@ -100,7 +128,42 @@ export class LockProgrammingComponent implements OnInit {
     ];
   }
 
-  onLockProgrammingPhase() {}
+  onValidateLockProgrammingPhase() {
+    this.busy = true;
+
+    this.pomService
+      .canLockPom(this.programmingModel.pom, this.selectedWorkspace)
+      .subscribe(
+        resp => {
+          const valid = (resp as any).result;
+          if (valid) {
+            this.lockConfirmationDlg.display = true;
+          }
+        },
+        error => {
+          this.toastService.displayError(error.error.error);
+        }
+      )
+      .add(() => (this.busy = false));
+  }
+
+  onLockProgrammingPhase() {
+    this.busy = true;
+    this.pomService
+      .lockPom(this.programmingModel.pom, this.selectedWorkspace)
+      .subscribe(
+        resp => {
+          this.toastService.displaySuccess(
+            `Programming phase for ${this.programmingModel.pom.fy} successfully locked.`
+          );
+        },
+        error => this.toastService.displayError(error.error.error),
+        () => {
+          this.lockConfirmationDlg.display = false;
+        }
+      )
+      .add(() => (this.busy = false));
+  }
 
   private loadPOMData() {
     this.busy = true;
