@@ -24,8 +24,8 @@ export class FundingLineServiceImpl extends FundingLineService {
     return this.put('funding-line', fundingLine);
   }
 
-  updateFundingLineBulk(fundingLines: FundingLine[]): Observable<any> {
-    return this.put('funding-line/bulk', fundingLines);
+  updateFundingLineBulk(fundingLines: FundingLine[], amount: number, isPercentage: boolean): Observable<any> {
+    return this.put('funding-line/bulk/' + amount + '/' + isPercentage, fundingLines);
   }
 
   removeFundingLineById(fundingLineId: string): Observable<any> {

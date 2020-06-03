@@ -33,6 +33,7 @@ import { FundingLineActionCellRendererComponent } from 'src/app/pfm-coreui/datag
 import { formatDate } from '@angular/common';
 import { UserService } from 'src/app/services/user-impl-service';
 import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
+import { AllowedCharacters } from 'src/app/ag-grid/cell-editors/AllowedCharacters';
 
 @Component({
   selector: 'pfm-requests-funding-line-grid',
@@ -462,7 +463,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
         ? 'BY' + (i === this.pomYear ? '' : i - this.pomYear)
         : 'CY'
       ).toLowerCase();
-      fundingData[headerName] = funds[i] ? funds[i] : 0;
+      fundingData[headerName] = parseInt(((funds[i] ?? 0) / 1000).toString(), 10);
     }
     fundingData.action = {
       ...(fundingLine.userCreated ? this.actionState.VIEW : this.actionState.VIEW_NO_DELETE),
@@ -471,7 +472,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
     return fundingData;
   }
 
-  private convertFiscalYearToFunds(fundingLine: FundingData) {
+  private convertFiscalYearToFunds(fundingLine: FundingData, convertToThousand = true) {
     const fundingLineToSave: FundingLine = { ...fundingLine };
     fundingLineToSave.funds = {};
     for (let i = this.pomYear - 3, x = 0; i < this.pomYear + 5; i++, x++) {
@@ -481,7 +482,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
         ? 'BY' + (i === this.pomYear ? '' : i - this.pomYear)
         : 'CY'
       ).toLowerCase();
-      fundingLineToSave.funds[i] = Number(fundingLine[headerName]);
+      fundingLineToSave.funds[i] = Number(fundingLine[headerName]) * (convertToThousand ? 1000 : 1);
     }
     fundingLineToSave.ctc = Number(fundingLine.ctc);
     return fundingLineToSave;
@@ -513,7 +514,10 @@ export class RequestsFundingLineGridComponent implements OnInit {
             sortable: false,
             suppressMenu: true,
             aggFunc: 'sum',
-            cellEditor: NumericCellEditor.create({ returnUndefinedOnZero: false }),
+            cellEditor: NumericCellEditor.create({
+              returnUndefinedOnZero: false,
+              allowedCharacters: AllowedCharacters.DIGITS_ONLY
+            }),
             cellClass: params => ['numeric-class', params.node.group ? 'aggregate-cell' : 'regular-cell'],
             cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
             minWidth: 80,
@@ -647,7 +651,10 @@ export class RequestsFundingLineGridComponent implements OnInit {
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
         cellClass: params => ['numeric-class', params.node.group ? 'aggregate-cell' : 'regular-cell'],
         minWidth: 80,
-        cellEditor: NumericCellEditor.create({ returnUndefinedOnZero: false }),
+        cellEditor: NumericCellEditor.create({
+          returnUndefinedOnZero: false,
+          allowedCharacters: AllowedCharacters.DIGITS_ONLY
+        }),
         valueFormatter: params => this.currencyFormatter(params.value)
       },
       {
@@ -774,7 +781,10 @@ export class RequestsFundingLineGridComponent implements OnInit {
             cellClass: params => ['numeric-class', 'regular-cell'],
             cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
             minWidth: 75,
-            cellEditor: NumericCellEditor.create({ returnUndefinedOnZero: false }),
+            cellEditor: NumericCellEditor.create({
+              returnUndefinedOnZero: false,
+              allowedCharacters: AllowedCharacters.DIGITS_ONLY
+            }),
             valueFormatter: params => this.currencyFormatter(params.data[params.colDef.field])
           }
         ]
@@ -919,7 +929,10 @@ export class RequestsFundingLineGridComponent implements OnInit {
         cellClass: params => ['numeric-class', 'regular-cell'],
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
         minWidth: 75,
-        cellEditor: NumericCellEditor.create({ returnUndefinedOnZero: false }),
+        cellEditor: NumericCellEditor.create({
+          returnUndefinedOnZero: false,
+          allowedCharacters: AllowedCharacters.DIGITS_ONLY
+        }),
         valueFormatter: params => this.currencyFormatter(params.data[params.colDef.field])
       },
       {
@@ -1533,7 +1546,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
         ? this.summaryFundingLineRows
         : this.nonSummaryFundingLineRows;
       fundingLineRows.forEach(row => {
-        const fundingLine = this.convertFiscalYearToFunds(row);
+        const fundingLine = this.convertFiscalYearToFunds(row, false);
         for (const year of Object.keys(fundingLine.funds)) {
           funds[year] = funds[year] ?? 0;
           funds[year] += Number(fundingLine.funds[year]) ?? 0;
@@ -2008,6 +2021,9 @@ export class RequestsFundingLineGridComponent implements OnInit {
             .obtainFundingLineById(fundingLine.id)
             .toPromise()
             .then(fundingLineResp => {
+              if (!fundingLine.fundingLineHistories) {
+                fundingLine.fundingLineHistories = [];
+              }
               fundingLine.fundingLineHistories.push(...(fundingLineResp.result as FundingLine).fundingLineHistories);
             });
         } else {
@@ -2141,9 +2157,9 @@ export class RequestsFundingLineGridComponent implements OnInit {
           const byFields = [];
           for (let i = this.pomYear, x = 0; i < this.pomYear + 5; i++, x++) {
             byFields.push({
-              ['by' + (x > 0 ? x : '')]: fundingLineHistory.funds[i] ?? 0
+              ['by' + (x > 0 ? x : '')]: parseInt(((fundingLineHistory.funds[i] ?? 0) / 1000).toString(), 10)
             });
-            total += fundingLineHistory.funds[i] ?? 0;
+            total += parseInt(((fundingLineHistory.funds[i] ?? 0) / 1000).toString(), 10);
           }
           const fundingLineHistoryEntry = {
             update: index + 1,
@@ -2264,33 +2280,16 @@ export class RequestsFundingLineGridComponent implements OnInit {
       return;
     }
     const bulk = JSON.parse(JSON.stringify(this.nonSummaryFundingLineRows)) as FundingData[];
-    if (this.showPercent) {
-      bulk.forEach(fundingLine => {
-        fundingLine.by = +(fundingLine.by * (this.bulkChangeAmount / 100 + 1)).toFixed(5);
-        fundingLine.by1 = +(fundingLine.by1 * (this.bulkChangeAmount / 100 + 1)).toFixed(5);
-        fundingLine.by2 = +(fundingLine.by2 * (this.bulkChangeAmount / 100 + 1)).toFixed(5);
-        fundingLine.by3 = +(fundingLine.by3 * (this.bulkChangeAmount / 100 + 1)).toFixed(5);
-        fundingLine.by4 = +(fundingLine.by4 * (this.bulkChangeAmount / 100 + 1)).toFixed(5);
-      });
-    } else {
-      bulk.forEach(fundingLine => {
-        fundingLine.by += this.bulkChangeAmount;
-        fundingLine.by1 += this.bulkChangeAmount;
-        fundingLine.by2 += this.bulkChangeAmount;
-        fundingLine.by3 += this.bulkChangeAmount;
-        fundingLine.by4 += this.bulkChangeAmount;
-      });
-    }
     this.displayBulkHistoryReasonDialog(bulk, this.performBulkApplyChange.bind(this));
   }
 
   private performBulkApplyChange(bulk: FundingData[]) {
     const fundingLineFiscalYear: FundingLine[] = [];
     bulk.forEach(fundingData => {
-      fundingLineFiscalYear.push(this.convertFiscalYearToFunds(fundingData));
+      fundingLineFiscalYear.push(this.convertFiscalYearToFunds(fundingData, false));
     });
     this.fundingLineService
-      .updateFundingLineBulk(fundingLineFiscalYear)
+      .updateFundingLineBulk(fundingLineFiscalYear, this.bulkChangeAmount, !!this.showPercent)
       .pipe(
         map(resp => {
           const fundingLines: FundingData[] = [];
@@ -2354,7 +2353,6 @@ export class RequestsFundingLineGridComponent implements OnInit {
       });
       data.push(singleData);
     }
-
     return data;
   }
 
