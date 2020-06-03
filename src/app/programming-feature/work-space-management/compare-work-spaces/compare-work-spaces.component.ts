@@ -282,7 +282,12 @@ export class CompareWorkSpacesComponent implements OnInit {
           .forEach(option => {
             const funds: number[] = [];
             const legends = this.retrieveChartLegend();
-            data[0].push(`Workspace ${workspace.version} - ${workspace.name}` + ', ' + (legends.length ? legends + '/' : '') + option.name);
+            data[0].push(
+              `Workspace ${workspace.version} - ${workspace.name}` +
+                ', ' +
+                (legends.length ? legends + '/' : '') +
+                option.name
+            );
             fundingLineRows = this.fundingLinesByWrksp[workspace.id];
             const fundingLineFiltered = this.filterFundingLineRow(fundingLineRows);
             if (!this.isSingleChartDropdown()) {
