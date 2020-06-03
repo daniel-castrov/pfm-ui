@@ -42,7 +42,7 @@ import { RequestSummaryNavigationHistoryService } from './requests/requests-summ
 import { VisibilityService } from '../services/visibility-service';
 import { VisibilityServiceImpl } from '../services/visibility-service-impl.service';
 import { RequestsDetailsFormComponent } from './requests/requests-details/requests-details-form/requests-details-form.component';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { JustificationComponent } from './requests/requests-details/justification/justification.component';
 import { ScopeComponent } from './requests/requests-details/scope/scope.component';
@@ -82,6 +82,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { UfrServiceImpl } from './services/ufr-service-impl.service';
 import { UfrService } from './services/ufr-service';
 import { UfrFormComponent } from './ufr-requests/ufr-requests-detail/ufr-form/ufr-form.component';
+import { UfrJustificationComponent } from './ufr-requests/ufr-requests-detail/ufr-justification/ufr-justification.component';
 
 @NgModule({
   declarations: [
@@ -112,7 +113,8 @@ import { UfrFormComponent } from './ufr-requests/ufr-requests-detail/ufr-form/uf
     AssetsComponent,
     UfrRequestsDetailComponent,
     UfrRequestsSummaryComponent,
-    UfrFormComponent
+    UfrFormComponent,
+    UfrJustificationComponent
   ],
   imports: [
     CommonModule,
