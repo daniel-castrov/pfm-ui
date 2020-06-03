@@ -7,5 +7,7 @@ export abstract class UfrService extends BaseRestService {
     super(httpClient);
   }
 
-  abstract getBYProgramShortName(shortName: string): Observable<object>;
+  abstract getByProgramShortName(shortName: string): Observable<object>;
+
+  abstract getById(id: string): Observable<object>;
 }

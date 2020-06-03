@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { PomService } from './pom-service';
 import { Pom } from '../models/Pom';
+import { Workspace } from '../models/workspace';
 
 @Injectable({
   providedIn: 'root'
@@ -50,5 +51,13 @@ export class PomServiceImpl extends PomService {
 
   getOpenPom(): Observable<object> {
     return this.get('pom/open');
+  }
+
+  canLockPom(pom: Pom, workspace: Workspace): Observable<object> {
+    return this.get(`pom/${pom.id}/${workspace.id}/canlock`);
+  }
+
+  lockPom(pom: Pom, workspace: Workspace): Observable<object> {
+    return this.put(`pom/${pom.id}/${workspace.id}/lock`);
   }
 }
