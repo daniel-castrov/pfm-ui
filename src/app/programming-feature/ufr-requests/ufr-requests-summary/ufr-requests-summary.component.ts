@@ -15,6 +15,8 @@ import { WorkspaceService } from '../../services/workspace.service';
 import { MrdbService } from '../../services/mrdb-service';
 import { PomStatus } from '../../models/enumerations/pom-status.model';
 import { UfrService } from '../../services/ufr-service';
+import { AppModel } from 'src/app/pfm-common-models/AppModel';
+import { RoleConstants } from 'src/app/pfm-common-models/role-contants.model';
 
 @Component({
   selector: 'pfm-ufr-requests-summary',
@@ -50,7 +52,8 @@ export class UfrRequestsSummaryComponent implements OnInit {
     private workspaceService: WorkspaceService,
     private mrdbService: MrdbService,
     private ufrService: UfrService,
-    private organizationService: OrganizationService
+    private organizationService: OrganizationService,
+    private appModel: AppModel
   ) {}
 
   ngOnInit() {
@@ -72,7 +75,10 @@ export class UfrRequestsSummaryComponent implements OnInit {
 
     this.pomService.getLatestPom().subscribe(resp => {
       this.pom = (resp as any).result as Pom;
-      this.showGridAddCta = this.pom.status === PomStatus.CREATED || this.pom.status === PomStatus.OPEN;
+      this.showGridAddCta =
+        (this.pom.status === PomStatus.CREATED || this.pom.status === PomStatus.OPEN) &&
+        (this.appModel.userDetails.roles.includes(RoleConstants.POM_MANAGER) ||
+          this.appModel.userDetails.roles.includes(RoleConstants.FINANCIAL_MANAGER));
     });
     this.infoIconMessage =
       'Only those programs that are not assigned to the Funds Requestor appear in the dropdown list.';
@@ -495,7 +501,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
       });
     if (ufr) {
       ret = true;
-      this.shortNameErrorMessage = 'The program ID entered already exists in a UFR: "' + ufr.ufrName + '"';
+      this.shortNameErrorMessage = 'The program ID entered already exists on a UFR Request "' + ufr.ufrName + '"';
     }
     return ret;
   }
@@ -534,7 +540,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
       .then(resp => {
         workspaces = (resp as any).result;
       });
-    if (workspaces) {
+    if (workspaces?.length) {
       this.shortNameErrorMessage =
         'The program ID entered already exists on Workspace(s)  ' +
         workspaces.map(w => 'ID ' + w.version).join(' ') +
