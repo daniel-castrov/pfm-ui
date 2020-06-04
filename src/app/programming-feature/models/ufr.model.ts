@@ -19,7 +19,7 @@ export class UFR {
   modifiedByName?: string;
   createdByName?: string;
 
-  programId: string;
+  parentId: string;
   shortName: string;
   longName: string;
   type: string;

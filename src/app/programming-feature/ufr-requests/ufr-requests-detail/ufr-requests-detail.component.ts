@@ -84,8 +84,8 @@ export class UfrRequestsDetailComponent implements OnInit {
             this.ufr.secDefLOEId = '5ed7c10510f2113665b64dfc'; // Improve Physical and Procedural Security
             this.ufr.strategicImperativeId = '5ed7c10510f2113665b64e03'; // Agility
             this.ufr.agencyObjectiveId = '5ed7c10510f2113665b64e07'; // Make the world safer
-            this.ufr.programId = '5ed7c4e14441f743732597a4'; // For Increment or FoS
-            this.ufr.shortyType = ShortyType.NEW_PROGRAM;
+            this.ufr.parentId = '5ed7c4e14441f743732597a4'; // For Increment or FoS
+            this.ufr.shortyType = ShortyType.MRDB_PROGRAM;
           }
         }
       );
