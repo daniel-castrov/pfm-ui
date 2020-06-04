@@ -537,7 +537,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
     if (workspaces) {
       this.shortNameErrorMessage =
         'The program ID entered already exists on Workspace(s)  ' +
-        workspaces.map(w => 'ID ' + w.version).join(' ') +
+        workspaces.map(w => 'ID ' + w.version).join(', ') +
         '.';
       ret = true;
     }

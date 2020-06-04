@@ -82,6 +82,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { UfrServiceImpl } from './services/ufr-service-impl.service';
 import { UfrService } from './services/ufr-service';
 import { UfrFormComponent } from './ufr-requests/ufr-requests-detail/ufr-form/ufr-form.component';
+import { UfrProgramFormComponent } from './ufr-requests/ufr-requests-detail/ufr-program-form/ufr-program-form.component';
 
 @NgModule({
   declarations: [
@@ -112,7 +113,8 @@ import { UfrFormComponent } from './ufr-requests/ufr-requests-detail/ufr-form/uf
     AssetsComponent,
     UfrRequestsDetailComponent,
     UfrRequestsSummaryComponent,
-    UfrFormComponent
+    UfrFormComponent,
+    UfrProgramFormComponent
   ],
   imports: [
     CommonModule,

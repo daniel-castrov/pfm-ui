@@ -11,10 +11,26 @@ export class UFR {
   dispositionExplanation: string;
   ufrStatus: UFRStatus;
   shortyType: ShortyType;
+
   created?: any;
   modified?: any;
   modifiedBy?: string;
   createdBy?: string;
   modifiedByName?: string;
   createdByName?: string;
+
+  programId: string;
+  shortName: string;
+  longName: string;
+  type: string;
+  organizationId: string;
+  divisionId: string;
+  missionPriorityId: string;
+  agencyPriority: number;
+  directoratePriority: number;
+  secDefLOEId: string;
+  strategicImperativeId: string;
+  agencyObjectiveId: string;
+  imageName: string;
+  imageArea: string;
 }
