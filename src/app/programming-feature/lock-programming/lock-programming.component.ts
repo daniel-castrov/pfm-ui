@@ -189,7 +189,7 @@ export class LockProgrammingComponent implements OnInit {
         switchMap(programs => {
           this.programmingModel.programs = (programs as any).result;
           return this.programmingService
-            .getBaBlinSummary(this.programmingModel.pom.id, null)
+            .getBaBlinSummary(this.programmingModel.pom.workspaceId, null)
             .pipe(map(bablin => (this.baBlinSummary = (bablin as any).result)));
         }),
         catchError(error => {
