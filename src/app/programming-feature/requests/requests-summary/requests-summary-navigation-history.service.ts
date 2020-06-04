@@ -1,4 +1,5 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
+
 @Injectable()
 export class RequestSummaryNavigationHistoryService {
   private requestSummaryNavigationHistory: IRequestSummaryNavigationHistory;
@@ -11,6 +12,9 @@ export class RequestSummaryNavigationHistoryService {
 
   updateRequestSummaryNavigationHistory(requestSummaryNavigationHistory: IRequestSummaryNavigationHistory) {
     if (requestSummaryNavigationHistory) {
+      if (requestSummaryNavigationHistory.selectedContainer) {
+        this.tempRequestSummaryNavigationHistory.selectedContainer = requestSummaryNavigationHistory.selectedContainer;
+      }
       if (requestSummaryNavigationHistory.selectedOrganization) {
         this.tempRequestSummaryNavigationHistory.selectedOrganization =
           requestSummaryNavigationHistory.selectedOrganization;
@@ -27,6 +31,12 @@ export class RequestSummaryNavigationHistoryService {
 
   prepareNavigationHistory() {
     this.requestSummaryNavigationHistory = { ...this.tempRequestSummaryNavigationHistory };
+  }
+
+  getSelectedContainer() {
+    const selectedContainer = this.requestSummaryNavigationHistory.selectedContainer;
+    this.requestSummaryNavigationHistory.selectedContainer = undefined;
+    return selectedContainer;
   }
 
   getSelectedOrganization() {
@@ -49,6 +59,7 @@ export class RequestSummaryNavigationHistoryService {
 }
 
 export interface IRequestSummaryNavigationHistory {
+  selectedContainer?: string;
   selectedOrganization?: string;
   selectedOrganizationWidget?: string;
   selectedTOAWidget?: string;
