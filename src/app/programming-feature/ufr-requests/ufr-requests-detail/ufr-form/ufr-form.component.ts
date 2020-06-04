@@ -38,9 +38,9 @@ export class UfrFormComponent implements OnInit {
         this.ufr.dispositionExplanation ? this.ufr.dispositionExplanation : this.DEFAULT_DISPOSITION
       ),
       created: new FormControl(formatDate(this.ufr.created, 'M/d/yyyy HH:mm', 'en-US')),
-      createdBy: new FormControl(this.ufr.createdByName),
+      createdBy: new FormControl(this.ufr.createdBy),
       modified: new FormControl(formatDate(this.ufr.modified, 'M/d/yyyy HH:mm', 'en-US')),
-      modifiedBy: new FormControl(this.ufr.modifiedByName)
+      modifiedBy: new FormControl(this.ufr.modifiedBy)
     });
     this.disableInput();
   }

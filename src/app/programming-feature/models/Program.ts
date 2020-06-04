@@ -14,6 +14,7 @@ export class Program {
   emphases: Array<string>;
 
   id: string;
+  parentId?: string;
   organizationId: string;
   programStatus: ProgramStatus;
   bulkOrigin: boolean;

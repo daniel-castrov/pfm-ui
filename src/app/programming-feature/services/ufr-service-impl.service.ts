@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { UfrService } from './ufr-service';
+import { UFR } from '../models/ufr.model';
 
 @Injectable({
   providedIn: 'root'
@@ -17,5 +18,13 @@ export class UfrServiceImpl extends UfrService {
 
   getById(id: string): Observable<object> {
     return this.get('ufr/' + id);
+  }
+
+  create(ufr: UFR): Observable<any> {
+    return this.post('ufr', ufr);
+  }
+
+  getByContainerId(containerId: string): Observable<any> {
+    return this.get('ufr/container/' + containerId);
   }
 }
