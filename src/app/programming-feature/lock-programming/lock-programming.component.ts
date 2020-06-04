@@ -355,7 +355,6 @@ export class LockProgrammingComponent implements OnInit {
 
   private loadGridData() {
     this.gridData = [];
-    console.log(this.programmingModel);
     for (const program of this.programmingModel.programs) {
       const ps = new ProgramSummary();
       const role = this.programmingModel.roles.get(program.responsibleRoleId);
