@@ -54,4 +54,8 @@ export class MrdbServiceImpl extends MrdbService {
   getProgramRequestValidForURF(): Observable<object> {
     return this.get('mrdb/urf/program-requests');
   }
+
+  getPRsAndMrdbPRsValidForURF(): Observable<object> {
+    return this.get('mrdb/urf/prs-and-mrdb-prs');
+  }
 }

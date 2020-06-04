@@ -3,9 +3,9 @@
     <div class="col-6" *ngIf="pomYear">
       <h3>Session Lock for POM{{ pomYear % 100 }}</h3>
     </div>
-    <div class="button-container col-6 text-right p-0" *ngIf="selectedWorkspace">
-      <div class="div-button-return">
-        <button type="button" class="btn btn-primary" (click)="onLockProgrammingPhase()">
+    <div class="button-container col-6 text-right p-0" *ngIf="selectedWorkspace && appModel.visibilityDef">
+      <div class="div-button-return" *pfmIsVisible="'programming-phase-component.lockProgrammingPhase'">
+        <button type="button" class="btn btn-primary" (click)="onValidateLockProgrammingPhase()">
           Lock Programming Phase
         </button>
       </div>
@@ -13,7 +13,7 @@
   </div>
 </div>
 <div class="alert alert-danger" role="alert" *ngIf="!workspaces?.length && !busy">
-  At least one Workspace must be active prior to locking the POM.
+  At least one workspace must be active prior to locking the POM.
 </div>
 
 <ng-container *ngIf="workspaces?.length">
@@ -74,3 +74,39 @@
     </div>
   </ng-container>
 </ng-container>
+
+<ng-container *ngIf="lockConfirmationDlg.display">
+  <pfm-custom-dialog
+    [title]="lockConfirmationDlg.title"
+    [body]="yearSkipBody"
+    [actions]="yearSkipActions"
+    (onCancelDialog)="lockConfirmationDlg.display = false"
+  ></pfm-custom-dialog>
+
+  <ng-template #yearSkipBody>
+    <span
+      ><b>
+        Are you sure you want to lock the POM Session?
+      </b>
+    </span>
+    <br />
+    <br />
+    <span>
+      Be advised that this is irreversible.
+    </span>
+  </ng-template>
+
+  <ng-template #yearSkipActions>
+    <div class="pull-left">
+      <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onLockProgrammingPhase()">
+        Lock
+      </button>
+    </div>
+
+    <div class="pull-right">
+      <pfm-cancel-cta (onCancelClicked)="lockConfirmationDlg.display = false"></pfm-cancel-cta>
+    </div>
+  </ng-template>
+</ng-container>
+
+<pfm-busy [busy]="busy"></pfm-busy>

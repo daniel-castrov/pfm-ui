@@ -28,7 +28,7 @@ export class BaseRestService {
     return this.httpClient.post(this.baseURL + '/' + resource, data, { headers: this.headers });
   }
 
-  protected put(resource: string, data: any, params?: HttpParams): Observable<object> {
+  protected put(resource: string, data?: any, params?: HttpParams): Observable<object> {
     return this.httpClient.put(this.baseURL + '/' + resource, data, { headers: this.headers, params });
   }
 

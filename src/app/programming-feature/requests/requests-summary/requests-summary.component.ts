@@ -157,6 +157,7 @@ export class RequestsSummaryComponent implements OnInit {
           items.push(item);
         }
         this.workspaces = items;
+        this.loadPreviousContainerSelection();
       },
       error => {
         this.dialogService.displayDebug(error);
@@ -271,6 +272,16 @@ export class RequestsSummaryComponent implements OnInit {
     );
   }
 
+  loadPreviousContainerSelection() {
+    const selectedContainer = this.requestSummaryNavigationHistoryService.getSelectedContainer();
+    if (selectedContainer) {
+      this.containerId = selectedContainer;
+      const listItem = this.workspaces.find(x => x.id === selectedContainer);
+      listItem.isSelected = true;
+      this.onWorkspaceChange(listItem);
+    }
+  }
+
   loadPreviousSelection() {
     const selectedOrganization = this.requestSummaryNavigationHistoryService.getSelectedOrganization();
     if (selectedOrganization) {
@@ -360,6 +371,9 @@ export class RequestsSummaryComponent implements OnInit {
   onWorkspaceChange(selected: ListItem) {
     this.selectedWorkspace = selected.rawData;
     this.programmingModel.pom.workspaceId = this.selectedWorkspace.id;
+    this.requestSummaryNavigationHistoryService.updateRequestSummaryNavigationHistory({
+      selectedContainer: this.selectedWorkspace.id
+    });
     this.setupResquestSummary();
     this.setupDropDown();
   }
