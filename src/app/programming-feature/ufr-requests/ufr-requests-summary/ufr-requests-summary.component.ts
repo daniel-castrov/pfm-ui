@@ -17,6 +17,9 @@ import { PomStatus } from '../../models/enumerations/pom-status.model';
 import { UfrService } from '../../services/ufr-service';
 import { AppModel } from 'src/app/pfm-common-models/AppModel';
 import { RoleConstants } from 'src/app/pfm-common-models/role-contants.model';
+import { switchMap } from 'rxjs/operators';
+import { throwError, of } from 'rxjs';
+import { UFR } from '../../models/ufr.model';
 
 @Component({
   selector: 'pfm-ufr-requests-summary',
@@ -397,7 +400,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
     );
   }
 
-  async onCreateProgramAction() {
+  onCreateProgramAction() {
     this.showValidationErrors = false;
     if (this.createProgramDialog.form.valid) {
       const program = {
@@ -405,25 +408,63 @@ export class UfrRequestsSummaryComponent implements OnInit {
         longName: this.createProgramDialog.form.get(['longName']).value,
         organizationId: this.createProgramDialog.form.get(['organizationId']).value
       } as Program;
-      if (await this.checkProgramExistInMaster(program)) {
-        this.showValidationErrors = true;
-        return;
-      }
-      if (await this.checkProgramExistInUFR(program)) {
-        this.showValidationErrors = true;
-        return;
-      }
-      if (this.pom.status === PomStatus.CREATED) {
-        if (await this.checkProgramAlreadyExistsInPom(program)) {
-          this.showValidationErrors = true;
-          return;
-        }
-      } else {
-        if (await this.checkProgramExistInWorkspaces(program)) {
-          this.showValidationErrors = true;
-          return;
-        }
-      }
+      this.mrdbService
+        .getByName(program.shortName)
+        .pipe(
+          switchMap(resp => {
+            if ((resp as any).result) {
+              this.shortNameErrorMessage =
+                'The program ID entered already exists as a previously funded program. ' +
+                'Please cancel out of this and click the + button to add a Previously Funded Program.';
+              return throwError({ showValidationErrors: true });
+            }
+            return this.ufrService.getByProgramShortName(program.shortName);
+          }),
+          switchMap((resp: any) => {
+            const ufr = resp.result as UFR;
+            if (ufr) {
+              this.shortNameErrorMessage =
+                'The program ID entered already exists on a UFR Request "' + ufr.ufrName + '"';
+              return throwError({ showValidationErrors: true });
+            }
+            return this.pom.status === PomStatus.CREATED
+              ? this.programmingService.findByShortNameAndContainerId(this.pom.id, program.shortName)
+              : of({ result: null });
+          }),
+          switchMap((resp: any) => {
+            const pomProgram = resp.result as Program;
+            if (pomProgram) {
+              this.organizationService.getById(pomProgram.organizationId).subscribe(orgResp => {
+                this.shortNameErrorMessage =
+                  'The program ID entered already exists on the POM in the  ' +
+                  orgResp.result.abbreviation +
+                  ' organization.';
+                return throwError({ showValidationErrors: true });
+              });
+              return this.workspaceService.getByProgramShortName(program.shortName);
+            }
+          }),
+          switchMap(resp => {
+            const workspaces = (resp as any).result;
+            if (workspaces?.length) {
+              this.shortNameErrorMessage =
+                'The program ID entered already exists on Workspace(s)  ' +
+                workspaces.map(w => 'ID ' + w.version).join(', ') +
+                '.';
+            }
+            return of();
+          })
+        )
+        .subscribe(
+          () => {},
+          (error: any) => {
+            if (error?.showValidationErrors) {
+              this.showValidationErrors = error.showValidationErrors;
+            } else {
+              this.dialogService.displayDebug(error);
+            }
+          }
+        );
     } else {
       this.showValidationErrors = true;
     }
@@ -448,24 +489,66 @@ export class UfrRequestsSummaryComponent implements OnInit {
     }
   }
 
-  async onCreateNewUFRAction() {
+  onCreateNewUFRAction() {
     this.showValidationErrors = false;
     if (this.createNewIncOrFosDialog.form.valid) {
-      if (await this.checkProgramExistInMaster(this.SelectedProgram)) {
-        this.showValidationErrors = true;
-        return;
-      }
-      if (this.pom.status === PomStatus.CREATED) {
-        if (await this.checkProgramAlreadyExistsInPom(this.SelectedProgram)) {
-          this.showValidationErrors = true;
-          return;
-        }
-      } else {
-        if (await this.checkProgramExistInWorkspaces(this.SelectedProgram)) {
-          this.showValidationErrors = true;
-          return;
-        }
-      }
+      this.mrdbService
+        .getByName(this.SelectedProgram.shortName)
+        .pipe(
+          switchMap(resp => {
+            if ((resp as any).result) {
+              this.shortNameErrorMessage =
+                'The program ID entered already exists as a previously funded program. ' +
+                'Please cancel out of this and click the + button to add a Previously Funded Program.';
+              return throwError({ showValidationErrors: true });
+            }
+            return this.ufrService.getByProgramShortName(this.SelectedProgram.shortName);
+          }),
+          switchMap((resp: any) => {
+            const ufr = resp.result as UFR;
+            if (ufr) {
+              this.shortNameErrorMessage =
+                'The program ID entered already exists on a UFR Request "' + ufr.ufrName + '"';
+              return throwError({ showValidationErrors: true });
+            }
+            return this.pom.status === PomStatus.CREATED
+              ? this.programmingService.findByShortNameAndContainerId(this.pom.id, this.SelectedProgram.shortName)
+              : of({ result: null });
+          }),
+          switchMap((resp: any) => {
+            const pomProgram = resp.result as Program;
+            if (pomProgram) {
+              this.organizationService.getById(pomProgram.organizationId).subscribe(orgResp => {
+                this.shortNameErrorMessage =
+                  'The program ID entered already exists on the POM in the  ' +
+                  orgResp.result.abbreviation +
+                  ' organization.';
+                return throwError({ showValidationErrors: true });
+              });
+              return this.workspaceService.getByProgramShortName(this.SelectedProgram.shortName);
+            }
+          }),
+          switchMap(resp => {
+            const workspaces = (resp as any).result;
+            if (workspaces?.length) {
+              this.shortNameErrorMessage =
+                'The program ID entered already exists on Workspace(s)  ' +
+                workspaces.map(w => 'ID ' + w.version).join(', ') +
+                '.';
+            }
+            return of();
+          })
+        )
+        .subscribe(
+          () => {},
+          (error: any) => {
+            if (error?.showValidationErrors) {
+              this.showValidationErrors = error.showValidationErrors;
+            } else {
+              this.dialogService.displayDebug(error);
+            }
+          }
+        );
     } else {
       this.showValidationErrors = true;
     }
@@ -478,83 +561,5 @@ export class UfrRequestsSummaryComponent implements OnInit {
   onParentProgramChanged(event: any) {
     this.SelectedProgram = this.availablePrograms.find(p => p.id === event.target.value);
     this.createNewIncOrFosDialog.form.get('organizationId').patchValue(this.SelectedProgram.organizationId);
-  }
-
-  private async checkProgramExistInMaster(program: Program) {
-    let ret = false;
-    let masterProgram: Program;
-    await this.mrdbService
-      .getByName(program.shortName)
-      .toPromise()
-      .then(resp => {
-        masterProgram = resp.result as Program;
-      });
-    if (masterProgram) {
-      ret = true;
-      this.shortNameErrorMessage =
-        'The program ID entered already exists as a previously funded program. ' +
-        'Please cancel out of this and click the + button to add a Previously Funded Program.';
-    }
-    return ret;
-  }
-
-  private async checkProgramExistInUFR(program: Program) {
-    let ret = false;
-    let ufr;
-    await this.ufrService
-      .getByProgramShortName(program.shortName)
-      .toPromise()
-      .then(resp => {
-        ufr = (resp as any).result;
-      });
-    if (ufr) {
-      ret = true;
-      this.shortNameErrorMessage = 'The program ID entered already exists on a UFR Request "' + ufr.ufrName + '"';
-    }
-    return ret;
-  }
-
-  private async checkProgramAlreadyExistsInPom(program: Program) {
-    let ret = false;
-    let databaseProgram: Program;
-    await this.programmingService
-      .findByShortNameAndContainerId(program.containerId, program.shortName)
-      .toPromise()
-      .then(resp => {
-        databaseProgram = resp.result as Program;
-      });
-    if (databaseProgram) {
-      let organizationAbbreviation: string;
-      await this.organizationService
-        .getById(databaseProgram.organizationId)
-        .toPromise()
-        .then(resp => {
-          const organization = resp.result as Organization;
-          organizationAbbreviation = organization.abbreviation;
-        });
-      this.shortNameErrorMessage =
-        'The program ID entered already exists on the POM in the ' + organizationAbbreviation + ' organization.';
-      ret = true;
-    }
-    return ret;
-  }
-
-  private async checkProgramExistInWorkspaces(program: Program) {
-    let ret = false;
-    let workspaces: any;
-    await this.workspaceService
-      .getByProgramShortName(program.shortName)
-      .toPromise()
-      .then(resp => {
-        workspaces = (resp as any).result;
-      });
-    if (workspaces?.length) {
-      this.shortNameErrorMessage =
-        'The program ID entered already exists on Workspace(s)  ' +
-        workspaces.map(w => 'ID ' + w.version).join(' ') +
-        '.';
-      ret = true;
-    }
-    return ret;
   }
 }
