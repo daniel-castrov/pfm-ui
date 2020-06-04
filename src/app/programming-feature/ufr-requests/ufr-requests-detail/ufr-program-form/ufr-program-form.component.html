@@ -1,0 +1,169 @@
+<div class="section-main">
+  <div class="section-form">
+    <form *ngIf="form" [formGroup]="form">
+      <fieldset class="match-height">
+        <legend>Program Identification</legend>
+        <div class="padding">
+          <div class="row">
+            <div class="col-2">
+              <label>Program ID</label>
+            </div>
+            <span class="col-10"><input type="text" formControlName="shortName" /></span>
+          </div>
+          <div class="row">
+            <label class="col-2">*Program Name</label>
+            <span class="col-10"><input type="text" formControlName="longName" /></span>
+          </div>
+          <div class="row">
+            <label class="col-2">Program Type</label>
+            <span class="col-10"><input type="text" formControlName="type" /></span>
+          </div>
+          <div class="row" *ngIf="showParentProgram">
+            <label class="col-2">Parent Program</label>
+            <span class="col-10"><input type="text" formControlName="programId" /></span>
+          </div>
+          <div class="row">
+            <label class="col-2">Organization</label>
+            <div *ngIf="form.get('organizationId').disabled">
+              <span class="col-10"><input type="text" formControlName="organizationId" /></span>
+            </div>
+            <div *ngIf="form.get('organizationId').enabled">
+              <span class="col-10">
+                <select class="form-control-sm" formControlName="organizationId">
+                  <option value="" disabled>Select</option>
+                  <option *ngFor="let org of organizations" [value]="org.id">{{ org.abbreviation }}</option>
+                </select>
+              </span>
+            </div>
+          </div>
+          <div class="row">
+            <label class="col-2">Division</label>
+            <div *ngIf="!addMode">
+              <span class="col-10"><input type="text" formControlName="divisionId" /></span>
+            </div>
+            <span class="col-10" *ngIf="addMode">
+              <select class="form-control-sm" formControlName="divisionId">
+                <option [ngValue]="null" disabled>Select</option>
+                <option [ngValue]="option.id" *ngFor="let option of divisions">{{ option.name }}</option>
+              </select>
+            </span>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Program Information</legend>
+
+        <fieldset>
+          <legend>Priorities</legend>
+          <div class="row" *ngIf="showMissionPriority">
+            <label class="col-2">*Mission Priority</label>
+            <div *ngIf="!addMode && !showMissionPriorityMessage">
+              <span class="col-10"><input type="text" formControlName="missionPriorityId" /></span>
+            </div>
+            <span class="col-10" *ngIf="!addMode">
+              <ng-container *ngIf="!showMissionPriorityMessage">
+                <select
+                  class="form-control-sm"
+                  formControlName="missionPriorityId"
+                  (change)="onChangeMissionPriority($event)"
+                >
+                  <option [ngValue]="null">Select</option>
+                  <option [ngValue]="item.id" *ngFor="let item of missionPriorities">{{ item.title }}</option>
+                </select>
+              </ng-container>
+              <ng-container *ngIf="showMissionPriorityMessage">
+                <span class="col-10">
+                  <input type="text" formControlName="missionPrioritiesMessage" />
+                </span>
+              </ng-container>
+            </span>
+          </div>
+          <div class="row">
+            <label class="col-2">Agency Priority</label>
+            <div *ngIf="!addMode">
+              <span class="col-10"><input type="text" formControlName="agencyPriority" /></span>
+            </div>
+            <span class="col-10" *ngIf="addMode">
+              <select class="form-control-sm" formControlName="agencyPriority">
+                <option [ngValue]="null" disabled>Select</option>
+                <option [ngValue]="item" *ngFor="let item of agencyPriorities">{{ item }}</option>
+              </select>
+            </span>
+          </div>
+          <div class="row">
+            <label class="col-2">Directorate Priority</label>
+            <div *ngIf="!addMode">
+              <span class="col-10"><input type="text" formControlName="directoratePriority" /></span>
+            </div>
+            <span class="col-10" *ngIf="addMode">
+              <select class="form-control-sm" formControlName="directoratePriority">
+                <option [ngValue]="null" disabled>Select</option>
+                <option [ngValue]="item" *ngFor="let item of directoratePriorities">{{ item }}</option>
+              </select>
+            </span>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Strategic Alignment</legend>
+          <div class="row">
+            <label class="col-2 my-auto mx-0">SecDef LOE</label>
+            <div *ngIf="!addMode">
+              <span class="col-10"><input type="text" formControlName="secDefLOEId" /></span>
+            </div>
+            <span class="col-10" *ngIf="addMode">
+              <select class="form-control-sm" formControlName="secDefLOEId">
+                <option [ngValue]="null" disabled>Select</option>
+                <option [ngValue]="option.id" *ngFor="let option of secDefLOE">{{ option.name }}</option>
+              </select>
+            </span>
+          </div>
+          <div class="row">
+            <label class="col-2 my-auto mx-0">Strategic Imperative</label>
+            <div *ngIf="!addMode">
+              <span class="col-10"><input type="text" formControlName="strategicImperativeId" /></span>
+            </div>
+            <span class="col-10" *ngIf="addMode">
+              <select class="form-control-sm" formControlName="strategicImperativeId">
+                <option [ngValue]="null" disabled>Select</option>
+                <option [ngValue]="option.id" *ngFor="let option of strategicImperatives">{{ option.name }}</option>
+              </select>
+            </span>
+          </div>
+          <div class="row">
+            <label class="col-2 my-auto mx-0">Agency Objective</label>
+            <div *ngIf="!addMode">
+              <span class="col-10"><input type="text" formControlName="agencyObjectiveId" /></span>
+            </div>
+            <span class="col-10" *ngIf="addMode">
+              <select class="form-control-sm" formControlName="agencyObjectiveId">
+                <option [ngValue]="null" disabled>Select</option>
+                <option [ngValue]="option.id" *ngFor="let option of agencyObjectives">{{ option.name }}</option>
+              </select>
+            </span>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Area</legend>
+          <div class="row">
+            <label class="col-12">All program information can be customized to your needs.</label>
+          </div>
+        </fieldset>
+      </fieldset>
+    </form>
+  </div>
+
+  <div class="section-attachments">
+    <fieldset class="match-height">
+      <legend>Attach File</legend>
+      <file-upload
+        [isImageThumbnail]="true"
+        [area]="fileArea"
+        [imagePath]="imagePath"
+        (uploading)="onUploading($event)"
+        (fileUploadEvent)="onFileUploaded($event)"
+      ></file-upload>
+    </fieldset>
+  </div>
+</div>

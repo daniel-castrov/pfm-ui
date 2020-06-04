@@ -73,6 +73,19 @@ export class UfrRequestsDetailComponent implements OnInit {
             this.ufr = new UFR();
             this.ufr.created = new Date();
             this.ufr.modified = new Date();
+            this.ufr.shortName = 'Program ID';
+            this.ufr.longName = 'Program Name';
+            this.ufr.type = 'PROGRAM';
+            this.ufr.organizationId = '5ed7c10510f2113665b64e2c'; // JPEO-CBRND
+            this.ufr.divisionId = '5ed7c10510f2113665b64e0e'; // DOD
+            this.ufr.missionPriorityId = null;
+            this.ufr.agencyPriority = 1;
+            this.ufr.directoratePriority = 1;
+            this.ufr.secDefLOEId = '5ed7c10510f2113665b64dfc'; // Improve Physical and Procedural Security
+            this.ufr.strategicImperativeId = '5ed7c10510f2113665b64e03'; // Agility
+            this.ufr.agencyObjectiveId = '5ed7c10510f2113665b64e07'; // Make the world safer
+            this.ufr.parentId = '5ed7c4e14441f743732597a4'; // For Increment or FoS
+            this.ufr.shortyType = ShortyType.MRDB_PROGRAM;
           }
         }
       );
