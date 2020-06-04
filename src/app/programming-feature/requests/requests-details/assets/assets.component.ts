@@ -1,7 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { GridApi, ColGroupDef, ColumnApi, CellPosition } from '@ag-grid-community/all-modules';
+import { Component, Input, OnInit } from '@angular/core';
+import { CellPosition, ColGroupDef, ColumnApi, GridApi } from '@ag-grid-community/all-modules';
 import { ActionCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/action-cell-renderer/action-cell-renderer.component';
-import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { DataGridMessage } from 'src/app/pfm-coreui/models/DataGridMessage';
 import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
 import { NumericCellEditor } from 'src/app/ag-grid/cell-editors/NumericCellEditor';
@@ -634,7 +634,7 @@ export class AssetsComponent implements OnInit {
     this.assetColumnsDefinition = [
       {
         groupId: 'main-header',
-        headerName: 'Unit Costs in $K Total Costs in $M',
+        headerName: 'Unit Costs in $K',
         headerClass: this.headerClassFunc,
         marryChildren: true,
         children: [
