@@ -12,7 +12,10 @@ import { ShortyType } from 'src/app/programming-feature/models/enumerations/shor
 import { FileMetaData } from 'src/app/pfm-common-models/FileMetaData';
 import { Tag } from 'src/app/programming-feature/models/Tag';
 import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
-import { of, throwError, EMPTY } from 'rxjs';
+import { of, iif } from 'rxjs';
+import { ProgrammingService } from 'src/app/programming-feature/services/programming-service';
+import { Program } from 'src/app/programming-feature/models/Program';
+import { MrdbService } from 'src/app/programming-feature/services/mrdb-service';
 
 @Component({
   selector: 'pfm-ufr-program-form',
@@ -44,17 +47,25 @@ export class UfrProgramFormComponent implements OnInit {
   missionPriorityMessage: string;
   showMissionPriority: boolean;
   showMissionPriorityMessage: boolean;
+  showParentProgram: boolean;
+  parentProgramName: string;
 
   constructor(
     private organizationService: OrganizationService,
     private tagService: TagService,
     private planningService: PlanningService,
     private fileDownloadService: FileDownloadService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private programmingService: ProgrammingService,
+    private mrdbService: MrdbService
   ) {}
 
-  /*async */ ngOnInit() {
-    /*await*/
+  ngOnInit() {
+    this.showParentProgram =
+      this.ufr.shortyType === ShortyType.NEW_FOS_FOR_MRDB_PROGRAM ||
+      this.ufr.shortyType === ShortyType.NEW_FOS_FOR_PR ||
+      this.ufr.shortyType === ShortyType.NEW_INCREMENT_FOR_MRDB_PROGRAM ||
+      this.ufr.shortyType === ShortyType.NEW_INCREMENT_FOR_PR;
 
     if (
       this.ufr.shortyType === ShortyType.NEW_PROGRAM ||
@@ -75,8 +86,15 @@ export class UfrProgramFormComponent implements OnInit {
           shortName: new FormControl(this.ufr.shortName),
           longName: new FormControl(this.ufr.longName, [Validators.required]),
           type: new FormControl(this.ufr.type),
-          programId: new FormControl(this.ufr.programId),
-          organizationId: new FormControl(this.ufr.organizationId, [Validators.required]),
+          programId: new FormControl(this.parentProgramName),
+          organizationId: new FormControl(
+            this.ufr.shortyType === ShortyType.NEW_PROGRAM
+              ? this.ufr.organizationId
+                ? this.organizations.find(org => org.id === this.ufr.organizationId).abbreviation
+                : undefined
+              : this.ufr.organizationId,
+            [Validators.required]
+          ),
           divisionId: new FormControl(this.ufr.divisionId),
           missionPriorityId: new FormControl(this.ufr.missionPriorityId),
           agencyPriority: new FormControl(this.ufr.agencyPriority),
@@ -94,7 +112,7 @@ export class UfrProgramFormComponent implements OnInit {
           shortName: new FormControl(this.ufr.shortName),
           longName: new FormControl(this.ufr.longName, [Validators.required]),
           type: new FormControl(this.ufr.type),
-          programId: new FormControl(this.ufr.programId),
+          programId: new FormControl(this.parentProgramName),
           organizationId: new FormControl(
             this.ufr.organizationId
               ? this.organizations.find(org => org.id === this.ufr.organizationId).abbreviation
@@ -133,14 +151,6 @@ export class UfrProgramFormComponent implements OnInit {
     this.disableInputsInEditMode();
   }
 
-  callme() {
-    if (this.ufr.divisionId) {
-      const division = this.divisions.find(div => div.id === this.ufr.divisionId);
-      return division.name;
-    } else {
-      return undefined;
-    }
-  }
   disableInputsInEditMode() {
     this.form.controls['shortName'].disable();
     this.form.controls['type'].disable();
@@ -161,7 +171,7 @@ export class UfrProgramFormComponent implements OnInit {
       this.form.controls['agencyObjectiveId'].disable();
     }
   }
-  /*async*/ populateDropDownsAndLoadForm() {
+  populateDropDownsAndLoadForm() {
     this.organizationService
       .getAll()
       .pipe(
@@ -202,7 +212,33 @@ export class UfrProgramFormComponent implements OnInit {
         }),
         switchMap(resp => {
           this.agencyObjectives = resp.result as Tag[];
-          return of([]);
+          return iif(
+            () =>
+              this.ufr.shortyType === ShortyType.NEW_FOS_FOR_MRDB_PROGRAM ||
+              this.ufr.shortyType === ShortyType.NEW_FOS_FOR_PR ||
+              this.ufr.shortyType === ShortyType.NEW_INCREMENT_FOR_MRDB_PROGRAM ||
+              this.ufr.shortyType === ShortyType.NEW_INCREMENT_FOR_PR,
+            this.programmingService.getProgramById(this.ufr.programId).pipe(
+              catchError(error => of({})),
+              switchMap(prog => {
+                if (Object.keys(prog).length) {
+                  const program = (prog as any).result as Program;
+                  this.parentProgramName = program.shortName + ' - ' + program.longName;
+                  return of({});
+                }
+                return this.mrdbService.getById(this.ufr.programId);
+              }),
+              catchError(error => of({})),
+              switchMap(prog => {
+                const program = (prog as any).result as Program;
+                if (program) {
+                  this.parentProgramName = program.shortName + ' - ' + program.longName;
+                }
+                return of({});
+              })
+            ),
+            of({})
+          );
         })
       )
       .subscribe(() => {
