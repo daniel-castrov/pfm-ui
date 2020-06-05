@@ -190,10 +190,10 @@ export class UfrProgramFormComponent implements OnInit {
           } else {
             this.dialogService.displayDebug(error);
           }
-          return of({});
+          return of(undefined);
         }),
         switchMap(missionPriorities => {
-          if (Object.keys(missionPriorities).length) {
+          if (missionPriorities) {
             this.missionPriorities = missionPriorities.result;
           }
           return this.tagService.getByType(this.DIVISIONS);
@@ -219,25 +219,25 @@ export class UfrProgramFormComponent implements OnInit {
               this.ufr.shortyType === ShortyType.NEW_INCREMENT_FOR_MRDB_PROGRAM ||
               this.ufr.shortyType === ShortyType.NEW_INCREMENT_FOR_PR,
             this.programmingService.getProgramById(this.ufr.parentId).pipe(
-              catchError(error => of({})),
+              catchError(error => of(undefined)),
               switchMap(prog => {
-                if (Object.keys(prog).length) {
+                if (prog) {
                   const program = (prog as any).result as Program;
                   this.parentProgramName = program.shortName + ' - ' + program.longName;
-                  return of({});
+                  return of(undefined);
                 }
                 return this.mrdbService.getById(this.ufr.parentId);
               }),
-              catchError(error => of({})),
+              catchError(error => of(undefined)),
               switchMap(prog => {
                 const program = (prog as any).result as Program;
                 if (program) {
                   this.parentProgramName = program.shortName + ' - ' + program.longName;
                 }
-                return of({});
+                return of(undefined);
               })
             ),
-            of({})
+            of(undefined)
           );
         })
       )

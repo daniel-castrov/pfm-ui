@@ -86,6 +86,9 @@ export class UfrRequestsDetailComponent implements OnInit {
             this.ufr.agencyObjectiveId = '5ed7c10510f2113665b64e07'; // Make the world safer
             this.ufr.parentId = '5ed7c4e14441f743732597a4'; // For Increment or FoS
             this.ufr.shortyType = ShortyType.MRDB_PROGRAM;
+            this.ufr.originatedFrom = new UFR();
+            this.ufr.originatedFrom.requestNumber = 'P21008';
+            this.ufr.originatedFrom.id = '5ed7c4e14441f743732597a4';
           }
         }
       );
