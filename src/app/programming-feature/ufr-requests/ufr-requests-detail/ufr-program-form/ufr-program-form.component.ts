@@ -64,15 +64,19 @@ export class UfrProgramFormComponent implements OnInit {
     this.showParentProgram =
       this.ufr.shortyType === ShortyType.NEW_FOS_FOR_MRDB_PROGRAM ||
       this.ufr.shortyType === ShortyType.NEW_FOS_FOR_PR ||
+      this.ufr.shortyType === ShortyType.NEW_FOS ||
       this.ufr.shortyType === ShortyType.NEW_INCREMENT_FOR_MRDB_PROGRAM ||
-      this.ufr.shortyType === ShortyType.NEW_INCREMENT_FOR_PR;
+      this.ufr.shortyType === ShortyType.NEW_INCREMENT_FOR_PR ||
+      this.ufr.shortyType === ShortyType.NEW_INCREMENT;
 
     if (
       this.ufr.shortyType === ShortyType.NEW_PROGRAM ||
       this.ufr.shortyType === ShortyType.NEW_FOS_FOR_MRDB_PROGRAM ||
       this.ufr.shortyType === ShortyType.NEW_FOS_FOR_PR ||
+      this.ufr.shortyType === ShortyType.NEW_FOS ||
       this.ufr.shortyType === ShortyType.NEW_INCREMENT_FOR_MRDB_PROGRAM ||
-      this.ufr.shortyType === ShortyType.NEW_INCREMENT_FOR_PR
+      this.ufr.shortyType === ShortyType.NEW_INCREMENT_FOR_PR ||
+      this.ufr.shortyType === ShortyType.NEW_INCREMENT
     ) {
       this.addMode = true;
     }
