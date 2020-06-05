@@ -187,8 +187,6 @@ export class UfrProgramFormComponent implements OnInit {
           if (error?.status === 409) {
             this.showMissionPriorityMessage = true;
             this.missionPriorityMessage = error.error.error;
-          } else {
-            this.dialogService.displayDebug(error);
           }
           return of(undefined);
         }),
