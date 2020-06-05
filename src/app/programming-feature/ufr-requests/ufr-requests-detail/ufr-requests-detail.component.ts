@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PomService } from '../../services/pom-service';
 import { Pom } from '../../models/Pom';
@@ -12,6 +12,9 @@ import { ShortyType } from '../../models/enumerations/shorty-type.model';
 import { UfrService } from '../../services/ufr-service';
 import { switchMap, catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
+import { RequestSummaryNavigationHistoryService } from '../../requests/requests-summary/requests-summary-navigation-history.service';
+import { UfrScheduleComponent } from './ufr-schedule/ufr-schedule.component';
+import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
 
 @Component({
   selector: 'pfm-ufr-requests-detail',
@@ -19,6 +22,9 @@ import { throwError } from 'rxjs';
   styleUrls: ['./ufr-requests-detail.component.scss']
 })
 export class UfrRequestsDetailComponent implements OnInit {
+  @ViewChild('ufrSchedule')
+  ufrSchedule: UfrScheduleComponent;
+
   pomYear: number;
   ufr: UFR;
   busy: boolean;
@@ -38,7 +44,9 @@ export class UfrRequestsDetailComponent implements OnInit {
     private visibilityService: VisibilityService,
     private dialogService: DialogService,
     private router: Router,
-    private ufrService: UfrService
+    private ufrService: UfrService,
+    private requestSummaryNavigationHistoryService: RequestSummaryNavigationHistoryService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -118,22 +126,43 @@ export class UfrRequestsDetailComponent implements OnInit {
      * available
      */
 
-    if (this.bacKToggle) {
+    if (this.hasNoEditingGrids(false, false)) {
       this.dialogService.displayConfirmation(
         'You have unsaved data in fields or grids on one or more tabs. ' +
           'If you continue this data will be lost. ' +
           'Do you want to continue and lose this data?',
         'Caution',
         () => {
-          this.router.navigate(['/programming/ufr-requests']);
+          this.performBackButton();
         },
         () => {},
         'Lose Data'
       );
     } else {
-      this.router.navigate(['/programming/ufr-requests']);
+      this.performBackButton();
     }
     this.bacKToggle = !this.bacKToggle;
+  }
+
+  private hasNoEditingGrids(isSave: boolean, displayToast: boolean = true) {
+    const errorMessage = isSave
+      ? 'Please save all rows in grids before saving the page.'
+      : 'Please save row(s) currently open for editing.';
+    let canSave = true;
+    if (this.ufrSchedule) {
+      if (this.ufrSchedule.gridApi.getEditingCells().length) {
+        canSave = false;
+        if (displayToast) {
+          this.toastService.displayError(errorMessage, 'Schedule');
+        }
+      }
+    }
+    return canSave;
+  }
+
+  private performBackButton() {
+    this.requestSummaryNavigationHistoryService.prepareNavigationHistory();
+    this.router.navigate(['/programming/ufr-requests']);
   }
 
   isPomCreatedOrOpen() {

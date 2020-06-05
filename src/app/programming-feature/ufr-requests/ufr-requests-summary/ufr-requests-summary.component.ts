@@ -26,6 +26,7 @@ import { formatDate } from '@angular/common';
 import { ShortyType } from '../../models/enumerations/shorty-type.model';
 import { DataGridMessage } from 'src/app/pfm-coreui/models/DataGridMessage';
 import { ProgramType } from '../../models/enumerations/program-type.model';
+import { RequestSummaryNavigationHistoryService } from '../../requests/requests-summary/requests-summary-navigation-history.service';
 
 @Component({
   selector: 'pfm-ufr-requests-summary',
@@ -65,13 +66,15 @@ export class UfrRequestsSummaryComponent implements OnInit {
     private organizationService: OrganizationService,
     private appModel: AppModel,
     private toastService: ToastService,
-    private router: Router
+    private router: Router,
+    private requestSummaryNavigationHistoryService: RequestSummaryNavigationHistoryService
   ) {}
 
   ngOnInit() {
     this.pomService.getPomYearsByStatus(['CREATED', 'OPEN', 'LOCKED', 'CLOSED']).subscribe(resp => {
       const poms = (resp as any).result as Pom[];
       this.poms = ListItemHelper.generateListItemFromArray(poms.map(pom => ['POM ' + pom.fy, pom.id]));
+      this.loadPreviousContainerSelection();
     });
 
     this.selectedOrg = {
@@ -691,6 +694,9 @@ export class UfrRequestsSummaryComponent implements OnInit {
 
   onPomChanged(pomYear: ListItem) {
     this.selectedPom = pomYear;
+    this.requestSummaryNavigationHistoryService.updateRequestSummaryNavigationHistory({
+      selectedContainer: this.selectedPom.value
+    });
     this.ufrService.getByContainerId(this.selectedPom.value).subscribe(resp => {
       const urfs = resp.result as UFR[];
       this.rows = urfs;
@@ -720,5 +726,14 @@ export class UfrRequestsSummaryComponent implements OnInit {
         tab: 0
       }
     ]);
+  }
+
+  loadPreviousContainerSelection() {
+    const selectedContainer = this.requestSummaryNavigationHistoryService.getSelectedContainer();
+    if (selectedContainer) {
+      const listItem = this.poms.find(p => p.id === selectedContainer);
+      listItem.isSelected = true;
+      this.onPomChanged(listItem);
+    }
   }
 }
