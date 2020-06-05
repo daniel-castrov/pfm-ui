@@ -11,8 +11,8 @@ import { RestResponse } from 'src/app/util/rest-response';
   providedIn: 'root'
 })
 export class ScheduleServiceImpl extends ScheduleService {
-  getByProgramId(programId: string): Observable<object> {
-    return this.get('schedules/program/' + programId).pipe(
+  getByContainerId(containerId: string): Observable<object> {
+    return this.get('schedules/container/' + containerId).pipe(
       map((res: RestResponse<any>) => this.convertDateArrayFromServer(res))
     );
   }
@@ -22,9 +22,19 @@ export class ScheduleServiceImpl extends ScheduleService {
     return this.post('schedules', copy).pipe(map((res: RestResponse<any>) => this.convertDateFromServer(res)));
   }
 
+  createUfrSchedule(schedule: Schedule): Observable<any> {
+    const copy = this.convertDateFromClient(schedule);
+    return this.post('schedules/ufr', copy).pipe(map((res: RestResponse<any>) => this.convertDateFromServer(res)));
+  }
+
   updateSchedule(schedule: Schedule): Observable<any> {
     const copy = this.convertDateFromClient(schedule);
     return this.put('schedules', copy);
+  }
+
+  updateUfrSchedule(schedule: Schedule): Observable<any> {
+    const copy = this.convertDateFromClient(schedule);
+    return this.put('schedules/ufr', copy);
   }
 
   deleteSchedule(scheduleId: any): Observable<object> {

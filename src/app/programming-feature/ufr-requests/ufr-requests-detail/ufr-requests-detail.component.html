@@ -44,7 +44,7 @@
     <div class="section-tab"></div>
   </tab>
   <tab heading="Schedule" [active]="currentSelectedTab === 3" class="w-100 h-100" (selectTab)="onSelectTab($event)">
-    <div class="section-tab"></div>
+    <div class="section-tab"><pfm-ufr-schedule [ufr]="ufr" [pomYear]="pomYear"></pfm-ufr-schedule></div>
   </tab>
   <tab heading="Scope" [active]="currentSelectedTab === 4" class="w-100 h-100" (selectTab)="onSelectTab($event)">
     <div class="section-tab"></div>

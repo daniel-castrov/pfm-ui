@@ -13,19 +13,19 @@ import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
 import { FundingLineService } from '../../../services/funding-line.service';
 import { map } from 'rxjs/operators';
 import { FundingLine } from '../../../models/funding-line.model';
-import { Program } from '../../../models/Program';
 import { ScheduleService } from '../../../services/schedule.service';
 import * as moment from 'moment';
 import { Schedule } from '../../../models/schedule.model';
 import { DropdownCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/dropdown-cell-renderer/dropdown-cell-renderer.component';
+import { UFR } from 'src/app/programming-feature/models/ufr.model';
 
 @Component({
-  selector: 'pfm-schedule',
-  templateUrl: './schedule.component.html',
-  styleUrls: ['./schedule.component.scss']
+  selector: 'pfm-ufr-schedule',
+  templateUrl: './ufr-schedule.component.html',
+  styleUrls: ['./ufr-schedule.component.scss']
 })
-export class ScheduleComponent implements OnInit {
-  @Input() program: Program;
+export class UfrScheduleComponent implements OnInit {
+  @Input() ufr: UFR;
   @Input() pomYear: number;
 
   currentFiscalYear: number;
@@ -117,7 +117,7 @@ export class ScheduleComponent implements OnInit {
     this.fundingGridAssociations = [];
     this.scheduleGridRows = [];
     this.fundingLineService
-      .obtainFundingLinesByProgramId(this.program.id)
+      .obtainFundingLinesByProgramId(this.ufr.id)
       .pipe(
         map(resp => {
           const fundingLines = resp.result as FundingLine[];
@@ -155,7 +155,7 @@ export class ScheduleComponent implements OnInit {
 
   private loadSchedules() {
     this.schedulesData = [];
-    this.scheduleService.getByContainerId(this.program.id).subscribe(schResp => {
+    this.scheduleService.getByContainerId(this.ufr.id).subscribe(schResp => {
       const schedules = (schResp as any).result;
       for (const schedule of schedules) {
         if (schedule.startDate) {
@@ -455,7 +455,7 @@ export class ScheduleComponent implements OnInit {
     const row: ScheduleDataInterface = this.scheduleGridRows[rowIndex];
     const canSave = this.validateRowData(row);
     if (canSave) {
-      row.programId = this.program.id;
+      row.containerId = this.ufr.id;
       if (row.startDate) {
         row.startDate = moment(row.startDate, 'MM/DD/YYYY');
       }
@@ -463,7 +463,7 @@ export class ScheduleComponent implements OnInit {
         row.endDate = moment(row.endDate, 'MM/DD/YYYY');
       }
       if (!row.id) {
-        this.scheduleService.createSchedule(row).subscribe(
+        this.scheduleService.createUfrSchedule(row).subscribe(
           resp => {
             const dbSchedule = resp.result as Schedule;
             row.id = dbSchedule.id;
@@ -486,7 +486,7 @@ export class ScheduleComponent implements OnInit {
         );
       } else {
         // Ensure creation information is preserved
-        this.scheduleService.updateSchedule(row).subscribe(
+        this.scheduleService.updateUfrSchedule(row).subscribe(
           resp => {
             this.busy = false;
             if (row.startDate) {
@@ -641,7 +641,7 @@ export class ScheduleComponent implements OnInit {
 
 export interface ScheduleDataInterface {
   id?: string;
-  programId?: string;
+  containerId?: string;
   taskDescription?: string;
   fundingLineId?: string;
   startDate?: any;
