@@ -25,11 +25,14 @@ import { IntIntMap } from '../../models/IntIntMap';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ProgramStatus } from '../../models/enumerations/program-status.model';
 import { RoleConstants } from 'src/app/pfm-common-models/role-contants.model';
-import { map } from 'rxjs/operators';
+import { map, switchMap, catchError } from 'rxjs/operators';
 import { OrganizationService } from 'src/app/services/organization-service';
 import { PomStatus } from '../../models/enumerations/pom-status.model';
 import { WorkspaceService } from '../../services/workspace.service';
 import { ProgramType } from '../../models/enumerations/program-type.model';
+import { throwError, of } from 'rxjs';
+import { UfrService } from '../../services/ufr-service';
+import { UFR } from '../../models/ufr.model';
 
 @Component({
   selector: 'pfm-requests-summary',
@@ -110,7 +113,8 @@ export class RequestsSummaryComponent implements OnInit {
     private toastService: ToastService,
     private organizationService: OrganizationService,
     private workspaceService: WorkspaceService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private ufrService: UfrService
   ) {}
 
   async ngOnInit() {
@@ -589,39 +593,89 @@ export class RequestsSummaryComponent implements OnInit {
     this.createProgramDialog.display = false;
   }
 
-  async onCreateProgramAction() {
-    this.programNameErrorMessage = null;
-    this.organizationErrorMessage = null;
-    const program = {
-      shortName: this.createProgramDialog.form.get(['shortName']).value,
-      longName: this.createProgramDialog.form.get(['longName']).value,
-      organizationId: this.createProgramDialog.form.get(['organizationId']).value
-    } as Program;
-    program.containerId = this.programmingModel.pom.workspaceId;
-    program.programStatus = ProgramStatus.SAVED;
-    program.type = ProgramType.PROGRAM;
-    const canSave = this.createProgramDialog.form.valid;
-    if (canSave) {
-      if ((await this.checkProgramAlreadyExists(program)) || (await this.checkProgramExistInMaster(program))) {
-        return;
-      }
-      this.programmingService.create(program).subscribe(
-        resp => {
-          const resultProgram = resp.result as Program;
-          this.toastService.displaySuccess('Program Request saved successfully.');
-          this.router.navigate([
-            '/programming/requests/details/' + resultProgram.id,
-            {
-              pomYear: this.pomYear,
-              tab: 0
+  onCreateProgramAction() {
+    if (this.createProgramDialog.form.valid) {
+      const program = {
+        shortName: this.createProgramDialog.form.get(['shortName']).value,
+        longName: this.createProgramDialog.form.get(['longName']).value,
+        organizationId: this.createProgramDialog.form.get(['organizationId']).value
+      } as Program;
+      program.containerId = this.programmingModel.pom.workspaceId;
+      program.programStatus = ProgramStatus.SAVED;
+      program.type = ProgramType.PROGRAM;
+
+      this.mrdbService
+        .getByName(program.shortName)
+        .pipe(
+          switchMap(resp => {
+            if ((resp as any).result) {
+              this.programErrorMessage =
+                'The program ID entered already exists as a previously funded program. ' +
+                'Please cancel out of this and click the + button to add a Previously Funded Program.';
+              return throwError({ showValidationErrors: true });
             }
-          ]);
-        },
-        error => {
-          this.toastService.displayError('An error has occurred while attempting to save program.');
-        },
-        () => (this.busy = false)
-      );
+            return this.ufrService.getByProgramShortName(program.shortName);
+          }),
+          switchMap((resp: any) => {
+            const ufr = resp.result as UFR;
+            if (ufr) {
+              this.programErrorMessage =
+                'The program ID entered already exists on a UFR Request "' + ufr.requestNumber + '"';
+              return throwError({ showValidationErrors: true });
+            }
+            return this.programmingModel.pom.status === PomStatus.CREATED
+              ? this.programmingService.findByShortNameAndContainerId(this.programmingModel.pom.id, program.shortName)
+              : of({ result: null });
+          }),
+          switchMap((resp: any) => {
+            const pomProgram = resp.result as Program;
+            if (pomProgram) {
+              this.organizationService.getById(pomProgram.organizationId).subscribe(orgResp => {
+                this.programErrorMessage =
+                  'The program ID entered already exists on the POM in the  ' +
+                  orgResp.result.abbreviation +
+                  ' organization.';
+                return throwError({ showValidationErrors: true });
+              });
+            }
+            return this.workspaceService.getByProgramShortName(program.shortName);
+          }),
+          switchMap(resp => {
+            const workspaces = (resp as any).result;
+            if (workspaces?.length) {
+              this.programErrorMessage =
+                'The program ID entered already exists on Workspace(s)  ' +
+                workspaces.map(w => 'ID ' + w.version).join(', ') +
+                '.';
+              return throwError({ showValidationErrors: true });
+            }
+
+            return this.programmingService.create(program);
+          }),
+          catchError(error => {
+            if (!error?.showValidationErrors) {
+              this.dialogService.displayDebug(error);
+            }
+            return of();
+          })
+        )
+        .subscribe(
+          resp => {
+            const resultProgram = resp.result as Program;
+            this.toastService.displaySuccess('Program Request saved successfully.');
+            this.router.navigate([
+              '/programming/requests/details/' + resultProgram.id,
+              {
+                pomYear: this.pomYear,
+                tab: 0
+              }
+            ]);
+          },
+          error => {
+            this.toastService.displayError('An error has occurred while attempting to save program.');
+          }
+        )
+        .add(() => (this.busy = false));
     } else {
       if (this.createProgramDialog.form.get('shortName').errors?.required) {
         this.programErrorMessage = 'Value required.';
@@ -633,48 +687,5 @@ export class RequestsSummaryComponent implements OnInit {
         this.organizationErrorMessage = 'Value required.';
       }
     }
-  }
-
-  private async checkProgramExistInMaster(program: Program) {
-    let ret = false;
-    let masterProgram: Program;
-    await this.mrdbService
-      .getByName(program.shortName)
-      .toPromise()
-      .then(resp => {
-        masterProgram = resp.result as Program;
-      });
-    if (masterProgram) {
-      this.programErrorMessage =
-        'The program ID entered already exists as a previously funded program. ' +
-        'Please cancel out of this and click the + button to add a Previously Funded Program.';
-      ret = true;
-    }
-    return ret;
-  }
-
-  private async checkProgramAlreadyExists(program: Program) {
-    let ret = false;
-    let databaseProgram: Program;
-    await this.programmingService
-      .findByShortNameAndContainerId(program.containerId, program.shortName)
-      .toPromise()
-      .then(resp => {
-        databaseProgram = resp.result as Program;
-      });
-    if (databaseProgram) {
-      let organizationAbbreviation: string;
-      await this.organizationService
-        .getById(databaseProgram.organizationId)
-        .toPromise()
-        .then(resp => {
-          const organization = resp.result as Organization;
-          organizationAbbreviation = organization.abbreviation;
-        });
-      this.programErrorMessage =
-        'The program ID entered already exists on the POM in the ' + organizationAbbreviation + ' organization.';
-      ret = true;
-    }
-    return ret;
   }
 }
