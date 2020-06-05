@@ -846,7 +846,7 @@ export class CreateProgrammingComponent implements OnInit {
     const communityToas: TOA[] = [];
     const commToaRow = this.communityData[1];
     for (let i = 0; i < 5; i++) {
-      communityToas.push({ year: this.byYear + i, amount: commToaRow[this.byYear + i] });
+      communityToas.push({ year: this.byYear + i, amount: commToaRow[this.byYear + i] * 1000 });
     }
 
     const orgToas: { [key: string]: TOA[] } = {};
@@ -854,7 +854,7 @@ export class CreateProgrammingComponent implements OnInit {
       const otoa: TOA[] = [];
       const orgRow = this.orgData[rowIndx];
       for (let i = 0; i < 5; i++) {
-        otoa.push({ year: this.byYear + i, amount: orgRow[this.byYear + i] });
+        otoa.push({ year: this.byYear + i, amount: orgRow[this.byYear + i] * 1000 });
       }
 
       let orgName = orgRow['orgid'];
