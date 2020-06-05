@@ -3,7 +3,7 @@
   <div class="float-left w-70">
     <h3 *ngIf="ufr">
       POM{{ pomYear % 100 }} UFR Details:
-      <span *ngIf="ufr.ufrName">{{ ufr.ufrName }}</span>
+      <span *ngIf="ufr.shortName">{{ ufr.shortName }}</span>
     </h3>
   </div>
   <div class="div-buttons" *ngIf="appModel.visibilityDef['ufr-requests-detail-component']">
