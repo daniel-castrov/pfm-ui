@@ -25,6 +25,7 @@ import { Router } from '@angular/router';
 import { formatDate } from '@angular/common';
 import { ShortyType } from '../../models/enumerations/shorty-type.model';
 import { DataGridMessage } from 'src/app/pfm-coreui/models/DataGridMessage';
+import { ProgramType } from '../../models/enumerations/program-type.model';
 
 @Component({
   selector: 'pfm-ufr-requests-summary',
@@ -468,7 +469,8 @@ export class UfrRequestsSummaryComponent implements OnInit {
               longName: this.createProgramDialog.form.get(['longName']).value,
               organizationId: this.createProgramDialog.form.get(['organizationId']).value,
               containerId: this.selectedPom.value,
-              shortyType: this.selectedShortyType
+              shortyType: this.selectedShortyType,
+              type: ProgramType.PROGRAM
             } as UFR;
             return this.ufrService.create(ufr);
           }),
