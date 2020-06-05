@@ -107,7 +107,7 @@ export class ToaComponent implements OnInit {
     this.programYearSelected = 'undefined';
     this.pomService.getPomYearsByStatus(['CREATED', 'OPEN', 'LOCKED', 'CLOSED']).subscribe(
       resp => {
-        const years: string[] = (resp as any).result.map(String);
+        const years: string[] = (resp as any).result.map(pom => pom.fy.toString());
         this.pomYears = ListItemHelper.generateListItemFromArray(years);
       },
       error => {
