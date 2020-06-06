@@ -11,8 +11,8 @@ export class TeamLeadServiceImpl extends TeamLeadService {
     super(httpClient);
   }
 
-  getByProgram(programId: string): Observable<object> {
-    return this.get('teamLead/programId/' + programId);
+  getByContainerId(containerId: string): Observable<object> {
+    return this.get('teamLead/container/' + containerId);
   }
 
   createTeamLead(data: any): Observable<object> {

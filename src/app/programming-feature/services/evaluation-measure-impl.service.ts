@@ -16,8 +16,8 @@ export class EvaluationMeasureServiceImpl extends EvaluationMeasureService {
     super(httpClient);
   }
 
-  getByProgram(programId: string): Observable<object> {
-    return this.get('evaluationMeasure/programId/' + programId).pipe(
+  getByContainerId(containerId: string): Observable<object> {
+    return this.get('evaluationMeasure/container/' + containerId).pipe(
       map((res: RestResponse<any>) => this.convertDateArrayFromServer(res))
     );
   }

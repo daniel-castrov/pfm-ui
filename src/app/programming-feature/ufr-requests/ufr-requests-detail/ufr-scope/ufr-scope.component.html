@@ -1,0 +1,119 @@
+<div class="pl-5 pr-5">
+  <form [formGroup]="form">
+    <fieldset>
+      <legend>Program Goals</legend>
+      <div class="form-group row">
+        <div class="row col-12 mt-3">
+          <p class="col-1 ml-4">Program Aim</p>
+          <textarea class="form-control col-10" formControlName="aim"></textarea>
+        </div>
+        <div class="row col-12 mt-3">
+          <p class="col-1 ml-4">Program Goal</p>
+          <textarea class="form-control col-10" formControlName="goal"></textarea>
+        </div>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>Program Constraints</legend>
+      <div class="form-group row">
+        <div class="row col-12 mt-3">
+          <p class="col-1 ml-4">Budget</p>
+          <p class="col-10">{{ budget | currency: '':'symbol':'0.0' }}</p>
+        </div>
+        <div class="row col-12 mt-1">
+          <p class="col-1 ml-4">Schedule</p>
+          <p class="col-10">{{ schedule }}</p>
+        </div>
+        <div class="row col-12 mt-3">
+          <p class="col-1 ml-4">Quality</p>
+          <textarea class="form-control col-10" formControlName="quality"></textarea>
+        </div>
+        <div class="row col-12 mt-3">
+          <p class="col-1 ml-4">Other</p>
+          <textarea class="form-control col-10" formControlName="other"></textarea>
+        </div>
+        <div class="row col-12 mt-3 attachment-container">
+          <p class="col-1 ml-4">Attachment</p>
+          <pfm-dropdown
+            class="col-5 p-0"
+            (selectionChanged)="downloadAttachment($event)"
+            [type]="'attatchmentDropdown'"
+            [options]="attachmentsUploaded"
+            [fieldLabel]="'name'"
+            [fieldName]="'name'"
+          ></pfm-dropdown>
+          <i class="fa fa-upload col-1 text-center" (click)="onFileUploadClick()"></i>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+  <fieldset>
+    <legend>Program Evaluation Measure</legend>
+    <pfm-datagrid
+      (gridIsReady)="onEvaluationMeasureGridIsReady($event)"
+      (cellAction)="onHandleEvaluationMeasureCellAction($event)"
+      [columns]="evaluationMeasureColumnDefinitions"
+      [rows]="evaluationMeasureRows"
+      [showAddSingleRow]="true"
+      [showPagination]="false"
+      (addCtaEvent)="onEvaluationMeasureRowAdd($event)"
+      (mousedown)="onEvaluationMeasureMouseDown($event)"
+    >
+    </pfm-datagrid>
+  </fieldset>
+  <fieldset>
+    <legend>Program Team Leads</legend>
+    <pfm-datagrid
+      (gridIsReady)="onTeamLeadGridIsReady($event)"
+      (cellAction)="onHandleTeamLeadCellAction($event)"
+      [columns]="teamLeadsColumnDefinitions"
+      [rows]="teamLeadRows"
+      [showAddSingleRow]="true"
+      [showPagination]="false"
+      (addCtaEvent)="onTeamLeadRowAdd($event)"
+      (mousedown)="onTeamLeadMouseDown($event)"
+    >
+    </pfm-datagrid>
+  </fieldset>
+  <fieldset>
+    <legend>Program Process Prioritization</legend>
+    <pfm-datagrid
+      (gridIsReady)="onProcessPriorizationGridIsReady($event)"
+      (cellAction)="onHandleProcessPriorizationCellAction($event)"
+      [columns]="processPriorizationColumnDefinitions"
+      [rows]="processPriorizationRows"
+      [showAddSingleRow]="true"
+      [showPagination]="false"
+      (addCtaEvent)="onProcessPriorizationRowAdd($event)"
+      (mousedown)="onProcessPriorizationMouseDown($event)"
+    >
+    </pfm-datagrid>
+  </fieldset>
+</div>
+<ng-container *ngIf="showUploadDialog">
+  <pfm-secure-upload (onFilesUploaded)="handleNewAttachments($event)"></pfm-secure-upload>
+</ng-container>
+<ng-container *ngIf="deleteDialog.display">
+  <pfm-custom-dialog
+    [title]="deleteDialog.title"
+    [body]="deleteBody"
+    [actions]="deleteActions"
+    (onCancelDialog)="onCancelDeleteDialog()"
+  ></pfm-custom-dialog>
+
+  <ng-template #deleteBody>
+    <span>{{ deleteDialog.bodyText }}</span>
+  </ng-template>
+
+  <ng-template #deleteActions>
+    <div class="pull-left">
+      <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onDeleteData()">Delete</button>
+    </div>
+
+    <div class="pull-right">
+      <pfm-cancel-cta (onCancelClicked)="onCancelDeleteDialog()"></pfm-cancel-cta>
+    </div>
+  </ng-template>
+</ng-container>
+<pfm-secure-download></pfm-secure-download>

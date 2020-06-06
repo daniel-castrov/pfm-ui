@@ -16,20 +16,21 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { SecureDownloadComponent } from 'src/app/pfm-secure-filedownload/secure-download/secure-download.component';
 import { ListItem } from 'src/app/pfm-common-models/ListItem';
 import { DropdownCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/dropdown-cell-renderer/dropdown-cell-renderer.component';
-import { ProgrammingService } from '../../../services/programming-service';
 import { Schedule } from '../../../models/schedule.model';
 import { FundingLine } from '../../../models/funding-line.model';
+import { UfrService } from 'src/app/programming-feature/services/ufr-service';
+import { UFR } from 'src/app/programming-feature/models/ufr.model';
 
 @Component({
-  selector: 'pfm-scope',
-  templateUrl: './scope.component.html',
-  styleUrls: ['./scope.component.scss']
+  selector: 'pfm-ufr-scope',
+  templateUrl: './ufr-scope.component.html',
+  styleUrls: ['./ufr-scope.component.scss']
 })
-export class ScopeComponent implements OnInit {
+export class UfrScopeComponent implements OnInit {
   @ViewChild(SecureDownloadComponent)
   secureDownloadComponent: SecureDownloadComponent;
 
-  @Input() program: Program;
+  @Input() ufr: UFR;
 
   @Input() pomYear: number;
 
@@ -86,13 +87,13 @@ export class ScopeComponent implements OnInit {
     private processPrioritizationService: ProcessPrioritizationService,
     private teamLeadService: TeamLeadService,
     private dialogService: DialogService,
-    private programmingService: ProgrammingService
+    private ufrService: UfrService
   ) {}
 
   ngOnInit() {
     this.loadForm();
     this.loadExternalInfo();
-    this.updateForm(this.program);
+    this.updateForm(this.ufr);
 
     this.setupEvaluationMeasureGrid();
     this.setupTeamLeadsGrid();
@@ -109,10 +110,10 @@ export class ScopeComponent implements OnInit {
   }
 
   loadExternalInfo() {
-    this.programmingService.getProgramById(this.program.id).subscribe(resp => {
-      const program = resp.result as Program;
-      this.loadBudget(program.fundingLines);
-      this.loadScheduleRange(program.schedules);
+    this.ufrService.getByContainerId(this.ufr.id).subscribe(resp => {
+      const ufrRetrieved = resp.result as UFR;
+      this.loadBudget(ufrRetrieved.fundingLines);
+      this.loadScheduleRange(ufrRetrieved.schedules);
     });
   }
 
@@ -164,7 +165,7 @@ export class ScopeComponent implements OnInit {
   }
 
   loadEvaluationMeasures() {
-    this.evaluationMeasureService.getByContainerId(this.program.id).subscribe(resp => {
+    this.evaluationMeasureService.getByContainerId(this.ufr.id).subscribe(resp => {
       const result = (resp as any).result;
       this.evaluationMeasureRows = result;
       for (let i = 0; i < result.length; i++) {
@@ -178,7 +179,7 @@ export class ScopeComponent implements OnInit {
   }
 
   loadTeamLeads() {
-    this.teamLeadService.getByContainerId(this.program.id).subscribe(resp => {
+    this.teamLeadService.getByContainerId(this.ufr.id).subscribe(resp => {
       const result = (resp as any).result;
       this.teamLeadRows = result;
       for (let i = 0; i < result.length; i++) {
@@ -188,7 +189,7 @@ export class ScopeComponent implements OnInit {
   }
 
   loadProcessPrioritizations() {
-    this.processPrioritizationService.getByContainerId(this.program.id).subscribe(resp => {
+    this.processPrioritizationService.getByContainerId(this.ufr.id).subscribe(resp => {
       const result = (resp as any).result;
       this.processPriorizationRows = result;
       for (let i = 0; i < result.length; i++) {
@@ -424,7 +425,7 @@ export class ScopeComponent implements OnInit {
         row.currentPerformanceDate = moment(row.currentPerformanceDate, 'MM/DD/YYYY');
       }
       if (!row.id) {
-        row.programId = this.program.id;
+        row.containerId = this.ufr.id;
         this.evaluationMeasureService.createEvaluationMeasure(row).subscribe(
           resp => {
             this.busy = false;
@@ -598,7 +599,7 @@ export class ScopeComponent implements OnInit {
     const canSave = this.validateTeamLeadRowData(row);
     if (canSave) {
       if (!row.id) {
-        row.programId = this.program.id;
+        row.containerId = this.ufr.id;
         this.teamLeadService.createTeamLead(row).subscribe(
           resp => {
             this.busy = false;
@@ -757,7 +758,7 @@ export class ScopeComponent implements OnInit {
         row.estimatedCompletionDate = moment(row.estimatedCompletionDate, 'MM/DD/YYYY');
       }
       if (!row.id) {
-        row.programId = this.program.id;
+        row.containerId = this.ufr.id;
         this.processPrioritizationService.createProcessPrioritization(row).subscribe(
           resp => {
             this.busy = false;
