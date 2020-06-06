@@ -7,7 +7,7 @@ export abstract class ProcessPrioritizationService extends BaseRestService {
     super(httpClient);
   }
 
-  abstract getByProgram(programId: string): Observable<object>;
+  abstract getByContainerId(containerId: string): Observable<object>;
   abstract createProcessPrioritization(processPrioritization: any): Observable<object>;
   abstract updateProcessPrioritization(processPrioritization: any): Observable<object>;
   abstract deleteProcessPrioritization(id: any): Observable<object>;

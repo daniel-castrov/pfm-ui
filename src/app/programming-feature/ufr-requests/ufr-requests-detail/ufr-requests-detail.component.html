@@ -47,7 +47,7 @@
     <div class="section-tab"><pfm-ufr-schedule #ufrSchedule [ufr]="ufr" [pomYear]="pomYear"></pfm-ufr-schedule></div>
   </tab>
   <tab heading="Scope" [active]="currentSelectedTab === 4" class="w-100 h-100" (selectTab)="onSelectTab($event)">
-    <div class="section-tab"></div>
+    <div class="section-tab"><pfm-ufr-scope #ufrSchedule [ufr]="ufr" [pomYear]="pomYear"></pfm-ufr-scope></div>
   </tab>
   <tab heading="Assets" [active]="currentSelectedTab === 5" class="w-100 h-100" (selectTab)="onSelectTab($event)">
     <div class="section-tab"></div>

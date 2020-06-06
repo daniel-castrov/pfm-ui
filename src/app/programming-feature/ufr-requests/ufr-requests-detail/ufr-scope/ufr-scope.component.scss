@@ -1,0 +1,12 @@
+:host ::ng-deep .pfm-data {
+  height: 200px !important;
+}
+
+.attachment-container > select {
+  margin-top: -8px;
+}
+
+.attachment-container > i::before {
+  cursor: pointer;
+  font-size: x-large;
+}
