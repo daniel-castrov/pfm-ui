@@ -119,7 +119,7 @@ export class UfrScopeComponent implements OnInit {
 
   loadBudget(fundingLines: Array<FundingLine>) {
     let total = 0;
-    fundingLines.forEach(fundingLine => {
+    fundingLines?.forEach(fundingLine => {
       for (let i = this.pomYear; i < this.pomYear + 5; i++) {
         total += Number(fundingLine.funds[i] ?? 0);
       }
