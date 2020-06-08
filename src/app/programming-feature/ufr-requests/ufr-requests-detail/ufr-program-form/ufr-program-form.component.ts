@@ -218,8 +218,10 @@ export class UfrProgramFormComponent implements OnInit {
             () =>
               this.ufr.shortyType === ShortyType.NEW_FOS_FOR_MRDB_PROGRAM ||
               this.ufr.shortyType === ShortyType.NEW_FOS_FOR_PR ||
+              this.ufr.shortyType === ShortyType.NEW_FOS ||
               this.ufr.shortyType === ShortyType.NEW_INCREMENT_FOR_MRDB_PROGRAM ||
-              this.ufr.shortyType === ShortyType.NEW_INCREMENT_FOR_PR,
+              this.ufr.shortyType === ShortyType.NEW_INCREMENT_FOR_PR ||
+              this.ufr.shortyType === ShortyType.NEW_INCREMENT,
             this.programmingService.getProgramById(this.ufr.parentId).pipe(
               catchError(error => of(undefined)),
               switchMap(prog => {
@@ -232,8 +234,8 @@ export class UfrProgramFormComponent implements OnInit {
               }),
               catchError(error => of(undefined)),
               switchMap(prog => {
-                const program = (prog as any).result as Program;
-                if (program) {
+                if (prog) {
+                  const program = (prog as any).result as Program;
                   this.parentProgramName = program.shortName + ' - ' + program.longName;
                 }
                 return of(undefined);

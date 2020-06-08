@@ -543,7 +543,8 @@ export class UfrRequestsSummaryComponent implements OnInit {
               longName: validateProgram.longName,
               organizationId: validateProgram.organizationId,
               containerId: this.selectedPom.value,
-              shortyType: this.selectedShortyType
+              shortyType: this.selectedShortyType,
+              type: ProgramType.PROGRAM
             } as UFR;
             return this.ufrService.getByProgramShortName(ufr.shortName);
           }),
@@ -661,7 +662,8 @@ export class UfrRequestsSummaryComponent implements OnInit {
               organizationId: program.organizationId,
               containerId: this.selectedPom.value,
               shortyType: this.selectedShortyType,
-              parentId: program.id
+              parentId: program.id,
+              type: ProgramType.PROGRAM
             } as UFR;
             return this.ufrService.create(ufr);
           })
