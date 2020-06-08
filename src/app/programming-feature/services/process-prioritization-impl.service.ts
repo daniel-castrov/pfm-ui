@@ -16,8 +16,8 @@ export class ProcessPrioritizationServiceImpl extends ProcessPrioritizationServi
     super(httpClient);
   }
 
-  getByProgram(programId: string): Observable<object> {
-    return this.get('processPrioritization/programId/' + programId).pipe(
+  getByContainerId(containerId: string): Observable<object> {
+    return this.get('processPrioritization/container/' + containerId).pipe(
       map((res: RestResponse<any>) => this.convertDateArrayFromServer(res))
     );
   }
