@@ -173,7 +173,7 @@ export class CreateProgrammingComponent implements OnInit {
     let row = {};
     row['orgid'] = '<strong><span>Baseline</span></strong>';
     this.pom.communityToas.forEach(toa => {
-      row[toa.year] = toa.amount;
+      row[toa.year] = toa.amount / 1000;
     });
 
     const actions = this.getActions();
@@ -184,7 +184,7 @@ export class CreateProgrammingComponent implements OnInit {
     row['orgid'] = '<strong><span>TOA</span></strong>';
     toarow['orgid'] = 'sub TOA Total Goal';
     this.pom.communityToas.forEach((toa: TOA) => {
-      row[toa.year] = toa.amount;
+      row[toa.year] = toa.amount / 1000;
     });
 
     for (let i = 0; i < 5; i++) {
@@ -216,7 +216,7 @@ export class CreateProgrammingComponent implements OnInit {
       row = {};
       row['orgid'] = '<strong><span>' + organization.abbreviation + '</span></strong>';
       this.pom.orgToas[organization.id]?.forEach((toa: TOA) => {
-        row[toa.year] = toa.amount;
+        row[toa.year] = toa.amount / 1000;
       });
 
       row['Organizationactions'] = this.getActions();
