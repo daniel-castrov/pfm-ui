@@ -27,6 +27,7 @@ import { ShortyType } from '../../models/enumerations/shorty-type.model';
 import { DataGridMessage } from 'src/app/pfm-coreui/models/DataGridMessage';
 import { ProgramType } from '../../models/enumerations/program-type.model';
 import { RequestSummaryNavigationHistoryService } from '../../requests/requests-summary/requests-summary-navigation-history.service';
+import { VisibilityService } from 'src/app/services/visibility-service';
 
 @Component({
   selector: 'pfm-ufr-requests-summary',
@@ -67,7 +68,8 @@ export class UfrRequestsSummaryComponent implements OnInit {
     private appModel: AppModel,
     private toastService: ToastService,
     private router: Router,
-    private requestSummaryNavigationHistoryService: RequestSummaryNavigationHistoryService
+    private requestSummaryNavigationHistoryService: RequestSummaryNavigationHistoryService,
+    private visibilityService: VisibilityService
   ) {}
 
   ngOnInit() {
@@ -88,15 +90,25 @@ export class UfrRequestsSummaryComponent implements OnInit {
     this.setupOrgDropDown();
     this.setupForms();
 
-    this.pomService.getLatestPom().subscribe(resp => {
-      this.pom = (resp as any).result as Pom;
-      this.showGridAddCta =
-        (this.pom.status === PomStatus.CREATED || this.pom.status === PomStatus.OPEN) &&
-        (this.appModel.userDetails.roles.includes(RoleConstants.POM_MANAGER) ||
-          this.appModel.userDetails.roles.includes(RoleConstants.FINANCIAL_MANAGER));
-    });
+    this.setupVisibility()
+      .pipe(
+        switchMap(response => {
+          this.appModel['visibilityDef']['ufr-requests-summary-component'] = (response as any).result;
+          return this.pomService.getLatestPom();
+        })
+      )
+      .subscribe(resp => {
+        this.pom = (resp as any).result as Pom;
+        this.showGridAddCta =
+          (this.pom.status === PomStatus.CREATED || this.pom.status === PomStatus.OPEN) &&
+          this.appModel['visibilityDef']['ufr-requests-summary-component']?.gridAdd;
+      });
     this.infoIconMessage =
       'Only those programs that are not assigned to the Funds Requestor appear in the dropdown list.';
+  }
+
+  setupVisibility() {
+    return this.visibilityService.isCurrentlyVisible('ufr-requests-summary-component');
   }
 
   private setupGrid() {
