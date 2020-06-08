@@ -621,8 +621,8 @@ export class UfrRequestsSummaryComponent implements OnInit {
             }
           }),
           switchMap(resp => {
-            const activeProgram = resp.result;
-            if (activeProgram) {
+            if (resp) {
+              const activeProgram = resp.result;
               program = activeProgram;
             }
             return this.mrdbService.getByName(shortName);
@@ -745,7 +745,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
   loadPreviousContainerSelection() {
     const selectedContainer = this.requestSummaryNavigationHistoryService.getSelectedContainer();
     if (selectedContainer) {
-      const listItem = this.poms.find(p => p.id === selectedContainer);
+      const listItem = this.poms.find(p => p.value === selectedContainer);
       listItem.isSelected = true;
       this.onPomChanged(listItem);
     }
