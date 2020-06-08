@@ -63,10 +63,10 @@ export class UfrFormComponent implements OnInit {
       case ShortyType.PR: {
         return 'Program Request';
       }
-      case ShortyType.NEW_FOS_FOR_MRDB_PROGRAM: {
+      case ShortyType.NEW_INCREMENT_FOR_MRDB_PROGRAM: {
         return 'New Increment';
       }
-      case ShortyType.NEW_FOS_FOR_PR: {
+      case ShortyType.NEW_INCREMENT_FOR_PR: {
         return 'New Increment';
       }
       case ShortyType.NEW_INCREMENT: {
@@ -79,7 +79,7 @@ export class UfrFormComponent implements OnInit {
         return 'FoS';
       }
       case ShortyType.NEW_FOS: {
-        return 'New FoS';
+        return 'FoS';
       }
       case ShortyType.NEW_PROGRAM: {
         return 'New Program';

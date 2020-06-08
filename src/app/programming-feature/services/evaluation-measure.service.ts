@@ -7,7 +7,7 @@ export abstract class EvaluationMeasureService extends BaseRestService {
     super(httpClient);
   }
 
-  abstract getByProgram(programId: string): Observable<object>;
+  abstract getByContainerId(containerId: string): Observable<object>;
   abstract createEvaluationMeasure(data: any): Observable<object>;
   abstract updateEvaluationMeasure(data: any): Observable<object>;
   abstract deleteEvaluationMeasure(id: any): Observable<object>;

@@ -126,7 +126,7 @@ export class UfrRequestsDetailComponent implements OnInit {
      * available
      */
 
-    if (this.hasNoEditingGrids(false, false)) {
+    if (!this.hasNoEditingGrids(false, false)) {
       this.dialogService.displayConfirmation(
         'You have unsaved data in fields or grids on one or more tabs. ' +
           'If you continue this data will be lost. ' +

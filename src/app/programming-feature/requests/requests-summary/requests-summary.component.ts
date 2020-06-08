@@ -25,12 +25,12 @@ import { IntIntMap } from '../../models/IntIntMap';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ProgramStatus } from '../../models/enumerations/program-status.model';
 import { RoleConstants } from 'src/app/pfm-common-models/role-contants.model';
-import { map, switchMap, catchError } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { OrganizationService } from 'src/app/services/organization-service';
 import { PomStatus } from '../../models/enumerations/pom-status.model';
 import { WorkspaceService } from '../../services/workspace.service';
 import { ProgramType } from '../../models/enumerations/program-type.model';
-import { throwError, of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { UfrService } from '../../services/ufr-service';
 import { UFR } from '../../models/ufr.model';
 
@@ -120,7 +120,8 @@ export class RequestsSummaryComponent implements OnInit {
   async ngOnInit() {
     // Get latest POM
     await this.setupVisibility();
-    this.containerId = this.route.snapshot.paramMap.get('id');
+    this.containerId =
+      this.route.snapshot.paramMap.get('id') ?? this.requestSummaryNavigationHistoryService.getSelectedContainer();
     this.pomService.getLatestPom().subscribe(
       resp => {
         this.programmingModel.pom = (resp as any).result;
@@ -161,7 +162,6 @@ export class RequestsSummaryComponent implements OnInit {
           items.push(item);
         }
         this.workspaces = items;
-        this.loadPreviousContainerSelection();
       },
       error => {
         this.dialogService.displayDebug(error);
@@ -264,26 +264,19 @@ export class RequestsSummaryComponent implements OnInit {
           dropdownOptions.unshift(showAllOrg);
         }
         this.availableOrgs = this.toListItemOrgs(dropdownOptions.concat(orgs));
-        if (this.availableOrgs.length === 1 || this.appModel.userDetails.roles.includes(RoleConstants.POM_MANAGER)) {
+        this.loadPreviousSelection();
+        if (
+          !this.selectedOrg &&
+          (this.availableOrgs.length === 1 || this.appModel.userDetails.roles.includes(RoleConstants.POM_MANAGER))
+        ) {
           this.organizationSelected(this.availableOrgs[0]);
         }
         this.dropdownDefault = this.selectedOrg;
-        this.loadPreviousSelection();
       },
       error => {
         this.dialogService.displayDebug(error);
       }
     );
-  }
-
-  loadPreviousContainerSelection() {
-    const selectedContainer = this.requestSummaryNavigationHistoryService.getSelectedContainer();
-    if (selectedContainer) {
-      this.containerId = selectedContainer;
-      const listItem = this.workspaces.find(x => x.id === selectedContainer);
-      listItem.isSelected = true;
-      this.onWorkspaceChange(listItem);
-    }
   }
 
   loadPreviousSelection() {

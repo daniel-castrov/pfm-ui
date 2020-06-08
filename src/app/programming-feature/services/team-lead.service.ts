@@ -7,7 +7,7 @@ export abstract class TeamLeadService extends BaseRestService {
     super(httpClient);
   }
 
-  abstract getByProgram(programId: string): Observable<object>;
+  abstract getByContainerId(containerId: string): Observable<object>;
   abstract createTeamLead(data: any): Observable<object>;
   abstract updateTeamLead(data: any): Observable<object>;
   abstract deleteTeamLead(id: any): Observable<object>;
