@@ -190,7 +190,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
       },
       {
         headerName: 'Status',
-        field: 'programStatus',
+        field: 'ufrStatus',
         editable: false,
         suppressMovable: true,
         filter: false,
