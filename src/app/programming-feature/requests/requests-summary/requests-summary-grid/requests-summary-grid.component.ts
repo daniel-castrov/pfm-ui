@@ -217,7 +217,7 @@ export class RequestsSummaryGridComponent implements OnInit {
       }
       for (const fundingLine of program.fundingLines) {
         for (let i = this.gridMinYear; i <= this.gridMaxYear; i++) {
-          const fund = fundingLine.funds[i] / 1000;
+          const fund = parseInt(((fundingLine.funds[i] ?? 0) / 1000).toString(), 10);
           if (fund) {
             ps.funds[i] += fund;
             ps.fundsTotal += fund;

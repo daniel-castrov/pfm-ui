@@ -372,9 +372,10 @@ export class LockProgrammingComponent implements OnInit {
       }
       for (const fundingLine of program.fundingLines) {
         for (let i = this.minYear; i <= this.maxYear; i++) {
-          if (fundingLine.funds[i]) {
-            ps.funds[i] += fundingLine.funds[i];
-            ps.fundsTotal += ps.funds[i];
+          const fund = parseInt(((fundingLine.funds[i] ?? 0) / 1000).toString(), 10);
+          if (fund) {
+            ps.funds[i] += fund;
+            ps.fundsTotal += fund;
           }
         }
       }
