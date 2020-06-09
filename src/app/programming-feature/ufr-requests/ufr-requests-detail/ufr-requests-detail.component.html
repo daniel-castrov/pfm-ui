@@ -35,10 +35,12 @@
 
 <tabset class="program-tab-style" *ngIf="ufr" destroyOnHide="true">
   <tab heading="UFR" [active]="currentSelectedTab === 0" class="w-100 h-100" (selectTab)="onSelectTab($event)">
-    <div class="section-tab"><pfm-ufr-form [ufr]="ufr"></pfm-ufr-form></div>
+    <div class="section-tab"><pfm-ufr-form #ufrForm [ufr]="ufr"></pfm-ufr-form></div>
   </tab>
   <tab heading="Program" [active]="currentSelectedTab === 1" class="w-100 h-100" (selectTab)="onSelectTab($event)">
-    <div class="section-tab"><pfm-ufr-program-form [ufr]="ufr" [pomYear]="pomYear"></pfm-ufr-program-form></div>
+    <div class="section-tab">
+      <pfm-ufr-program-form #ufrProgramForm [ufr]="ufr" [pomYear]="pomYear"></pfm-ufr-program-form>
+    </div>
   </tab>
   <tab heading="Funds" [active]="currentSelectedTab === 2" class="w-100 h-100" (selectTab)="onSelectTab($event)">
     <div class="section-tab"></div>
@@ -58,7 +60,7 @@
     class="w-100 h-100"
     (selectTab)="onSelectTab($event)"
   >
-    <div class="section-tab"><pfm-ufr-justification [ufr]="ufr"></pfm-ufr-justification></div>
+    <div class="section-tab"><pfm-ufr-justification #ufrJustification [ufr]="ufr"></pfm-ufr-justification></div>
   </tab>
 </tabset>
 <pfm-busy [busy]="busy"></pfm-busy>
