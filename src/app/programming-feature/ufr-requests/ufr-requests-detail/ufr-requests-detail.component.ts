@@ -15,6 +15,11 @@ import { throwError } from 'rxjs';
 import { RequestSummaryNavigationHistoryService } from '../../requests/requests-summary/requests-summary-navigation-history.service';
 import { UfrScheduleComponent } from './ufr-schedule/ufr-schedule.component';
 import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
+import { UfrFormComponent } from './ufr-form/ufr-form.component';
+import { UfrProgramFormComponent } from './ufr-program-form/ufr-program-form.component';
+import { UfrScopeComponent } from './ufr-scope/ufr-scope.component';
+import { UfrAssetsComponent } from './ufr-assets/ufr-assets.component';
+import { UfrJustificationComponent } from './ufr-justification/ufr-justification.component';
 
 @Component({
   selector: 'pfm-ufr-requests-detail',
@@ -22,8 +27,18 @@ import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
   styleUrls: ['./ufr-requests-detail.component.scss']
 })
 export class UfrRequestsDetailComponent implements OnInit {
+  @ViewChild('ufrForm')
+  ufrForm: UfrFormComponent;
+  @ViewChild('ufrProgramForm')
+  ufrProgramForm: UfrProgramFormComponent;
   @ViewChild('ufrSchedule')
   ufrSchedule: UfrScheduleComponent;
+  @ViewChild('ufrScope')
+  ufrScope: UfrScopeComponent;
+  @ViewChild('ufrAssets')
+  ufrAssets: UfrAssetsComponent;
+  @ViewChild('ufrJustification')
+  ufrJustification: UfrJustificationComponent;
 
   pomYear: number;
   ufr: UFR;
@@ -69,7 +84,9 @@ export class UfrRequestsDetailComponent implements OnInit {
       .subscribe(
         resp => {
           this.pom = (resp as any).result;
-          this.showSaveButton = this.isPomCreatedOrOpen() && this.ufr.ufrStatus === UFRStatus.SAVED;
+          this.showSaveButton =
+            this.isPomCreatedOrOpen() &&
+            (this.ufr.ufrStatus === UFRStatus.SAVED || this.ufr.ufrStatus === UFRStatus.SUBMITTED);
           this.showSubmitButton = this.isPomCreatedOrOpen() && this.ufr.ufrStatus === UFRStatus.SAVED;
           this.showSetDisposition =
             this.isPomCreatedOrOpen() && this.ufr.ufrStatus === UFRStatus.SAVED && this.clickedReviewForApproval;
@@ -113,7 +130,21 @@ export class UfrRequestsDetailComponent implements OnInit {
       });
   }
 
-  onSave() {}
+  onSave() {
+    let savingUfr = this.ufr;
+    const canSave = this.hasNoEditingGrids(true);
+    if (canSave) {
+      savingUfr = this.getFromUfrForm(savingUfr);
+      savingUfr = this.getFromProgramForm(savingUfr);
+      savingUfr = this.getFromScopeForm(savingUfr);
+      savingUfr = this.getFromAssets(savingUfr);
+      savingUfr = this.getFromJustificationForm(savingUfr);
+      this.performSaveOrCreate(
+        savingUfr.id ? this.ufrService.update.bind(this.ufrService) : this.ufrService.create.bind(this.ufrService),
+        savingUfr
+      );
+    }
+  }
 
   onSubmit() {}
 
@@ -149,11 +180,33 @@ export class UfrRequestsDetailComponent implements OnInit {
       ? 'Please save all rows in grids before saving the page.'
       : 'Please save row(s) currently open for editing.';
     let canSave = true;
+    if (this.ufrScope) {
+      let editing = 0;
+      editing += this.ufrScope.evaluationMeasureGridApi.getEditingCells().length;
+      editing += this.ufrScope.teamLeadGridApi.getEditingCells().length;
+      editing += this.ufrScope.processPriorizationGridApi.getEditingCells().length;
+      if (editing) {
+        canSave = false;
+        if (displayToast) {
+          this.toastService.displayError(errorMessage, 'Scope');
+        }
+      }
+    }
     if (this.ufrSchedule) {
       if (this.ufrSchedule.gridApi.getEditingCells().length) {
         canSave = false;
         if (displayToast) {
           this.toastService.displayError(errorMessage, 'Schedule');
+        }
+      }
+    }
+    if (this.ufrAssets) {
+      if (this.ufrAssets.assetGridApi) {
+        if (this.ufrAssets.assetGridApi.getEditingCells().length) {
+          canSave = false;
+          if (displayToast) {
+            this.toastService.displayError(errorMessage, 'Assets');
+          }
         }
       }
     }
@@ -167,5 +220,79 @@ export class UfrRequestsDetailComponent implements OnInit {
 
   isPomCreatedOrOpen() {
     return this.pom.status === PomStatus.CREATED || this.pom.status === PomStatus.OPEN;
+  }
+
+  private performSaveOrCreate(ufrServiceCall, ufr: UFR) {
+    this.busy = true;
+    ufrServiceCall(ufr)
+      .subscribe(
+        resp => {
+          this.ufr = resp.result as UFR;
+          this.toastService.displaySuccess('UFR saved successfully.');
+        },
+        error => {
+          this.toastService.displayError('An error has ocurred while attempting to save UFR.');
+        }
+      )
+      .add(() => (this.busy = false));
+  }
+
+  private getFromUfrForm(ufr: UFR): UFR {
+    return {
+      ...ufr,
+      ufrName: this.ufrForm.form.get(['ufrName']).value,
+      notes: this.ufrForm.form.get(['notes']).value
+    };
+  }
+
+  private getFromProgramForm(ufr: UFR): UFR {
+    return {
+      ...ufr,
+      shortName: this.ufrProgramForm.form.get(['shortName']).enabled
+        ? this.ufrProgramForm.form.get(['shortName']).value
+        : ufr.shortName,
+      longName: this.ufrProgramForm.form.get(['longName']).value,
+      type: this.ufrProgramForm.form.get(['type']).enabled ? this.ufrProgramForm.form.get(['type']).value : ufr.type,
+      organizationId: this.ufrProgramForm.form.get(['organizationId']).enabled
+        ? this.ufrProgramForm.form.get(['organizationId']).value
+        : ufr.organizationId,
+      divisionId: this.ufrProgramForm.form.get(['divisionId']).value,
+      missionPriorityId:
+        this.ufrProgramForm.showMissionPriority && !this.ufrProgramForm.showMissionPriorityMessage
+          ? this.ufrProgramForm.form.get(['missionPriorityId']).value
+          : null,
+      agencyPriority: this.ufrProgramForm.form.get(['agencyPriority']).value,
+      directoratePriority: this.ufrProgramForm.form.get(['directoratePriority']).value,
+      secDefLOEId: this.ufrProgramForm.form.get(['secDefLOEId']).value,
+      strategicImperativeId: this.ufrProgramForm.form.get(['strategicImperativeId']).value,
+      agencyObjectiveId: this.ufrProgramForm.form.get(['agencyObjectiveId']).value
+    };
+  }
+
+  private getFromScopeForm(ufr: UFR): UFR {
+    return {
+      ...ufr,
+      aim: this.ufrScope.form.get(['aim']).value,
+      goal: this.ufrScope.form.get(['goal']).value,
+      quality: this.ufrScope.form.get(['quality']).value,
+      other: this.ufrScope.form.get(['other']).value,
+      attachments: [...this.ufrScope.programAttachments]
+    };
+  }
+
+  private getFromAssets(ufr: UFR): UFR {
+    return {
+      ...ufr,
+      assets: this.ufrAssets.getProgramAssets()
+    };
+  }
+
+  private getFromJustificationForm(ufr: UFR): UFR {
+    return {
+      ...ufr,
+      justification: this.ufrJustification.form.get(['justification']).value,
+      impactN: this.ufrJustification.form.get(['impactN']).value,
+      milestoneImpact: this.ufrJustification.form.get(['milestoneImpact']).value
+    };
   }
 }

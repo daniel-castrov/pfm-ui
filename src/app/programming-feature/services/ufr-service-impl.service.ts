@@ -24,6 +24,10 @@ export class UfrServiceImpl extends UfrService {
     return this.post('ufr', ufr);
   }
 
+  update(ufr: UFR) {
+    return this.put('ufr', ufr);
+  }
+
   getByContainerId(containerId: string): Observable<any> {
     return this.get('ufr/container/' + containerId);
   }

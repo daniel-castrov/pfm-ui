@@ -26,7 +26,7 @@ export class UfrFormComponent implements OnInit {
   loadForm() {
     this.form = new FormGroup({
       requestNumber: new FormControl(this.ufr.requestNumber),
-      ShortyType: new FormControl(this.getShortyTypeLabel(this.ufr.shortyType)),
+      shortyType: new FormControl(this.getShortyTypeLabel(this.ufr.shortyType)),
       ufrName: new FormControl(this.ufr.ufrName, Validators.required),
       notes: new FormControl(this.ufr.notes, [Validators.required]),
       ufrStatus_disposition: new FormControl(
@@ -47,7 +47,7 @@ export class UfrFormComponent implements OnInit {
 
   disableInput() {
     this.form.controls['requestNumber'].disable();
-    this.form.controls['ShortyType'].disable();
+    this.form.controls['shortyType'].disable();
     this.form.controls['ufrStatus_disposition'].disable();
     this.form.controls['dispositionExplanation'].disable();
     this.form.controls['created'].disable();
