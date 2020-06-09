@@ -460,7 +460,7 @@ export class ScheduleComponent implements OnInit {
     const row: ScheduleDataInterface = this.scheduleGridRows[rowIndex];
     const canSave = this.validateRowData(row);
     if (canSave) {
-      row.programId = this.program.id;
+      row.containerId = this.program.id;
       if (row.startDate) {
         row.startDate = moment(row.startDate, 'MM/DD/YYYY');
       }
@@ -655,7 +655,7 @@ export class ScheduleComponent implements OnInit {
 
 export interface ScheduleDataInterface {
   id?: string;
-  programId?: string;
+  containerId?: string;
   taskDescription?: string;
   fundingLineId?: string;
   startDate?: any;

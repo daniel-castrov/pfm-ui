@@ -22,6 +22,7 @@ import { VisibilityService } from '../../services/visibility-service';
 import { AppModel } from '../../pfm-common-models/AppModel';
 import { Workspace } from '../models/workspace';
 import { ToastService } from '../../pfm-coreui/services/toast.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'pfm-programming',
@@ -72,7 +73,8 @@ export class LockProgrammingComponent implements OnInit {
     private visibilityService: VisibilityService,
     private toastService: ToastService,
     public appModel: AppModel,
-    private workspaceService: WorkspaceService
+    private workspaceService: WorkspaceService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -156,6 +158,7 @@ export class LockProgrammingComponent implements OnInit {
           this.toastService.displaySuccess(
             `Programming phase for ${this.programmingModel.pom.fy} successfully locked.`
           );
+          this.router.navigate(['/home']);
         },
         error => this.toastService.displayError(error.error.error),
         () => {
@@ -372,9 +375,10 @@ export class LockProgrammingComponent implements OnInit {
       }
       for (const fundingLine of program.fundingLines) {
         for (let i = this.minYear; i <= this.maxYear; i++) {
-          if (fundingLine.funds[i]) {
-            ps.funds[i] += fundingLine.funds[i];
-            ps.fundsTotal += ps.funds[i];
+          const fund = parseInt(((fundingLine.funds[i] ?? 0) / 1000).toString(), 10);
+          if (fund) {
+            ps.funds[i] += fund;
+            ps.fundsTotal += fund;
           }
         }
       }

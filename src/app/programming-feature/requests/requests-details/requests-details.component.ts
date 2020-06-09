@@ -343,9 +343,10 @@ export class RequestsDetailsComponent implements OnInit {
       type: this.requestDetailsFormComponent.addMode
         ? this.requestDetailsFormComponent.form.get(['type']).value
         : program.type,
-      organizationId: this.requestDetailsFormComponent.addMode
-        ? this.requestDetailsFormComponent.form.get(['organizationId']).value
-        : program.organizationId,
+      organizationId:
+        this.requestDetailsFormComponent.addMode || this.requestDetailsFormComponent.isPreviousYear
+          ? this.requestDetailsFormComponent.form.get(['organizationId']).value
+          : program.organizationId,
       divisionId: this.requestDetailsFormComponent.form.get(['divisionId']).value,
       missionPriorityId:
         this.requestDetailsFormComponent.showMissionPriority &&

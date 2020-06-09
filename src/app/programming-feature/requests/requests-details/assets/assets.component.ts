@@ -553,15 +553,15 @@ export class AssetsComponent implements OnInit {
                   'justify-content': 'flex-end'
                 },
                 minWidth: 80,
-                valueGetter: params => params.data.details[i].unitCost,
+                valueGetter: params => params.data.details[i].unitCost / 1000,
                 valueSetter: params => {
-                  params.data.details[i].unitCost = Number(params.newValue);
+                  params.data.details[i].unitCost = Number(params.newValue) * 1000;
                   return true;
                 },
                 cellEditor: NumericCellEditor.create({
                   returnUndefinedOnZero: false
                 }),
-                valueFormatter: params => this.currencyFormatter(params.data.details[i].unitCost)
+                valueFormatter: params => this.currencyFormatter(params.data.details[i].unitCost / 1000)
               },
               {
                 colId: 2 + x * 3 + 2,
@@ -620,16 +620,16 @@ export class AssetsComponent implements OnInit {
                   'justify-content': 'flex-end'
                 },
                 minWidth: 80,
-                valueGetter: params => params.data.details[i].totalCost,
+                valueGetter: params => params.data.details[i].totalCost / 1000,
                 valueSetter: params => {
-                  params.data.details[i].totalCost = Number(params.newValue);
+                  params.data.details[i].totalCost = Number(params.newValue) * 1000;
 
                   return true;
                 },
                 cellEditor: NumericCellEditor.create({
                   returnUndefinedOnZero: false
                 }),
-                valueFormatter: params => this.currencyFormatter(params.data.details[i].totalCost)
+                valueFormatter: params => this.currencyFormatter(params.data.details[i].totalCost / 1000)
               }
             ]
           }
