@@ -58,7 +58,7 @@ export class UfrFormComponent implements OnInit {
   getShortyTypeLabel(shortyType: ShortyType) {
     switch (shortyType) {
       case ShortyType.MRDB_PROGRAM: {
-        return 'Previously Founded Program';
+        return 'Previously Funded Program';
       }
       case ShortyType.PR: {
         return 'Program Request';
