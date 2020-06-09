@@ -22,6 +22,7 @@ import { VisibilityService } from '../../services/visibility-service';
 import { AppModel } from '../../pfm-common-models/AppModel';
 import { Workspace } from '../models/workspace';
 import { ToastService } from '../../pfm-coreui/services/toast.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'pfm-programming',
@@ -72,7 +73,8 @@ export class LockProgrammingComponent implements OnInit {
     private visibilityService: VisibilityService,
     private toastService: ToastService,
     public appModel: AppModel,
-    private workspaceService: WorkspaceService
+    private workspaceService: WorkspaceService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -156,6 +158,7 @@ export class LockProgrammingComponent implements OnInit {
           this.toastService.displaySuccess(
             `Programming phase for ${this.programmingModel.pom.fy} successfully locked.`
           );
+          this.router.navigate(['/home']);
         },
         error => this.toastService.displayError(error.error.error),
         () => {
