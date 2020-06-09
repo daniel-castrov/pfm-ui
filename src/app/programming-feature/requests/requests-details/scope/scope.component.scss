@@ -10,3 +10,9 @@
   cursor: pointer;
   font-size: x-large;
 }
+
+.non-editable {
+  background-color: #fff;
+  outline: none !important;
+  border-color: transparent;
+}

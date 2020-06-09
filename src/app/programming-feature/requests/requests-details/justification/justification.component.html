@@ -9,11 +9,15 @@
     <div class="form-group row">
       <div class="description-container row col-12 mt-5">
         <p class="col-2">Description of Change</p>
-        <textarea class="form-control col-10" formControlName="justification"></textarea>
+        <textarea
+          class="form-control col-10"
+          [class.non-editable]="!editMode"
+          formControlName="justification"
+        ></textarea>
       </div>
       <div class="impact-container row col-12 mt-5">
         <p class="col-2">Impact if not funded</p>
-        <textarea class="form-control col-10" formControlName="impactN"></textarea>
+        <textarea class="form-control col-10" [class.non-editable]="!editMode" formControlName="impactN"></textarea>
       </div>
     </div>
   </form>

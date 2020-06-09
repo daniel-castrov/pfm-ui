@@ -41,14 +41,16 @@ export class ScopeComponent implements OnInit {
       canEdit: true,
       canDelete: true,
       canUpload: false,
-      isSingleDelete: true
+      isSingleDelete: true,
+      editMode: false
     },
     EDIT: {
       canEdit: false,
       canSave: true,
       canDelete: true,
       canUpload: false,
-      isSingleDelete: true
+      isSingleDelete: true,
+      editMode: false
     }
   };
 
@@ -80,6 +82,7 @@ export class ScopeComponent implements OnInit {
   attachmentsUploaded: ListItem[] = [];
   programAttachments: Attachment[] = [];
   deleteDialog: DeleteDialogInterface = { title: 'Delete' };
+  editMode: boolean;
 
   constructor(
     private evaluationMeasureService: EvaluationMeasureService,
@@ -97,6 +100,8 @@ export class ScopeComponent implements OnInit {
     this.setupEvaluationMeasureGrid();
     this.setupTeamLeadsGrid();
     this.setupProcessPriorizationGrid();
+    this.editMode = false;
+    this.changeEditMode(false);
   }
 
   loadForm() {
@@ -1072,6 +1077,28 @@ export class ScopeComponent implements OnInit {
     this.deleteDialog.cellAction = null;
     this.deleteDialog.delete = null;
     this.deleteDialog.display = false;
+  }
+
+  changeEditMode(editMode: boolean) {
+    this.editMode = editMode;
+    this.actionState.EDIT.editMode = editMode;
+    this.actionState.VIEW.editMode = editMode;
+
+    if (editMode) {
+      this.form.get('aim').enable();
+      this.form.get('goal').enable();
+      this.form.get('quality').enable();
+      this.form.get('other').enable();
+    } else {
+      this.form.get('aim').disable();
+      this.form.get('goal').disable();
+      this.form.get('quality').disable();
+      this.form.get('other').disable();
+      this.evaluationMeasureRows.forEach(row => {
+        row.action.editMode = editMode;
+      });
+      this.evaluationMeasureGridApi.setRowData(this.evaluationMeasureRows);
+    }
   }
 }
 

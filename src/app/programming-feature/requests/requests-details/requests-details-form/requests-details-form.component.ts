@@ -45,6 +45,7 @@ export class RequestsDetailsFormComponent implements OnInit {
   showMissionPriority: boolean;
   showMissionPriorityMessage: boolean;
   missionPriorityMessage: string;
+  editMode: boolean;
 
   constructor(
     private organizationService: OrganizationService,
@@ -63,6 +64,8 @@ export class RequestsDetailsFormComponent implements OnInit {
     this.loadImage();
     this.loadForm();
     this.updateForm(this.program);
+    this.editMode = false;
+    this.changeEditMode(false);
   }
 
   loadForm() {
@@ -219,5 +222,61 @@ export class RequestsDetailsFormComponent implements OnInit {
 
   trackById(index: number, item: any) {
     return item.id;
+  }
+
+  changeEditMode(editMode: boolean) {
+    this.editMode = editMode;
+
+    if (editMode) {
+      this.form.get('longName').enable();
+      this.form.get('organizationId').enable();
+      this.form.get('divisionId').enable();
+      this.form.get('missionPriorityId').enable();
+      this.form.get('agencyPriority').enable();
+      this.form.get('directoratePriority').enable();
+      this.form.get('secDefLOEId').enable();
+      this.form.get('strategicImperativeId').enable();
+      this.form.get('agencyObjectiveId').enable();
+      this.form.patchValue({
+        organizationId: this.program.organizationId
+          ? this.organizations.find(org => org.id === this.program.organizationId).abbreviation
+          : undefined,
+        divisionId: this.program.divisionId,
+        missionPriorityId: this.program.missionPriorityId,
+        secDefLOEId: this.program.secDefLOEId,
+        strategicImperativeId: this.program.strategicImperativeId,
+        agencyObjectiveId: this.program.agencyObjectiveId
+      });
+    } else {
+      this.form.get('longName').disable();
+      this.form.get('organizationId').disable();
+      this.form.get('divisionId').disable();
+      this.form.get('missionPriorityId').disable();
+      this.form.get('agencyPriority').disable();
+      this.form.get('directoratePriority').disable();
+      this.form.get('secDefLOEId').disable();
+      this.form.get('strategicImperativeId').disable();
+      this.form.get('agencyObjectiveId').disable();
+      this.form.patchValue({
+        organizationId: this.program.organizationId
+          ? this.organizations.find(org => org.id === this.program.organizationId).abbreviation
+          : undefined,
+        divisionId: this.program.divisionId
+          ? this.divisions.find(div => div.id === this.program.divisionId).name
+          : undefined,
+        missionPriorityId: this.program.missionPriorityId
+          ? this.missionPriorities.find(m => m.id === this.program.missionPriorityId).title
+          : undefined,
+        secDefLOEId: this.program.secDefLOEId
+          ? this.secDefLOE.find(sec => sec.id === this.program.secDefLOEId).name
+          : undefined,
+        strategicImperativeId: this.program.strategicImperativeId
+          ? this.strategicImperatives.find(si => si.id === this.program.strategicImperativeId).name
+          : undefined,
+        agencyObjectiveId: this.program.agencyObjectiveId
+          ? this.agencyObjectives.find(ao => ao.id === this.program.agencyObjectiveId).name
+          : undefined
+      });
+    }
   }
 }
