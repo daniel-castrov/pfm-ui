@@ -2343,7 +2343,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
       data[0].push('Update ' + (i + 1));
       for (const year of Object.keys(historyRow.funds)) {
         funds[historyRow.id][year] = funds[historyRow.id][year] ?? 0;
-        funds[historyRow.id][year] += Number(historyRow.funds[year]) ?? 0;
+        funds[historyRow.id][year] += parseInt(((historyRow.funds[year] ?? 0) / 1000).toString(), 10);
       }
     });
     for (let i = this.pomYear; i < this.pomYear + 5; i++) {

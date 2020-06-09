@@ -1,8 +1,8 @@
 <div>
   <div class="row col-12">
-    <div class="col-8">
+    <div class="col-8 border">
       <google-chart #googleChart [data]="chartData"></google-chart>
-      <div class="row mx-auto">
+      <div class="row">
         <div class="row col-11">
           <pfm-dropdown
             #displayDropdown
@@ -71,7 +71,7 @@
           >
           </pfm-dropdown>
         </div>
-
+        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
         <button type="button" class="btn btn-primary pull-right" (click)="drawLineChart()">
           Go
         </button>
