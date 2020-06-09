@@ -13,4 +13,6 @@ export class UFR extends Program {
   ufrStatus?: UFRStatus;
   shortyType?: ShortyType;
   originatedFrom?: UFR;
+  milestoneImpact?: string;
+  yoE?: boolean;
 }

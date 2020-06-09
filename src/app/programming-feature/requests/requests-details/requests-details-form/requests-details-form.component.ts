@@ -73,7 +73,7 @@ export class RequestsDetailsFormComponent implements OnInit {
         type: new FormControl(this.addMode ? 'PROGRAM' : this.program.type),
         organizationId: new FormControl(
           this.program.organizationId
-            ? this.organizations.find(org => org.id === this.program.organizationId).abbreviation
+            ? this.organizations.find(org => org.id === this.program.organizationId).id
             : undefined,
           [Validators.required]
         ),
