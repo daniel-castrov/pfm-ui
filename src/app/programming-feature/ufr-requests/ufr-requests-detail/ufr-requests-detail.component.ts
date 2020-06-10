@@ -10,7 +10,7 @@ import { UFR } from '../../models/ufr.model';
 import { UFRStatus } from '../../models/enumerations/ufr-status.model';
 import { ShortyType } from '../../models/enumerations/shorty-type.model';
 import { UfrService } from '../../services/ufr-service';
-import { switchMap, catchError } from 'rxjs/operators';
+import { catchError, switchMap } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { RequestSummaryNavigationHistoryService } from '../../requests/requests-summary/requests-summary-navigation-history.service';
 import { UfrScheduleComponent } from './ufr-schedule/ufr-schedule.component';
@@ -20,6 +20,12 @@ import { UfrProgramFormComponent } from './ufr-program-form/ufr-program-form.com
 import { UfrScopeComponent } from './ufr-scope/ufr-scope.component';
 import { UfrAssetsComponent } from './ufr-assets/ufr-assets.component';
 import { UfrJustificationComponent } from './ufr-justification/ufr-justification.component';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { PropertyService } from '../../services/property.service';
+import { PropertyType } from '../../models/enumerations/property-type.model';
+import { RestResponse } from '../../../util/rest-response';
+import { Property } from '../../models/property.model';
+import { DispositionType } from '../../models/disposition-type.model';
 
 @Component({
   selector: 'pfm-ufr-requests-detail',
@@ -52,6 +58,17 @@ export class UfrRequestsDetailComponent implements OnInit {
   clickedReviewForApproval: boolean;
   selectUfrId: string;
 
+  setDispositionDlg = {
+    title: 'Select Disposition',
+    form: new FormGroup({
+      dispositionType: new FormControl('', [Validators.required]),
+      explanation: new FormControl('', [Validators.required])
+    }),
+    continueAction: null,
+    display: false
+  };
+  dispositionTypes: DispositionType[];
+
   constructor(
     private route: ActivatedRoute,
     private pomService: PomService,
@@ -61,6 +78,7 @@ export class UfrRequestsDetailComponent implements OnInit {
     private router: Router,
     private ufrService: UfrService,
     private requestSummaryNavigationHistoryService: RequestSummaryNavigationHistoryService,
+    private propertyService: PropertyService,
     private toastService: ToastService
   ) {}
 
@@ -70,6 +88,7 @@ export class UfrRequestsDetailComponent implements OnInit {
     this.clickedReviewForApproval = true;
 
     this.selectUfrId = this.route.snapshot.paramMap.get('id');
+    this.loadDispositionTypes();
     this.ufrService
       .getById(this.selectUfrId)
       .pipe(
@@ -121,6 +140,13 @@ export class UfrRequestsDetailComponent implements OnInit {
     this.setupVisibility();
   }
 
+  private loadDispositionTypes() {
+    this.propertyService
+      .getByType(PropertyType.DISPOSITION_TYPE)
+      .subscribe((res: RestResponse<Property<DispositionType>[]>) => {
+        this.dispositionTypes = res.result.map(x => x.value).filter(x => x.phaseType === 'POM');
+      });
+  }
   setupVisibility() {
     this.visibilityService
       .isCurrentlyVisible('ufr-requests-detail-component')
@@ -148,7 +174,20 @@ export class UfrRequestsDetailComponent implements OnInit {
 
   onSubmit() {}
 
-  onSetDisposition() {}
+  showDispositionDlg() {
+    this.setDispositionDlg.form.patchValue({
+      dispositionType: '',
+      explanation: ''
+    });
+    this.setDispositionDlg.form.markAsUntouched();
+    this.setDispositionDlg.display = true;
+  }
+  onSetDisposition() {
+    this.setDispositionDlg.form.markAllAsTouched();
+    if (!this.setDispositionDlg.form.invalid) {
+      this.setDispositionDlg.display = false;
+    }
+  }
 
   onSelectTab(event: any) {}
 
