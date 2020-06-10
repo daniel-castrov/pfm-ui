@@ -22,7 +22,7 @@
           (cellAction)="onCellAction($event)"
           [columns]="assetColumnsDefinition"
           [rows]="assetRows"
-          [showAddSingleRow]="true && pageEditMode"
+          [showAddSingleRow]="pageEditMode"
           [showPagination]="false"
           (addCtaEvent)="onRowAdd($event)"
           (mousedown)="onMouseDown($event)"
