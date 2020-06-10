@@ -27,6 +27,7 @@ import { DataGridMessage } from 'src/app/pfm-coreui/models/DataGridMessage';
 import { ProgramType } from '../../models/enumerations/program-type.model';
 import { RequestSummaryNavigationHistoryService } from '../../requests/requests-summary/requests-summary-navigation-history.service';
 import { VisibilityService } from 'src/app/services/visibility-service';
+import { UFRStatus } from '../../models/enumerations/ufr-status.model';
 
 @Component({
   selector: 'pfm-ufr-requests-summary',
@@ -55,6 +56,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
   showValidationErrors: boolean;
   showGridAddCta: boolean;
   selectedShortyType: ShortyType;
+  deleteDialog: DeleteDialogInterface = { title: 'Delete' };
 
   constructor(
     private pomService: PomService,
@@ -275,8 +277,8 @@ export class UfrRequestsSummaryComponent implements OnInit {
         sortable: false,
         suppressMenu: true,
         cellStyle,
-        maxWidth: 80,
-        minWidth: 80,
+        maxWidth: 130,
+        minWidth: 130,
         cellRendererFramework: UfrActionCellRendererComponent
       }
     ];
@@ -711,8 +713,9 @@ export class UfrRequestsSummaryComponent implements OnInit {
       selectedContainer: this.selectedPom.value
     });
     this.ufrService.getByContainerId(this.selectedPom.value).subscribe(resp => {
-      const urfs = resp.result as UFR[];
-      this.rows = urfs;
+      const ufrs = resp.result as UFR[];
+      ufrs.forEach(ufr => (ufr.action = this.getActionState(ufr)));
+      this.rows = ufrs;
     });
   }
 
@@ -728,6 +731,13 @@ export class UfrRequestsSummaryComponent implements OnInit {
           this.columnDetailClicked(cellAction.rowIndex);
         }
         break;
+      case 'delete':
+        this.deleteDialog.bodyText = 'Are you sure you want to delete?';
+        this.displayDeleteDialog(cellAction, this.deleteRow.bind(this));
+        break;
+      case 'review':
+        // TODO implement actions here
+        break;
     }
   }
 
@@ -741,6 +751,43 @@ export class UfrRequestsSummaryComponent implements OnInit {
     ]);
   }
 
+  private deleteRow(rowIndex: number) {
+    const ufr = this.rows[rowIndex];
+    if (ufr.id) {
+      this.ufrService.remove(ufr.id).subscribe(
+        () => {
+          this.rows.splice(rowIndex, 1);
+
+          this.gridApi.setRowData(this.rows);
+        },
+        error => {
+          this.dialogService.displayDebug(error);
+        }
+      );
+    }
+  }
+
+  private displayDeleteDialog(cellAction: DataGridMessage, deleteFunction: (rowIndex: number) => void) {
+    this.deleteDialog.cellAction = cellAction;
+    this.deleteDialog.delete = deleteFunction;
+    this.deleteDialog.display = true;
+  }
+
+  onCancelDeleteDialog() {
+    this.closeDeleteDialog();
+  }
+
+  onDeleteData() {
+    this.deleteDialog.delete(this.deleteDialog.cellAction.rowIndex);
+    this.closeDeleteDialog();
+  }
+
+  private closeDeleteDialog() {
+    this.deleteDialog.cellAction = null;
+    this.deleteDialog.delete = null;
+    this.deleteDialog.display = false;
+  }
+
   loadPreviousContainerSelection() {
     const selectedContainer = this.requestSummaryNavigationHistoryService.getSelectedContainer();
     if (selectedContainer) {
@@ -749,4 +796,24 @@ export class UfrRequestsSummaryComponent implements OnInit {
       this.onPomChanged(listItem);
     }
   }
+
+  getActionState(ufr: UFR) {
+    const canReview =
+      this.appModel['visibilityDef']['ufr-requests-summary-component']?.canReview &&
+      ufr.ufrStatus === UFRStatus.SUBMITTED &&
+      !ufr.disposition;
+    const canDeleteSingle =
+      ufr.createdBy === this.appModel.userDetails.cacId &&
+      (ufr.ufrStatus === UFRStatus.SAVED || ufr.ufrStatus === UFRStatus.SUBMITTED) &&
+      !ufr.disposition;
+    return { canReview, canDeleteSingle };
+  }
+}
+
+export interface DeleteDialogInterface {
+  title: string;
+  bodyText?: string;
+  display?: boolean;
+  cellAction?: DataGridMessage;
+  delete?: (rowIndex: number) => void;
 }

@@ -275,3 +275,26 @@
   </ng-template>
 </ng-container>
 <pfm-busy [busy]="busy"></pfm-busy>
+
+<ng-container *ngIf="deleteDialog.display">
+  <pfm-custom-dialog
+    [title]="deleteDialog.title"
+    [body]="deleteBody"
+    [actions]="deleteActions"
+    (onCancelDialog)="onCancelDeleteDialog()"
+  ></pfm-custom-dialog>
+
+  <ng-template #deleteBody>
+    <span>{{ deleteDialog.bodyText }}</span>
+  </ng-template>
+
+  <ng-template #deleteActions>
+    <div class="pull-left">
+      <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onDeleteData()">Delete</button>
+    </div>
+
+    <div class="pull-right">
+      <pfm-cancel-cta (onCancelClicked)="onCancelDeleteDialog()"></pfm-cancel-cta>
+    </div>
+  </ng-template>
+</ng-container>

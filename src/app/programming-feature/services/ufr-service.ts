@@ -13,4 +13,5 @@ export abstract class UfrService extends BaseRestService {
   abstract getByContainerId(containerId: string): Observable<any>;
   abstract create(ufr: UFR): Observable<any>;
   abstract update(ufr: UFR): Observable<any>;
+  abstract remove(id: string): Observable<any>;
 }

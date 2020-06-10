@@ -7,3 +7,18 @@
   [extraActions]="extraActions"
 >
 </pfm-action-cell-renderer>
+<ng-template #extraActions>
+  <div class="action">
+    <span>
+      <ng-container *ngIf="data.canDeleteSingle">
+        <fa-icon [icon]="'trash-alt'" title="Delete" (click)="onSelected('delete')"></fa-icon>
+      </ng-container>
+      <ng-container *ngIf="data.canReview">
+        <span class="icon-review" [title]="'Review UFR'" (click)="onSelected('review')">
+          <fa-icon icon="file" class="review-file"></fa-icon>
+          <fa-icon icon="check" class="review-check"></fa-icon>
+        </span>
+      </ng-container>
+    </span>
+  </div>
+</ng-template>
