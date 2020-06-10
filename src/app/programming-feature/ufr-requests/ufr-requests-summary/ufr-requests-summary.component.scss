@@ -6,3 +6,7 @@
 option {
   background-color: #bbced7;
 }
+
+:host ::ng-deep .ag-header-cell-label .ag-header-cell-text {
+  white-space: normal !important;
+}
