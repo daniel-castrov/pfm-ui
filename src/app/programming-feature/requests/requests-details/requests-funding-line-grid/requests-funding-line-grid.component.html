@@ -1,6 +1,6 @@
 <div>
-  <div class="row col-12">
-    <div class="col-8 border">
+  <div class="row p-0 m-0 col-12">
+    <div class="col-8 border left-chart">
       <google-chart #googleChart [data]="chartData"></google-chart>
       <div class="row">
         <div class="row col-11">
@@ -77,7 +77,7 @@
         </button>
       </div>
     </div>
-    <div class="col-4 p-0 border" *ngIf="showHistoryGraph">
+    <div class="col-4 p-0 border right-chart" *ngIf="showHistoryGraph">
       <google-chart #historyChart [data]="historyChartData"></google-chart>
     </div>
   </div>

@@ -96,7 +96,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
     chartType: 'LineChart',
     options: {
       title: 'Funding Lines',
-      width: 1000,
+      width: 950,
       height: 350,
       chartArea: {
         width: '50%',
@@ -129,10 +129,10 @@ export class RequestsFundingLineGridComponent implements OnInit {
     chartType: 'LineChart',
     options: {
       title: 'Update History for ',
-      width: 540,
+      width: 500,
       height: 350,
       chartArea: {
-        width: '70%',
+        width: '68%',
         height: '70%',
         left: '11%'
       },
