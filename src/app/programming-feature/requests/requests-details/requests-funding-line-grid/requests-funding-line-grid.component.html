@@ -158,7 +158,7 @@
       (cellAction)="onNonSummaryCellAction($event)"
       [columns]="nonSummaryFundingLineColumnsDefinition"
       [rows]="nonSummaryFundingLineRows"
-      [showAddSingleRow]="true && editMode"
+      [showAddSingleRow]="editMode"
       [showPagination]="false"
       (addCtaEvent)="onNonSummaryRowAdd($event)"
       (mousedown)="onNonSummaryMouseDown($event)"

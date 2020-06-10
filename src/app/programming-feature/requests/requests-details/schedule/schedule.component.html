@@ -23,7 +23,7 @@
           (cellAction)="handleCellAction($event)"
           [columns]="fundingGridColumnDefinitions"
           [rows]="scheduleGridRows"
-          [showAddSingleRow]="true && pageEditMode"
+          [showAddSingleRow]="pageEditMode"
           [showPagination]="false"
           (addCtaEvent)="onScheduleRowAdd($event)"
           (mousedown)="onMouseDown($event)"
