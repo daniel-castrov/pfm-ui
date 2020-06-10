@@ -344,7 +344,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
         this.prevFundedProgramDialog.form.patchValue({ program: '' });
         this.showInfoIcon = true;
         this.mrdbService
-          .getProgramRequestValidForURF()
+          .getProgramRequestValidForUFR()
           .subscribe(
             resp => {
               this.availablePrograms = (resp as any).result;
@@ -367,7 +367,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
         this.createNewIncOrFosDialog.display = true;
         this.showInfoIcon = true;
         this.mrdbService
-          .getPRsAndMrdbPRsValidForURF()
+          .getPRsAndMrdbPRsValidForUFR()
           .subscribe(
             resp => {
               this.availablePrograms = (resp as any).result;
@@ -390,7 +390,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
         });
         this.showInfoIcon = true;
         this.mrdbService
-          .getPRsAndMrdbPRsValidForURF()
+          .getPRsAndMrdbPRsValidForUFR()
           .subscribe(
             resp => {
               this.availablePrograms = (resp as any).result;
