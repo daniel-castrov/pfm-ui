@@ -852,6 +852,12 @@ export class AssetsComponent implements OnInit {
     this.pageEditMode = editMode;
     this.actionState.EDIT.editMode = editMode;
     this.actionState.VIEW.editMode = editMode;
+
+    if (editMode) {
+      this.form.get('remarks').enable();
+    } else {
+      this.form.get('remarks').disable();
+    }
     if (this.assetGridApi) {
       this.assetSummaryRows.forEach(row => {
         row.action = editMode;

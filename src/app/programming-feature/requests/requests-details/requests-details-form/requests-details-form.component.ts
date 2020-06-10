@@ -4,13 +4,14 @@ import { FormGroup, FormControl, ValidatorFn, ValidationErrors, Validators } fro
 import { OrganizationService } from '../../../../services/organization-service';
 import { Organization } from '../../../../pfm-common-models/Organization';
 import { PlanningService } from 'src/app/planning-feature/services/planning-service';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, catchError } from 'rxjs/operators';
 import { FileMetaData } from 'src/app/pfm-common-models/FileMetaData';
 import { FileDownloadService } from 'src/app/pfm-secure-filedownload/services/file-download-service';
 import { TagService } from 'src/app/programming-feature/services/tag.service';
 import { Tag } from 'src/app/programming-feature/models/Tag';
 import { MissionPriority } from 'src/app/planning-feature/models/MissionPriority';
 import { MrdbService } from 'src/app/programming-feature/services/mrdb-service';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'pfm-requests-details-form',
@@ -55,17 +56,14 @@ export class RequestsDetailsFormComponent implements OnInit {
     private mrdbService: MrdbService
   ) {}
 
-  async ngOnInit() {
-    await this.populateDropDowns();
+  ngOnInit() {
+    this.populateDropDowns();
     if (!this.program) {
       this.addMode = true;
       this.program = new Program();
     }
     this.loadImage();
-    this.loadForm();
-    this.updateForm(this.program);
     this.editMode = false;
-    this.changeEditMode(false);
   }
 
   loadForm() {
@@ -107,53 +105,59 @@ export class RequestsDetailsFormComponent implements OnInit {
     this.updateAgencyPriority();
   }
 
-  async populateDropDowns() {
-    this.organizations = ((await this.organizationService.getAll().toPromise()) as any).result;
-    await this.planningService
-      .getPlanningByYear(this.pomYear)
+  populateDropDowns() {
+    this.organizationService
+      .getAll()
       .pipe(
+        switchMap(resp => {
+          this.organizations = (resp as any).result;
+          return this.planningService.getPlanningByYear(this.pomYear);
+        }),
         switchMap(planning => {
           this.showMissionPriority = true;
           return this.planningService.getMissionPrioritiesForPOM(planning.result.id);
-        })
-      )
-      .toPromise()
-      .then(
-        missionPriorities => {
-          this.missionPriorities = missionPriorities.result;
-        },
-        error => {
-          // Conflict Status
-          if (error.status === 409) {
+        }),
+        catchError(error => {
+          if (error?.status === 409) {
             this.showMissionPriorityMessage = true;
             this.missionPriorityMessage = error.error.error;
           }
-        }
-      );
-    this.tagService.getByType(this.DIVISIONS).subscribe(resp => {
-      this.divisions = resp.result as Tag[];
-    });
-    this.agencyPriorities = Array.from({ length: 20 }, (x, i) => i + 1);
-    this.directoratePriorities = Array.from({ length: 20 }, (x, i) => i + 1);
-    this.tagService.getByType(this.SEC_DEF_LOE).subscribe(resp => {
-      this.secDefLOE = resp.result as Tag[];
-    });
-    this.tagService.getByType(this.STRATEGIC_IMPERATIVES).subscribe(resp => {
-      this.strategicImperatives = resp.result as Tag[];
-    });
-    this.tagService.getByType(this.AGENCY_OBJECTIVES).subscribe(resp => {
-      this.agencyObjectives = resp.result as Tag[];
-    });
-    if (this.program.shortName) {
-      await this.mrdbService
-        .getByName(this.program.shortName)
-        .toPromise()
-        .then(resp => {
-          if (resp.result) {
-            this.isPreviousYear = true;
+          return of(undefined);
+        }),
+        switchMap(missionPriorities => {
+          if (missionPriorities) {
+            this.missionPriorities = missionPriorities.result;
           }
-        });
-    }
+          return this.tagService.getByType(this.DIVISIONS);
+        }),
+        switchMap(resp => {
+          this.divisions = resp.result as Tag[];
+          return this.tagService.getByType(this.SEC_DEF_LOE);
+        }),
+        switchMap(resp => {
+          this.secDefLOE = resp.result as Tag[];
+          return this.tagService.getByType(this.STRATEGIC_IMPERATIVES);
+        }),
+        switchMap(resp => {
+          this.strategicImperatives = resp.result as Tag[];
+          return this.tagService.getByType(this.AGENCY_OBJECTIVES);
+        }),
+        switchMap(resp => {
+          this.agencyObjectives = resp.result as Tag[];
+          return this.mrdbService.getByName(this.program.shortName);
+        })
+      )
+      .subscribe(resp => {
+        if (resp.result) {
+          this.isPreviousYear = true;
+        }
+        this.agencyPriorities = Array.from({ length: 20 }, (x, i) => i + 1);
+        this.directoratePriorities = Array.from({ length: 20 }, (x, i) => i + 1);
+
+        this.loadForm();
+        this.updateForm(this.program);
+        this.changeEditMode(false);
+      });
   }
 
   onChangeMissionPriority(event: any) {
@@ -238,9 +242,7 @@ export class RequestsDetailsFormComponent implements OnInit {
       this.form.get('strategicImperativeId').enable();
       this.form.get('agencyObjectiveId').enable();
       this.form.patchValue({
-        organizationId: this.program.organizationId
-          ? this.organizations.find(org => org.id === this.program.organizationId).abbreviation
-          : undefined,
+        organizationId: this.program.organizationId,
         divisionId: this.program.divisionId,
         missionPriorityId: this.program.missionPriorityId,
         secDefLOEId: this.program.secDefLOEId,

@@ -1094,10 +1094,26 @@ export class ScopeComponent implements OnInit {
       this.form.get('goal').disable();
       this.form.get('quality').disable();
       this.form.get('other').disable();
-      this.evaluationMeasureRows.forEach(row => {
-        row.action.editMode = editMode;
-      });
+    }
+    this.evaluationMeasureRows.forEach(row => {
+      row.action.editMode = editMode;
+    });
+    if (this.evaluationMeasureGridApi) {
       this.evaluationMeasureGridApi.setRowData(this.evaluationMeasureRows);
+    }
+
+    this.teamLeadRows.forEach(row => {
+      row.action.editMode = editMode;
+    });
+    if (this.teamLeadGridApi) {
+      this.teamLeadGridApi.setRowData(this.evaluationMeasureRows);
+    }
+
+    this.processPriorizationRows.forEach(row => {
+      row.action.editMode = editMode;
+    });
+    if (this.processPriorizationRows) {
+      this.processPriorizationGridApi.setRowData(this.processPriorizationRows);
     }
   }
 }
