@@ -39,7 +39,7 @@ export abstract class MrdbService extends BaseRestService {
 
   abstract getPrevFundedProgramsValidForUFR(): Observable<object>;
 
-  abstract getProgramRequestValidForURF(): Observable<object>;
+  abstract getProgramRequestValidForUFR(): Observable<object>;
 
-  abstract getPRsAndMrdbPRsValidForURF(): Observable<object>;
+  abstract getPRsAndMrdbPRsValidForUFR(): Observable<object>;
 }
