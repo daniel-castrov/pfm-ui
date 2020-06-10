@@ -62,12 +62,15 @@ export class JustificationComponent implements OnInit {
   programmingPreviousYear = [];
 
   programmingCurrentYear = [];
+  editMode: boolean;
 
   constructor(private programmingService: ProgrammingService) {}
 
   async ngOnInit() {
     this.loadForm();
     this.updateForm(this.program);
+    this.editMode = false;
+    this.changeEditMode(false);
   }
 
   async loadChart() {
@@ -184,6 +187,18 @@ export class JustificationComponent implements OnInit {
         funds += fundingLine.funds[year] || 0;
       }
       programmingYear[year - this.pomYear] = funds;
+    }
+  }
+
+  changeEditMode(editMode: boolean) {
+    this.editMode = editMode;
+
+    if (editMode) {
+      this.form.get('justification').enable();
+      this.form.get('impactN').enable();
+    } else {
+      this.form.get('justification').disable();
+      this.form.get('impactN').disable();
     }
   }
 }

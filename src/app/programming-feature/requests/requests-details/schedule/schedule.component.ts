@@ -39,14 +39,16 @@ export class ScheduleComponent implements OnInit {
       canEdit: true,
       canDelete: true,
       canUpload: false,
-      isSingleDelete: true
+      isSingleDelete: true,
+      editMode: false
     },
     EDIT: {
       canEdit: false,
       canSave: true,
       canDelete: true,
       canUpload: false,
-      isSingleDelete: true
+      isSingleDelete: true,
+      editMode: false
     }
   };
 
@@ -84,6 +86,7 @@ export class ScheduleComponent implements OnInit {
 
   busy: boolean;
   currentRowDataState: ScheduleRowDataStateInterface = {};
+  pageEditMode: boolean;
 
   constructor(
     private dialogService: DialogService,
@@ -95,6 +98,8 @@ export class ScheduleComponent implements OnInit {
     this.loadFundingLines();
     this.loadSchedulesGrid();
     this.currentFiscalYear = this.pomYear;
+    this.pageEditMode = false;
+    this.changePageEditMode(false);
   }
 
   loadFundingLines() {
@@ -635,6 +640,15 @@ export class ScheduleComponent implements OnInit {
     this.gridApi.startEditingCell({
       rowIndex,
       colKey: 'taskDescription'
+    });
+  }
+
+  changePageEditMode(editMode: boolean) {
+    this.pageEditMode = editMode;
+    this.fundingGridActionState.VIEW.editMode = editMode;
+    this.fundingGridActionState.EDIT.editMode = editMode;
+    this.scheduleGridRows.forEach((row, index) => {
+      row.action.editMode = editMode;
     });
   }
 }

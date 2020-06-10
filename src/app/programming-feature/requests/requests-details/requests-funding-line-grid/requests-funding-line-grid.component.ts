@@ -72,7 +72,8 @@ export class RequestsFundingLineGridComponent implements OnInit {
       canDelete: true,
       canUpload: false,
       isSingleDelete: true,
-      hasHistory: false
+      hasHistory: false,
+      editMode: false
     },
     VIEW_NO_DELETE: {
       canSave: false,
@@ -80,7 +81,8 @@ export class RequestsFundingLineGridComponent implements OnInit {
       canDelete: false,
       canUpload: false,
       isSingleDelete: true,
-      hasHistory: false
+      hasHistory: false,
+      editMode: false
     },
     EDIT: {
       canEdit: false,
@@ -88,7 +90,8 @@ export class RequestsFundingLineGridComponent implements OnInit {
       canDelete: true,
       canUpload: false,
       isSingleDelete: true,
-      hasHistory: false
+      hasHistory: false,
+      editMode: false
     }
   };
 
@@ -96,7 +99,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
     chartType: 'LineChart',
     options: {
       title: 'Funding Lines',
-      width: 1000,
+      width: 950,
       height: 350,
       chartArea: {
         width: '50%',
@@ -129,10 +132,10 @@ export class RequestsFundingLineGridComponent implements OnInit {
     chartType: 'LineChart',
     options: {
       title: 'Update History for ',
-      width: 540,
+      width: 500,
       height: 350,
       chartArea: {
-        width: '70%',
+        width: '68%',
         height: '70%',
         left: '11%'
       },
@@ -212,6 +215,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
 
   showHistoryGraph = false;
   currentRowHistoryGraph = -1;
+  editMode: boolean;
 
   constructor(
     private programmingModel: ProgrammingModel,
@@ -228,6 +232,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
     this.setupSummaryFundingLineGrid();
     this.setupNonSummaryFundingLineGrid();
     this.loadDropDownValues();
+    this.editMode = false;
   }
 
   onNonSummaryGridIsReady(api: GridApi) {
@@ -247,7 +252,10 @@ export class RequestsFundingLineGridComponent implements OnInit {
     this.summaryFundingLineRows = [...this.nonSummaryFundingLineRows];
     this.updateTotalFields(this.summaryFundingLineGridApi, this.summaryFundingLineRows);
     this.summaryFundingLineGridApi.setRowData(this.summaryFundingLineRows);
-    setTimeout(() => this.summaryFundingLineGridApi.hideOverlay(), 0);
+    setTimeout(() => {
+      this.summaryFundingLineGridApi.hideOverlay();
+      this.changeEditMode(this.editMode);
+    }, 0);
   }
 
   onToggleValueChanged(value) {
@@ -421,6 +429,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
           this.loadBulkDropdownValue();
         }
         this.originalNonSummaryFundingLineRows = JSON.parse(JSON.stringify(this.nonSummaryFundingLineRows));
+        this.changeEditMode(false);
       });
   }
 
@@ -2343,7 +2352,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
       data[0].push('Update ' + (i + 1));
       for (const year of Object.keys(historyRow.funds)) {
         funds[historyRow.id][year] = funds[historyRow.id][year] ?? 0;
-        funds[historyRow.id][year] += Number(historyRow.funds[year]) ?? 0;
+        funds[historyRow.id][year] += parseInt(((historyRow.funds[year] ?? 0) / 1000).toString(), 10);
       }
     });
     for (let i = this.pomYear; i < this.pomYear + 5; i++) {
@@ -2364,6 +2373,27 @@ export class RequestsFundingLineGridComponent implements OnInit {
     props.push(fundingLine.wucd);
     props.push(fundingLine.expenditureType);
     return props.join('/');
+  }
+
+  changeEditMode(editMode: boolean) {
+    this.editMode = editMode;
+    this.actionState.EDIT.editMode = editMode;
+    this.actionState.VIEW.editMode = editMode;
+    this.actionState.VIEW_NO_DELETE.editMode = editMode;
+
+    if (this.nonSummaryFundingLineGridApi) {
+      this.nonSummaryFundingLineRows.forEach((row, index) => {
+        row.action.editMode = editMode;
+      });
+
+      this.nonSummaryFundingLineGridApi.setRowData(this.nonSummaryFundingLineRows);
+    }
+    if (this.summaryFundingLineGridApi) {
+      this.summaryFundingLineRows.forEach((row, index) => {
+        row.action.editMode = editMode;
+      });
+      this.summaryFundingLineGridApi.setRowData(this.summaryFundingLineRows);
+    }
   }
 }
 

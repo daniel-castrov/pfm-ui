@@ -42,6 +42,8 @@ export class RequestsDetailsComponent implements OnInit {
   program: Program;
   busy: boolean;
   disableSchedule = false;
+  canEdit: boolean;
+  editMode: boolean;
 
   constructor(
     public programmingModel: ProgrammingModel,
@@ -87,9 +89,17 @@ export class RequestsDetailsComponent implements OnInit {
     this.loadPom();
     this.loadProgram();
     this.setupVisibility();
+    this.setUpCanEdit();
+    this.editMode = false;
     this.currentSelectedTab = openTab < 0 || openTab > 5 ? 1 : openTab;
   }
 
+  private setUpCanEdit() {
+    this.programmingService.canEditPR(this.programmingModel.selectedProgramId).subscribe(
+      resp => (this.canEdit = (resp as any).result),
+      error => this.dialogService.displayDebug(error)
+    );
+  }
   private loadPom() {
     this.pomService.getLatestPom().subscribe(
       resp => {
@@ -301,7 +311,10 @@ export class RequestsDetailsComponent implements OnInit {
         this.currentSelectedTab = 1;
         break;
       case 'schedule':
-        setTimeout(() => this.pfmSchedule.ngOnInit(), 0);
+        setTimeout(() => {
+          this.pfmSchedule.ngOnInit();
+          this.pfmSchedule.changePageEditMode(this.editMode);
+        }, 0);
         this.currentSelectedTab = 2;
         break;
       case 'scope':
@@ -372,5 +385,15 @@ export class RequestsDetailsComponent implements OnInit {
       ...program,
       assets: this.assetsComponent.getProgramAssets()
     };
+  }
+
+  onEditModeChange(editMode: boolean) {
+    this.editMode = editMode;
+    this.requestDetailsFormComponent.changeEditMode(editMode);
+    this.fundingLinesComponent.changeEditMode(editMode);
+    this.pfmSchedule.changePageEditMode(editMode);
+    this.scopeComponent.changeEditMode(editMode);
+    this.assetsComponent.changePageEditMode(editMode);
+    this.justificationComponent.changeEditMode(editMode);
   }
 }

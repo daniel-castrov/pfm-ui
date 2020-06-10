@@ -6,3 +6,9 @@
 .impact-container > textarea {
   min-height: 130px;
 }
+
+.non-editable {
+  background-color: #fff;
+  outline: none !important;
+  border-color: transparent;
+}

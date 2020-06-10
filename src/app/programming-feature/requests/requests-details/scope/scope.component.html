@@ -5,11 +5,11 @@
       <div class="form-group row">
         <div class="row col-12 mt-3">
           <p class="col-1 ml-4">Program Aim</p>
-          <textarea class="form-control col-10" formControlName="aim"></textarea>
+          <textarea class="form-control col-10" [class.non-editable]="!editMode" formControlName="aim"></textarea>
         </div>
         <div class="row col-12 mt-3">
           <p class="col-1 ml-4">Program Goal</p>
-          <textarea class="form-control col-10" formControlName="goal"></textarea>
+          <textarea class="form-control col-10" [class.non-editable]="!editMode" formControlName="goal"></textarea>
         </div>
       </div>
     </fieldset>
@@ -26,11 +26,11 @@
         </div>
         <div class="row col-12 mt-3">
           <p class="col-1 ml-4">Quality</p>
-          <textarea class="form-control col-10" formControlName="quality"></textarea>
+          <textarea class="form-control col-10" [class.non-editable]="!editMode" formControlName="quality"></textarea>
         </div>
         <div class="row col-12 mt-3">
           <p class="col-1 ml-4">Other</p>
-          <textarea class="form-control col-10" formControlName="other"></textarea>
+          <textarea class="form-control col-10" [class.non-editable]="!editMode" formControlName="other"></textarea>
         </div>
         <div class="row col-12 mt-3 attachment-container">
           <p class="col-1 ml-4">Attachment</p>
@@ -42,7 +42,7 @@
             [fieldLabel]="'name'"
             [fieldName]="'name'"
           ></pfm-dropdown>
-          <i class="fa fa-upload col-1 text-center" (click)="onFileUploadClick()"></i>
+          <i class="fa fa-upload col-1 text-center" *ngIf="editMode" (click)="onFileUploadClick()"></i>
         </div>
       </div>
     </fieldset>
@@ -55,7 +55,7 @@
       (cellAction)="onHandleEvaluationMeasureCellAction($event)"
       [columns]="evaluationMeasureColumnDefinitions"
       [rows]="evaluationMeasureRows"
-      [showAddSingleRow]="true"
+      [showAddSingleRow]="true && editMode"
       [showPagination]="false"
       (addCtaEvent)="onEvaluationMeasureRowAdd($event)"
       (mousedown)="onEvaluationMeasureMouseDown($event)"
@@ -69,7 +69,7 @@
       (cellAction)="onHandleTeamLeadCellAction($event)"
       [columns]="teamLeadsColumnDefinitions"
       [rows]="teamLeadRows"
-      [showAddSingleRow]="true"
+      [showAddSingleRow]="true && editMode"
       [showPagination]="false"
       (addCtaEvent)="onTeamLeadRowAdd($event)"
       (mousedown)="onTeamLeadMouseDown($event)"
@@ -83,7 +83,7 @@
       (cellAction)="onHandleProcessPriorizationCellAction($event)"
       [columns]="processPriorizationColumnDefinitions"
       [rows]="processPriorizationRows"
-      [showAddSingleRow]="true"
+      [showAddSingleRow]="true && editMode"
       [showPagination]="false"
       (addCtaEvent)="onProcessPriorizationRowAdd($event)"
       (mousedown)="onProcessPriorizationMouseDown($event)"
