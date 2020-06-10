@@ -9,7 +9,7 @@
   <div class="div-buttons" *ngIf="appModel.visibilityDef['ufr-requests-detail-component']">
     <ng-container *ngIf="showSaveButton">
       <div class="div-button" *pfmIsVisible="'ufr-requests-detail-component.setDisposition'">
-        <button (click)="onSetDisposition()" class="btn btn-success">
+        <button (click)="showDispositionDlg()" class="btn btn-success">
           <i class="fa fa-check"></i>
           Set Disposition
         </button>
@@ -64,3 +64,87 @@
   </tab>
 </tabset>
 <pfm-busy [busy]="busy"></pfm-busy>
+<ng-container *ngIf="setDispositionDlg.display">
+  <pfm-custom-dialog
+    [title]="setDispositionDlg.title"
+    [body]="createProgramBody"
+    [actions]="createProgramActions"
+    (onCancelDialog)="setDispositionDlg.display = false"
+  ></pfm-custom-dialog>
+
+  <ng-template #createProgramBody>
+    <div class="section-form">
+      <form class="form-horizontal" *ngIf="setDispositionDlg.form" [formGroup]="setDispositionDlg.form">
+        <div class="form-group row">
+          <div class="col-sm-8 col-form-label">
+            <div class="form-check" *ngFor="let item of dispositionTypes; let i = index">
+              <input
+                type="radio"
+                class="form-check-input"
+                formControlName="dispositionType"
+                id="dispositionType{{ i }}"
+                name="dispositionType"
+                [value]="item.name"
+              />
+              <label class="form-check-label" for="dispositionType{{ i }}">
+                {{ item.name || '?' }}
+              </label>
+            </div>
+            <div
+              *ngIf="
+                setDispositionDlg.form.get('dispositionType').invalid &&
+                (setDispositionDlg.form.get('dispositionType').dirty ||
+                  setDispositionDlg.form.get('dispositionType').touched)
+              "
+            >
+              <small
+                class="form-text text-danger"
+                *ngIf="setDispositionDlg.form.get('dispositionType').errors.required"
+              >
+                Value required.
+              </small>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="explanation" class="col-sm-5 col-form-label">*Provide Explanation</label>
+          <div class="col-sm-7">
+            <input
+              type="text"
+              [class.input-error]="
+                setDispositionDlg.form.get('explanation').invalid &&
+                (setDispositionDlg.form.get('explanation').dirty || setDispositionDlg.form.get('explanation').touched)
+              "
+              class="form-control"
+              id="explanation"
+              formControlName="explanation"
+            />
+            <div
+              *ngIf="
+                setDispositionDlg.form.get('explanation').invalid &&
+                (setDispositionDlg.form.get('explanation').dirty || setDispositionDlg.form.get('explanation').touched)
+              "
+            >
+              <small class="form-text text-danger" *ngIf="setDispositionDlg.form.get('explanation').errors.required">
+                An Explanation is required.
+              </small>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+
+  <ng-template #createProgramActions>
+    <div class="pull-left">
+      <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onSetDisposition()">
+        Set Disposition
+      </button>
+    </div>
+
+    <div class="pull-right">
+      <pfm-cancel-cta (onCancelClicked)="setDispositionDlg.display = false"></pfm-cancel-cta>
+    </div>
+  </ng-template>
+</ng-container>
