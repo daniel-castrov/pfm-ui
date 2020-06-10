@@ -1112,7 +1112,7 @@ export class ScopeComponent implements OnInit {
     this.processPriorizationRows.forEach(row => {
       row.action.editMode = editMode;
     });
-    if (this.processPriorizationRows) {
+    if (this.processPriorizationGridApi) {
       this.processPriorizationGridApi.setRowData(this.processPriorizationRows);
     }
   }
