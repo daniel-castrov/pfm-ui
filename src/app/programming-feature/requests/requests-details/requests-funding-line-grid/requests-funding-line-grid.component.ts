@@ -99,7 +99,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
     chartType: 'LineChart',
     options: {
       title: 'Funding Lines',
-      width: 1000,
+      width: 950,
       height: 350,
       chartArea: {
         width: '50%',
@@ -132,10 +132,10 @@ export class RequestsFundingLineGridComponent implements OnInit {
     chartType: 'LineChart',
     options: {
       title: 'Update History for ',
-      width: 540,
+      width: 500,
       height: 350,
       chartArea: {
-        width: '70%',
+        width: '68%',
         height: '70%',
         left: '11%'
       },
@@ -2352,7 +2352,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
       data[0].push('Update ' + (i + 1));
       for (const year of Object.keys(historyRow.funds)) {
         funds[historyRow.id][year] = funds[historyRow.id][year] ?? 0;
-        funds[historyRow.id][year] += Number(historyRow.funds[year]) ?? 0;
+        funds[historyRow.id][year] += parseInt(((historyRow.funds[year] ?? 0) / 1000).toString(), 10);
       }
     });
     for (let i = this.pomYear; i < this.pomYear + 5; i++) {
