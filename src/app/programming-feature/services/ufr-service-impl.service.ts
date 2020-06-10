@@ -31,4 +31,8 @@ export class UfrServiceImpl extends UfrService {
   getByContainerId(containerId: string): Observable<any> {
     return this.get('ufr/container/' + containerId);
   }
+
+  remove(id: string) {
+    return this.delete('ufr/' + id);
+  }
 }
