@@ -269,6 +269,23 @@ export class UfrRequestsSummaryComponent implements OnInit {
         minWidth: 130
       },
       {
+        headerName: 'Originated from UFR #',
+        field: 'origin',
+        colId: 'origin',
+        editable: false,
+        suppressMovable: true,
+        filter: false,
+        sortable: false,
+        suppressMenu: true,
+        valueGetter: ({ node }) => {
+          const ufr: UFR = node.data;
+          return ufr.originatedFrom ? ufr.originatedFrom.requestNumber : '';
+        },
+        cellClass: 'pfm-datagrid-text pfm-datagrid-text-underline pfm-datagrid-lightgreybg',
+        maxWidth: 100,
+        minWidth: 100
+      },
+      {
         headerName: 'Actions',
         field: 'action',
         editable: false,
@@ -316,6 +333,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
 
   onGridIsReady(gridApi: GridApi) {
     this.gridApi = gridApi;
+    this.gridApi.setHeaderHeight(50);
   }
 
   handleGridAdd(event: any) {
@@ -728,7 +746,9 @@ export class UfrRequestsSummaryComponent implements OnInit {
     switch (cellAction.message) {
       case 'cellClicked':
         if (cellAction.columnId === 'requestNumber') {
-          this.columnDetailClicked(cellAction.rowIndex);
+          this.columnDetailClicked(this.rows[cellAction.rowIndex].id);
+        } else if (cellAction.columnId === 'origin' && this.rows[cellAction.rowIndex].originatedFrom) {
+          this.columnDetailClicked(this.rows[cellAction.rowIndex].originatedFrom.id);
         }
         break;
       case 'delete':
@@ -741,9 +761,9 @@ export class UfrRequestsSummaryComponent implements OnInit {
     }
   }
 
-  columnDetailClicked(rowIndex: number) {
+  columnDetailClicked(ufrId: string) {
     this.router.navigate([
-      '/programming/ufr-requests/details/' + this.rows[rowIndex].id,
+      '/programming/ufr-requests/details/' + ufrId,
       {
         pomYear: this.pom.fy,
         tab: 0
