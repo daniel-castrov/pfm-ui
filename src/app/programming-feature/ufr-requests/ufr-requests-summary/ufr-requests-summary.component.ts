@@ -674,7 +674,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
               containerId: this.selectedPom.value,
               shortyType: this.selectedShortyType,
               parentId: program.id,
-              type: ProgramType.PROGRAM
+              type: this.selectedShortyType === ShortyType.NEW_FOS ? ProgramType.FOS : ProgramType.INCREMENT
             } as UFR;
             return this.ufrService.create(ufr);
           })
