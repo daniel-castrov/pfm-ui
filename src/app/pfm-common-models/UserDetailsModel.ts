@@ -6,6 +6,7 @@ import { Moment } from 'moment';
 export class UserDetailsModel {
   admin: boolean;
   cn: string;
+  cacId: string;
   communication: Communication;
   created: Date;
   createdBy: string;

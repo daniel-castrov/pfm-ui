@@ -15,4 +15,6 @@ export class UFR extends Program {
   originatedFrom?: UFR;
   milestoneImpact?: string;
   yoE?: boolean;
+
+  action?: any;
 }
