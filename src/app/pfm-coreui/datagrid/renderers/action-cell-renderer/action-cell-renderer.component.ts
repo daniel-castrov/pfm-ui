@@ -48,6 +48,14 @@ export class ActionCellRendererComponent implements OnInit {
   agInit(params) {
     this.params = params;
     this.data = params.value;
+
+    if (this.data?.hasOwnProperty('editMode')) {
+      this.data.editMode = this.data.editMode;
+    } else {
+      if (this.data) {
+        this.data['editMode'] = true;
+      }
+    }
   }
 
   ngOnInit() {

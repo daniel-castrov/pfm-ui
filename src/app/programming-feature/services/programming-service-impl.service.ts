@@ -89,4 +89,8 @@ export class ProgrammingServiceImpl extends ProgrammingService {
     }
     return res;
   }
+
+  canEditPR(id: string): Observable<any> {
+    return this.get(`program/${id}/canEdit`);
+  }
 }

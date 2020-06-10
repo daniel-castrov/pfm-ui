@@ -22,7 +22,7 @@
           (cellAction)="onCellAction($event)"
           [columns]="assetColumnsDefinition"
           [rows]="assetRows"
-          [showAddSingleRow]="true"
+          [showAddSingleRow]="true && pageEditMode"
           [showPagination]="false"
           (addCtaEvent)="onRowAdd($event)"
           (mousedown)="onMouseDown($event)"
@@ -34,7 +34,11 @@
       <div class="form-group row">
         <div class="description-container row col-12 mt-5">
           <p class="col-2">Remarks</p>
-          <textarea formControlName="remarks" class="form-control col-10"></textarea>
+          <textarea
+            formControlName="remarks"
+            [class.non-editable]="!pageEditMode"
+            class="form-control col-10"
+          ></textarea>
         </div>
       </div>
     </div>
