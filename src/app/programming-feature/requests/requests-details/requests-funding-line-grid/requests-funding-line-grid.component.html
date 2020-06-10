@@ -1,8 +1,8 @@
 <div>
-  <div class="row col-12">
-    <div class="col-8">
+  <div class="row p-0 m-0 col-12">
+    <div class="col-8 border left-chart">
       <google-chart #googleChart [data]="chartData"></google-chart>
-      <div class="row mx-auto">
+      <div class="row">
         <div class="row col-11">
           <pfm-dropdown
             #displayDropdown
@@ -71,13 +71,13 @@
           >
           </pfm-dropdown>
         </div>
-
+        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
         <button type="button" class="btn btn-primary pull-right" (click)="drawLineChart()">
           Go
         </button>
       </div>
     </div>
-    <div class="col-4 p-0" *ngIf="showHistoryGraph">
+    <div class="col-4 p-0 border right-chart" *ngIf="showHistoryGraph">
       <google-chart #historyChart [data]="historyChartData"></google-chart>
     </div>
   </div>
