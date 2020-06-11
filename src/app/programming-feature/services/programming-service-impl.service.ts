@@ -42,7 +42,8 @@ export class ProgrammingServiceImpl extends ProgrammingService {
   }
 
   findByShortNameAndContainerId(shortName: string, containerId: string) {
-    return this.get('program/name/' + shortName + '/container/' + containerId);
+    const params: HttpParams = new HttpParams().set('shortName', shortName).set('containerId', containerId);
+    return this.get('program/name-and-containerId', params);
   }
 
   getPRForYearAndShortName(year: number, shortName: string) {

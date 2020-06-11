@@ -449,7 +449,7 @@ export class RequestsSummaryComponent implements OnInit {
             type: mrdbProgram.type,
             organizationId: mrdbProgram.organizationId
           } as Program;
-          program.containerId = this.programmingModel.pom.workspaceId;
+          program.containerId = this.containerId;
           program.programStatus = ProgramStatus.SAVED;
           return program;
         })
@@ -593,7 +593,7 @@ export class RequestsSummaryComponent implements OnInit {
         longName: this.createProgramDialog.form.get(['longName']).value,
         organizationId: this.createProgramDialog.form.get(['organizationId']).value
       } as Program;
-      program.containerId = this.programmingModel.pom.workspaceId;
+      program.containerId = this.containerId;
       program.programStatus = ProgramStatus.SAVED;
       program.type = ProgramType.PROGRAM;
 
@@ -617,7 +617,7 @@ export class RequestsSummaryComponent implements OnInit {
               return throwError({ showValidationErrors: true });
             }
             return this.programmingModel.pom.status === PomStatus.CREATED
-              ? this.programmingService.findByShortNameAndContainerId(this.programmingModel.pom.id, program.shortName)
+              ? this.programmingService.findByShortNameAndContainerId(program.shortName, this.programmingModel.pom.id)
               : of({ result: null });
           }),
           switchMap((resp: any) => {

@@ -473,7 +473,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
               return throwError({ showValidationErrors: true });
             }
             return this.pom.status === PomStatus.CREATED
-              ? this.programmingService.findByShortNameAndContainerId(this.pom.id, program.shortName)
+              ? this.programmingService.findByShortNameAndContainerId(program.shortName, this.pom.id)
               : of({ result: null });
           }),
           switchMap((resp: any) => {
@@ -663,7 +663,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
               return throwError({ showValidationErrors: true });
             }
             return this.pom.status === PomStatus.CREATED
-              ? this.programmingService.findByShortNameAndContainerId(this.pom.id, shortName)
+              ? this.programmingService.findByShortNameAndContainerId(program.shortName, this.pom.id)
               : of({ result: null });
           }),
           switchMap((resp: any) => {
