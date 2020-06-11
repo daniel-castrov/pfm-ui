@@ -13,6 +13,7 @@ import { Pom } from '../models/Pom';
 import { RoleConstants } from 'src/app/pfm-common-models/role-contants.model';
 import * as moment from 'moment';
 import { Router } from '@angular/router';
+import { Workspace } from '../models/workspace';
 
 @Component({
   selector: 'pfm-programming',
@@ -46,6 +47,12 @@ export class WorkSpaceManagementComponent implements OnInit {
     },
     NO_ACTIONS: {
       canView: false,
+      canUpdate: false,
+      canDuplicate: false,
+      disabled: false
+    },
+    VIEW_ONLY: {
+      canView: true,
       canUpdate: false,
       canDuplicate: false,
       disabled: false
@@ -283,11 +290,7 @@ export class WorkSpaceManagementComponent implements OnInit {
             const currentRow = {
               ...workspace,
               action: {
-                ...(!this.appModel.userDetails.roles.includes(RoleConstants.POM_MANAGER)
-                  ? this.gridActionState.NO_ACTIONS
-                  : workspace.version === 1
-                  ? this.gridActionState.DUPLICATE_ONLY
-                  : this.gridActionState.VIEW)
+                ...this.getAction(workspace)
               },
               disabled: false
             };
@@ -355,11 +358,7 @@ export class WorkSpaceManagementComponent implements OnInit {
             newRow = {
               ...workspace,
               action: {
-                ...(!this.appModel.userDetails.roles.includes(RoleConstants.POM_MANAGER)
-                  ? this.gridActionState.NO_ACTIONS
-                  : workspace.version === 1
-                  ? this.gridActionState.DUPLICATE_ONLY
-                  : this.gridActionState.VIEW)
+                ...this.getAction(workspace)
               },
               disabled: false
             };
@@ -386,11 +385,7 @@ export class WorkSpaceManagementComponent implements OnInit {
             newRow = {
               ...workspace,
               action: {
-                ...(!this.appModel.userDetails.roles.includes(RoleConstants.POM_MANAGER)
-                  ? this.gridActionState.NO_ACTIONS
-                  : workspace.version === 1
-                  ? this.gridActionState.DUPLICATE_ONLY
-                  : this.gridActionState.VIEW)
+                ...this.getAction(workspace)
               },
               disabled: false
             };
@@ -410,6 +405,22 @@ export class WorkSpaceManagementComponent implements OnInit {
 
   viewWorkspace(params) {
     this.router.navigate(['/programming/requests/' + params['id']]);
+  }
+
+  private getAction(workspace: Workspace) {
+    if (this.appModel.userDetails.roles.includes(RoleConstants.POM_MANAGER)) {
+      if (workspace.version === 1) {
+        return this.gridActionState.DUPLICATE_ONLY;
+      } else {
+        return this.gridActionState.VIEW;
+      }
+    } else {
+      if (workspace.version === 1) {
+        return this.gridActionState.NO_ACTIONS;
+      } else {
+        return this.gridActionState.VIEW_ONLY;
+      }
+    }
   }
 
   private validateRow(row) {
