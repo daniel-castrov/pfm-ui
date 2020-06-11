@@ -616,20 +616,28 @@ export class RequestsSummaryComponent implements OnInit {
                 'The program ID entered already exists on a UFR Request "' + ufr.requestNumber + '"';
               return throwError({ showValidationErrors: true });
             }
-            return this.programmingModel.pom.status === PomStatus.CREATED
-              ? this.programmingService.findByShortNameAndContainerId(program.shortName, this.programmingModel.pom.id)
-              : of({ result: null });
+            if (this.programmingModel.pom.status === PomStatus.CREATED) {
+              return this.programmingService
+                .findByShortNameAndContainerId(program.shortName, this.programmingModel.pom.id)
+                .pipe(
+                  switchMap((resp2: any) => {
+                    const pomProgram = resp2.result as Program;
+                    if (pomProgram) {
+                      return this.organizationService.getById(pomProgram.organizationId);
+                    }
+                    return of(undefined);
+                  })
+                );
+            }
+            return of(undefined);
           }),
           switchMap((resp: any) => {
-            const pomProgram = resp.result as Program;
-            if (pomProgram) {
-              this.organizationService.getById(pomProgram.organizationId).subscribe(orgResp => {
-                this.programErrorMessage =
-                  'The program ID entered already exists on the POM in the  ' +
-                  orgResp.result.abbreviation +
-                  ' organization.';
-                return throwError({ showValidationErrors: true });
-              });
+            if (resp) {
+              this.programErrorMessage =
+                'The program ID entered already exists on the POM in the  ' +
+                resp.result.abbreviation +
+                ' organization.';
+              return throwError({ showValidationErrors: true });
             }
             return this.workspaceService.getByProgramShortName(program.shortName);
           }),
