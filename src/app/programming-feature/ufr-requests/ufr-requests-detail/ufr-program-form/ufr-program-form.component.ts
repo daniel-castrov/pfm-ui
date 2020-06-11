@@ -49,6 +49,7 @@ export class UfrProgramFormComponent implements OnInit {
   showMissionPriorityMessage: boolean;
   showParentProgram: boolean;
   parentProgramName: string;
+  editMode: boolean;
 
   constructor(
     private organizationService: OrganizationService,
@@ -81,6 +82,7 @@ export class UfrProgramFormComponent implements OnInit {
       this.addMode = true;
     }
     this.populateDropDownsAndLoadForm();
+    this.editMode = false;
   }
 
   loadForm() {
@@ -249,6 +251,7 @@ export class UfrProgramFormComponent implements OnInit {
         this.agencyPriorities = Array.from({ length: 20 }, (x, i) => i + 1);
         this.directoratePriorities = Array.from({ length: 20 }, (x, i) => i + 1);
         this.loadForm();
+        this.changeEditMode(false);
       });
   }
 
@@ -319,5 +322,66 @@ export class UfrProgramFormComponent implements OnInit {
       agencyObjectiveId: ufr.agencyObjectiveId
     });
     this.updateAgencyPriority();
+  }
+
+  changeEditMode(editMode: boolean) {
+    this.editMode = editMode;
+
+    if (this.addMode && editMode) {
+      this.form.get('longName').enable();
+      if (this.ufr.shortyType === ShortyType.NEW_PROGRAM) {
+        this.form.get('organizationId').disable();
+      } else {
+        this.form.get('organizationId').enable();
+      }
+      this.form.get('divisionId').enable();
+      this.form.get('missionPriorityId').enable();
+      this.form.get('agencyPriority').enable();
+      this.form.get('directoratePriority').enable();
+      this.form.get('secDefLOEId').enable();
+      this.form.get('strategicImperativeId').enable();
+      this.form.get('agencyObjectiveId').enable();
+      this.form.patchValue({
+        organizationId:
+          this.ufr.shortyType === ShortyType.NEW_PROGRAM
+            ? this.ufr.organizationId
+              ? this.organizations.find(org => org.id === this.ufr.organizationId).abbreviation
+              : undefined
+            : this.ufr.organizationId,
+        divisionId: this.ufr.divisionId,
+        missionPriorityId: this.ufr.missionPriorityId,
+        secDefLOEId: this.ufr.secDefLOEId,
+        strategicImperativeId: this.ufr.strategicImperativeId,
+        agencyObjectiveId: this.ufr.agencyObjectiveId
+      });
+    } else {
+      this.form.get('longName').disable();
+      this.form.get('organizationId').disable();
+      this.form.get('divisionId').disable();
+      this.form.get('missionPriorityId').disable();
+      this.form.get('agencyPriority').disable();
+      this.form.get('directoratePriority').disable();
+      this.form.get('secDefLOEId').disable();
+      this.form.get('strategicImperativeId').disable();
+      this.form.get('agencyObjectiveId').disable();
+      this.form.patchValue({
+        organizationId: this.ufr.organizationId
+          ? this.organizations.find(org => org.id === this.ufr.organizationId).abbreviation
+          : undefined,
+        divisionId: this.ufr.divisionId ? this.divisions.find(div => div.id === this.ufr.divisionId).name : undefined,
+        missionPriorityId: this.ufr.missionPriorityId
+          ? this.missionPriorities.find(m => m.id === this.ufr.missionPriorityId).title
+          : undefined,
+        secDefLOEId: this.ufr.secDefLOEId
+          ? this.secDefLOE.find(sec => sec.id === this.ufr.secDefLOEId).name
+          : undefined,
+        strategicImperativeId: this.ufr.strategicImperativeId
+          ? this.strategicImperatives.find(si => si.id === this.ufr.strategicImperativeId).name
+          : undefined,
+        agencyObjectiveId: this.ufr.agencyObjectiveId
+          ? this.agencyObjectives.find(ao => ao.id === this.ufr.agencyObjectiveId).name
+          : undefined
+      });
+    }
   }
 }

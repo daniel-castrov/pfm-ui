@@ -38,10 +38,10 @@
           </div>
           <div class="row">
             <label class="col-2">Division</label>
-            <div *ngIf="!addMode">
+            <div *ngIf="!addMode || !editMode">
               <span class="col-10"><input type="text" formControlName="divisionId" /></span>
             </div>
-            <span class="col-10" *ngIf="addMode">
+            <span class="col-10" *ngIf="addMode && editMode">
               <select class="form-control-sm" formControlName="divisionId">
                 <option [ngValue]="null" disabled>Select</option>
                 <option [ngValue]="option.id" *ngFor="let option of divisions">{{ option.name }}</option>
@@ -58,10 +58,10 @@
           <legend>Priorities</legend>
           <div class="row" *ngIf="showMissionPriority">
             <label class="col-2">*Mission Priority</label>
-            <div *ngIf="!addMode && !showMissionPriorityMessage">
+            <div *ngIf="!addMode && !showMissionPriorityMessage && !editMode">
               <span class="col-10"><input type="text" formControlName="missionPriorityId" /></span>
             </div>
-            <span class="col-10" *ngIf="!addMode">
+            <span class="col-10" *ngIf="!addMode && editMode">
               <ng-container *ngIf="!showMissionPriorityMessage">
                 <select
                   class="form-control-sm"
@@ -81,10 +81,10 @@
           </div>
           <div class="row">
             <label class="col-2">Agency Priority</label>
-            <div *ngIf="!addMode">
+            <div *ngIf="!addMode || !editMode">
               <span class="col-10"><input type="text" formControlName="agencyPriority" /></span>
             </div>
-            <span class="col-10" *ngIf="addMode">
+            <span class="col-10" *ngIf="addMode && editMode">
               <select class="form-control-sm" formControlName="agencyPriority">
                 <option [ngValue]="null" disabled>Select</option>
                 <option [ngValue]="item" *ngFor="let item of agencyPriorities">{{ item }}</option>
@@ -93,10 +93,10 @@
           </div>
           <div class="row">
             <label class="col-2">Directorate Priority</label>
-            <div *ngIf="!addMode">
+            <div *ngIf="!addMode || !editMode">
               <span class="col-10"><input type="text" formControlName="directoratePriority" /></span>
             </div>
-            <span class="col-10" *ngIf="addMode">
+            <span class="col-10" *ngIf="addMode && editMode">
               <select class="form-control-sm" formControlName="directoratePriority">
                 <option [ngValue]="null" disabled>Select</option>
                 <option [ngValue]="item" *ngFor="let item of directoratePriorities">{{ item }}</option>
@@ -109,10 +109,10 @@
           <legend>Strategic Alignment</legend>
           <div class="row">
             <label class="col-2 my-auto mx-0">SecDef LOE</label>
-            <div *ngIf="!addMode">
+            <div *ngIf="!addMode || !editMode">
               <span class="col-10"><input type="text" formControlName="secDefLOEId" /></span>
             </div>
-            <span class="col-10" *ngIf="addMode">
+            <span class="col-10" *ngIf="addMode && editMode">
               <select class="form-control-sm" formControlName="secDefLOEId">
                 <option [ngValue]="null" disabled>Select</option>
                 <option [ngValue]="option.id" *ngFor="let option of secDefLOE">{{ option.name }}</option>
@@ -121,10 +121,10 @@
           </div>
           <div class="row">
             <label class="col-2 my-auto mx-0">Strategic Imperative</label>
-            <div *ngIf="!addMode">
+            <div *ngIf="!addMode || !editMode">
               <span class="col-10"><input type="text" formControlName="strategicImperativeId" /></span>
             </div>
-            <span class="col-10" *ngIf="addMode">
+            <span class="col-10" *ngIf="addMode && editMode">
               <select class="form-control-sm" formControlName="strategicImperativeId">
                 <option [ngValue]="null" disabled>Select</option>
                 <option [ngValue]="option.id" *ngFor="let option of strategicImperatives">{{ option.name }}</option>
@@ -133,10 +133,10 @@
           </div>
           <div class="row">
             <label class="col-2 my-auto mx-0">Agency Objective</label>
-            <div *ngIf="!addMode">
+            <div *ngIf="!addMode || !editMode">
               <span class="col-10"><input type="text" formControlName="agencyObjectiveId" /></span>
             </div>
-            <span class="col-10" *ngIf="addMode">
+            <span class="col-10" *ngIf="addMode && editMode">
               <select class="form-control-sm" formControlName="agencyObjectiveId">
                 <option [ngValue]="null" disabled>Select</option>
                 <option [ngValue]="option.id" *ngFor="let option of agencyObjectives">{{ option.name }}</option>
@@ -158,6 +158,7 @@
     <fieldset class="match-height">
       <legend>Attach File</legend>
       <file-upload
+        [disabled]="!editMode"
         [isImageThumbnail]="true"
         [area]="fileArea"
         [imagePath]="imagePath"

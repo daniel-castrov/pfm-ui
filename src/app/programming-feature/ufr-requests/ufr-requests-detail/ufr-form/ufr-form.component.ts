@@ -16,11 +16,14 @@ export class UfrFormComponent implements OnInit {
   readonly DEFAULT_DISPOSITION = 'No entry yet.  Will be added when disposition is set.';
 
   form: FormGroup;
+  editMode: boolean;
 
   constructor(private titlecasePipe: TitleCasePipe) {}
 
   ngOnInit(): void {
     this.loadForm();
+    this.editMode = false;
+    this.changeEditMode(this.editMode);
   }
 
   loadForm() {
@@ -111,6 +114,16 @@ export class UfrFormComponent implements OnInit {
       }
       default:
         return '';
+    }
+  }
+  changeEditMode(editMode: boolean) {
+    this.editMode = editMode;
+    if (editMode) {
+      this.form.get('ufrName').enable();
+      this.form.get('notes').enable();
+    } else {
+      this.form.get('ufrName').disable();
+      this.form.get('notes').disable();
     }
   }
 }

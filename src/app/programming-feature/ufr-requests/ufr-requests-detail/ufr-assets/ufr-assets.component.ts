@@ -39,14 +39,16 @@ export class UfrAssetsComponent implements OnInit {
       canEdit: true,
       canDelete: true,
       canUpload: false,
-      isSingleDelete: true
+      isSingleDelete: true,
+      editMode: false
     },
     EDIT: {
       canEdit: false,
       canSave: true,
       canDelete: true,
       canUpload: false,
-      isSingleDelete: true
+      isSingleDelete: true,
+      editMode: false
     }
   };
 
@@ -68,6 +70,7 @@ export class UfrAssetsComponent implements OnInit {
   deleteDialog: DeleteDialogInterface = { title: 'Delete' };
 
   style: CSSStyleSheet;
+  pageEditMode: boolean;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -85,6 +88,8 @@ export class UfrAssetsComponent implements OnInit {
     }
     this.loadForm();
     this.setupGrid();
+    this.pageEditMode = false;
+    this.changePageEditMode(false);
   }
 
   private async setupGrid() {
@@ -838,6 +843,24 @@ export class UfrAssetsComponent implements OnInit {
   resetStyle() {
     if (this.style && this.style.rules.length) {
       this.style.removeRule(0);
+    }
+  }
+
+  changePageEditMode(editMode: boolean) {
+    this.pageEditMode = editMode;
+    this.actionState.EDIT.editMode = editMode;
+    this.actionState.VIEW.editMode = editMode;
+
+    if (editMode) {
+      this.form.get('remarks').enable();
+    } else {
+      this.form.get('remarks').disable();
+    }
+    if (this.assetGridApi) {
+      this.assetSummaryRows.forEach(row => {
+        row.action = editMode;
+      });
+      this.assetGridApi.setRowData(this.assetSummaryRows);
     }
   }
 }
