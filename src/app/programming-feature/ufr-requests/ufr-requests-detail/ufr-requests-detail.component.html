@@ -62,7 +62,9 @@
     class="w-100 h-100"
     (selectTab)="onSelectTab($event)"
   >
-    <div class="section-tab"><pfm-ufr-justification #ufrJustification [ufr]="ufr"></pfm-ufr-justification></div>
+    <div class="section-tab">
+      <pfm-ufr-justification #ufrJustification [ufr]="ufr" [pomYear]="pomYear"></pfm-ufr-justification>
+    </div>
   </tab>
 </tabset>
 <pfm-busy [busy]="busy"></pfm-busy>
