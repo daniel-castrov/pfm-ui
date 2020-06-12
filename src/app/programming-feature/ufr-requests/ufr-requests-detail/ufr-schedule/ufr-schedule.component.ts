@@ -117,7 +117,7 @@ export class UfrScheduleComponent implements OnInit {
     this.fundingGridAssociations = [];
     this.scheduleGridRows = [];
     this.fundingLineService
-      .obtainFundingLinesByProgramId(this.ufr.id)
+      .obtainFundingLinesByContainerId(this.ufr.id)
       .pipe(
         map(resp => {
           const fundingLines = resp.result as FundingLine[];

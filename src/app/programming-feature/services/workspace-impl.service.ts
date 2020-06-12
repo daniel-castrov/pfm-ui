@@ -19,6 +19,10 @@ export class WorkspaceServiceImpl extends WorkspaceService {
     return this.get('workspaces/container/' + containerId + '?active=' + active);
   }
 
+  getByContainerIdAndVersion(containerId: string, version: number): Observable<object> {
+    return this.get('workspaces/container/' + containerId + '/version/' + version);
+  }
+
   duplicate(workspace: any): Observable<object> {
     return this.put('workspaces/duplicate', workspace);
   }

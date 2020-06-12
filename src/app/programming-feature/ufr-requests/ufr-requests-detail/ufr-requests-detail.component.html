@@ -43,7 +43,9 @@
     </div>
   </tab>
   <tab heading="Funds" [active]="currentSelectedTab === 2" class="w-100 h-100" (selectTab)="onSelectTab($event)">
-    <div class="section-tab"></div>
+    <div class="section-tab">
+      <pfm-ufr-funds #ufrFunds [ufr]="ufr" [pomYear]="pomYear"></pfm-ufr-funds>
+    </div>
   </tab>
   <tab heading="Schedule" [active]="currentSelectedTab === 3" class="w-100 h-100" (selectTab)="onSelectTab($event)">
     <div class="section-tab"><pfm-ufr-schedule #ufrSchedule [ufr]="ufr" [pomYear]="pomYear"></pfm-ufr-schedule></div>

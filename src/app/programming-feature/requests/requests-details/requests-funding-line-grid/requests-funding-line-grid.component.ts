@@ -413,7 +413,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
 
   private loadDataFromProgram() {
     this.fundingLineService
-      .obtainFundingLinesByProgramId(this.program.id)
+      .obtainFundingLinesByContainerId(this.program.id)
       .pipe(map(resp => this.convertFundsToFiscalYear(resp)))
       .subscribe(resp => {
         const fundingLines = resp as FundingData[];
@@ -1018,7 +1018,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
   private prepareNonSummarySave(rowIndex: number) {
     const row = this.nonSummaryFundingLineRows[rowIndex];
     const fundingLine = this.convertFiscalYearToFunds(row);
-    fundingLine.programId = this.program.id;
+    fundingLine.containerId = this.program.id;
     if (this.currentNonSummaryRowDataState.isAddMode) {
       this.performNonSummarySave(
         this.fundingLineService.createFundingLine.bind(this.fundingLineService),
