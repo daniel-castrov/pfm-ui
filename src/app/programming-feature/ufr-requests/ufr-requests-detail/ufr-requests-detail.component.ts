@@ -11,7 +11,7 @@ import { UFRStatus } from '../../models/enumerations/ufr-status.model';
 import { ShortyType } from '../../models/enumerations/shorty-type.model';
 import { UfrService } from '../../services/ufr-service';
 import { catchError, switchMap } from 'rxjs/operators';
-import { throwError } from 'rxjs';
+import { throwError, NEVER, EMPTY } from 'rxjs';
 import { RequestSummaryNavigationHistoryService } from '../../requests/requests-summary/requests-summary-navigation-history.service';
 import { UfrScheduleComponent } from './ufr-schedule/ufr-schedule.component';
 import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
@@ -91,6 +91,13 @@ export class UfrRequestsDetailComponent implements OnInit {
     this.selectUfrId = this.route.snapshot.paramMap.get('id');
     this.loadDispositionTypes();
     const openTab = Number(this.route.snapshot.paramMap.get('tab') ?? 1);
+
+    this.loadUfrData();
+    this.setupVisibility();
+    this.currentSelectedTab = openTab < 0 || openTab > 6 ? 1 : openTab;
+  }
+
+  private loadUfrData() {
     this.ufrService
       .getById(this.selectUfrId)
       .pipe(
@@ -138,9 +145,6 @@ export class UfrRequestsDetailComponent implements OnInit {
           }
         }
       );
-
-    this.setupVisibility();
-    this.currentSelectedTab = openTab < 0 || openTab > 6 ? 1 : openTab;
   }
 
   private loadDispositionTypes() {
@@ -159,9 +163,9 @@ export class UfrRequestsDetailComponent implements OnInit {
   }
 
   onSave() {
-    let savingUfr = this.ufr;
     const canSave = this.hasNoEditingGrids(true);
     if (canSave) {
+      let savingUfr = this.ufr;
       savingUfr = this.getFromUfrForm(savingUfr);
       savingUfr = this.getFromProgramForm(savingUfr);
       savingUfr = this.getFromScopeForm(savingUfr);
@@ -171,10 +175,100 @@ export class UfrRequestsDetailComponent implements OnInit {
         savingUfr.id ? this.ufrService.update.bind(this.ufrService) : this.ufrService.create.bind(this.ufrService),
         savingUfr
       );
+      return true;
+    }
+    return false;
+  }
+
+  onSubmit() {
+    const canSave = this.hasNoEditingGrids(true);
+    if (canSave) {
+      let savingUfr = this.ufr;
+      savingUfr = this.getFromUfrForm(savingUfr);
+      savingUfr = this.getFromProgramForm(savingUfr);
+      savingUfr = this.getFromScopeForm(savingUfr);
+      savingUfr = this.getFromAssets(savingUfr);
+      savingUfr = this.getFromJustificationForm(savingUfr);
+      this.busy = true;
+      this.ufrService
+        .update(savingUfr)
+        .pipe(
+          switchMap(resp => {
+            const savedUfr = resp.result as UFR;
+            if (this.validateFields(false)) {
+              return this.ufrService.submit(this.ufr.id);
+            }
+            return EMPTY;
+          })
+        )
+        .subscribe(resp => {
+          this.ufr = resp.result as UFR;
+          this.loadUfrData();
+          this.toastService.displaySuccess('UFR successfully submitted.');
+        })
+        .add(() => (this.busy = false));
     }
   }
 
-  onSubmit() {}
+  private validateFields(showSucessfulMessage: boolean): boolean {
+    let passedValidation = true;
+    let ufr = { ...this.ufr };
+    if (this.ufrForm) {
+      ufr = this.getFromUfrForm(ufr);
+      if (!ufr.ufrName) {
+        passedValidation = false;
+        this.toastService.displayError('UFR Name field must not be empty.', 'UFR');
+      }
+      if (!ufr.notes) {
+        passedValidation = false;
+        this.toastService.displayError('Description field must not be empty.', 'UFR');
+      }
+    }
+    if (this.ufrProgramForm) {
+      ufr = this.getFromProgramForm(ufr);
+      if (!ufr.shortName) {
+        passedValidation = false;
+        this.toastService.displayError('Program ID field must not be empty.', 'Program');
+      }
+      if (!ufr.longName) {
+        passedValidation = false;
+        this.toastService.displayError('Program Name field must not be empty.', 'Program');
+      }
+      if (!ufr.type) {
+        passedValidation = false;
+        this.toastService.displayError('Program Type field must not be empty.', 'Program');
+      }
+      if (!ufr.organizationId) {
+        passedValidation = false;
+        this.toastService.displayError('Organization field must not be empty.', 'Program');
+      }
+      if (this.ufrProgramForm.showMissionPriority && !this.ufrProgramForm.showMissionPriorityMessage) {
+        if (!ufr.missionPriorityId) {
+          passedValidation = false;
+          this.toastService.displayError('Mission Priority field must not be empty.', 'Program');
+        }
+      }
+    }
+    if (this.ufrJustification) {
+      ufr = this.getFromJustificationForm(ufr);
+      if (!ufr.justification) {
+        passedValidation = false;
+        this.toastService.displayError('Description of Change field must not be empty.', 'Justification');
+      }
+      if (!ufr.impactN) {
+        passedValidation = false;
+        this.toastService.displayError('Impact if not funded field must not be empty.', 'Justification');
+      }
+      if (!ufr.milestoneImpact) {
+        passedValidation = false;
+        this.toastService.displayError('Milestone Impact field must not be empty.', 'Justification');
+      }
+    }
+    if (passedValidation && showSucessfulMessage) {
+      this.toastService.displaySuccess('All validations passed.');
+    }
+    return passedValidation;
+  }
 
   showDispositionDlg() {
     this.setDispositionDlg.form.patchValue({
