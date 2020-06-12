@@ -2,7 +2,7 @@ import { FundingLineHistory } from './funding-line-history.model';
 
 export class FundingData {
   id?: string;
-  programId?: string;
+  containerId?: string;
   appropriation: string;
   baOrBlin?: string;
   sag?: string;

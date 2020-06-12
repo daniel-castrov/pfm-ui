@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { WorkspaceService } from './workspace.service';
 
@@ -19,6 +19,10 @@ export class WorkspaceServiceImpl extends WorkspaceService {
     return this.get('workspaces/container/' + containerId + '?active=' + active);
   }
 
+  getByContainerIdAndVersion(containerId: string, version: number): Observable<object> {
+    return this.get('workspaces/container/' + containerId + '/version/' + version);
+  }
+
   duplicate(workspace: any): Observable<object> {
     return this.put('workspaces/duplicate', workspace);
   }
@@ -28,6 +32,7 @@ export class WorkspaceServiceImpl extends WorkspaceService {
   }
 
   getByProgramShortName(shortName: string) {
-    return this.get('workspaces/program-short-name/' + shortName);
+    const params: HttpParams = new HttpParams().set('shortName', shortName);
+    return this.get('workspaces/program-short-name/', params);
   }
 }

@@ -26,7 +26,7 @@ export class DatagridComponent implements OnInit {
   @Input() suppressKeyboardEvent = true;
   @Input() rowDragManaged = true;
   @Input() pinnedTopRowData = [];
-  @Input() overlayNoRowsTemplate;
+  @Input() overlayNoRowsTemplate: string;
   @Input() isMasterDetail = false;
   @Input() detailCellRendererParams = null;
   @Input() disableAddRow: boolean;
@@ -125,6 +125,9 @@ export class DatagridComponent implements OnInit {
 
   onGridSizeChanged() {
     this.api.sizeColumnsToFit();
+    if (this.api.getPinnedTopRow(0)) {
+      this.api.hideOverlay();
+    }
   }
 
   ngOnInit() {

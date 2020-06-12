@@ -174,7 +174,7 @@ export class UfrAssetsComponent implements OnInit {
 
   async getFundingLineOptions() {
     await this.fundingLineService
-      .obtainFundingLinesByProgramId(this.ufr.id)
+      .obtainFundingLinesByContainerId(this.ufr.id)
       .pipe(
         map(resp => {
           this.form.controls.fundingLineSelect.disable();

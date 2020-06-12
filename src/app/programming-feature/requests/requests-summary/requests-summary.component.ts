@@ -449,7 +449,7 @@ export class RequestsSummaryComponent implements OnInit {
             type: mrdbProgram.type,
             organizationId: mrdbProgram.organizationId
           } as Program;
-          program.containerId = this.programmingModel.pom.workspaceId;
+          program.containerId = this.containerId;
           program.programStatus = ProgramStatus.SAVED;
           return program;
         })
@@ -593,7 +593,7 @@ export class RequestsSummaryComponent implements OnInit {
         longName: this.createProgramDialog.form.get(['longName']).value,
         organizationId: this.createProgramDialog.form.get(['organizationId']).value
       } as Program;
-      program.containerId = this.programmingModel.pom.workspaceId;
+      program.containerId = this.containerId;
       program.programStatus = ProgramStatus.SAVED;
       program.type = ProgramType.PROGRAM;
 
@@ -616,20 +616,28 @@ export class RequestsSummaryComponent implements OnInit {
                 'The program ID entered already exists on a UFR Request "' + ufr.requestNumber + '"';
               return throwError({ showValidationErrors: true });
             }
-            return this.programmingModel.pom.status === PomStatus.CREATED
-              ? this.programmingService.findByShortNameAndContainerId(this.programmingModel.pom.id, program.shortName)
-              : of({ result: null });
+            if (this.programmingModel.pom.status === PomStatus.CREATED) {
+              return this.programmingService
+                .findByShortNameAndContainerId(program.shortName, this.programmingModel.pom.id)
+                .pipe(
+                  switchMap((resp2: any) => {
+                    const pomProgram = resp2.result as Program;
+                    if (pomProgram) {
+                      return this.organizationService.getById(pomProgram.organizationId);
+                    }
+                    return of(undefined);
+                  })
+                );
+            }
+            return of(undefined);
           }),
           switchMap((resp: any) => {
-            const pomProgram = resp.result as Program;
-            if (pomProgram) {
-              this.organizationService.getById(pomProgram.organizationId).subscribe(orgResp => {
-                this.programErrorMessage =
-                  'The program ID entered already exists on the POM in the  ' +
-                  orgResp.result.abbreviation +
-                  ' organization.';
-                return throwError({ showValidationErrors: true });
-              });
+            if (resp) {
+              this.programErrorMessage =
+                'The program ID entered already exists on the POM in the  ' +
+                resp.result.abbreviation +
+                ' organization.';
+              return throwError({ showValidationErrors: true });
             }
             return this.workspaceService.getByProgramShortName(program.shortName);
           }),

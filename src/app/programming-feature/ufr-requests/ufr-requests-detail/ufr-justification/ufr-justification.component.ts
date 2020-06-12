@@ -23,9 +23,9 @@ export class UfrJustificationComponent implements OnInit {
 
   loadForm() {
     this.form = new FormGroup({
-      justification: new FormControl('', Validators.required),
-      impactN: new FormControl('', Validators.required),
-      milestoneImpact: new FormControl('', Validators.required)
+      justification: new FormControl(this.ufr.justification ?? '', Validators.required),
+      impactN: new FormControl(this.ufr.impactN ?? '', Validators.required),
+      milestoneImpact: new FormControl(this.ufr.milestoneImpact ?? '', Validators.required)
     });
   }
 

@@ -13,7 +13,8 @@ export class UfrServiceImpl extends UfrService {
   }
 
   getByProgramShortName(shortName: string): Observable<object> {
-    return this.get('ufr/program/short-name/' + shortName);
+    const params: HttpParams = new HttpParams().set('shortName', shortName);
+    return this.get('ufr/program/short-name', params);
   }
 
   getById(id: string): Observable<object> {
@@ -34,5 +35,9 @@ export class UfrServiceImpl extends UfrService {
 
   remove(id: string) {
     return this.delete('ufr/' + id);
+  }
+
+  submit(id: string) {
+    return this.put('ufr/submit', id);
   }
 }

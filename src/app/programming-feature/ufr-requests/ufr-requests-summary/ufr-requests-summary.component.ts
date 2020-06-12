@@ -28,6 +28,7 @@ import { ProgramType } from '../../models/enumerations/program-type.model';
 import { RequestSummaryNavigationHistoryService } from '../../requests/requests-summary/requests-summary-navigation-history.service';
 import { VisibilityService } from 'src/app/services/visibility-service';
 import { UFRStatus } from '../../models/enumerations/ufr-status.model';
+import { FundingLine } from '../../models/funding-line.model';
 
 @Component({
   selector: 'pfm-ufr-requests-summary',
@@ -472,20 +473,26 @@ export class UfrRequestsSummaryComponent implements OnInit {
                 'The program ID entered already exists on a UFR Request "' + ufr.requestNumber + '"';
               return throwError({ showValidationErrors: true });
             }
-            return this.pom.status === PomStatus.CREATED
-              ? this.programmingService.findByShortNameAndContainerId(this.pom.id, program.shortName)
-              : of({ result: null });
+            if (this.pom.status === PomStatus.CREATED) {
+              return this.programmingService.findByShortNameAndContainerId(program.shortName, this.pom.id).pipe(
+                switchMap((resp2: any) => {
+                  const pomProgram = resp2.result as Program;
+                  if (pomProgram) {
+                    return this.organizationService.getById(pomProgram.organizationId);
+                  }
+                  return of(undefined);
+                })
+              );
+            }
+            return of(undefined);
           }),
           switchMap((resp: any) => {
-            const pomProgram = resp.result as Program;
-            if (pomProgram) {
-              this.organizationService.getById(pomProgram.organizationId).subscribe(orgResp => {
-                this.shortNameErrorMessage =
-                  'The program ID entered already exists on the POM in the  ' +
-                  orgResp.result.abbreviation +
-                  ' organization.';
-                return throwError({ showValidationErrors: true });
-              });
+            if (resp) {
+              this.shortNameErrorMessage =
+                'The program ID entered already exists on the POM in the  ' +
+                resp.result.abbreviation +
+                ' organization.';
+              return throwError({ showValidationErrors: true });
             }
             return this.workspaceService.getByProgramShortName(program.shortName);
           }),
@@ -577,6 +584,25 @@ export class UfrRequestsSummaryComponent implements OnInit {
               shortyType: this.selectedShortyType,
               type: ProgramType.PROGRAM
             } as UFR;
+            if (this.selectedShortyType === ShortyType.PR) {
+              ufr.proposedFundingLines = [];
+              validateProgram.fundingLines.forEach(fundingLine => {
+                const proposedFundingLine: FundingLine = {};
+                proposedFundingLine.appropriation = fundingLine.appropriation;
+                proposedFundingLine.baOrBlin = fundingLine.baOrBlin;
+                proposedFundingLine.sag = fundingLine.sag;
+                proposedFundingLine.wucd = fundingLine.wucd;
+                proposedFundingLine.expenditureType = fundingLine.expenditureType;
+                proposedFundingLine.ctc = fundingLine.ctc;
+                proposedFundingLine.userCreated = fundingLine.userCreated;
+                const funds: { [key: string]: number } = {};
+                for (let i = this.pom.fy; i < this.pom.fy + 5; i++) {
+                  funds[i] = 0;
+                }
+                proposedFundingLine.funds = funds;
+                ufr.proposedFundingLines.push(proposedFundingLine);
+              });
+            }
             return this.ufrService.getByProgramShortName(ufr.shortName);
           }),
           switchMap((resp: any) => {
@@ -662,20 +688,26 @@ export class UfrRequestsSummaryComponent implements OnInit {
                 'The program ID entered already exists on a UFR Request "' + ufr.requestNumber + '"';
               return throwError({ showValidationErrors: true });
             }
-            return this.pom.status === PomStatus.CREATED
-              ? this.programmingService.findByShortNameAndContainerId(this.pom.id, shortName)
-              : of({ result: null });
+            if (this.pom.status === PomStatus.CREATED) {
+              return this.programmingService.findByShortNameAndContainerId(shortName, this.pom.id).pipe(
+                switchMap((resp2: any) => {
+                  const pomProgram = resp2.result as Program;
+                  if (pomProgram) {
+                    return this.organizationService.getById(pomProgram.organizationId);
+                  }
+                  return of(undefined);
+                })
+              );
+            }
+            return of(undefined);
           }),
           switchMap((resp: any) => {
-            const pomProgram = resp.result as Program;
-            if (pomProgram) {
-              this.organizationService.getById(pomProgram.organizationId).subscribe(orgResp => {
-                this.shortNameErrorMessage =
-                  'The program ID entered already exists on the POM in the  ' +
-                  orgResp.result.abbreviation +
-                  ' organization.';
-                return throwError({ showValidationErrors: true });
-              });
+            if (resp) {
+              this.shortNameErrorMessage =
+                'The program ID entered already exists on the POM in the  ' +
+                resp.result.abbreviation +
+                ' organization.';
+              return throwError({ showValidationErrors: true });
             }
             return this.workspaceService.getByProgramShortName(shortName);
           }),
