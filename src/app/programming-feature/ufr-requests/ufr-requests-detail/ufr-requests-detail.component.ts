@@ -23,8 +23,6 @@ import { UfrJustificationComponent } from './ufr-justification/ufr-justification
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { PropertyService } from '../../services/property.service';
 import { PropertyType } from '../../models/enumerations/property-type.model';
-import { RestResponse } from '../../../util/rest-response';
-import { Property } from '../../models/property.model';
 import { DispositionType } from '../../models/disposition-type.model';
 import { UfrFundsComponent } from './ufr-funds/ufr-funds.component';
 
@@ -146,12 +144,11 @@ export class UfrRequestsDetailComponent implements OnInit {
   }
 
   private loadDispositionTypes() {
-    this.propertyService
-      .getByType(PropertyType.DISPOSITION_TYPE)
-      .subscribe((res: RestResponse<Property<DispositionType>[]>) => {
-        this.dispositionTypes = res.result.map(x => x.value).filter(x => x.phaseType === 'POM');
-      });
+    this.propertyService.getByType(PropertyType.DISPOSITION_TYPE).subscribe((res: any) => {
+      this.dispositionTypes = res.properties.map(x => x.value).filter(x => x.phaseType === 'POM');
+    });
   }
+
   setupVisibility() {
     this.visibilityService
       .isCurrentlyVisible('ufr-requests-detail-component')
