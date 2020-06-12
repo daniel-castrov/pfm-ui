@@ -279,30 +279,24 @@ export class RequestsFundingLineGridComponent implements OnInit {
   }
 
   private loadDropDownValues() {
-    this.propertyService
-      .getByType(PropertyType.APPROPRIATION)
-      .subscribe((res: RestResponse<Property<Appropriation>[]>) => {
-        this.appnOptions = res.result.map(x => x.value).map(x => x.appropriation);
-      });
-
-    this.propertyService.getByType(PropertyType.BA_BLIN).subscribe((res: RestResponse<Property<BaBlin>[]>) => {
-      this.allBaBlins = res.result.map(x => x.value);
+    this.propertyService.getByType(PropertyType.APPROPRIATION).subscribe((res: any) => {
+      this.appnOptions = res.properties.map(x => x.value).map(x => x.appropriation);
     });
 
-    this.propertyService.getByType(PropertyType.SAG).subscribe((res: RestResponse<Property<SAG>[]>) => {
-      this.sagOptions = res.result.map(x => x.value).map(x => x.sag);
+    this.propertyService.getByType(PropertyType.BA_BLIN).subscribe((res: any) => {
+      this.allBaBlins = res.properties.map(x => x.value);
     });
-    this.propertyService
-      .getByType(PropertyType.WORK_UNIT_CODE)
-      .subscribe((res: RestResponse<Property<WorkUnitCode>[]>) => {
-        this.wucdOptions = res.result.map(x => x.value).map(x => x.workUnitCode);
-      });
 
-    this.propertyService
-      .getByType(PropertyType.EXPENDITURE_TYPE)
-      .subscribe((res: RestResponse<Property<ExpenditureType>[]>) => {
-        this.expTypeOptions = res.result.map(x => x.value).map(x => x.code);
-      });
+    this.propertyService.getByType(PropertyType.SAG).subscribe((res: any) => {
+      this.sagOptions = res.properties.map(x => x.value).map(x => x.sag);
+    });
+    this.propertyService.getByType(PropertyType.WORK_UNIT_CODE).subscribe((res: any) => {
+      this.wucdOptions = res.properties.map(x => x.value).map(x => x.workUnitCode);
+    });
+
+    this.propertyService.getByType(PropertyType.EXPENDITURE_TYPE).subscribe((res: any) => {
+      this.expTypeOptions = res.properties.map(x => x.value).map(x => x.code);
+    });
 
     this.displayDropdownOptions = [
       {
