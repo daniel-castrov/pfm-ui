@@ -588,7 +588,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
                 proposedFundingLine.wucd = fundingLine.wucd;
                 proposedFundingLine.expenditureType = fundingLine.expenditureType;
                 proposedFundingLine.ctc = fundingLine.ctc;
-                proposedFundingLine.userCreated = false;
+                proposedFundingLine.userCreated = fundingLine.userCreated;
                 const funds: { [key: string]: number } = {};
                 for (let i = this.pom.fy; i < this.pom.fy + 5; i++) {
                   funds[i] = 0;
