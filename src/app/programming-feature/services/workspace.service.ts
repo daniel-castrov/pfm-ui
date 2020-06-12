@@ -9,6 +9,8 @@ export abstract class WorkspaceService extends BaseRestService {
 
   abstract getByContainerId(containerId: string): Observable<object>;
 
+  abstract getByContainerIdAndVersion(containerId: string, version: number): Observable<object>;
+
   abstract getByContainerIdAndActive(containerId: string, active: boolean): Observable<object>;
 
   abstract duplicate(workspace: any): Observable<object>;

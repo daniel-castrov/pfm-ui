@@ -174,7 +174,7 @@ export class AssetsComponent implements OnInit {
 
   async getFundingLineOptions() {
     await this.fundingLineService
-      .obtainFundingLinesByProgramId(this.program.id)
+      .obtainFundingLinesByContainerId(this.program.id)
       .pipe(
         map(resp => {
           this.form.controls.fundingLineSelect.disable();

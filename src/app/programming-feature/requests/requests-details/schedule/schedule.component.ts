@@ -122,7 +122,7 @@ export class ScheduleComponent implements OnInit {
     this.fundingGridAssociations = [];
     this.scheduleGridRows = [];
     this.fundingLineService
-      .obtainFundingLinesByProgramId(this.program.id)
+      .obtainFundingLinesByContainerId(this.program.id)
       .pipe(
         map(resp => {
           const fundingLines = resp.result as FundingLine[];

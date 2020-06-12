@@ -11,7 +11,7 @@ export class FundingLine {
   emphases?: Array<string>;
 
   id?: string;
-  programId?: string;
+  containerId?: string;
   appropriation?: string;
   baOrBlin?: string;
   sag?: string;

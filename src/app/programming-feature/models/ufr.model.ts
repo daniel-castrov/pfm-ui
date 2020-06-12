@@ -2,6 +2,7 @@ import { UFRStatus } from './enumerations/ufr-status.model';
 import { ShortyType } from './enumerations/shorty-type.model';
 import { Disposition } from './enumerations/disposition.model';
 import { Program } from './Program';
+import { FundingLine } from './funding-line.model';
 
 export class UFR extends Program {
   id: string;
@@ -15,6 +16,9 @@ export class UFR extends Program {
   originatedFrom?: UFR;
   milestoneImpact?: string;
   yoE?: boolean;
+  proposedFundingLines?: Array<FundingLine>;
+  totalRevisedFundingLines?: Array<FundingLine>;
+  approvedFundingLines?: Array<FundingLine>;
 
   action?: any;
 }
