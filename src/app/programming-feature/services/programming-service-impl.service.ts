@@ -41,7 +41,7 @@ export class ProgrammingServiceImpl extends ProgrammingService {
     return this.get('program/permittedOrganizations');
   }
 
-  findByShortNameAndContainerId(shortName: string, containerId: string) {
+  findByShortNameAndContainerId(containerId: string, shortName: string) {
     const params: HttpParams = new HttpParams().set('shortName', shortName).set('containerId', containerId);
     return this.get('program/name-and-containerId', params);
   }
