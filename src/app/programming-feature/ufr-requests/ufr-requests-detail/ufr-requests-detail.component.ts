@@ -294,6 +294,7 @@ export class UfrRequestsDetailComponent implements OnInit {
         this.currentSelectedTab = 1;
         break;
       case 'funds':
+        setTimeout(() => this.ufrFunds.drawLineChart(true), 0);
         this.currentSelectedTab = 2;
         break;
       case 'schedule':

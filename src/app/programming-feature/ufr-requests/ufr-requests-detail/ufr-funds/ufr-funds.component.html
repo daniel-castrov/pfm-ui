@@ -1,6 +1,6 @@
 <div>
   <div class="row col-12">
-    <div class="col-12">
+    <div class="col-12" *ngIf="forceDrawReload">
       <google-chart #googleChart [data]="chartData"></google-chart>
     </div>
   </div>
