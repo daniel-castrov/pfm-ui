@@ -1580,34 +1580,11 @@ export class UfrFundsComponent implements OnInit {
     this.actionState.VIEW.editMode = editMode;
     this.actionState.VIEW_NO_DELETE.editMode = editMode;
 
-    if (this.currentFundingLineGridApi) {
-      this.currentFundingLineRows.forEach((row, index) => {
-        row.action.editMode = editMode;
-      });
-
-      this.currentFundingLineGridApi.setRowData(this.currentFundingLineRows);
-    }
-
-    if (this.approvedFundingLineGridApi) {
-      this.approvedFundingLineRows.forEach((row, index) => {
-        row.action.editMode = editMode;
-      });
-
-      this.approvedFundingLineGridApi.setRowData(this.approvedFundingLineRows);
-    }
-
     if (this.proposedFundingLineGridApi) {
-      this.totalRevisedFundingLineRows.forEach((row, index) => {
+      this.proposedFundingLineRows.forEach((row, index) => {
         row.action.editMode = editMode;
       });
-      this.proposedFundingLineGridApi.setRowData(this.totalRevisedFundingLineRows);
-    }
-
-    if (this.approvedFundingLineGridApi) {
-      this.approvedFundingLineRows.forEach((row, index) => {
-        row.action.editMode = editMode;
-      });
-      this.approvedFundingLineGridApi.setRowData(this.approvedFundingLineRows);
+      this.proposedFundingLineGridApi.setRowData(this.proposedFundingLineRows);
     }
   }
 }
