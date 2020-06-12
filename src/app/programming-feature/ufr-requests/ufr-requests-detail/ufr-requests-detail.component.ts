@@ -251,6 +251,18 @@ export class UfrRequestsDetailComponent implements OnInit {
       ? 'Please save all rows in grids before saving the page.'
       : 'Please save row(s) currently open for editing.';
     let canSave = true;
+    if (this.ufrFunds) {
+      let editing = 0;
+      if (this.ufrFunds.proposedFundingLineGridApi) {
+        editing += this.ufrFunds.proposedFundingLineGridApi.getEditingCells().length;
+      }
+      if (editing) {
+        canSave = false;
+        if (displayToast) {
+          this.toastService.displayError(errorMessage, 'Funds');
+        }
+      }
+    }
     if (this.ufrScope) {
       let editing = 0;
       editing += this.ufrScope.evaluationMeasureGridApi.getEditingCells().length;
