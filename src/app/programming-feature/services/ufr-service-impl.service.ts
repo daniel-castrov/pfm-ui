@@ -35,4 +35,8 @@ export class UfrServiceImpl extends UfrService {
   remove(id: string) {
     return this.delete('ufr/' + id);
   }
+
+  submit(id: string) {
+    return this.put('ufr/submit', id);
+  }
 }
