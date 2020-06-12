@@ -26,6 +26,7 @@ import { PropertyType } from '../../models/enumerations/property-type.model';
 import { RestResponse } from '../../../util/rest-response';
 import { Property } from '../../models/property.model';
 import { DispositionType } from '../../models/disposition-type.model';
+import { UfrFundsComponent } from './ufr-funds/ufr-funds.component';
 
 @Component({
   selector: 'pfm-ufr-requests-detail',
@@ -37,6 +38,8 @@ export class UfrRequestsDetailComponent implements OnInit {
   ufrForm: UfrFormComponent;
   @ViewChild('ufrProgramForm')
   ufrProgramForm: UfrProgramFormComponent;
+  @ViewChild('ufrFunds')
+  ufrFunds: UfrFundsComponent;
   @ViewChild('ufrSchedule')
   ufrSchedule: UfrScheduleComponent;
   @ViewChild('ufrScope')
@@ -89,6 +92,7 @@ export class UfrRequestsDetailComponent implements OnInit {
 
     this.selectUfrId = this.route.snapshot.paramMap.get('id');
     this.loadDispositionTypes();
+    const openTab = Number(this.route.snapshot.paramMap.get('tab') ?? 1);
     this.ufrService
       .getById(this.selectUfrId)
       .pipe(
@@ -138,6 +142,7 @@ export class UfrRequestsDetailComponent implements OnInit {
       );
 
     this.setupVisibility();
+    this.currentSelectedTab = openTab < 0 || openTab > 6 ? 1 : openTab;
   }
 
   private loadDispositionTypes() {
@@ -189,7 +194,34 @@ export class UfrRequestsDetailComponent implements OnInit {
     }
   }
 
-  onSelectTab(event: any) {}
+  onSelectTab(event: any) {
+    switch (event.heading.toLowerCase()) {
+      case 'ufr':
+        this.currentSelectedTab = 0;
+        break;
+      case 'program':
+        this.currentSelectedTab = 1;
+        break;
+      case 'funds':
+        this.currentSelectedTab = 2;
+        break;
+      case 'schedule':
+        setTimeout(() => this.ufrSchedule.ngOnInit(), 0);
+        this.currentSelectedTab = 3;
+        break;
+      case 'scope':
+        this.ufrScope.loadExternalInfo();
+        this.currentSelectedTab = 4;
+        break;
+      case 'assets':
+        this.ufrAssets.getFundingLineOptions();
+        this.currentSelectedTab = 5;
+        break;
+      case 'justification':
+        this.currentSelectedTab = 6;
+        break;
+    }
+  }
 
   goBack() {
     /** TODO Delete bacKToggle  and implement proper validation as indicated in PFM-487 when fields and grids

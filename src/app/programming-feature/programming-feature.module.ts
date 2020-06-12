@@ -87,6 +87,7 @@ import { UfrJustificationComponent } from './ufr-requests/ufr-requests-detail/uf
 import { UfrScheduleComponent } from './ufr-requests/ufr-requests-detail/ufr-schedule/ufr-schedule.component';
 import { UfrScopeComponent } from './ufr-requests/ufr-requests-detail/ufr-scope/ufr-scope.component';
 import { UfrAssetsComponent } from './ufr-requests/ufr-requests-detail/ufr-assets/ufr-assets.component';
+import { UfrFundsComponent } from './ufr-requests/ufr-requests-detail/ufr-funds/ufr-funds.component';
 
 @NgModule({
   declarations: [
@@ -122,7 +123,8 @@ import { UfrAssetsComponent } from './ufr-requests/ufr-requests-detail/ufr-asset
     UfrJustificationComponent,
     UfrScheduleComponent,
     UfrScopeComponent,
-    UfrAssetsComponent
+    UfrAssetsComponent,
+    UfrFundsComponent
   ],
   imports: [
     CommonModule,

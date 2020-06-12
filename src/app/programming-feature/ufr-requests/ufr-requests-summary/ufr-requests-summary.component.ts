@@ -28,6 +28,7 @@ import { ProgramType } from '../../models/enumerations/program-type.model';
 import { RequestSummaryNavigationHistoryService } from '../../requests/requests-summary/requests-summary-navigation-history.service';
 import { VisibilityService } from 'src/app/services/visibility-service';
 import { UFRStatus } from '../../models/enumerations/ufr-status.model';
+import { FundingLine } from '../../models/funding-line.model';
 
 @Component({
   selector: 'pfm-ufr-requests-summary',
@@ -577,6 +578,25 @@ export class UfrRequestsSummaryComponent implements OnInit {
               shortyType: this.selectedShortyType,
               type: ProgramType.PROGRAM
             } as UFR;
+            if (this.selectedShortyType === ShortyType.PR) {
+              ufr.proposedFundingLines = [];
+              validateProgram.fundingLines.forEach(fundingLine => {
+                const proposedFundingLine: FundingLine = {};
+                proposedFundingLine.appropriation = fundingLine.appropriation;
+                proposedFundingLine.baOrBlin = fundingLine.baOrBlin;
+                proposedFundingLine.sag = fundingLine.sag;
+                proposedFundingLine.wucd = fundingLine.wucd;
+                proposedFundingLine.expenditureType = fundingLine.expenditureType;
+                proposedFundingLine.ctc = fundingLine.ctc;
+                proposedFundingLine.userCreated = false;
+                const funds: { [key: string]: number } = {};
+                for (let i = this.pom.fy; i < this.pom.fy + 5; i++) {
+                  funds[i] = 0;
+                }
+                proposedFundingLine.funds = funds;
+                ufr.proposedFundingLines.push(proposedFundingLine);
+              });
+            }
             return this.ufrService.getByProgramShortName(ufr.shortName);
           }),
           switchMap((resp: any) => {

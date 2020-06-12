@@ -29,6 +29,10 @@ export class PomServiceImpl extends PomService {
     return this.get('pom/latest');
   }
 
+  getPomById(id: string): Observable<object> {
+    return this.get('pom/' + id);
+  }
+
   createPom(year: number, pom: Pom): Observable<object> {
     return this.post('pom/year/' + year, pom);
   }
