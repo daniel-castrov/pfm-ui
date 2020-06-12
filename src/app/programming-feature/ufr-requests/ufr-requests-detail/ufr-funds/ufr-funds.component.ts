@@ -223,7 +223,7 @@ export class UfrFundsComponent implements OnInit {
       .pipe(
         switchMap((containerId: string) => {
           return this.programmingService
-            .findByShortNameAndContainerId(containerId, this.ufr.shortName)
+            .findByShortNameAndContainerId(this.ufr.shortName, containerId)
             .pipe(map(resp => resp.result as Program));
         }),
         catchError(error => {
