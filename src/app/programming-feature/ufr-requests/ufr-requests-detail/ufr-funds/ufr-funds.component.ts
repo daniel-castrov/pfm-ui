@@ -214,11 +214,11 @@ export class UfrFundsComponent implements OnInit {
             return this.workspaceService.getByContainerIdAndVersion(pom.id, 1).pipe(
               map((workspaceResp: any) => {
                 const workspace = workspaceResp.result as Workspace;
-                return workspace.id;
+                return of(workspace.id);
               })
             );
           } else {
-            return pom.id;
+            return of(pom.id);
           }
         }),
         catchError(error => {
