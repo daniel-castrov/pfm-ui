@@ -105,8 +105,10 @@ export class UfrAssetsComponent implements OnInit {
     });
     this.form.controls.fundingLineSelect.patchValue(0);
     this.form.controls.remarks.valueChanges.subscribe(val => {
-      const asset = this.ufr.assets && this.ufr.assets.find(a => a.id === this.selectedAsset.id);
-      asset.remarks = val;
+      const asset = this.ufr.assets && this.ufr.assets.find(a => a.id === this.selectedAsset?.id);
+      if (asset) {
+        asset.remarks = val;
+      }
     });
   }
 

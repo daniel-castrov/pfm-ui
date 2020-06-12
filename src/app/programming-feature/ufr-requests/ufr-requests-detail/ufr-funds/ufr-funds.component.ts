@@ -49,19 +49,22 @@ export class UfrFundsComponent implements OnInit {
       canSave: false,
       canEdit: true,
       canDelete: true,
-      isSingleDelete: true
+      isSingleDelete: true,
+      editMode: false
     },
     VIEW_NO_DELETE: {
       canSave: false,
       canEdit: true,
       canDelete: false,
-      isSingleDelete: true
+      isSingleDelete: true,
+      editMode: false
     },
     EDIT: {
       canEdit: false,
       canSave: true,
       canDelete: true,
-      isSingleDelete: true
+      isSingleDelete: true,
+      editMode: false
     }
   };
 
@@ -127,6 +130,7 @@ export class UfrFundsComponent implements OnInit {
   expTypeOptions = [];
 
   showCurrentFundingGrid: boolean;
+  editMode: boolean;
 
   constructor(
     private pomService: PomService,
@@ -141,6 +145,7 @@ export class UfrFundsComponent implements OnInit {
     this.showCurrentFundingGrid = this.ufr.shortyType === ShortyType.PR;
     this.setupCurrentFundingLineGrid();
     this.loadDropDownValues();
+    this.editMode = false;
   }
 
   onCurrentFundingLineGridIsReady(api: GridApi) {
@@ -223,7 +228,7 @@ export class UfrFundsComponent implements OnInit {
       .pipe(
         switchMap((containerId: string) => {
           return this.programmingService
-            .findByShortNameAndContainerId(containerId, this.ufr.shortName)
+            .findByShortNameAndContainerId(this.ufr.shortName, containerId)
             .pipe(map(resp => resp.result as Program));
         }),
         catchError(error => {
@@ -1567,6 +1572,43 @@ export class UfrFundsComponent implements OnInit {
       data.push(['FY' + (i % 100), currentFunds[i] ?? 0, revisedFunds[i] ?? 0]);
     }
     return data;
+  }
+
+  changeEditMode(editMode: boolean) {
+    this.editMode = editMode;
+    this.actionState.EDIT.editMode = editMode;
+    this.actionState.VIEW.editMode = editMode;
+    this.actionState.VIEW_NO_DELETE.editMode = editMode;
+
+    if (this.currentFundingLineGridApi) {
+      this.currentFundingLineRows.forEach((row, index) => {
+        row.action.editMode = editMode;
+      });
+
+      this.currentFundingLineGridApi.setRowData(this.currentFundingLineRows);
+    }
+
+    if (this.approvedFundingLineGridApi) {
+      this.approvedFundingLineRows.forEach((row, index) => {
+        row.action.editMode = editMode;
+      });
+
+      this.approvedFundingLineGridApi.setRowData(this.approvedFundingLineRows);
+    }
+
+    if (this.proposedFundingLineGridApi) {
+      this.totalRevisedFundingLineRows.forEach((row, index) => {
+        row.action.editMode = editMode;
+      });
+      this.proposedFundingLineGridApi.setRowData(this.totalRevisedFundingLineRows);
+    }
+
+    if (this.approvedFundingLineGridApi) {
+      this.approvedFundingLineRows.forEach((row, index) => {
+        row.action.editMode = editMode;
+      });
+      this.approvedFundingLineGridApi.setRowData(this.approvedFundingLineRows);
+    }
   }
 }
 

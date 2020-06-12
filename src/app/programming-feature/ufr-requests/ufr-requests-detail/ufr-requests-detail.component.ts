@@ -280,7 +280,10 @@ export class UfrRequestsDetailComponent implements OnInit {
         this.currentSelectedTab = 2;
         break;
       case 'schedule':
-        setTimeout(() => this.ufrSchedule.ngOnInit(), 0);
+        setTimeout(() => {
+          this.ufrSchedule.ngOnInit();
+          this.onEditModeChange(this.editMode);
+        }, 0);
         this.currentSelectedTab = 3;
         break;
       case 'scope':
@@ -457,7 +460,7 @@ export class UfrRequestsDetailComponent implements OnInit {
     this.editMode = editMode;
     this.ufrForm.changeEditMode(editMode);
     this.ufrProgramForm.changeEditMode(editMode);
-    // TODO add read only mode for funding lines
+    this.ufrFunds.changeEditMode(editMode);
     this.ufrSchedule.changePageEditMode(editMode);
     this.ufrScope.changeEditMode(editMode);
     this.ufrAssets.changePageEditMode(editMode);
