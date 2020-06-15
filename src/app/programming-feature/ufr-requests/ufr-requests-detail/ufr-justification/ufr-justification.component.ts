@@ -8,7 +8,7 @@ import { catchError, map, switchMap } from 'rxjs/operators';
 import { Pom } from '../../../models/Pom';
 import { PomStatus } from '../../../models/enumerations/pom-status.model';
 import { Workspace } from '../../../models/workspace';
-import { throwError } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { Program } from '../../../models/Program';
 import { PomService } from '../../../services/pom-service';
 import { WorkspaceService } from '../../../services/workspace.service';
@@ -122,9 +122,13 @@ export class UfrJustificationComponent implements OnInit {
       )
       .pipe(
         switchMap(program => {
-          return this.fundingLineService
-            .obtainFundingLinesByContainerId(program.id)
-            .pipe(map(fundingLines => this.convertFundsToFiscalYear(fundingLines, false)));
+          if (program) {
+            return this.fundingLineService
+              .obtainFundingLinesByContainerId(program.id)
+              .pipe(map(fundingLines => this.convertFundsToFiscalYear(fundingLines, false)));
+          } else {
+            return of([]);
+          }
         }),
         catchError(error => {
           return throwError(error);
