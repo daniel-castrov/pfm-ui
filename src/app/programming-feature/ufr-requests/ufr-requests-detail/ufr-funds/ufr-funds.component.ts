@@ -164,11 +164,7 @@ export class UfrFundsComponent implements OnInit {
     this.totalRevisedFundingLineGridApi = api;
     this.totalRevisedFundingLineGridApi.setHeaderHeight(0);
     this.totalRevisedFundingLineRows = [];
-    this.updateTotalFields(
-      this.totalRevisedFundingLineGridApi,
-      this.totalRevisedFundingLineRows,
-      'Total Revised Funding'
-    );
+    this.updateTotalFields(this.totalRevisedFundingLineGridApi, this.totalRevisedFundingLineRows, 'Total Revised');
     this.totalRevisedFundingLineGridApi.hideOverlay();
   }
 
