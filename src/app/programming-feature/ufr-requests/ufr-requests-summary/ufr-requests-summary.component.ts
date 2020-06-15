@@ -352,7 +352,8 @@ export class UfrRequestsSummaryComponent implements OnInit {
           .getPrevFundedProgramsValidForUFR()
           .subscribe(
             resp => {
-              this.availablePrograms = (resp as any).result;
+              const programs = (resp as any).result;
+              this.availablePrograms = programs.sort((a, b) => a.shortName.localeCompare(b.shortName));
             },
             error => {}
           )
@@ -368,7 +369,8 @@ export class UfrRequestsSummaryComponent implements OnInit {
           .getProgramRequestValidForUFR()
           .subscribe(
             resp => {
-              this.availablePrograms = (resp as any).result;
+              const programs = (resp as any).result;
+              this.availablePrograms = programs.sort((a, b) => a.shortName.localeCompare(b.shortName));
             },
             error => this.dialogService.displayDebug(error)
           )
@@ -391,7 +393,8 @@ export class UfrRequestsSummaryComponent implements OnInit {
           .getPRsAndMrdbPRsValidForUFR()
           .subscribe(
             resp => {
-              this.availablePrograms = (resp as any).result;
+              const programs = (resp as any).result;
+              this.availablePrograms = programs.sort((a, b) => a.shortName.localeCompare(b.shortName));
             },
             error => this.dialogService.displayDebug(error)
           )
@@ -414,7 +417,8 @@ export class UfrRequestsSummaryComponent implements OnInit {
           .getPRsAndMrdbPRsValidForUFR()
           .subscribe(
             resp => {
-              this.availablePrograms = (resp as any).result;
+              const programs = (resp as any).result;
+              this.availablePrograms = programs.sort((a, b) => a.shortName.localeCompare(b.shortName));
             },
             error => this.dialogService.displayDebug(error)
           )
