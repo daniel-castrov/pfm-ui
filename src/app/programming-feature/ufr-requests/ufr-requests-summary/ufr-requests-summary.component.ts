@@ -352,7 +352,8 @@ export class UfrRequestsSummaryComponent implements OnInit {
           .getPrevFundedProgramsValidForUFR()
           .subscribe(
             resp => {
-              this.availablePrograms = (resp as any).result;
+              const programs = (resp as any).result;
+              this.availablePrograms = programs.sort((a, b) => a.shortName.localeCompare(b.shortName));
             },
             error => {}
           )
@@ -368,7 +369,8 @@ export class UfrRequestsSummaryComponent implements OnInit {
           .getProgramRequestValidForUFR()
           .subscribe(
             resp => {
-              this.availablePrograms = (resp as any).result;
+              const programs = (resp as any).result;
+              this.availablePrograms = programs.sort((a, b) => a.shortName.localeCompare(b.shortName));
             },
             error => this.dialogService.displayDebug(error)
           )
@@ -391,7 +393,8 @@ export class UfrRequestsSummaryComponent implements OnInit {
           .getPRsAndMrdbPRsValidForUFR()
           .subscribe(
             resp => {
-              this.availablePrograms = (resp as any).result;
+              const programs = (resp as any).result;
+              this.availablePrograms = programs.sort((a, b) => a.shortName.localeCompare(b.shortName));
             },
             error => this.dialogService.displayDebug(error)
           )
@@ -414,7 +417,8 @@ export class UfrRequestsSummaryComponent implements OnInit {
           .getPRsAndMrdbPRsValidForUFR()
           .subscribe(
             resp => {
-              this.availablePrograms = (resp as any).result;
+              const programs = (resp as any).result;
+              this.availablePrograms = programs.sort((a, b) => a.shortName.localeCompare(b.shortName));
             },
             error => this.dialogService.displayDebug(error)
           )
@@ -603,24 +607,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
                 ufr.proposedFundingLines.push(proposedFundingLine);
               });
             }
-            return this.ufrService.getByProgramShortName(ufr.shortName);
-          }),
-          switchMap((resp: any) => {
-            const existingUfr = resp.result as UFR;
-            if (existingUfr) {
-              this.shortNameErrorMessage =
-                'The program ID entered already exists on a UFR Request "' + existingUfr.requestNumber + '"';
-              return throwError({ showValidationErrors: true });
-            }
             return this.ufrService.create(ufr);
-          }),
-          catchError(error => {
-            if (error?.showValidationErrors) {
-              this.showValidationErrors = error.showValidationErrors;
-            } else {
-              this.dialogService.displayDebug(error);
-            }
-            return of();
           })
         )
         .subscribe(
