@@ -61,7 +61,7 @@ export class SecureUploadComponent implements OnInit {
     (this.uploader.onSuccessItem = (item, response, status, headers) => {
       const data = JSON.parse(response); // success server response
       this.fileMetaData = new FileMetaData();
-      this.fileMetaData = data.result;
+      this.fileMetaData = data;
     }),
       (this.uploader.onCompleteAll = () => {
         this.onFilesUploaded.emit(this.fileMetaData);
