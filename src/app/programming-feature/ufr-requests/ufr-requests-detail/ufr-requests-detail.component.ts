@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PomService } from '../../services/pom-service';
 import { Pom } from '../../models/Pom';
@@ -30,20 +30,20 @@ import { UfrFundsComponent } from './ufr-funds/ufr-funds.component';
   templateUrl: './ufr-requests-detail.component.html',
   styleUrls: ['./ufr-requests-detail.component.scss']
 })
-export class UfrRequestsDetailComponent implements OnInit {
+export class UfrRequestsDetailComponent implements OnInit, AfterViewInit {
   @ViewChild('ufrForm')
   ufrForm: UfrFormComponent;
-  @ViewChild('ufrProgramForm')
+  @ViewChild('ufrProgramForm', { static: true })
   ufrProgramForm: UfrProgramFormComponent;
-  @ViewChild('ufrFunds')
+  @ViewChild('ufrFunds', { static: true })
   ufrFunds: UfrFundsComponent;
-  @ViewChild('ufrSchedule')
+  @ViewChild('ufrSchedule', { static: true })
   ufrSchedule: UfrScheduleComponent;
-  @ViewChild('ufrScope')
+  @ViewChild('ufrScope', { static: true })
   ufrScope: UfrScopeComponent;
-  @ViewChild('ufrAssets')
+  @ViewChild('ufrAssets', { static: true })
   ufrAssets: UfrAssetsComponent;
-  @ViewChild('ufrJustification')
+  @ViewChild('ufrJustification', { static: true })
   ufrJustification: UfrJustificationComponent;
 
   pomYear: number;
@@ -96,6 +96,10 @@ export class UfrRequestsDetailComponent implements OnInit {
     this.loadUfrData();
     this.setupVisibility();
     this.currentSelectedTab = openTab < 0 || openTab > 6 ? 1 : openTab;
+  }
+
+  ngAfterViewInit() {
+    this.onEditModeChange(Boolean(this.route.snapshot.paramMap.get('editMode')) ?? false);
   }
 
   private loadUfrData() {

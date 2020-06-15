@@ -41,7 +41,7 @@
 
 <tabset class="program-tab-style" *ngIf="ufr" destroyOnHide="true">
   <tab heading="UFR" [active]="currentSelectedTab === 0" class="w-100 h-100" (selectTab)="onSelectTab($event)">
-    <div class="section-tab"><pfm-ufr-form #ufrForm [ufr]="ufr"></pfm-ufr-form></div>
+    <div class="section-tab"><pfm-ufr-form #ufrForm [ufr]="ufr" [editMode]="editMode"></pfm-ufr-form></div>
   </tab>
   <tab heading="Program" [active]="currentSelectedTab === 1" class="w-100 h-100" (selectTab)="onSelectTab($event)">
     <div class="section-tab">

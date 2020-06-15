@@ -1,8 +1,8 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Component, Input, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UFR } from 'src/app/programming-feature/models/ufr.model';
 import { ShortyType } from 'src/app/programming-feature/models/enumerations/shorty-type.model';
-import { TitleCasePipe, formatDate } from '@angular/common';
+import { formatDate, TitleCasePipe } from '@angular/common';
 import { Disposition } from 'src/app/programming-feature/models/enumerations/disposition.model';
 
 @Component({
@@ -16,6 +16,7 @@ export class UfrFormComponent implements OnInit {
   readonly DEFAULT_DISPOSITION = 'No entry yet.  Will be added when disposition is set.';
 
   form: FormGroup;
+  @Input()
   editMode: boolean;
 
   constructor(private titlecasePipe: TitleCasePipe) {}

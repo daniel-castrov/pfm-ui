@@ -3,7 +3,7 @@ import { ListItem } from 'src/app/pfm-common-models/ListItem';
 import { ListItemHelper } from 'src/app/util/ListItemHelper';
 import { ColDef, GridApi } from '@ag-grid-community/all-modules';
 import { UfrActionCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/ufr-action-cell-renderer/ufr-action-cell-renderer.component';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
 import { Organization } from 'src/app/pfm-common-models/Organization';
 import { OrganizationService } from 'src/app/services/organization-service';
@@ -17,8 +17,8 @@ import { MrdbService } from '../../services/mrdb-service';
 import { PomStatus } from '../../models/enumerations/pom-status.model';
 import { UfrService } from '../../services/ufr-service';
 import { AppModel } from 'src/app/pfm-common-models/AppModel';
-import { switchMap, catchError } from 'rxjs/operators';
-import { throwError, of } from 'rxjs';
+import { catchError, switchMap } from 'rxjs/operators';
+import { of, throwError } from 'rxjs';
 import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
 import { Router } from '@angular/router';
 import { formatDate } from '@angular/common';
@@ -775,19 +775,21 @@ export class UfrRequestsSummaryComponent implements OnInit {
         this.displayDeleteDialog(cellAction, this.deleteRow.bind(this));
         break;
       case 'review':
-        // TODO implement actions here
+        this.columnDetailClicked(this.rows[cellAction.rowIndex].id, true);
+
         break;
     }
   }
 
-  columnDetailClicked(ufrId: string) {
-    this.router.navigate([
-      '/programming/ufr-requests/details/' + ufrId,
-      {
-        pomYear: this.pom.fy,
-        tab: 0
-      }
-    ]);
+  columnDetailClicked(ufrId: string, editMode?: boolean) {
+    const params = {
+      pomYear: this.pom.fy,
+      tab: 0
+    };
+    if (editMode) {
+      params['editMode'] = editMode;
+    }
+    this.router.navigate(['/programming/ufr-requests/details/' + ufrId, params]);
   }
 
   private deleteRow(rowIndex: number) {
