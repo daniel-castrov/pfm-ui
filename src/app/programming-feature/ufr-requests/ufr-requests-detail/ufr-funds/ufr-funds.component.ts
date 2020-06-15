@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, HostListener } from '@angular/core';
 import { ColGroupDef, GridApi } from '@ag-grid-community/all-modules';
 import { DataGridMessage } from '../../../../pfm-coreui/models/DataGridMessage';
 import { NumericCellEditor } from 'src/app/ag-grid/cell-editors/NumericCellEditor';
@@ -10,13 +10,6 @@ import { FundingLine } from 'src/app/programming-feature/models/funding-line.mod
 import { Observable, of, throwError } from 'rxjs';
 import { PropertyService } from '../../../services/property.service';
 import { PropertyType } from '../../../models/enumerations/property-type.model';
-import { Property } from '../../../models/property.model';
-import { Appropriation } from '../../../models/appropriation.model';
-import { BaBlin } from '../../../models/ba-blin.model';
-import { SAG } from '../../../models/sag.model';
-import { ExpenditureType } from '../../../models/expenditure-type.model';
-import { WorkUnitCode } from '../../../models/work-unit-code.model';
-import { RestResponse } from 'src/app/util/rest-response';
 import { DropdownCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/dropdown-cell-renderer/dropdown-cell-renderer.component';
 import { GoogleChartComponent, GoogleChartInterface } from 'ng2-google-charts';
 import { ProgramStatus } from 'src/app/programming-feature/models/enumerations/program-status.model';
@@ -100,6 +93,7 @@ export class UfrFundsComponent implements OnInit {
       }
     }
   };
+  forceDrawReload = true;
 
   busy: boolean;
 
@@ -272,7 +266,6 @@ export class UfrFundsComponent implements OnInit {
       if (!this.showCurrentFundingGrid) {
         this.loadDataForTotalRevisedFunding();
         this.loadDataForApprovedFunding();
-        this.drawLineChart();
       }
       this.changeEditMode(false);
     });
@@ -1529,11 +1522,15 @@ export class UfrFundsComponent implements OnInit {
     }
   }
 
-  drawLineChart() {
+  drawLineChart(forceRedraw?: boolean) {
     const data = this.lineChartData();
     this.chartData.dataTable = data;
     if (this.chart && this.chart.wrapper) {
       this.chart.draw();
+      if (forceRedraw) {
+        this.forceDrawReload = false;
+        setTimeout(() => (this.forceDrawReload = true), 0);
+      }
     }
   }
 
@@ -1550,7 +1547,7 @@ export class UfrFundsComponent implements OnInit {
         }
       });
     } else {
-      for (let i = this.pomYear - 3, x = 0; i < this.pomYear + 5; i++) {
+      for (let i = this.pomYear; i < this.pomYear + 5; i++) {
         currentFunds[i] = 0;
       }
     }
@@ -1565,11 +1562,11 @@ export class UfrFundsComponent implements OnInit {
         }
       });
     } else {
-      for (let i = this.pomYear - 3, x = 0; i < this.pomYear + 5; i++) {
+      for (let i = this.pomYear; i < this.pomYear + 5; i++) {
         revisedFunds[i] = 0;
       }
     }
-    for (let i = this.pomYear - 3, x = 0; i < this.pomYear + 5; i++) {
+    for (let i = this.pomYear; i < this.pomYear + 5; i++) {
       data.push(['FY' + (i % 100), currentFunds[i] ?? 0, revisedFunds[i] ?? 0]);
     }
     return data;
