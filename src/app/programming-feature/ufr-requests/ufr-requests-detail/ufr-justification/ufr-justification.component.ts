@@ -29,6 +29,7 @@ export class UfrJustificationComponent implements OnInit {
   @Input() pomYear: number;
 
   form: FormGroup;
+  editMode: boolean;
 
   chartData: GoogleChartInterface = {
     chartType: 'LineChart',
@@ -76,6 +77,8 @@ export class UfrJustificationComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadForm();
+    this.editMode = false;
+    this.changeEditMode(false);
   }
 
   loadForm() {
@@ -298,5 +301,19 @@ export class UfrJustificationComponent implements OnInit {
       data.push(['FY' + (i % 100), currentFunds[i] ?? 0, revisedFunds[i] ?? 0]);
     }
     return data;
+  }
+
+  changeEditMode(editMode: boolean) {
+    this.editMode = editMode;
+
+    if (editMode) {
+      this.form.get('justification').enable();
+      this.form.get('impactN').enable();
+      this.form.get('milestoneImpact').enable();
+    } else {
+      this.form.get('justification').disable();
+      this.form.get('impactN').disable();
+      this.form.get('milestoneImpact').disable();
+    }
   }
 }

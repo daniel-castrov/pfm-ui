@@ -48,3 +48,9 @@ form {
 .match-height {
   height: 240px;
 }
+
+.non-editable {
+  background-color: #fff;
+  outline: none !important;
+  border-color: transparent;
+}
