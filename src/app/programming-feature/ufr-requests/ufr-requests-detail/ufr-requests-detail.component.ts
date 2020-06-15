@@ -10,7 +10,7 @@ import { UFR } from '../../models/ufr.model';
 import { UFRStatus } from '../../models/enumerations/ufr-status.model';
 import { UfrService } from '../../services/ufr-service';
 import { catchError, switchMap } from 'rxjs/operators';
-import { throwError, EMPTY } from 'rxjs';
+import { EMPTY, throwError } from 'rxjs';
 import { RequestSummaryNavigationHistoryService } from '../../requests/requests-summary/requests-summary-navigation-history.service';
 import { UfrScheduleComponent } from './ufr-schedule/ufr-schedule.component';
 import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
@@ -296,6 +296,7 @@ export class UfrRequestsDetailComponent implements OnInit {
         this.currentSelectedTab = 5;
         break;
       case 'justification':
+        setTimeout(() => this.ufrJustification.loadChart(), 0);
         this.currentSelectedTab = 6;
         break;
     }
