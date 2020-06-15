@@ -121,13 +121,13 @@ export class CloseProgrammingComponent implements OnInit {
       .pipe(
         switchMap(resp => {
           this.programmingModel.pom = (resp as any).result;
-          if (this.programmingModel.pom.status === PlanningStatus.CREATED) {
+          if (this.programmingModel.pom.status === PlanningStatus.LOCKED) {
             this.pomYear = this.programmingModel.pom.fy;
             return this.programmingService
               .getPRsForContainer(this.programmingModel.pom.id, null)
               .pipe(map(programs => (this.programmingModel.programs = (programs as any).result)));
           }
-          return throwError('POM should be in CREATED status.');
+          return throwError('POM should be in LOCKED status.');
         }),
         catchError(error => {
           return throwError(error);
