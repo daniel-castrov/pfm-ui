@@ -274,6 +274,7 @@ export class UfrFundsComponent implements OnInit {
         this.loadDataForApprovedFunding();
         this.drawLineChart();
       }
+      this.changeEditMode(false);
     });
   }
 
