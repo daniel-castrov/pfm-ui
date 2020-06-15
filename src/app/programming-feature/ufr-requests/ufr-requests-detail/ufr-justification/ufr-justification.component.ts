@@ -11,11 +11,14 @@ export class UfrJustificationComponent implements OnInit {
   @Input() ufr: UFR;
 
   form: FormGroup;
+  editMode: boolean;
 
   constructor() {}
 
   ngOnInit(): void {
     this.loadForm();
+    this.editMode = false;
+    this.changeEditMode(false);
   }
 
   loadForm() {
@@ -24,5 +27,19 @@ export class UfrJustificationComponent implements OnInit {
       impactN: new FormControl(this.ufr.impactN ?? '', Validators.required),
       milestoneImpact: new FormControl(this.ufr.milestoneImpact ?? '', Validators.required)
     });
+  }
+
+  changeEditMode(editMode: boolean) {
+    this.editMode = editMode;
+
+    if (editMode) {
+      this.form.get('justification').enable();
+      this.form.get('impactN').enable();
+      this.form.get('milestoneImpact').enable();
+    } else {
+      this.form.get('justification').disable();
+      this.form.get('impactN').disable();
+      this.form.get('milestoneImpact').disable();
+    }
   }
 }

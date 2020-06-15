@@ -8,7 +8,6 @@ import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
 import { PomStatus } from '../../models/enumerations/pom-status.model';
 import { UFR } from '../../models/ufr.model';
 import { UFRStatus } from '../../models/enumerations/ufr-status.model';
-import { ShortyType } from '../../models/enumerations/shorty-type.model';
 import { UfrService } from '../../services/ufr-service';
 import { catchError, switchMap } from 'rxjs/operators';
 import { throwError, EMPTY } from 'rxjs';
@@ -58,6 +57,8 @@ export class UfrRequestsDetailComponent implements OnInit {
   showSetDisposition: boolean;
   clickedReviewForApproval: boolean;
   selectUfrId: string;
+  canEdit: boolean;
+  editMode: boolean;
 
   setDispositionDlg = {
     title: 'Select Disposition',
@@ -103,6 +104,10 @@ export class UfrRequestsDetailComponent implements OnInit {
       .pipe(
         switchMap(resp => {
           this.ufr = (resp as any).result as UFR;
+          this.canEdit =
+            (this.ufr.ufrStatus === UFRStatus.SAVED || this.ufr.ufrStatus === UFRStatus.SUBMITTED) &&
+            this.ufr.createdBy === this.appModel.userDetails.cacId;
+          this.editMode = false;
           return this.pomService.getPomForYear(this.pomYear);
         }),
         catchError(error => {
@@ -121,28 +126,6 @@ export class UfrRequestsDetailComponent implements OnInit {
         },
         error => {
           this.dialogService.displayDebug(error);
-          // TODO This prabably should probably go when loading real data
-          if (!this.ufr) {
-            this.ufr = new UFR();
-            this.ufr.created = new Date();
-            this.ufr.modified = new Date();
-            this.ufr.shortName = 'Program ID';
-            this.ufr.longName = 'Program Name';
-            this.ufr.type = 'PROGRAM';
-            this.ufr.organizationId = '5ed7c10510f2113665b64e2c'; // JPEO-CBRND
-            this.ufr.divisionId = '5ed7c10510f2113665b64e0e'; // DOD
-            this.ufr.missionPriorityId = null;
-            this.ufr.agencyPriority = 1;
-            this.ufr.directoratePriority = 1;
-            this.ufr.secDefLOEId = '5ed7c10510f2113665b64dfc'; // Improve Physical and Procedural Security
-            this.ufr.strategicImperativeId = '5ed7c10510f2113665b64e03'; // Agility
-            this.ufr.agencyObjectiveId = '5ed7c10510f2113665b64e07'; // Make the world safer
-            this.ufr.parentId = '5ed7c4e14441f743732597a4'; // For Increment or FoS
-            this.ufr.shortyType = ShortyType.MRDB_PROGRAM;
-            this.ufr.originatedFrom = new UFR();
-            this.ufr.originatedFrom.requestNumber = 'P21008';
-            this.ufr.originatedFrom.id = '5ed7c4e14441f743732597a4';
-          }
         }
       );
   }
@@ -298,7 +281,10 @@ export class UfrRequestsDetailComponent implements OnInit {
         this.currentSelectedTab = 2;
         break;
       case 'schedule':
-        setTimeout(() => this.ufrSchedule.ngOnInit(), 0);
+        setTimeout(() => {
+          this.ufrSchedule.ngOnInit();
+          this.onEditModeChange(this.editMode);
+        }, 0);
         this.currentSelectedTab = 3;
         break;
       case 'scope':
@@ -469,5 +455,16 @@ export class UfrRequestsDetailComponent implements OnInit {
       impactN: this.ufrJustification.form.get(['impactN']).value,
       milestoneImpact: this.ufrJustification.form.get(['milestoneImpact']).value
     };
+  }
+
+  onEditModeChange(editMode: boolean) {
+    this.editMode = editMode;
+    this.ufrForm.changeEditMode(editMode);
+    this.ufrProgramForm.changeEditMode(editMode);
+    this.ufrFunds.changeEditMode(editMode);
+    this.ufrSchedule.changePageEditMode(editMode);
+    this.ufrScope.changeEditMode(editMode);
+    this.ufrAssets.changePageEditMode(editMode);
+    this.ufrJustification.changeEditMode(editMode);
   }
 }
