@@ -99,11 +99,11 @@ export class UfrJustificationComponent implements OnInit {
             return this.workspaceService.getByContainerIdAndVersion(pom.id, 1).pipe(
               map((workspaceResp: any) => {
                 const workspace = workspaceResp.result as Workspace;
-                return workspace.id;
+                return of(workspace.id);
               })
             );
           } else {
-            return pom.id;
+            return of(pom.id);
           }
         }),
         catchError(error => {
@@ -113,7 +113,7 @@ export class UfrJustificationComponent implements OnInit {
       .pipe(
         switchMap((containerId: string) => {
           return this.programmingService
-            .findByShortNameAndContainerId(containerId, this.ufr.shortName)
+            .findByShortNameAndContainerId(this.ufr.shortName, containerId)
             .pipe(map(resp => resp.result as Program));
         }),
         catchError(error => {
@@ -122,13 +122,9 @@ export class UfrJustificationComponent implements OnInit {
       )
       .pipe(
         switchMap(program => {
-          if (program) {
-            return this.fundingLineService
-              .obtainFundingLinesByContainerId(program.id)
-              .pipe(map(fundingLines => this.convertFundsToFiscalYear(fundingLines, false)));
-          } else {
-            return of([]);
-          }
+          return this.fundingLineService
+            .obtainFundingLinesByContainerId(program.id)
+            .pipe(map(fundingLines => this.convertFundsToFiscalYear(fundingLines, false)));
         }),
         catchError(error => {
           return throwError(error);
@@ -136,10 +132,11 @@ export class UfrJustificationComponent implements OnInit {
       )
       .subscribe(resp => {
         const fundingLines = resp as FundingData[];
-        this.currentFundingLineRows.push(...fundingLines);
+        this.currentFundingLineRows = fundingLines;
         this.loadDataFromUfr();
       });
   }
+
   private loadDataFromUfr() {
     this.fundingLineService.obtainFundingLinesByContainerId(this.ufr.id).subscribe(resp => {
       const proposedFundingLine = resp.result as FundingLine[];
