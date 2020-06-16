@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PomService } from '../../services/pom-service';
 import { Pom } from '../../models/Pom';
@@ -30,20 +30,20 @@ import { UfrFundsComponent } from './ufr-funds/ufr-funds.component';
   templateUrl: './ufr-requests-detail.component.html',
   styleUrls: ['./ufr-requests-detail.component.scss']
 })
-export class UfrRequestsDetailComponent implements OnInit, AfterViewInit {
+export class UfrRequestsDetailComponent implements OnInit {
   @ViewChild('ufrForm')
   ufrForm: UfrFormComponent;
-  @ViewChild('ufrProgramForm', { static: true })
+  @ViewChild('ufrProgramForm')
   ufrProgramForm: UfrProgramFormComponent;
-  @ViewChild('ufrFunds', { static: true })
+  @ViewChild('ufrFunds')
   ufrFunds: UfrFundsComponent;
-  @ViewChild('ufrSchedule', { static: true })
+  @ViewChild('ufrSchedule')
   ufrSchedule: UfrScheduleComponent;
-  @ViewChild('ufrScope', { static: true })
+  @ViewChild('ufrScope')
   ufrScope: UfrScopeComponent;
-  @ViewChild('ufrAssets', { static: true })
+  @ViewChild('ufrAssets')
   ufrAssets: UfrAssetsComponent;
-  @ViewChild('ufrJustification', { static: true })
+  @ViewChild('ufrJustification')
   ufrJustification: UfrJustificationComponent;
 
   pomYear: number;
@@ -86,9 +86,6 @@ export class UfrRequestsDetailComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.pomYear = Number(this.route.snapshot.paramMap.get('pomYear'));
-    // TODO Remove fake implemation below. Use data required when data available. See PFM-487
-    this.clickedReviewForApproval = true;
-
     this.selectUfrId = this.route.snapshot.paramMap.get('id');
     this.loadDispositionTypes();
     const openTab = Number(this.route.snapshot.paramMap.get('tab') ?? 1);
@@ -96,10 +93,6 @@ export class UfrRequestsDetailComponent implements OnInit, AfterViewInit {
     this.loadUfrData();
     this.setupVisibility();
     this.currentSelectedTab = openTab < 0 || openTab > 6 ? 1 : openTab;
-  }
-
-  ngAfterViewInit() {
-    this.onEditModeChange(Boolean(this.route.snapshot.paramMap.get('editMode')) ?? false);
   }
 
   private loadUfrData() {
@@ -112,6 +105,7 @@ export class UfrRequestsDetailComponent implements OnInit, AfterViewInit {
             (this.ufr.ufrStatus === UFRStatus.SAVED || this.ufr.ufrStatus === UFRStatus.SUBMITTED) &&
             this.ufr.createdBy === this.appModel.userDetails.cacId;
           this.editMode = history.state.editMode || false;
+          this.clickedReviewForApproval = history.state.clickedReviewForApproval || false;
           return this.pomService.getPomForYear(this.pomYear);
         }),
         catchError(error => {
@@ -125,8 +119,7 @@ export class UfrRequestsDetailComponent implements OnInit, AfterViewInit {
             this.isPomCreatedOrOpen() &&
             (this.ufr.ufrStatus === UFRStatus.SAVED || this.ufr.ufrStatus === UFRStatus.SUBMITTED);
           this.showSubmitButton = this.isPomCreatedOrOpen() && this.ufr.ufrStatus === UFRStatus.SAVED;
-          this.showSetDisposition =
-            this.isPomCreatedOrOpen() && this.ufr.ufrStatus === UFRStatus.SAVED && this.clickedReviewForApproval;
+          this.showSetDisposition = this.isPomCreatedOrOpen() && this.clickedReviewForApproval;
         },
         error => {
           this.dialogService.displayDebug(error);
@@ -149,7 +142,7 @@ export class UfrRequestsDetailComponent implements OnInit, AfterViewInit {
       });
   }
 
-  onSave() {
+  onSave(successMessage?: string, successCallback?: any) {
     const canSave = this.hasNoEditingGrids(true);
     if (canSave) {
       let savingUfr = this.ufr;
@@ -160,7 +153,9 @@ export class UfrRequestsDetailComponent implements OnInit, AfterViewInit {
       savingUfr = this.getFromJustificationForm(savingUfr);
       this.performSaveOrCreate(
         savingUfr.id ? this.ufrService.update.bind(this.ufrService) : this.ufrService.create.bind(this.ufrService),
-        savingUfr
+        savingUfr,
+        successMessage,
+        successCallback
       );
       return true;
     }
@@ -258,6 +253,22 @@ export class UfrRequestsDetailComponent implements OnInit, AfterViewInit {
   }
 
   showDispositionDlg() {
+    const canSave = this.hasNoEditingGrids(true);
+    if (canSave) {
+      let savingUfr = this.ufr;
+      savingUfr = this.getFromUfrForm(savingUfr);
+      savingUfr = this.getFromProgramForm(savingUfr);
+      savingUfr = this.getFromScopeForm(savingUfr);
+      savingUfr = this.getFromAssets(savingUfr);
+      savingUfr = this.getFromJustificationForm(savingUfr);
+      this.ufr = savingUfr;
+      if (!this.validateFields(false)) {
+        return;
+      }
+    } else {
+      return;
+    }
+
     this.setDispositionDlg.form.patchValue({
       dispositionType: '',
       explanation: ''
@@ -265,10 +276,13 @@ export class UfrRequestsDetailComponent implements OnInit, AfterViewInit {
     this.setDispositionDlg.form.markAsUntouched();
     this.setDispositionDlg.display = true;
   }
+
   onSetDisposition() {
     this.setDispositionDlg.form.markAllAsTouched();
     if (!this.setDispositionDlg.form.invalid) {
-      this.setDispositionDlg.display = false;
+      this.ufr.disposition = this.setDispositionDlg.form.get(['dispositionType']).value;
+      this.ufr.explanation = this.setDispositionDlg.form.get(['explanation']).value;
+      this.onSave('Disposition saved successfully.', this.router.navigate(['/programming/ufr-requests']));
     }
   }
 
@@ -388,16 +402,19 @@ export class UfrRequestsDetailComponent implements OnInit, AfterViewInit {
     return this.pom.status === PomStatus.CREATED || this.pom.status === PomStatus.OPEN;
   }
 
-  private performSaveOrCreate(ufrServiceCall, ufr: UFR) {
+  private performSaveOrCreate(ufrServiceCall, ufr: UFR, successMessage?: string, successCallback?: any) {
     this.busy = true;
     ufrServiceCall(ufr)
       .subscribe(
         resp => {
           this.ufr = resp.result as UFR;
-          this.toastService.displaySuccess('UFR saved successfully.');
+          this.toastService.displaySuccess(successMessage ?? 'UFR saved successfully.');
+          if (successCallback) {
+            successCallback();
+          }
         },
         error => {
-          this.toastService.displayError('An error has ocurred while attempting to save UFR.');
+          this.toastService.displayError('An error has occurred while attempting to save UFR.');
         }
       )
       .add(() => (this.busy = false));

@@ -16,7 +16,6 @@ export class UfrFormComponent implements OnInit {
   readonly DEFAULT_DISPOSITION = 'No entry yet.  Will be added when disposition is set.';
 
   form: FormGroup;
-  @Input()
   editMode: boolean;
 
   constructor(private titlecasePipe: TitleCasePipe) {}
@@ -38,9 +37,7 @@ export class UfrFormComponent implements OnInit {
           ? this.getDispositionLabel(this.ufr.disposition)
           : this.titlecasePipe.transform(this.ufr.ufrStatus)
       ),
-      dispositionExplanation: new FormControl(
-        this.ufr.dispositionExplanation ? this.ufr.dispositionExplanation : this.DEFAULT_DISPOSITION
-      ),
+      dispositionExplanation: new FormControl(this.ufr.explanation ? this.ufr.explanation : this.DEFAULT_DISPOSITION),
       created: new FormControl(formatDate(this.ufr.created, 'M/d/yyyy HH:mm', 'en-US')),
       createdBy: new FormControl(this.ufr.createdBy),
       modified: new FormControl(formatDate(this.ufr.modified, 'M/d/yyyy HH:mm', 'en-US')),
@@ -99,19 +96,19 @@ export class UfrFormComponent implements OnInit {
         return 'Approved';
       }
       case Disposition.PARTIALLY_APPROVED: {
-        return 'Program Request';
+        return 'Partially Approved';
       }
       case Disposition.DISAPPROVED: {
         return 'Disapproved';
       }
-      case Disposition.DEFERRED: {
+      case Disposition.DEFERRED_POM: {
         return 'Deferred to Future POM';
       }
-      case Disposition.YEAR_OF_EXECUTION: {
+      case Disposition.DEFERRED_YOE: {
         return 'Deferred to YOE';
       }
-      case Disposition.ISSUE_PAPER: {
-        return 'Issue Paper';
+      case Disposition.DASD_REQUESTED: {
+        return 'DASD Review Requested';
       }
       default:
         return '';

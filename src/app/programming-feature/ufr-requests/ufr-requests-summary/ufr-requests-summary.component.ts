@@ -21,7 +21,7 @@ import { catchError, switchMap } from 'rxjs/operators';
 import { of, throwError } from 'rxjs';
 import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
 import { Router } from '@angular/router';
-import { formatDate } from '@angular/common';
+import { formatDate, TitleCasePipe } from '@angular/common';
 import { ShortyType } from '../../models/enumerations/shorty-type.model';
 import { DataGridMessage } from 'src/app/pfm-coreui/models/DataGridMessage';
 import { ProgramType } from '../../models/enumerations/program-type.model';
@@ -71,7 +71,8 @@ export class UfrRequestsSummaryComponent implements OnInit {
     private toastService: ToastService,
     private router: Router,
     private requestSummaryNavigationHistoryService: RequestSummaryNavigationHistoryService,
-    private visibilityService: VisibilityService
+    private visibilityService: VisibilityService,
+    private titlecasePipe: TitleCasePipe
   ) {}
 
   ngOnInit() {
@@ -213,7 +214,11 @@ export class UfrRequestsSummaryComponent implements OnInit {
         cellClass: 'text-class',
         cellStyle,
         maxWidth: 150,
-        minWidth: 150
+        minWidth: 150,
+        valueGetter: ({ node }) => {
+          const ufr: UFR = node.data;
+          return ufr.disposition ? ufr.disposition : this.titlecasePipe.transform(ufr.ufrStatus);
+        }
       },
       {
         headerName: 'Created Date',
@@ -784,20 +789,25 @@ export class UfrRequestsSummaryComponent implements OnInit {
         this.displayDeleteDialog(cellAction, this.deleteRow.bind(this));
         break;
       case 'review':
-        this.columnDetailClicked(this.rows[cellAction.rowIndex].id, true);
-
+        this.router.navigate(
+          [
+            '/programming/ufr-requests/details/' + this.rows[cellAction.rowIndex].id,
+            {
+              pomYear: this.pom.fy,
+              tab: 0
+            }
+          ],
+          { state: { editMode: true, clickedReviewForApproval: true } }
+        );
         break;
     }
   }
 
-  columnDetailClicked(ufrId: string, editMode?: boolean) {
+  columnDetailClicked(ufrId: string) {
     const params = {
       pomYear: this.pom.fy,
       tab: 0
     };
-    if (editMode) {
-      params['editMode'] = editMode;
-    }
     this.router.navigate(['/programming/ufr-requests/details/' + ufrId, params]);
   }
 

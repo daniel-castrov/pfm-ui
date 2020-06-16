@@ -41,7 +41,7 @@
 
 <tabset class="program-tab-style" *ngIf="ufr" destroyOnHide="true">
   <tab heading="UFR" [active]="currentSelectedTab === 0" class="w-100 h-100" (selectTab)="onSelectTab($event)">
-    <div class="section-tab"><pfm-ufr-form #ufrForm [ufr]="ufr" [editMode]="editMode"></pfm-ufr-form></div>
+    <div class="section-tab"><pfm-ufr-form #ufrForm [ufr]="ufr"></pfm-ufr-form></div>
   </tab>
   <tab heading="Program" [active]="currentSelectedTab === 1" class="w-100 h-100" (selectTab)="onSelectTab($event)">
     <div class="section-tab">
@@ -94,7 +94,7 @@
                 formControlName="dispositionType"
                 id="dispositionType{{ i }}"
                 name="dispositionType"
-                [value]="item.name"
+                [value]="item.code"
               />
               <label class="form-check-label" for="dispositionType{{ i }}">
                 {{ item.name || '?' }}
@@ -120,8 +120,7 @@
         <div class="form-group row">
           <label for="explanation" class="col-sm-5 col-form-label">*Provide Explanation</label>
           <div class="col-sm-7">
-            <input
-              type="text"
+            <textarea
               [class.input-error]="
                 setDispositionDlg.form.get('explanation').invalid &&
                 (setDispositionDlg.form.get('explanation').dirty || setDispositionDlg.form.get('explanation').touched)
@@ -129,7 +128,7 @@
               class="form-control"
               id="explanation"
               formControlName="explanation"
-            />
+            ></textarea>
             <div
               *ngIf="
                 setDispositionDlg.form.get('explanation').invalid &&
