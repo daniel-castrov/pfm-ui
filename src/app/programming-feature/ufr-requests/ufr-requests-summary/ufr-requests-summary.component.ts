@@ -532,13 +532,16 @@ export class UfrRequestsSummaryComponent implements OnInit {
           resp => {
             const resultUFR = resp.result as UFR;
             this.toastService.displaySuccess('UFR saved successfully.');
-            this.router.navigate([
-              '/programming/ufr-requests/details/' + resultUFR.id,
-              {
-                pomYear: this.pom.fy,
-                tab: 0
-              }
-            ]);
+            this.router.navigate(
+              [
+                '/programming/ufr-requests/details/' + resultUFR.id,
+                {
+                  pomYear: this.pom.fy,
+                  tab: 0
+                }
+              ],
+              { state: { editMode: true } }
+            );
           },
           error => {
             this.toastService.displayError('An error has occurred while attempting to save UFR.');
@@ -614,13 +617,16 @@ export class UfrRequestsSummaryComponent implements OnInit {
           resp => {
             const resultUFR = resp.result as UFR;
             this.toastService.displaySuccess('UFR saved successfully.');
-            this.router.navigate([
-              '/programming/ufr-requests/details/' + resultUFR.id,
-              {
-                pomYear: this.pom.fy,
-                tab: 0
-              }
-            ]);
+            this.router.navigate(
+              [
+                '/programming/ufr-requests/details/' + resultUFR.id,
+                {
+                  pomYear: this.pom.fy,
+                  tab: 0
+                }
+              ],
+              { state: { editMode: true } }
+            );
           },
           error => {
             this.toastService.displayError('An error has occurred while attempting to save UFR.');
@@ -722,13 +728,16 @@ export class UfrRequestsSummaryComponent implements OnInit {
           resp => {
             const resultUFR = resp.result as UFR;
             this.toastService.displaySuccess('UFR saved successfully.');
-            this.router.navigate([
-              '/programming/ufr-requests/details/' + resultUFR.id,
-              {
-                pomYear: this.pom.fy,
-                tab: 0
-              }
-            ]);
+            this.router.navigate(
+              [
+                '/programming/ufr-requests/details/' + resultUFR.id,
+                {
+                  pomYear: this.pom.fy,
+                  tab: 0
+                }
+              ],
+              { state: { editMode: true } }
+            );
           },
           (error: any) => {
             if (error?.showValidationErrors) {

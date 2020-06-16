@@ -101,8 +101,8 @@ export class UfrScopeComponent implements OnInit {
     this.setupEvaluationMeasureGrid();
     this.setupTeamLeadsGrid();
     this.setupProcessPriorizationGrid();
-    this.editMode = false;
-    this.changeEditMode(false);
+    this.editMode = history.state.editMode || false;
+    this.changeEditMode(this.editMode);
   }
 
   loadForm() {
