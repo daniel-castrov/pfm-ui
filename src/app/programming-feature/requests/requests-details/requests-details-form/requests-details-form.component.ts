@@ -63,7 +63,7 @@ export class RequestsDetailsFormComponent implements OnInit {
       this.program = new Program();
     }
     this.loadImage();
-    this.editMode = history.state.editMode || false;
+    this.editMode = history.state.editMode;
   }
 
   loadForm() {

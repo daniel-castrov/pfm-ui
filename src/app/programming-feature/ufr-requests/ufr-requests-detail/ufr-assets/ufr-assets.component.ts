@@ -88,7 +88,7 @@ export class UfrAssetsComponent implements OnInit {
     }
     this.loadForm();
     this.setupGrid();
-    this.pageEditMode = history.state.editMode || false;
+    this.pageEditMode = history.state.editMode;
     this.changePageEditMode(this.pageEditMode);
   }
 
