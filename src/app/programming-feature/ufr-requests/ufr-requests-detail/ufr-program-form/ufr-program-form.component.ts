@@ -82,7 +82,7 @@ export class UfrProgramFormComponent implements OnInit {
       this.addMode = true;
     }
     this.populateDropDownsAndLoadForm();
-    this.editMode = history.state.editMode || false;
+    this.editMode = history.state.editMode;
   }
 
   loadForm() {

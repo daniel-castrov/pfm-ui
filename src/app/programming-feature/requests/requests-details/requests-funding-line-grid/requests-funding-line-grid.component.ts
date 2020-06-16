@@ -232,7 +232,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
     this.setupSummaryFundingLineGrid();
     this.setupNonSummaryFundingLineGrid();
     this.loadDropDownValues();
-    this.editMode = history.state.editMode || false;
+    this.editMode = history.state.editMode;
   }
 
   onNonSummaryGridIsReady(api: GridApi) {

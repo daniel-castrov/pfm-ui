@@ -98,7 +98,7 @@ export class ScheduleComponent implements OnInit {
     this.loadFundingLines();
     this.loadSchedulesGrid();
     this.currentFiscalYear = this.pomYear;
-    this.pageEditMode = history.state.editMode || false;
+    this.pageEditMode = history.state.editMode;
     this.changePageEditMode(this.pageEditMode);
   }
 

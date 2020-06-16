@@ -90,7 +90,7 @@ export class RequestsDetailsComponent implements OnInit {
     this.loadProgram();
     this.setupVisibility();
     this.setUpCanEdit();
-    this.editMode = history.state.editMode || false;
+    this.editMode = history.state.editMode;
     this.currentSelectedTab = openTab < 0 || openTab > 5 ? 1 : openTab;
   }
 
