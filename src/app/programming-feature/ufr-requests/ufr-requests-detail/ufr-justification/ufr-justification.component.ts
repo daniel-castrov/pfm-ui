@@ -77,8 +77,8 @@ export class UfrJustificationComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadForm();
-    this.editMode = false;
-    this.changeEditMode(false);
+    this.editMode = history.state.editMode || false;
+    this.changeEditMode(this.editMode);
   }
 
   loadForm() {

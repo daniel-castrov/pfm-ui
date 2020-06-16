@@ -459,13 +459,16 @@ export class RequestsSummaryComponent implements OnInit {
           this.programmingService.create(program).subscribe(
             resp => {
               const resultProgram = resp.result as Program;
-              this.router.navigate([
-                '/programming/requests/details/' + resultProgram.id,
-                {
-                  pomYear: this.pomYear,
-                  tab: 0
-                }
-              ]);
+              this.router.navigate(
+                [
+                  '/programming/requests/details/' + resultProgram.id,
+                  {
+                    pomYear: this.pomYear,
+                    tab: 0
+                  }
+                ],
+                { state: { editMode: true } }
+              );
             },
             error => {
               this.toastService.displayError('An error has occurred while attempting to save program.');
@@ -664,13 +667,16 @@ export class RequestsSummaryComponent implements OnInit {
           resp => {
             const resultProgram = resp.result as Program;
             this.toastService.displaySuccess('Program Request saved successfully.');
-            this.router.navigate([
-              '/programming/requests/details/' + resultProgram.id,
-              {
-                pomYear: this.pomYear,
-                tab: 0
-              }
-            ]);
+            this.router.navigate(
+              [
+                '/programming/requests/details/' + resultProgram.id,
+                {
+                  pomYear: this.pomYear,
+                  tab: 0
+                }
+              ],
+              { state: { editMode: true } }
+            );
           },
           error => {
             this.toastService.displayError('An error has occurred while attempting to save program.');
