@@ -22,7 +22,7 @@ export class UfrFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadForm();
-    this.editMode = history.state.editMode || false;
+    this.editMode = history.state.editMode;
     this.changeEditMode(this.editMode);
   }
 

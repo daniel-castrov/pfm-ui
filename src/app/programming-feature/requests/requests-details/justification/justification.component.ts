@@ -69,7 +69,7 @@ export class JustificationComponent implements OnInit {
   async ngOnInit() {
     this.loadForm();
     this.updateForm(this.program);
-    this.editMode = history.state.editMode || false;
+    this.editMode = history.state.editMode;
     this.changeEditMode(this.editMode);
   }
 

@@ -107,7 +107,7 @@ export class UfrRequestsDetailComponent implements OnInit {
           this.canEdit =
             (this.ufr.ufrStatus === UFRStatus.SAVED || this.ufr.ufrStatus === UFRStatus.SUBMITTED) &&
             this.ufr.createdBy === this.appModel.userDetails.cacId;
-          this.editMode = history.state.editMode || false;
+          this.editMode = history.state.editMode;
           return this.pomService.getPomForYear(this.pomYear);
         }),
         catchError(error => {

@@ -139,7 +139,7 @@ export class UfrFundsComponent implements OnInit {
     this.showCurrentFundingGrid = this.ufr.shortyType === ShortyType.PR;
     this.setupCurrentFundingLineGrid();
     this.loadDropDownValues();
-    this.editMode = history.state.editMode || false;
+    this.editMode = history.state.editMode;
   }
 
   onCurrentFundingLineGridIsReady(api: GridApi) {
