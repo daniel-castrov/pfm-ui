@@ -63,7 +63,7 @@ export class RequestsDetailsFormComponent implements OnInit {
       this.program = new Program();
     }
     this.loadImage();
-    this.editMode = false;
+    this.editMode = history.state.editMode || false;
   }
 
   loadForm() {
@@ -156,7 +156,7 @@ export class RequestsDetailsFormComponent implements OnInit {
 
         this.loadForm();
         this.updateForm(this.program);
-        this.changeEditMode(false);
+        this.changeEditMode(this.editMode);
       });
   }
 

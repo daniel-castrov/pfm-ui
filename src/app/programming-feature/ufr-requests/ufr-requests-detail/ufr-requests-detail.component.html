@@ -13,7 +13,7 @@
         Edit
       </button>
     </div>
-    <ng-container *ngIf="showSaveButton && editMode">
+    <ng-container *ngIf="showSetDisposition && editMode">
       <div class="div-button" *pfmIsVisible="'ufr-requests-detail-component.setDisposition'">
         <button (click)="showDispositionDlg()" class="btn btn-success">
           <i class="fa fa-check"></i>
@@ -29,7 +29,7 @@
         </button>
       </div>
     </ng-container>
-    <ng-container *ngIf="showSetDisposition && editMode">
+    <ng-container *ngIf="showSaveButton && editMode">
       <div class="div-button" *pfmIsVisible="'ufr-requests-detail-component.save'">
         <button (click)="onSave()" class="btn btn-primary">
           Save
