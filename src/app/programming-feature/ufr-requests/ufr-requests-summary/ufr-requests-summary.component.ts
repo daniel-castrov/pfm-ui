@@ -3,7 +3,7 @@ import { ListItem } from 'src/app/pfm-common-models/ListItem';
 import { ListItemHelper } from 'src/app/util/ListItemHelper';
 import { ColDef, GridApi } from '@ag-grid-community/all-modules';
 import { UfrActionCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/ufr-action-cell-renderer/ufr-action-cell-renderer.component';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
 import { Organization } from 'src/app/pfm-common-models/Organization';
 import { OrganizationService } from 'src/app/services/organization-service';
@@ -17,11 +17,11 @@ import { MrdbService } from '../../services/mrdb-service';
 import { PomStatus } from '../../models/enumerations/pom-status.model';
 import { UfrService } from '../../services/ufr-service';
 import { AppModel } from 'src/app/pfm-common-models/AppModel';
-import { switchMap, catchError } from 'rxjs/operators';
-import { throwError, of } from 'rxjs';
+import { catchError, switchMap } from 'rxjs/operators';
+import { of, throwError } from 'rxjs';
 import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
 import { Router } from '@angular/router';
-import { formatDate } from '@angular/common';
+import { formatDate, TitleCasePipe } from '@angular/common';
 import { ShortyType } from '../../models/enumerations/shorty-type.model';
 import { DataGridMessage } from 'src/app/pfm-coreui/models/DataGridMessage';
 import { ProgramType } from '../../models/enumerations/program-type.model';
@@ -71,7 +71,8 @@ export class UfrRequestsSummaryComponent implements OnInit {
     private toastService: ToastService,
     private router: Router,
     private requestSummaryNavigationHistoryService: RequestSummaryNavigationHistoryService,
-    private visibilityService: VisibilityService
+    private visibilityService: VisibilityService,
+    private titlecasePipe: TitleCasePipe
   ) {}
 
   ngOnInit() {
@@ -213,7 +214,11 @@ export class UfrRequestsSummaryComponent implements OnInit {
         cellClass: 'text-class',
         cellStyle,
         maxWidth: 150,
-        minWidth: 150
+        minWidth: 150,
+        valueGetter: ({ node }) => {
+          const ufr: UFR = node.data;
+          return ufr.disposition ? ufr.disposition : this.titlecasePipe.transform(ufr.ufrStatus);
+        }
       },
       {
         headerName: 'Created Date',
@@ -784,19 +789,26 @@ export class UfrRequestsSummaryComponent implements OnInit {
         this.displayDeleteDialog(cellAction, this.deleteRow.bind(this));
         break;
       case 'review':
-        // TODO implement actions here
+        this.router.navigate(
+          [
+            '/programming/ufr-requests/details/' + this.rows[cellAction.rowIndex].id,
+            {
+              pomYear: this.pom.fy,
+              tab: 0
+            }
+          ],
+          { state: { editMode: true, clickedReviewForApproval: true } }
+        );
         break;
     }
   }
 
   columnDetailClicked(ufrId: string) {
-    this.router.navigate([
-      '/programming/ufr-requests/details/' + ufrId,
-      {
-        pomYear: this.pom.fy,
-        tab: 0
-      }
-    ]);
+    const params = {
+      pomYear: this.pom.fy,
+      tab: 0
+    };
+    this.router.navigate(['/programming/ufr-requests/details/' + ufrId, params]);
   }
 
   private deleteRow(rowIndex: number) {
