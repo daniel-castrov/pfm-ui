@@ -10,6 +10,7 @@ export class UFR extends Program {
   ufrName?: string;
   notes?: string;
   disposition?: Disposition;
+  explanation?: string;
   dispositionExplanation?: string;
   ufrStatus?: UFRStatus;
   shortyType?: ShortyType;
