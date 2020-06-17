@@ -85,9 +85,30 @@
     </ng-template>
   </li>
 
-  <li class="menu-item" (click)="onSelect('Budget')" [class.active]="isParentSelected('/budget')" routerLink="/budget">
+  <li
+    (click)="onSelect('Budget')"
+    [ngClass]="{ 'semi-active': isBudgetSelected, active: isParentSelected('/budget') }"
+    class="menu-item"
+    placement="right-top"
+    container="body"
+    [ngbPopover]="popContentBudget"
+    (hidden)="onHide('Budget')"
+    (shown)="onShow('Budget')"
+    popoverClass="{{ isOpen ? 'menu-display-container-open' : 'menu-display-container' }}"
+  >
     <fa-icon [icon]="'money-bill-alt'"></fa-icon>
     <span>Budget</span>
+    <ng-template #popContentBudget>
+      <div class="inner-menu">
+        <a class="inner-menu-item" routerLink="/budget/create-budget" routerLinkActive="active-link">Create Phase</a>
+        <a class="inner-menu-item" href="#" routerLink="/budget/lock-position" routerLinkActive="active-link"
+          >Lock Position</a
+        >
+        <a class="inner-menu-item" href="#" routerLink="/budget/edit-details" routerLinkActive="active-link"
+          >Edit Budget Details</a
+        >
+      </div>
+    </ng-template>
   </li>
 
   <li
