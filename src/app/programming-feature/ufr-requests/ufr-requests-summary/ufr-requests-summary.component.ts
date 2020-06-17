@@ -28,7 +28,9 @@ import { ProgramType } from '../../models/enumerations/program-type.model';
 import { RequestSummaryNavigationHistoryService } from '../../requests/requests-summary/requests-summary-navigation-history.service';
 import { VisibilityService } from 'src/app/services/visibility-service';
 import { UFRStatus, getUFRStatusDescription } from '../../models/enumerations/ufr-status.model';
+import { getDispositionDescription } from '../../models/enumerations/disposition.model';
 import { FundingLine } from '../../models/funding-line.model';
+import { FormatterUtil } from 'src/app/util/formatterUtil';
 
 @Component({
   selector: 'pfm-ufr-requests-summary',
@@ -187,7 +189,8 @@ export class UfrRequestsSummaryComponent implements OnInit {
         cellClass: 'text-class',
         cellStyle,
         maxWidth: 150,
-        minWidth: 150
+        minWidth: 150,
+        valueFormatter: params => FormatterUtil.formatCurrency(params.data[params.colDef.field])
       },
       {
         headerName: 'Mission Priority',
@@ -197,7 +200,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
         filter: false,
         sortable: false,
         suppressMenu: true,
-        cellClass: 'numeric-class',
+        cellClass: 'numeric-class justify-content-center',
         cellStyle,
         maxWidth: 150,
         minWidth: 150
@@ -235,7 +238,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
       },
       {
         headerName: 'Created By',
-        field: 'createdBy',
+        field: 'fullNameCreatedBy',
         editable: false,
         suppressMovable: true,
         filter: false,
@@ -262,7 +265,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
       },
       {
         headerName: 'Last Updated By',
-        field: 'modifiedBy',
+        field: 'fullNameModifiedBy',
         editable: false,
         suppressMovable: true,
         filter: false,
@@ -767,6 +770,9 @@ export class UfrRequestsSummaryComponent implements OnInit {
       ufrs.forEach(ufr => {
         ufr.shortyTypeDescription = getShortyTypeDescription(ufr.shortyType);
         ufr.ufrStatusDescription = getUFRStatusDescription(ufr.ufrStatus);
+        if (ufr.disposition) {
+          ufr.dispositionDescription = getDispositionDescription(ufr.disposition);
+        }
         ufr.action = this.getActionState(ufr);
       });
       this.rows = ufrs;

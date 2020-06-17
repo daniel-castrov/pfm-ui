@@ -308,7 +308,9 @@ export class UfrProgramFormComponent implements OnInit {
         return;
       }
     }
-    this.form.controls['agencyPriority'].enable();
+    if (this.editMode && this.addMode) {
+      this.form.controls['agencyPriority'].enable();
+    }
   }
 
   updateForm(ufr: UFR) {
@@ -383,5 +385,6 @@ export class UfrProgramFormComponent implements OnInit {
           : undefined
       });
     }
+    this.updateAgencyPriority();
   }
 }
