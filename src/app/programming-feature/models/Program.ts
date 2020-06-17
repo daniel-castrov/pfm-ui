@@ -62,5 +62,8 @@ export class Program {
   attachments: Attachment[];
   userCreated: boolean;
 
+  fullNameCreatedBy?: string;
+  fullNameModifiedBy?: string;
+
   constructor() {}
 }

@@ -21,14 +21,16 @@ import { catchError, switchMap } from 'rxjs/operators';
 import { of, throwError } from 'rxjs';
 import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
 import { Router } from '@angular/router';
-import { formatDate, TitleCasePipe } from '@angular/common';
-import { ShortyType } from '../../models/enumerations/shorty-type.model';
+import { formatDate } from '@angular/common';
+import { ShortyType, getShortyTypeDescription } from '../../models/enumerations/shorty-type.model';
 import { DataGridMessage } from 'src/app/pfm-coreui/models/DataGridMessage';
 import { ProgramType } from '../../models/enumerations/program-type.model';
 import { RequestSummaryNavigationHistoryService } from '../../requests/requests-summary/requests-summary-navigation-history.service';
 import { VisibilityService } from 'src/app/services/visibility-service';
-import { UFRStatus } from '../../models/enumerations/ufr-status.model';
+import { UFRStatus, getUFRStatusDescription } from '../../models/enumerations/ufr-status.model';
+import { getDispositionDescription } from '../../models/enumerations/disposition.model';
 import { FundingLine } from '../../models/funding-line.model';
+import { FormatterUtil } from 'src/app/util/formatterUtil';
 
 @Component({
   selector: 'pfm-ufr-requests-summary',
@@ -71,8 +73,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
     private toastService: ToastService,
     private router: Router,
     private requestSummaryNavigationHistoryService: RequestSummaryNavigationHistoryService,
-    private visibilityService: VisibilityService,
-    private titlecasePipe: TitleCasePipe
+    private visibilityService: VisibilityService
   ) {}
 
   ngOnInit() {
@@ -153,7 +154,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
       },
       {
         headerName: 'Created for',
-        field: 'shortyType',
+        field: 'shortyTypeDescription',
         editable: true,
         suppressMovable: true,
         filter: false,
@@ -188,7 +189,8 @@ export class UfrRequestsSummaryComponent implements OnInit {
         cellClass: 'text-class',
         cellStyle,
         maxWidth: 150,
-        minWidth: 150
+        minWidth: 150,
+        valueFormatter: params => FormatterUtil.formatCurrency(params.data[params.colDef.field])
       },
       {
         headerName: 'Mission Priority',
@@ -198,7 +200,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
         filter: false,
         sortable: false,
         suppressMenu: true,
-        cellClass: 'numeric-class',
+        cellClass: 'numeric-class justify-content-center',
         cellStyle,
         maxWidth: 150,
         minWidth: 150
@@ -217,7 +219,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
         minWidth: 150,
         valueGetter: ({ node }) => {
           const ufr: UFR = node.data;
-          return ufr.disposition ? ufr.disposition : this.titlecasePipe.transform(ufr.ufrStatus);
+          return ufr.disposition ? ufr.dispositionDescription : ufr.ufrStatusDescription;
         }
       },
       {
@@ -236,7 +238,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
       },
       {
         headerName: 'Created By',
-        field: 'createdBy',
+        field: 'fullNameCreatedBy',
         editable: false,
         suppressMovable: true,
         filter: false,
@@ -263,7 +265,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
       },
       {
         headerName: 'Last Updated By',
-        field: 'modifiedBy',
+        field: 'fullNameModifiedBy',
         editable: false,
         suppressMovable: true,
         filter: false,
@@ -765,7 +767,14 @@ export class UfrRequestsSummaryComponent implements OnInit {
     });
     this.ufrService.getByContainerId(this.selectedPom.value).subscribe(resp => {
       const ufrs = resp.result as UFR[];
-      ufrs.forEach(ufr => (ufr.action = this.getActionState(ufr)));
+      ufrs.forEach(ufr => {
+        ufr.shortyTypeDescription = getShortyTypeDescription(ufr.shortyType);
+        ufr.ufrStatusDescription = getUFRStatusDescription(ufr.ufrStatus);
+        if (ufr.disposition) {
+          ufr.dispositionDescription = getDispositionDescription(ufr.disposition);
+        }
+        ufr.action = this.getActionState(ufr);
+      });
       this.rows = ufrs;
     });
   }

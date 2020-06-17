@@ -58,10 +58,10 @@
           <legend>Priorities</legend>
           <div class="row" *ngIf="showMissionPriority">
             <label class="col-2">*Mission Priority</label>
-            <div *ngIf="!addMode && !showMissionPriorityMessage && !editMode">
+            <div *ngIf="(!addMode || !editMode) && !showMissionPriorityMessage">
               <span class="col-10"><input type="text" formControlName="missionPriorityId" /></span>
             </div>
-            <span class="col-10" *ngIf="!addMode && editMode">
+            <span class="col-10" *ngIf="addMode && editMode">
               <ng-container *ngIf="!showMissionPriorityMessage">
                 <select
                   class="form-control-sm"
