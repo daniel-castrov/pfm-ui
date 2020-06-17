@@ -22,12 +22,12 @@ import { throwError, of } from 'rxjs';
 import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
 import { Router } from '@angular/router';
 import { formatDate } from '@angular/common';
-import { ShortyType } from '../../models/enumerations/shorty-type.model';
+import { ShortyType, getShortyTypeDescription } from '../../models/enumerations/shorty-type.model';
 import { DataGridMessage } from 'src/app/pfm-coreui/models/DataGridMessage';
 import { ProgramType } from '../../models/enumerations/program-type.model';
 import { RequestSummaryNavigationHistoryService } from '../../requests/requests-summary/requests-summary-navigation-history.service';
 import { VisibilityService } from 'src/app/services/visibility-service';
-import { UFRStatus } from '../../models/enumerations/ufr-status.model';
+import { UFRStatus, getUFRStatusDescription } from '../../models/enumerations/ufr-status.model';
 import { FundingLine } from '../../models/funding-line.model';
 
 @Component({
@@ -152,7 +152,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
       },
       {
         headerName: 'Created for',
-        field: 'shortyType',
+        field: 'shortyTypeDescription',
         editable: true,
         suppressMovable: true,
         filter: false,
@@ -213,7 +213,11 @@ export class UfrRequestsSummaryComponent implements OnInit {
         cellClass: 'text-class',
         cellStyle,
         maxWidth: 150,
-        minWidth: 150
+        minWidth: 150,
+        valueGetter: ({ node }) => {
+          const ufr: UFR = node.data;
+          return ufr.disposition ? ufr.dispositionDescription : ufr.ufrStatusDescription;
+        }
       },
       {
         headerName: 'Created Date',
@@ -760,7 +764,11 @@ export class UfrRequestsSummaryComponent implements OnInit {
     });
     this.ufrService.getByContainerId(this.selectedPom.value).subscribe(resp => {
       const ufrs = resp.result as UFR[];
-      ufrs.forEach(ufr => (ufr.action = this.getActionState(ufr)));
+      ufrs.forEach(ufr => {
+        ufr.shortyTypeDescription = getShortyTypeDescription(ufr.shortyType);
+        ufr.ufrStatusDescription = getUFRStatusDescription(ufr.ufrStatus);
+        ufr.action = this.getActionState(ufr);
+      });
       this.rows = ufrs;
     });
   }

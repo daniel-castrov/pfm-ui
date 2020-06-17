@@ -20,5 +20,8 @@ export class UFR extends Program {
   totalRevisedFundingLines?: Array<FundingLine>;
   approvedFundingLines?: Array<FundingLine>;
 
+  shortyTypeDescription?: string;
+  ufrStatusDescription?: string;
+  dispositionDescription?: string;
   action?: any;
 }
