@@ -3,7 +3,7 @@ import { ListItem } from 'src/app/pfm-common-models/ListItem';
 import { ListItemHelper } from 'src/app/util/ListItemHelper';
 import { ColDef, GridApi } from '@ag-grid-community/all-modules';
 import { UfrActionCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/ufr-action-cell-renderer/ufr-action-cell-renderer.component';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
 import { Organization } from 'src/app/pfm-common-models/Organization';
 import { OrganizationService } from 'src/app/services/organization-service';
@@ -17,18 +17,20 @@ import { MrdbService } from '../../services/mrdb-service';
 import { PomStatus } from '../../models/enumerations/pom-status.model';
 import { UfrService } from '../../services/ufr-service';
 import { AppModel } from 'src/app/pfm-common-models/AppModel';
-import { switchMap, catchError } from 'rxjs/operators';
-import { throwError, of } from 'rxjs';
+import { catchError, switchMap } from 'rxjs/operators';
+import { of, throwError } from 'rxjs';
 import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
 import { Router } from '@angular/router';
 import { formatDate } from '@angular/common';
-import { ShortyType } from '../../models/enumerations/shorty-type.model';
+import { ShortyType, getShortyTypeDescription } from '../../models/enumerations/shorty-type.model';
 import { DataGridMessage } from 'src/app/pfm-coreui/models/DataGridMessage';
 import { ProgramType } from '../../models/enumerations/program-type.model';
 import { RequestSummaryNavigationHistoryService } from '../../requests/requests-summary/requests-summary-navigation-history.service';
 import { VisibilityService } from 'src/app/services/visibility-service';
-import { UFRStatus } from '../../models/enumerations/ufr-status.model';
+import { UFRStatus, getUFRStatusDescription } from '../../models/enumerations/ufr-status.model';
+import { getDispositionDescription } from '../../models/enumerations/disposition.model';
 import { FundingLine } from '../../models/funding-line.model';
+import { FormatterUtil } from 'src/app/util/formatterUtil';
 
 @Component({
   selector: 'pfm-ufr-requests-summary',
@@ -152,7 +154,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
       },
       {
         headerName: 'Created for',
-        field: 'shortyType',
+        field: 'shortyTypeDescription',
         editable: true,
         suppressMovable: true,
         filter: false,
@@ -187,7 +189,8 @@ export class UfrRequestsSummaryComponent implements OnInit {
         cellClass: 'text-class',
         cellStyle,
         maxWidth: 150,
-        minWidth: 150
+        minWidth: 150,
+        valueFormatter: params => FormatterUtil.formatCurrency(params.data[params.colDef.field])
       },
       {
         headerName: 'Mission Priority',
@@ -197,7 +200,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
         filter: false,
         sortable: false,
         suppressMenu: true,
-        cellClass: 'numeric-class',
+        cellClass: 'numeric-class justify-content-center',
         cellStyle,
         maxWidth: 150,
         minWidth: 150
@@ -213,7 +216,11 @@ export class UfrRequestsSummaryComponent implements OnInit {
         cellClass: 'text-class',
         cellStyle,
         maxWidth: 150,
-        minWidth: 150
+        minWidth: 150,
+        valueGetter: ({ node }) => {
+          const ufr: UFR = node.data;
+          return ufr.disposition ? ufr.dispositionDescription : ufr.ufrStatusDescription;
+        }
       },
       {
         headerName: 'Created Date',
@@ -231,7 +238,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
       },
       {
         headerName: 'Created By',
-        field: 'createdBy',
+        field: 'fullNameCreatedBy',
         editable: false,
         suppressMovable: true,
         filter: false,
@@ -258,7 +265,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
       },
       {
         headerName: 'Last Updated By',
-        field: 'modifiedBy',
+        field: 'fullNameModifiedBy',
         editable: false,
         suppressMovable: true,
         filter: false,
@@ -532,13 +539,16 @@ export class UfrRequestsSummaryComponent implements OnInit {
           resp => {
             const resultUFR = resp.result as UFR;
             this.toastService.displaySuccess('UFR saved successfully.');
-            this.router.navigate([
-              '/programming/ufr-requests/details/' + resultUFR.id,
-              {
-                pomYear: this.pom.fy,
-                tab: 0
-              }
-            ]);
+            this.router.navigate(
+              [
+                '/programming/ufr-requests/details/' + resultUFR.id,
+                {
+                  pomYear: this.pom.fy,
+                  tab: 0
+                }
+              ],
+              { state: { editMode: true } }
+            );
           },
           error => {
             this.toastService.displayError('An error has occurred while attempting to save UFR.');
@@ -614,13 +624,16 @@ export class UfrRequestsSummaryComponent implements OnInit {
           resp => {
             const resultUFR = resp.result as UFR;
             this.toastService.displaySuccess('UFR saved successfully.');
-            this.router.navigate([
-              '/programming/ufr-requests/details/' + resultUFR.id,
-              {
-                pomYear: this.pom.fy,
-                tab: 0
-              }
-            ]);
+            this.router.navigate(
+              [
+                '/programming/ufr-requests/details/' + resultUFR.id,
+                {
+                  pomYear: this.pom.fy,
+                  tab: 0
+                }
+              ],
+              { state: { editMode: true } }
+            );
           },
           error => {
             this.toastService.displayError('An error has occurred while attempting to save UFR.');
@@ -722,13 +735,16 @@ export class UfrRequestsSummaryComponent implements OnInit {
           resp => {
             const resultUFR = resp.result as UFR;
             this.toastService.displaySuccess('UFR saved successfully.');
-            this.router.navigate([
-              '/programming/ufr-requests/details/' + resultUFR.id,
-              {
-                pomYear: this.pom.fy,
-                tab: 0
-              }
-            ]);
+            this.router.navigate(
+              [
+                '/programming/ufr-requests/details/' + resultUFR.id,
+                {
+                  pomYear: this.pom.fy,
+                  tab: 0
+                }
+              ],
+              { state: { editMode: true } }
+            );
           },
           (error: any) => {
             if (error?.showValidationErrors) {
@@ -751,7 +767,14 @@ export class UfrRequestsSummaryComponent implements OnInit {
     });
     this.ufrService.getByContainerId(this.selectedPom.value).subscribe(resp => {
       const ufrs = resp.result as UFR[];
-      ufrs.forEach(ufr => (ufr.action = this.getActionState(ufr)));
+      ufrs.forEach(ufr => {
+        ufr.shortyTypeDescription = getShortyTypeDescription(ufr.shortyType);
+        ufr.ufrStatusDescription = getUFRStatusDescription(ufr.ufrStatus);
+        if (ufr.disposition) {
+          ufr.dispositionDescription = getDispositionDescription(ufr.disposition);
+        }
+        ufr.action = this.getActionState(ufr);
+      });
       this.rows = ufrs;
     });
   }
@@ -775,19 +798,26 @@ export class UfrRequestsSummaryComponent implements OnInit {
         this.displayDeleteDialog(cellAction, this.deleteRow.bind(this));
         break;
       case 'review':
-        // TODO implement actions here
+        this.router.navigate(
+          [
+            '/programming/ufr-requests/details/' + this.rows[cellAction.rowIndex].id,
+            {
+              pomYear: this.pom.fy,
+              tab: 0
+            }
+          ],
+          { state: { editMode: true, clickedReviewForApproval: true } }
+        );
         break;
     }
   }
 
   columnDetailClicked(ufrId: string) {
-    this.router.navigate([
-      '/programming/ufr-requests/details/' + ufrId,
-      {
-        pomYear: this.pom.fy,
-        tab: 0
-      }
-    ]);
+    const params = {
+      pomYear: this.pom.fy,
+      tab: 0
+    };
+    this.router.navigate(['/programming/ufr-requests/details/' + ufrId, params]);
   }
 
   private deleteRow(rowIndex: number) {

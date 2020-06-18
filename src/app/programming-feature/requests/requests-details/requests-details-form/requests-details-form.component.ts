@@ -63,7 +63,7 @@ export class RequestsDetailsFormComponent implements OnInit {
       this.program = new Program();
     }
     this.loadImage();
-    this.editMode = false;
+    this.editMode = history.state.editMode;
   }
 
   loadForm() {
@@ -156,7 +156,7 @@ export class RequestsDetailsFormComponent implements OnInit {
 
         this.loadForm();
         this.updateForm(this.program);
-        this.changeEditMode(false);
+        this.changeEditMode(this.editMode);
       });
   }
 
@@ -233,8 +233,13 @@ export class RequestsDetailsFormComponent implements OnInit {
 
     if (editMode) {
       this.form.get('longName').enable();
-      this.form.get('organizationId').enable();
+
       this.form.get('divisionId').enable();
+      if (!this.addMode && !this.isPreviousYear) {
+        this.form.get('organizationId').disable();
+      } else {
+        this.form.get('organizationId').enable();
+      }
       this.form.get('missionPriorityId').enable();
       this.form.get('agencyPriority').enable();
       this.form.get('directoratePriority').enable();
@@ -242,7 +247,12 @@ export class RequestsDetailsFormComponent implements OnInit {
       this.form.get('strategicImperativeId').enable();
       this.form.get('agencyObjectiveId').enable();
       this.form.patchValue({
-        organizationId: this.program.organizationId,
+        organizationId:
+          !this.addMode && !this.isPreviousYear
+            ? this.program.organizationId
+              ? this.organizations.find(org => org.id === this.program.organizationId).abbreviation
+              : undefined
+            : this.program.organizationId,
         divisionId: this.program.divisionId,
         missionPriorityId: this.program.missionPriorityId,
         secDefLOEId: this.program.secDefLOEId,

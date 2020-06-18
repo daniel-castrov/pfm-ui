@@ -82,7 +82,7 @@ export class UfrProgramFormComponent implements OnInit {
       this.addMode = true;
     }
     this.populateDropDownsAndLoadForm();
-    this.editMode = false;
+    this.editMode = history.state.editMode;
   }
 
   loadForm() {
@@ -251,7 +251,7 @@ export class UfrProgramFormComponent implements OnInit {
         this.agencyPriorities = Array.from({ length: 20 }, (x, i) => i + 1);
         this.directoratePriorities = Array.from({ length: 20 }, (x, i) => i + 1);
         this.loadForm();
-        this.changeEditMode(false);
+        this.changeEditMode(this.editMode);
       });
   }
 
@@ -308,7 +308,9 @@ export class UfrProgramFormComponent implements OnInit {
         return;
       }
     }
-    this.form.controls['agencyPriority'].enable();
+    if (this.editMode && this.addMode) {
+      this.form.controls['agencyPriority'].enable();
+    }
   }
 
   updateForm(ufr: UFR) {
@@ -383,5 +385,6 @@ export class UfrProgramFormComponent implements OnInit {
           : undefined
       });
     }
+    this.updateAgencyPriority();
   }
 }

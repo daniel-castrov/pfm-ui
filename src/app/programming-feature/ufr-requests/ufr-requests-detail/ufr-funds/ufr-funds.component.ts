@@ -139,7 +139,7 @@ export class UfrFundsComponent implements OnInit {
     this.showCurrentFundingGrid = this.ufr.shortyType === ShortyType.PR;
     this.setupCurrentFundingLineGrid();
     this.loadDropDownValues();
-    this.editMode = false;
+    this.editMode = history.state.editMode;
   }
 
   onCurrentFundingLineGridIsReady(api: GridApi) {
@@ -164,11 +164,7 @@ export class UfrFundsComponent implements OnInit {
     this.totalRevisedFundingLineGridApi = api;
     this.totalRevisedFundingLineGridApi.setHeaderHeight(0);
     this.totalRevisedFundingLineRows = [];
-    this.updateTotalFields(
-      this.totalRevisedFundingLineGridApi,
-      this.totalRevisedFundingLineRows,
-      'Total Revised Funding'
-    );
+    this.updateTotalFields(this.totalRevisedFundingLineGridApi, this.totalRevisedFundingLineRows, 'Total Revised');
     this.totalRevisedFundingLineGridApi.hideOverlay();
   }
 
@@ -267,7 +263,7 @@ export class UfrFundsComponent implements OnInit {
         this.loadDataForTotalRevisedFunding();
         this.loadDataForApprovedFunding();
       }
-      this.changeEditMode(false);
+      this.changeEditMode(this.editMode);
     });
   }
 

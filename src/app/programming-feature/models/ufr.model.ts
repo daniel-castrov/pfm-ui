@@ -10,6 +10,7 @@ export class UFR extends Program {
   ufrName?: string;
   notes?: string;
   disposition?: Disposition;
+  explanation?: string;
   dispositionExplanation?: string;
   ufrStatus?: UFRStatus;
   shortyType?: ShortyType;
@@ -20,5 +21,8 @@ export class UFR extends Program {
   totalRevisedFundingLines?: Array<FundingLine>;
   approvedFundingLines?: Array<FundingLine>;
 
+  shortyTypeDescription?: string;
+  ufrStatusDescription?: string;
+  dispositionDescription?: string;
   action?: any;
 }

@@ -232,7 +232,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
     this.setupSummaryFundingLineGrid();
     this.setupNonSummaryFundingLineGrid();
     this.loadDropDownValues();
-    this.editMode = false;
+    this.editMode = history.state.editMode;
   }
 
   onNonSummaryGridIsReady(api: GridApi) {
@@ -423,7 +423,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
           this.loadBulkDropdownValue();
         }
         this.originalNonSummaryFundingLineRows = JSON.parse(JSON.stringify(this.nonSummaryFundingLineRows));
-        this.changeEditMode(false);
+        this.changeEditMode(this.editMode);
       });
   }
 
