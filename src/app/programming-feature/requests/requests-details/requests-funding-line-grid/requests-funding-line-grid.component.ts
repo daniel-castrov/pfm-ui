@@ -34,6 +34,8 @@ import { formatDate } from '@angular/common';
 import { UserService } from 'src/app/services/user-impl-service';
 import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
 import { AllowedCharacters } from 'src/app/ag-grid/cell-editors/AllowedCharacters';
+import { PomService } from '../../../services/pom-service';
+import { Pom } from '../../../models/Pom';
 
 @Component({
   selector: 'pfm-requests-funding-line-grid',
@@ -217,7 +219,10 @@ export class RequestsFundingLineGridComponent implements OnInit {
   currentRowHistoryGraph = -1;
   editMode: boolean;
 
+  pom: Pom;
+
   constructor(
+    protected pomService: PomService,
     private programmingModel: ProgrammingModel,
     private dialogService: DialogService,
     private propertyService: PropertyService,
@@ -228,6 +233,9 @@ export class RequestsFundingLineGridComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.pomService.getLatestPom().subscribe((res: RestResponse<Pom>) => {
+      this.pom = res.result;
+    });
     this.isPomOpenStatus = this.programmingModel.pom.status === PomStatus.OPEN;
     this.setupSummaryFundingLineGrid();
     this.setupNonSummaryFundingLineGrid();
