@@ -1,0 +1,31 @@
+.title-line {
+  display: flex;
+  width: 100%;
+}
+
+.card-container {
+  padding-left: 20px;
+  padding-bottom: 0px;
+}
+
+.padded {
+  padding-top: 20px;
+}
+
+fieldset {
+  padding: 20px;
+  min-height: 70px;
+}
+
+.btn-file {
+  position: relative;
+}
+
+input[readonly] {
+  background-color: #fff !important;
+  cursor: text !important;
+}
+
+.input-width {
+  width: 88.5%;
+}
