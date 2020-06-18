@@ -24,6 +24,8 @@ import { PropertyService } from '../../services/property.service';
 import { PropertyType } from '../../models/enumerations/property-type.model';
 import { DispositionType } from '../../models/disposition-type.model';
 import { UfrFundsComponent } from './ufr-funds/ufr-funds.component';
+import { FundingLine } from '../../models/funding-line.model';
+import { FundingLineService } from '../../services/funding-line.service';
 
 @Component({
   selector: 'pfm-ufr-requests-detail',
@@ -81,7 +83,8 @@ export class UfrRequestsDetailComponent implements OnInit {
     private ufrService: UfrService,
     private requestSummaryNavigationHistoryService: RequestSummaryNavigationHistoryService,
     private propertyService: PropertyService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private fundingLineService: FundingLineService
   ) {}
 
   ngOnInit(): void {
@@ -145,19 +148,23 @@ export class UfrRequestsDetailComponent implements OnInit {
   onSave(successMessage?: string, successCallback?: any) {
     const canSave = this.hasNoEditingGrids(true);
     if (canSave) {
-      let savingUfr = this.ufr;
-      savingUfr = this.getFromUfrForm(savingUfr);
-      savingUfr = this.getFromProgramForm(savingUfr);
-      savingUfr = this.getFromScopeForm(savingUfr);
-      savingUfr = this.getFromAssets(savingUfr);
-      savingUfr = this.getFromJustificationForm(savingUfr);
-      this.performSaveOrCreate(
-        savingUfr.id ? this.ufrService.update.bind(this.ufrService) : this.ufrService.create.bind(this.ufrService),
-        savingUfr,
-        successMessage,
-        successCallback
-      );
-      return true;
+      this.getFundingData().subscribe(proposedResult => {
+        const proposedFundingLine = proposedResult.result as FundingLine[];
+        this.ufr.proposedFundingLines = proposedFundingLine;
+        let savingUfr = this.ufr;
+        savingUfr = this.getFromUfrForm(savingUfr);
+        savingUfr = this.getFromProgramForm(savingUfr);
+        savingUfr = this.getFromScopeForm(savingUfr);
+        savingUfr = this.getFromAssets(savingUfr);
+        savingUfr = this.getFromJustificationForm(savingUfr);
+        this.performSaveOrCreate(
+          savingUfr.id ? this.ufrService.update.bind(this.ufrService) : this.ufrService.create.bind(this.ufrService),
+          savingUfr,
+          successMessage,
+          successCallback
+        );
+        return true;
+      });
     }
     return false;
   }
@@ -165,30 +172,34 @@ export class UfrRequestsDetailComponent implements OnInit {
   onSubmit() {
     const canSave = this.hasNoEditingGrids(true);
     if (canSave) {
-      let savingUfr = this.ufr;
-      savingUfr = this.getFromUfrForm(savingUfr);
-      savingUfr = this.getFromProgramForm(savingUfr);
-      savingUfr = this.getFromScopeForm(savingUfr);
-      savingUfr = this.getFromAssets(savingUfr);
-      savingUfr = this.getFromJustificationForm(savingUfr);
-      this.busy = true;
-      this.ufrService
-        .update(savingUfr)
-        .pipe(
-          switchMap(resp => {
-            const savedUfr = resp.result as UFR;
-            if (this.validateFields(false)) {
-              return this.ufrService.submit(this.ufr.id);
-            }
-            return EMPTY;
+      this.getFundingData().subscribe(proposedResult => {
+        const proposedFundingLine = proposedResult.result as FundingLine[];
+        this.ufr.proposedFundingLines = proposedFundingLine;
+        let savingUfr = this.ufr;
+        savingUfr = this.getFromUfrForm(savingUfr);
+        savingUfr = this.getFromProgramForm(savingUfr);
+        savingUfr = this.getFromScopeForm(savingUfr);
+        savingUfr = this.getFromAssets(savingUfr);
+        savingUfr = this.getFromJustificationForm(savingUfr);
+        this.busy = true;
+        this.ufrService
+          .update(savingUfr)
+          .pipe(
+            switchMap(resp => {
+              const savedUfr = resp.result as UFR;
+              if (this.validateFields(false)) {
+                return this.ufrService.submit(this.ufr.id);
+              }
+              return EMPTY;
+            })
+          )
+          .subscribe(resp => {
+            this.ufr = resp.result as UFR;
+            this.loadUfrData();
+            this.toastService.displaySuccess('UFR successfully submitted.');
           })
-        )
-        .subscribe(resp => {
-          this.ufr = resp.result as UFR;
-          this.loadUfrData();
-          this.toastService.displaySuccess('UFR successfully submitted.');
-        })
-        .add(() => (this.busy = false));
+          .add(() => (this.busy = false));
+      });
     }
   }
 
@@ -282,7 +293,17 @@ export class UfrRequestsDetailComponent implements OnInit {
     if (!this.setDispositionDlg.form.invalid) {
       this.ufr.disposition = this.setDispositionDlg.form.get(['dispositionType']).value;
       this.ufr.explanation = this.setDispositionDlg.form.get(['explanation']).value;
-      this.onSave('Disposition saved successfully.', this.router.navigate(['/programming/ufr-requests']));
+      this.busy = true;
+      this.ufrService
+        .disposition(this.ufr)
+        .subscribe(resp => {
+          this.toastService.displaySuccess('Disposition saved successfully.');
+          this.router.navigate(['/programming/ufr-requests']);
+        })
+        .add(() => {
+          this.setDispositionDlg.display = false;
+          this.busy = false;
+        });
     }
   }
 
@@ -450,6 +471,10 @@ export class UfrRequestsDetailComponent implements OnInit {
       strategicImperativeId: this.ufrProgramForm.form.get(['strategicImperativeId']).value,
       agencyObjectiveId: this.ufrProgramForm.form.get(['agencyObjectiveId']).value
     };
+  }
+
+  private getFundingData() {
+    return this.fundingLineService.obtainFundingLinesByContainerId(this.ufr.id);
   }
 
   private getFromScopeForm(ufr: UFR): UFR {

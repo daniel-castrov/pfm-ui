@@ -15,4 +15,5 @@ export abstract class UfrService extends BaseRestService {
   abstract update(ufr: UFR): Observable<any>;
   abstract remove(id: string): Observable<any>;
   abstract submit(id: string): Observable<any>;
+  abstract disposition(ufr: UFR): Observable<any>;
 }

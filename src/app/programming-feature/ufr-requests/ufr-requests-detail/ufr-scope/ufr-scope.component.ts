@@ -115,9 +115,9 @@ export class UfrScopeComponent implements OnInit {
   }
 
   loadExternalInfo() {
-    this.ufrService.getByContainerId(this.ufr.id).subscribe(resp => {
-      const ufrRetrieved = resp.result as UFR;
-      this.loadBudget(ufrRetrieved.fundingLines);
+    this.ufrService.getById(this.ufr.id).subscribe(resp => {
+      const ufrRetrieved = (resp as any).result as UFR;
+      this.loadBudget(ufrRetrieved.proposedFundingLines);
       this.loadScheduleRange(ufrRetrieved.schedules);
     });
   }

@@ -204,11 +204,11 @@ export class UfrFundsComponent implements OnInit {
             return this.workspaceService.getByContainerIdAndVersion(pom.id, 1).pipe(
               map((workspaceResp: any) => {
                 const workspace = workspaceResp.result as Workspace;
-                return of(workspace.id);
+                return workspace.id;
               })
             );
           } else {
-            return of(pom.id);
+            return pom.id;
           }
         }),
         catchError(error => {
@@ -285,7 +285,7 @@ export class UfrFundsComponent implements OnInit {
           by2: fundingLine.by2,
           by3: fundingLine.by3,
           by4: fundingLine.by4,
-          ctc: 0,
+          ctc: fundingLine.ctc,
           fyTotal: 0,
           action: null
         });
@@ -305,6 +305,7 @@ export class UfrFundsComponent implements OnInit {
           totalRevisedFunding.by2 += fundingLine.by2 ?? 0;
           totalRevisedFunding.by3 += fundingLine.by3 ?? 0;
           totalRevisedFunding.by4 += fundingLine.by4 ?? 0;
+          totalRevisedFunding.ctc += fundingLine.ctc ?? 0;
         } else {
           this.totalRevisedFundingLineRows.push({
             appropriation: fundingLine.appropriation,
@@ -320,7 +321,7 @@ export class UfrFundsComponent implements OnInit {
             by2: fundingLine.by2,
             by3: fundingLine.by3,
             by4: fundingLine.by4,
-            ctc: 0,
+            ctc: fundingLine.ctc,
             fyTotal: 0,
             action: null
           });

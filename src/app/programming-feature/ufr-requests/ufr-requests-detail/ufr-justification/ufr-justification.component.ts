@@ -99,11 +99,11 @@ export class UfrJustificationComponent implements OnInit {
             return this.workspaceService.getByContainerIdAndVersion(pom.id, 1).pipe(
               map((workspaceResp: any) => {
                 const workspace = workspaceResp.result as Workspace;
-                return of(workspace.id);
+                return workspace.id;
               })
             );
           } else {
-            return of(pom.id);
+            return pom.id;
           }
         }),
         catchError(error => {

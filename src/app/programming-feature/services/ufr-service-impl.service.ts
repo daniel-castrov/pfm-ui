@@ -40,4 +40,8 @@ export class UfrServiceImpl extends UfrService {
   submit(id: string) {
     return this.put('ufr/submit', id);
   }
+
+  disposition(ufr: UFR) {
+    return this.put('ufr/disposition', ufr);
+  }
 }
