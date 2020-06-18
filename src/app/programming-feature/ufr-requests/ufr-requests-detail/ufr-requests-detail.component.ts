@@ -298,7 +298,7 @@ export class UfrRequestsDetailComponent implements OnInit {
         .disposition(this.ufr)
         .subscribe(resp => {
           this.toastService.displaySuccess('Disposition saved successfully.');
-          this.router.navigate(['/programming/ufr-requests']);
+          this.performBackButton();
         })
         .add(() => {
           this.setDispositionDlg.display = false;
