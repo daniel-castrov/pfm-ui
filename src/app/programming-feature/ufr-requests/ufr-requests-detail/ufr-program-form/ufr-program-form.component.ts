@@ -177,6 +177,7 @@ export class UfrProgramFormComponent implements OnInit {
       this.form.controls['agencyObjectiveId'].disable();
     }
   }
+
   populateDropDownsAndLoadForm() {
     this.organizationService
       .getAll()
@@ -186,7 +187,6 @@ export class UfrProgramFormComponent implements OnInit {
           return this.planningService.getPlanningByYear(this.pomYear);
         }),
         switchMap(planning => {
-          this.showMissionPriority = true;
           return this.planningService.getMissionPrioritiesForPOM(planning.result.id);
         }),
         catchError(error => {
@@ -197,7 +197,8 @@ export class UfrProgramFormComponent implements OnInit {
           return of(undefined);
         }),
         switchMap(missionPriorities => {
-          if (missionPriorities) {
+          if (missionPriorities?.length) {
+            this.showMissionPriority = true;
             this.missionPriorities = missionPriorities.result;
           }
           return this.tagService.getByType(this.DIVISIONS);

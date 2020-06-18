@@ -56,6 +56,7 @@ export class UfrFormComponent implements OnInit {
     this.form.controls['modified'].disable();
     this.form.controls['modifiedBy'].disable();
   }
+
   getShortyTypeLabel(shortyType: ShortyType) {
     switch (shortyType) {
       case ShortyType.MRDB_PROGRAM: {

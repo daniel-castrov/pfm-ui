@@ -607,7 +607,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
                 proposedFundingLine.sag = fundingLine.sag;
                 proposedFundingLine.wucd = fundingLine.wucd;
                 proposedFundingLine.expenditureType = fundingLine.expenditureType;
-                proposedFundingLine.ctc = fundingLine.ctc;
+                proposedFundingLine.ctc = 0;
                 proposedFundingLine.userCreated = fundingLine.userCreated;
                 const funds: { [key: string]: number } = {};
                 for (let i = this.pom.fy; i < this.pom.fy + 5; i++) {
@@ -767,7 +767,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
     });
     this.ufrService.getByContainerId(this.selectedPom.value).subscribe(resp => {
       const ufrs = resp.result as UFR[];
-      ufrs.forEach(ufr => {
+      ufrs?.forEach(ufr => {
         ufr.shortyTypeDescription = getShortyTypeDescription(ufr.shortyType);
         ufr.ufrStatusDescription = getUFRStatusDescription(ufr.ufrStatus);
         if (ufr.disposition) {
