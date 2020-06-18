@@ -18,7 +18,7 @@ import { catchError, map, switchMap } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { Role } from '../../pfm-common-models/Role';
 import { ListItemHelper } from '../../util/ListItemHelper';
-import { PlanningStatus } from '../../planning-feature/models/enumerators/planning-status.model';
+import { PomStatus } from '../models/enumerations/pom-status.model';
 
 @Component({
   selector: 'pfm-programming',
@@ -121,7 +121,7 @@ export class CloseProgrammingComponent implements OnInit {
       .pipe(
         switchMap(resp => {
           this.programmingModel.pom = (resp as any).result;
-          if (this.programmingModel.pom.status === PlanningStatus.LOCKED) {
+          if (this.programmingModel.pom.status === PomStatus.LOCKED) {
             this.pomYear = this.programmingModel.pom.fy;
             return this.programmingService
               .getPRsForContainer(this.programmingModel.pom.id, null)
