@@ -870,6 +870,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
     const canReview =
       this.appModel['visibilityDef']['ufr-requests-summary-component']?.canReview &&
       ufr.ufrStatus === UFRStatus.SUBMITTED &&
+      this.pom.status === PomStatus.OPEN &&
       !ufr.disposition;
     const canDeleteSingle =
       ufr.createdBy === this.appModel.userDetails.cacId &&
