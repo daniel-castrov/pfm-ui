@@ -15,6 +15,7 @@ import { WorkspaceService } from '../../../services/workspace.service';
 import { ProgrammingService } from '../../../services/programming-service';
 import { FundingLineService } from '../../../services/funding-line.service';
 import { ShortyType } from '../../../models/enumerations/shorty-type.model';
+import { FundingLineType } from 'src/app/programming-feature/models/enumerations/funding-line-type.model';
 
 @Component({
   selector: 'pfm-ufr-justification',
@@ -123,7 +124,7 @@ export class UfrJustificationComponent implements OnInit {
       .pipe(
         switchMap(program => {
           return this.fundingLineService
-            .obtainFundingLinesByContainerId(program.id)
+            .obtainFundingLinesByContainerId(program.id, FundingLineType.PROGRAM)
             .pipe(map(fundingLines => this.convertFundsToFiscalYear(fundingLines, false)));
         }),
         catchError(error => {
@@ -138,15 +139,17 @@ export class UfrJustificationComponent implements OnInit {
   }
 
   private loadDataFromUfr() {
-    this.fundingLineService.obtainFundingLinesByContainerId(this.ufr.id).subscribe(resp => {
-      const proposedFundingLine = resp.result as FundingLine[];
-      this.proposedFundingLineRows = [];
-      proposedFundingLine?.forEach(fundingLine => {
-        this.proposedFundingLineRows.push(this.fundingLineToFundingData(fundingLine, true));
-      });
+    this.fundingLineService
+      .obtainFundingLinesByContainerId(this.ufr.id, FundingLineType.UFR_PROPOSED)
+      .subscribe(resp => {
+        const proposedFundingLine = resp.result as FundingLine[];
+        this.proposedFundingLineRows = [];
+        proposedFundingLine?.forEach(fundingLine => {
+          this.proposedFundingLineRows.push(this.fundingLineToFundingData(fundingLine, true));
+        });
 
-      this.loadDataForTotalRevisedFunding();
-    });
+        this.loadDataForTotalRevisedFunding();
+      });
   }
   private loadDataForTotalRevisedFunding() {
     this.totalRevisedFundingLineRows = [];
