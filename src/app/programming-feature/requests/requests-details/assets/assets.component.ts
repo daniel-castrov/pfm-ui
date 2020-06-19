@@ -105,10 +105,7 @@ export class AssetsComponent implements OnInit {
       remarks: new FormControl('')
     });
     this.form.controls.fundingLineSelect.patchValue(0);
-    this.form.controls.remarks.valueChanges.subscribe(val => {
-      const asset = this.program.assets && this.program.assets.find(a => a.id === this.selectedAsset.id);
-      asset.remarks = val;
-    });
+    this.setupOnChangeRemark();
   }
 
   private async loadToBeUsedBy() {
@@ -849,6 +846,13 @@ export class AssetsComponent implements OnInit {
     }
   }
 
+  private setupOnChangeRemark() {
+    this.form.get('remarks').valueChanges.subscribe(val => {
+      const asset = this.program.assets && this.program.assets.find(a => a.id === this.selectedAsset.id);
+      asset.remarks = val;
+    });
+  }
+
   changePageEditMode(editMode: boolean) {
     this.pageEditMode = editMode;
     this.actionState.EDIT.editMode = editMode;
@@ -856,6 +860,7 @@ export class AssetsComponent implements OnInit {
 
     if (editMode) {
       this.form.get('remarks').enable();
+      this.setupOnChangeRemark();
     } else {
       this.form.get('remarks').disable();
     }
