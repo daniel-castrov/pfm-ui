@@ -20,6 +20,7 @@ import { AssetSummary } from 'src/app/programming-feature/models/asset-summary.m
 import { AssetSummaryService } from 'src/app/programming-feature/services/asset-summary.service';
 import { DropdownCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/dropdown-cell-renderer/dropdown-cell-renderer.component';
 import { ListItem } from 'src/app/pfm-common-models/ListItem';
+import { FundingLineType } from 'src/app/programming-feature/models/enumerations/funding-line-type.model';
 
 @Component({
   selector: 'pfm-assets',
@@ -174,7 +175,7 @@ export class AssetsComponent implements OnInit {
 
   async getFundingLineOptions() {
     await this.fundingLineService
-      .obtainFundingLinesByContainerId(this.program.id)
+      .obtainFundingLinesByContainerId(this.program.id, FundingLineType.PROGRAM)
       .pipe(
         map(resp => {
           this.form.controls.fundingLineSelect.disable();

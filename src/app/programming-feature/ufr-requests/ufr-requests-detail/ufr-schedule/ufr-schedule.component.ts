@@ -18,6 +18,7 @@ import * as moment from 'moment';
 import { Schedule } from '../../../models/schedule.model';
 import { DropdownCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/dropdown-cell-renderer/dropdown-cell-renderer.component';
 import { UFR } from 'src/app/programming-feature/models/ufr.model';
+import { FundingLineType } from 'src/app/programming-feature/models/enumerations/funding-line-type.model';
 
 @Component({
   selector: 'pfm-ufr-schedule',
@@ -122,7 +123,7 @@ export class UfrScheduleComponent implements OnInit {
     this.fundingGridAssociations = [];
     this.scheduleGridRows = [];
     this.fundingLineService
-      .obtainFundingLinesByContainerId(this.ufr.id)
+      .obtainFundingLinesByContainerId(this.ufr.id, FundingLineType.UFR_PROPOSED)
       .pipe(
         map(resp => {
           const fundingLines = resp.result as FundingLine[];

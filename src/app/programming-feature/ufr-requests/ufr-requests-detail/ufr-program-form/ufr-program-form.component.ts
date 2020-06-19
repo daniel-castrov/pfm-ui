@@ -252,6 +252,7 @@ export class UfrProgramFormComponent implements OnInit {
         this.agencyPriorities = Array.from({ length: 20 }, (x, i) => i + 1);
         this.directoratePriorities = Array.from({ length: 20 }, (x, i) => i + 1);
         this.loadForm();
+        this.loadImage();
         this.changeEditMode(this.editMode);
       });
   }

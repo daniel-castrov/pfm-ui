@@ -26,6 +26,7 @@ import { DispositionType } from '../../models/disposition-type.model';
 import { UfrFundsComponent } from './ufr-funds/ufr-funds.component';
 import { FundingLine } from '../../models/funding-line.model';
 import { FundingLineService } from '../../services/funding-line.service';
+import { FundingLineType } from '../../models/enumerations/funding-line-type.model';
 
 @Component({
   selector: 'pfm-ufr-requests-detail',
@@ -242,6 +243,21 @@ export class UfrRequestsDetailComponent implements OnInit {
         }
       }
     }
+    if (this.ufrFunds && !this.clickedReviewForApproval) {
+      for (const fundingLine of ufr.proposedFundingLines) {
+        let total = 0;
+        for (let i = this.pomYear; i < this.pomYear + 5; i++) {
+          total += fundingLine.funds[i];
+        }
+        if (!total) {
+          this.toastService.displayError(
+            'One or more funding lines seen in the Proposed Funding grid has BY through BY+4 values all set to $0. ' +
+              'Please add a requested amount or delete the funding line.'
+          );
+          passedValidation = false;
+        }
+      }
+    }
     if (this.ufrJustification) {
       ufr = this.getFromJustificationForm(ufr);
       if (!ufr.justification) {
@@ -296,11 +312,18 @@ export class UfrRequestsDetailComponent implements OnInit {
       this.busy = true;
       this.ufrService
         .disposition(this.ufr)
-        .subscribe(resp => {
-          this.toastService.displaySuccess('Disposition saved successfully.');
-          this.router.navigate(['/programming/ufr-requests']);
-        })
+        .subscribe(
+          resp => {
+            this.toastService.displaySuccess('Disposition saved successfully.');
+            this.performBackButton();
+          },
+          error => {
+            this.toastService.displayError(error.error.error);
+          }
+        )
         .add(() => {
+          this.setDispositionDlg.form.get('dispositionType').markAsPristine();
+          this.setDispositionDlg.form.get('explanation').markAsPristine();
           this.setDispositionDlg.display = false;
           this.busy = false;
         });
@@ -474,7 +497,7 @@ export class UfrRequestsDetailComponent implements OnInit {
   }
 
   private getFundingData() {
-    return this.fundingLineService.obtainFundingLinesByContainerId(this.ufr.id);
+    return this.fundingLineService.obtainFundingLinesByContainerId(this.ufr.id, FundingLineType.UFR_PROPOSED);
   }
 
   private getFromScopeForm(ufr: UFR): UFR {

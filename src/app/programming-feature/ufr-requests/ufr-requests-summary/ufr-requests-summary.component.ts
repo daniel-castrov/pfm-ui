@@ -77,12 +77,6 @@ export class UfrRequestsSummaryComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.pomService.getPomYearsByStatus(['CREATED', 'OPEN', 'LOCKED', 'CLOSED']).subscribe(resp => {
-      const poms = (resp as any).result as Pom[];
-      this.poms = ListItemHelper.generateListItemFromArray(poms.map(pom => ['POM ' + pom.fy, pom.id]));
-      this.loadPreviousContainerSelection();
-    });
-
     this.selectedOrg = {
       id: 'Select',
       name: 'Select',
@@ -96,8 +90,13 @@ export class UfrRequestsSummaryComponent implements OnInit {
 
     this.setupVisibility()
       .pipe(
-        switchMap(response => {
-          this.appModel['visibilityDef']['ufr-requests-summary-component'] = (response as any).result;
+        switchMap(resp => {
+          this.appModel['visibilityDef']['ufr-requests-summary-component'] = (resp as any).result;
+          return this.pomService.getPomYearsByStatus(['CREATED', 'OPEN', 'LOCKED', 'CLOSED']);
+        }),
+        switchMap(resp => {
+          const poms = (resp as any).result as Pom[];
+          this.poms = ListItemHelper.generateListItemFromArray(poms.map(pom => ['POM ' + pom.fy, pom.id]));
           return this.pomService.getLatestPom();
         })
       )
@@ -106,6 +105,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
         this.showGridAddCta =
           (this.pom.status === PomStatus.CREATED || this.pom.status === PomStatus.OPEN) &&
           this.appModel['visibilityDef']['ufr-requests-summary-component']?.gridAdd;
+        this.loadPreviousContainerSelection();
       });
     this.infoIconMessage =
       'Only those programs that are not assigned to the Funds Requestor appear in the dropdown list.';

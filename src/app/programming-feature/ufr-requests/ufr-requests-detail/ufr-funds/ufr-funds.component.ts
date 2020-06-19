@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild, HostListener } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ColGroupDef, GridApi } from '@ag-grid-community/all-modules';
 import { DataGridMessage } from '../../../../pfm-coreui/models/DataGridMessage';
 import { NumericCellEditor } from 'src/app/ag-grid/cell-editors/NumericCellEditor';
@@ -7,7 +7,7 @@ import { FundingLineService } from 'src/app/programming-feature/services/funding
 import { FundingData } from 'src/app/programming-feature/models/funding-data.model';
 import { map, switchMap, catchError } from 'rxjs/operators';
 import { FundingLine } from 'src/app/programming-feature/models/funding-line.model';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { PropertyService } from '../../../services/property.service';
 import { PropertyType } from '../../../models/enumerations/property-type.model';
 import { DropdownCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/dropdown-cell-renderer/dropdown-cell-renderer.component';
@@ -24,6 +24,7 @@ import { PomStatus } from 'src/app/programming-feature/models/enumerations/pom-s
 import { Workspace } from 'src/app/programming-feature/models/workspace';
 import { Program } from 'src/app/programming-feature/models/Program';
 import { ShortyType } from 'src/app/programming-feature/models/enumerations/shorty-type.model';
+import { FundingLineType } from 'src/app/programming-feature/models/enumerations/funding-line-type.model';
 
 @Component({
   selector: 'pfm-ufr-funds',
@@ -172,6 +173,9 @@ export class UfrFundsComponent implements OnInit {
     this.approvedFundingLineGridApi = api;
     this.approvedFundingLineGridApi.setHeaderHeight(0);
     this.approvedFundingLineRows = [];
+    this.ufr.approvedFundingLines?.forEach(fundingLine => {
+      this.approvedFundingLineRows.push(this.fundingLineToFundingData(fundingLine, false));
+    });
     this.updateTotalFields(this.approvedFundingLineGridApi, this.approvedFundingLineRows, 'Approved');
     this.approvedFundingLineGridApi.hideOverlay();
   }
@@ -228,7 +232,7 @@ export class UfrFundsComponent implements OnInit {
       .pipe(
         switchMap(program => {
           return this.fundingLineService
-            .obtainFundingLinesByContainerId(program.id)
+            .obtainFundingLinesByContainerId(program.id, FundingLineType.PROGRAM)
             .pipe(map(fundingLines => this.convertFundsToFiscalYear(fundingLines, false)));
         }),
         catchError(error => {
@@ -250,21 +254,23 @@ export class UfrFundsComponent implements OnInit {
   }
 
   private loadDataFromUfr() {
-    this.fundingLineService.obtainFundingLinesByContainerId(this.ufr.id).subscribe(resp => {
-      const proposedFundingLine = resp.result as FundingLine[];
-      this.proposedFundingLineRows = [];
-      proposedFundingLine?.forEach(fundingLine => {
-        this.proposedFundingLineRows.push(this.fundingLineToFundingData(fundingLine, true));
+    this.fundingLineService
+      .obtainFundingLinesByContainerId(this.ufr.id, FundingLineType.UFR_PROPOSED)
+      .subscribe(resp => {
+        const proposedFundingLine = resp.result as FundingLine[];
+        this.proposedFundingLineRows = [];
+        proposedFundingLine?.forEach(fundingLine => {
+          this.proposedFundingLineRows.push(this.fundingLineToFundingData(fundingLine, true));
+        });
+        this.updateTotalFields(this.proposedFundingLineGridApi, this.proposedFundingLineRows, 'Proposed');
+        this.proposedFundingLineGridApi.setRowData(this.proposedFundingLineRows);
+        this.proposedFundingLineGridApi.hideOverlay();
+        if (!this.showCurrentFundingGrid) {
+          this.loadDataForTotalRevisedFunding();
+          this.loadDataForApprovedFunding();
+        }
+        this.changeEditMode(this.editMode);
       });
-      this.updateTotalFields(this.proposedFundingLineGridApi, this.proposedFundingLineRows, 'Proposed');
-      this.proposedFundingLineGridApi.setRowData(this.proposedFundingLineRows);
-      this.proposedFundingLineGridApi.hideOverlay();
-      if (!this.showCurrentFundingGrid) {
-        this.loadDataForTotalRevisedFunding();
-        this.loadDataForApprovedFunding();
-      }
-      this.changeEditMode(this.editMode);
-    });
   }
 
   private loadDataForTotalRevisedFunding() {

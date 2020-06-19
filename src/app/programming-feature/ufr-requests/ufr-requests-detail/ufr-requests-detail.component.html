@@ -79,7 +79,11 @@
     [title]="setDispositionDlg.title"
     [body]="createProgramBody"
     [actions]="createProgramActions"
-    (onCancelDialog)="setDispositionDlg.display = false"
+    (onCancelDialog)="
+      setDispositionDlg.form.get('dispositionType').markAsPristine();
+      setDispositionDlg.form.get('explanation').markAsPristine();
+      setDispositionDlg.display = false
+    "
   ></pfm-custom-dialog>
 
   <ng-template #createProgramBody>
@@ -153,7 +157,13 @@
     </div>
 
     <div class="pull-right">
-      <pfm-cancel-cta (onCancelClicked)="setDispositionDlg.display = false"></pfm-cancel-cta>
+      <pfm-cancel-cta
+        (onCancelClicked)="
+          setDispositionDlg.form.get('dispositionType').markAsPristine();
+          setDispositionDlg.form.get('explanation').markAsPristine();
+          setDispositionDlg.display = false
+        "
+      ></pfm-cancel-cta>
     </div>
   </ng-template>
 </ng-container>

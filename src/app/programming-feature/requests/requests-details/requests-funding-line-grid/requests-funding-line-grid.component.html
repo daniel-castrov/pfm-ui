@@ -195,7 +195,7 @@
 </ng-container>
 
 <ng-template #expandCollapse>
-  <div>
+  <div *ngIf="pom?.status !== 'CREATED'">
     <fa-icon [icon]="'angle-double-down'" title="Expand all rows" *ngIf="!expanded" (click)="expand()"></fa-icon>
     <fa-icon [icon]="'angle-double-up'" title="Collapse all rows" *ngIf="expanded" (click)="collapse()"></fa-icon>
   </div>

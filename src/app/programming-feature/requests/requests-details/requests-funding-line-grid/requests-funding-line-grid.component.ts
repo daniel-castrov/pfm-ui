@@ -12,12 +12,6 @@ import { FundingLine } from 'src/app/programming-feature/models/funding-line.mod
 import { Observable, of } from 'rxjs';
 import { PropertyService } from '../../../services/property.service';
 import { PropertyType } from '../../../models/enumerations/property-type.model';
-import { Property } from '../../../models/property.model';
-import { Appropriation } from '../../../models/appropriation.model';
-import { BaBlin } from '../../../models/ba-blin.model';
-import { SAG } from '../../../models/sag.model';
-import { ExpenditureType } from '../../../models/expenditure-type.model';
-import { WorkUnitCode } from '../../../models/work-unit-code.model';
 import { RestResponse } from 'src/app/util/rest-response';
 import { DropdownCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/dropdown-cell-renderer/dropdown-cell-renderer.component';
 import { GoogleChartComponent, GoogleChartInterface } from 'ng2-google-charts';
@@ -34,6 +28,9 @@ import { formatDate } from '@angular/common';
 import { UserService } from 'src/app/services/user-impl-service';
 import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
 import { AllowedCharacters } from 'src/app/ag-grid/cell-editors/AllowedCharacters';
+import { PomService } from '../../../services/pom-service';
+import { Pom } from '../../../models/Pom';
+import { FundingLineType } from 'src/app/programming-feature/models/enumerations/funding-line-type.model';
 
 @Component({
   selector: 'pfm-requests-funding-line-grid',
@@ -217,7 +214,10 @@ export class RequestsFundingLineGridComponent implements OnInit {
   currentRowHistoryGraph = -1;
   editMode: boolean;
 
+  pom: Pom;
+
   constructor(
+    protected pomService: PomService,
     private programmingModel: ProgrammingModel,
     private dialogService: DialogService,
     private propertyService: PropertyService,
@@ -228,6 +228,9 @@ export class RequestsFundingLineGridComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.pomService.getLatestPom().subscribe((res: RestResponse<Pom>) => {
+      this.pom = res.result;
+    });
     this.isPomOpenStatus = this.programmingModel.pom.status === PomStatus.OPEN;
     this.setupSummaryFundingLineGrid();
     this.setupNonSummaryFundingLineGrid();
@@ -407,7 +410,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
 
   private loadDataFromProgram() {
     this.fundingLineService
-      .obtainFundingLinesByContainerId(this.program.id)
+      .obtainFundingLinesByContainerId(this.program.id, FundingLineType.PROGRAM)
       .pipe(map(resp => this.convertFundsToFiscalYear(resp)))
       .subscribe(resp => {
         const fundingLines = resp as FundingData[];
