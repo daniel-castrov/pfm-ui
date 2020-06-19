@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { FundingLineService } from './funding-line.service';
 import { FundingLine } from '../models/funding-line.model';
 import { HttpParams } from '@angular/common/http';
+import { FundingLineType } from '../models/enumerations/funding-line-type.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +13,8 @@ export class FundingLineServiceImpl extends FundingLineService {
     return this.get('funding-line/' + fundingLineId);
   }
 
-  obtainFundingLinesByContainerId(containerId: string): Observable<any> {
-    return this.get('funding-line/container/' + containerId);
+  obtainFundingLinesByContainerId(containerId: string, fundingLineType: FundingLineType): Observable<any> {
+    return this.get('funding-line/container/' + containerId + '/funding-line-type/' + fundingLineType);
   }
 
   createFundingLine(fundingLine: FundingLine): Observable<any> {

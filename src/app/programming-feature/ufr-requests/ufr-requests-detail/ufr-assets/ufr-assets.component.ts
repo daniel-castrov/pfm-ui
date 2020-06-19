@@ -20,6 +20,7 @@ import { AssetSummaryService } from 'src/app/programming-feature/services/asset-
 import { DropdownCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/dropdown-cell-renderer/dropdown-cell-renderer.component';
 import { ListItem } from 'src/app/pfm-common-models/ListItem';
 import { UFR } from 'src/app/programming-feature/models/ufr.model';
+import { FundingLineType } from 'src/app/programming-feature/models/enumerations/funding-line-type.model';
 
 @Component({
   selector: 'pfm-ufr-assets',
@@ -176,7 +177,7 @@ export class UfrAssetsComponent implements OnInit {
 
   async getFundingLineOptions() {
     await this.fundingLineService
-      .obtainFundingLinesByContainerId(this.ufr.id)
+      .obtainFundingLinesByContainerId(this.ufr.id, FundingLineType.UFR_PROPOSED)
       .pipe(
         map(resp => {
           this.form.controls.fundingLineSelect.disable();

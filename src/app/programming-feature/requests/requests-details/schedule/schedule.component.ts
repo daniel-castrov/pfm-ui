@@ -18,6 +18,7 @@ import { ScheduleService } from '../../../services/schedule.service';
 import * as moment from 'moment';
 import { Schedule } from '../../../models/schedule.model';
 import { DropdownCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/dropdown-cell-renderer/dropdown-cell-renderer.component';
+import { FundingLineType } from 'src/app/programming-feature/models/enumerations/funding-line-type.model';
 
 @Component({
   selector: 'pfm-schedule',
@@ -122,7 +123,7 @@ export class ScheduleComponent implements OnInit {
     this.fundingGridAssociations = [];
     this.scheduleGridRows = [];
     this.fundingLineService
-      .obtainFundingLinesByContainerId(this.program.id)
+      .obtainFundingLinesByContainerId(this.program.id, FundingLineType.PROGRAM)
       .pipe(
         map(resp => {
           const fundingLines = resp.result as FundingLine[];
