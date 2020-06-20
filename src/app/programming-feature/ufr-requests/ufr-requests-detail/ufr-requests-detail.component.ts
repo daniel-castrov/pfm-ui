@@ -251,19 +251,18 @@ export class UfrRequestsDetailComponent implements OnInit {
         );
         passedValidation = false;
       } else {
+        let total = 0;
         for (const fundingLine of ufr.proposedFundingLines) {
-          let total = 0;
           for (let i = this.pomYear; i < this.pomYear + 5; i++) {
             total += fundingLine.funds[i];
           }
-          if (!total) {
-            this.toastService.displayError(
-              'You have requested a UFR for $0. ' +
-                'Please go back to the funding line and add values in the Proposed section.'
-            );
-            passedValidation = false;
-            break;
-          }
+        }
+        if (!total) {
+          this.toastService.displayError(
+            'You have requested a UFR for $0. ' +
+              'Please go back to the funding line and add values in the Proposed section.'
+          );
+          passedValidation = false;
         }
       }
     }
