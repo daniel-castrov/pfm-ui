@@ -38,7 +38,7 @@
     >
     </pfm-datagrid>
     <pfm-datagrid
-      *ngIf="ufr.disposition"
+      *ngIf="ufr.disposition && ufr.approvedFundingLines?.length"
       (gridIsReady)="onApprovedFundingLineGridIsReady($event)"
       [columns]="approvedFundingLineColumnsDefinition"
       [rows]="approvedFundingLineRows"
