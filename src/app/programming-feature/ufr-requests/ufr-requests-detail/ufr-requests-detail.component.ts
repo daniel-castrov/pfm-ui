@@ -259,8 +259,7 @@ export class UfrRequestsDetailComponent implements OnInit {
         }
         if (!total) {
           this.toastService.displayError(
-            'You have requested a UFR for $0. ' +
-              'Please go back to the funding line and add values in the Proposed section.'
+            'You have requested a UFR for $0. Please go back to the Funds Tab and add values in the Proposed section.'
           );
           passedValidation = false;
         }
