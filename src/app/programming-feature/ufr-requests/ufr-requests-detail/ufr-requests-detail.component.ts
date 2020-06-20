@@ -252,19 +252,17 @@ export class UfrRequestsDetailComponent implements OnInit {
         passedValidation = false;
       } else {
         for (const fundingLine of ufr.proposedFundingLines) {
-          if (fundingLine.userCreated) {
-            let total = 0;
-            for (let i = this.pomYear; i < this.pomYear + 5; i++) {
-              total += fundingLine.funds[i];
-            }
-            if (!total) {
-              this.toastService.displayError(
-                'One or more funding lines seen in the Proposed Funding grid has BY through BY+4 values' +
-                  'all set to $0. Please add a requested amount or delete the funding line.'
-              );
-              passedValidation = false;
-              break;
-            }
+          let total = 0;
+          for (let i = this.pomYear; i < this.pomYear + 5; i++) {
+            total += fundingLine.funds[i];
+          }
+          if (!total) {
+            this.toastService.displayError(
+              'One or more funding lines seen in the Proposed Funding grid has BY through BY+4 values' +
+                'all set to $0. Please add a requested amount or delete the funding line.'
+            );
+            passedValidation = false;
+            break;
           }
         }
       }
