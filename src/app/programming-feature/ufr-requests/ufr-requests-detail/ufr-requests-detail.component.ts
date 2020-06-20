@@ -246,8 +246,7 @@ export class UfrRequestsDetailComponent implements OnInit {
     if (this.ufrFunds && !this.clickedReviewForApproval) {
       if (!ufr.proposedFundingLines?.length) {
         this.toastService.displayError(
-          'It seems like there are no Funding Lines in the Proposed Funding grid.' +
-            'Please add a Funding Line before submitting.'
+          'You have requested a UFR for $0. Please go back to the Funds Tab and add values in the Proposed section.'
         );
         passedValidation = false;
       } else {
