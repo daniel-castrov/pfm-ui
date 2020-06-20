@@ -258,8 +258,8 @@ export class UfrRequestsDetailComponent implements OnInit {
           }
           if (!total) {
             this.toastService.displayError(
-              'One or more funding lines seen in the Proposed Funding grid has BY through BY+4 values' +
-                'all set to $0. Please add a requested amount or delete the funding line.'
+              'You have requested a UFR for $0. ' +
+                'Please go back to the funding line and add values in the Proposed section.'
             );
             passedValidation = false;
             break;
