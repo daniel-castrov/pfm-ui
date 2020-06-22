@@ -31,6 +31,7 @@ import { UFRStatus, getUFRStatusDescription } from '../../models/enumerations/uf
 import { getDispositionDescription } from '../../models/enumerations/disposition.model';
 import { FundingLine } from '../../models/funding-line.model';
 import { FormatterUtil } from 'src/app/util/formatterUtil';
+import { Workspace } from '../../models/workspace';
 
 @Component({
   selector: 'pfm-ufr-requests-summary',
@@ -798,16 +799,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
         this.displayDeleteDialog(cellAction, this.deleteRow.bind(this));
         break;
       case 'review':
-        this.router.navigate(
-          [
-            '/programming/ufr-requests/details/' + this.rows[cellAction.rowIndex].id,
-            {
-              pomYear: this.pom.fy,
-              tab: 0
-            }
-          ],
-          { state: { editMode: true, clickedReviewForApproval: true } }
-        );
+        this.onReview(cellAction.rowIndex);
         break;
     }
   }
@@ -834,6 +826,52 @@ export class UfrRequestsSummaryComponent implements OnInit {
         }
       );
     }
+  }
+
+  private onReview(rowIndex: number) {
+    const ufr = this.rows[rowIndex];
+    if (ufr.shortyType === ShortyType.PR) {
+      this.workspaceService.getByProgramShortName(ufr.shortName).subscribe(resp => {
+        const workspaces: Workspace[] = (resp as any).result;
+        let activeWksp = false;
+        if (workspaces) {
+          for (const workspace of workspaces) {
+            if (workspace.active) {
+              activeWksp = true;
+              break;
+            }
+          }
+        }
+        if (activeWksp) {
+          this.goToDetails(ufr.id, true, true, undefined);
+        } else {
+          this.dialogService.displayConfirmation(
+            'The UFR has been created for a program request that is not currently on any active workspace. <br/><br/>' +
+              'Either have the originator delete the UFR, or make at least one workspace active where the ' +
+              'program request resides.',
+            'Unable to Review',
+            () => {},
+            () => {}
+          );
+        }
+      });
+    } else {
+      this.goToDetails(ufr.id, true, true, undefined);
+    }
+  }
+
+  private goToDetails(id: string, editMode: boolean, clickedReviewForApproval: boolean, params: any) {
+    const navigationValues = [
+      '/programming/ufr-requests/details/' + id,
+      {
+        pomYear: this.pom.fy,
+        tab: 0
+      }
+    ];
+    if (params) {
+      navigationValues.push(params);
+    }
+    this.router.navigate(navigationValues, { state: { editMode, clickedReviewForApproval } });
   }
 
   private displayDeleteDialog(cellAction: DataGridMessage, deleteFunction: (rowIndex: number) => void) {
