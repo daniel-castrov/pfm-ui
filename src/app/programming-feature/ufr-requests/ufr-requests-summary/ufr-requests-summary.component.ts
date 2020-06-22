@@ -61,6 +61,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
   showGridAddCta: boolean;
   selectedShortyType: ShortyType;
   deleteDialog: DeleteDialogInterface = { title: 'Delete' };
+  canEdit: boolean;
 
   constructor(
     private pomService: PomService,
@@ -789,9 +790,9 @@ export class UfrRequestsSummaryComponent implements OnInit {
     switch (cellAction.message) {
       case 'cellClicked':
         if (cellAction.columnId === 'requestNumber') {
-          this.columnDetailClicked(this.rows[cellAction.rowIndex].id);
+          this.columnDetailClicked(this.rows[cellAction.rowIndex]);
         } else if (cellAction.columnId === 'origin' && this.rows[cellAction.rowIndex].originatedFrom) {
-          this.columnDetailClicked(this.rows[cellAction.rowIndex].originatedFrom.id);
+          this.columnDetailClicked(this.rows[cellAction.rowIndex].originatedFrom);
         }
         break;
       case 'delete':
@@ -804,12 +805,16 @@ export class UfrRequestsSummaryComponent implements OnInit {
     }
   }
 
-  columnDetailClicked(ufrId: string) {
+  columnDetailClicked(ufr: UFR) {
+    this.canEdit =
+      (ufr.ufrStatus === UFRStatus.SAVED || ufr.ufrStatus === UFRStatus.SUBMITTED) &&
+      !ufr.disposition &&
+      ufr.createdBy === this.appModel.userDetails.cacId;
     const params = {
       pomYear: this.pom.fy,
       tab: 0
     };
-    this.router.navigate(['/programming/ufr-requests/details/' + ufrId, params]);
+    this.goToDetails(ufr.id, this.canEdit, false, params);
   }
 
   private deleteRow(rowIndex: number) {
@@ -861,13 +866,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
   }
 
   private goToDetails(id: string, editMode: boolean, clickedReviewForApproval: boolean, params: any) {
-    const navigationValues = [
-      '/programming/ufr-requests/details/' + id,
-      {
-        pomYear: this.pom.fy,
-        tab: 0
-      }
-    ];
+    const navigationValues = ['/programming/ufr-requests/details/' + id];
     if (params) {
       navigationValues.push(params);
     }

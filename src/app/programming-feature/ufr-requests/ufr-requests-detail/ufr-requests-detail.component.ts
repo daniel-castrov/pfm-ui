@@ -60,7 +60,6 @@ export class UfrRequestsDetailComponent implements OnInit {
   showSetDisposition: boolean;
   clickedReviewForApproval: boolean;
   selectUfrId: string;
-  canEdit: boolean;
   editMode: boolean;
 
   setDispositionDlg = {
@@ -105,10 +104,7 @@ export class UfrRequestsDetailComponent implements OnInit {
       .pipe(
         switchMap(resp => {
           this.ufr = (resp as any).result as UFR;
-          this.canEdit =
-            (this.ufr.ufrStatus === UFRStatus.SAVED || this.ufr.ufrStatus === UFRStatus.SUBMITTED) &&
-            this.ufr.createdBy === this.appModel.userDetails.cacId;
-          this.editMode = history.state.editMode || false;
+          this.editMode = history.state.editMode;
           this.clickedReviewForApproval = history.state.clickedReviewForApproval || false;
           return this.pomService.getPomForYear(this.pomYear);
         }),
