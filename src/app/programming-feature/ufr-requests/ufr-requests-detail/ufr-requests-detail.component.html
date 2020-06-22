@@ -7,12 +7,6 @@
     </h3>
   </div>
   <div class="div-buttons" *ngIf="appModel.visibilityDef['ufr-requests-detail-component']">
-    <div class="div-button" *ngIf="canEdit && !editMode">
-      <button (click)="onEditModeChange(true)" type="button" class="btn btn-primary">
-        <i class="fa fa-pencil"></i>
-        Edit
-      </button>
-    </div>
     <ng-container *ngIf="showSetDisposition && editMode">
       <div class="div-button" *pfmIsVisible="'ufr-requests-detail-component.setDisposition'">
         <button (click)="showDispositionDlg()" class="btn btn-success">
