@@ -66,7 +66,7 @@
               <textarea>{{ activeMessage.debug | json }}</textarea>
             </ng-container>
             <ng-container *ngIf="activeMessage.type === 'CONFIRMATION'">
-              <p>{{ activeMessage.body }}</p>
+              <p [innerHTML]="activeMessage.body"></p>
             </ng-container>
             <ng-container *ngIf="activeMessage.type === 'CHECKSELECTION'">
               <form action="">
