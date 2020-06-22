@@ -32,6 +32,7 @@ import { getDispositionDescription } from '../../models/enumerations/disposition
 import { FundingLine } from '../../models/funding-line.model';
 import { FormatterUtil } from 'src/app/util/formatterUtil';
 import { Workspace } from '../../models/workspace';
+import { RestResponse } from 'src/app/util/rest-response';
 
 @Component({
   selector: 'pfm-ufr-requests-summary',
@@ -833,22 +834,18 @@ export class UfrRequestsSummaryComponent implements OnInit {
     }
   }
 
-  private onReview(rowIndex: number) {
+  private onReview(rowIndex: number): void {
     const ufr = this.rows[rowIndex];
+    const params = {
+      pomYear: this.pom.fy,
+      tab: 0
+    };
     if (ufr.shortyType === ShortyType.PR) {
-      this.workspaceService.getByProgramShortName(ufr.shortName).subscribe(resp => {
-        const workspaces: Workspace[] = (resp as any).result;
-        let activeWksp = false;
-        if (workspaces) {
-          for (const workspace of workspaces) {
-            if (workspace.active) {
-              activeWksp = true;
-              break;
-            }
-          }
-        }
-        if (activeWksp) {
-          this.goToDetails(ufr.id, true, true, undefined);
+      this.workspaceService.getByProgramShortName(ufr.shortName).subscribe((resp: RestResponse<Workspace[]>) => {
+        const workspaces: Workspace[] = resp.result ?? [];
+        const isAnyWorkspaceActive = workspaces.findIndex(ws => ws.active) >= 0;
+        if (isAnyWorkspaceActive) {
+          this.goToDetails(ufr.id, true, true, params);
         } else {
           this.dialogService.displayConfirmation(
             'The UFR has been created for a program request that is not currently on any active workspace. <br/><br/>' +
@@ -861,11 +858,11 @@ export class UfrRequestsSummaryComponent implements OnInit {
         }
       });
     } else {
-      this.goToDetails(ufr.id, true, true, undefined);
+      this.goToDetails(ufr.id, true, true, params);
     }
   }
 
-  private goToDetails(id: string, editMode: boolean, clickedReviewForApproval: boolean, params: any) {
+  private goToDetails(id: string, editMode: boolean, clickedReviewForApproval: boolean, params: any): void {
     const navigationValues = ['/programming/ufr-requests/details/' + id];
     if (params) {
       navigationValues.push(params);
