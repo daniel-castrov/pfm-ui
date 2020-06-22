@@ -11,6 +11,7 @@ import { RoleConstants } from 'src/app/pfm-common-models/role-contants.model';
 import { PrsActionCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/prs-action-cell-renderer/prs-action-cell-renderer.component';
 import { ProgrammingService } from 'src/app/programming-feature/services/programming-service';
 import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
+import { RestResponse } from 'src/app/util/rest-response';
 
 @Component({
   selector: 'pfm-requests-summary-grid',
@@ -174,12 +175,20 @@ export class RequestsSummaryGridComponent implements OnInit {
   onCellClicked(cellAction: DataGridMessage): void {
     if (cellAction.columnId === 'programName') {
       // navigate to the program details
-      this.router.navigate([
-        '/programming/requests/details/' + cellAction.rowData['id'],
-        {
-          pomYear: this.pomYear
-        }
-      ]);
+      this.programmingService.canEditPR(cellAction.rowData['id']).subscribe(
+        (resp: RestResponse<boolean>) => {
+          this.router.navigate(
+            [
+              '/programming/requests/details/' + cellAction.rowData['id'],
+              {
+                pomYear: this.pomYear
+              }
+            ],
+            { state: { editMode: resp.result } }
+          );
+        },
+        error => this.dialogService.displayDebug(error)
+      );
     }
   }
 

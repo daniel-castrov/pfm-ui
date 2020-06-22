@@ -42,7 +42,6 @@ export class RequestsDetailsComponent implements OnInit {
   program: Program;
   busy: boolean;
   disableSchedule = false;
-  canEdit: boolean;
   editMode: boolean;
 
   constructor(
@@ -89,17 +88,10 @@ export class RequestsDetailsComponent implements OnInit {
     this.loadPom();
     this.loadProgram();
     this.setupVisibility();
-    this.setUpCanEdit();
     this.editMode = history.state.editMode;
     this.currentSelectedTab = openTab < 0 || openTab > 5 ? 1 : openTab;
   }
 
-  private setUpCanEdit() {
-    this.programmingService.canEditPR(this.programmingModel.selectedProgramId).subscribe(
-      resp => (this.canEdit = (resp as any).result),
-      error => this.dialogService.displayDebug(error)
-    );
-  }
   private loadPom() {
     this.pomService.getLatestPom().subscribe(
       resp => {
