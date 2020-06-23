@@ -202,7 +202,7 @@ export class UfrFundsComponent implements OnInit {
     this.pomService
       .getPomById(this.ufr.containerId)
       .pipe(
-        switchMap((resp: any) => {
+        map((resp: any) => {
           const pom = resp.result as Pom;
           if (pom.status === PomStatus.OPEN) {
             return this.workspaceService.getByContainerIdAndVersion(pom.id, 1).pipe(
