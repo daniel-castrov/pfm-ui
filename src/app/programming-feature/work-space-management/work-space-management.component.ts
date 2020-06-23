@@ -14,6 +14,7 @@ import { RoleConstants } from 'src/app/pfm-common-models/role-contants.model';
 import * as moment from 'moment';
 import { Router } from '@angular/router';
 import { Workspace } from '../models/workspace';
+import { RestResponse } from '../../util/rest-response';
 
 @Component({
   selector: 'pfm-programming',
@@ -85,8 +86,8 @@ export class WorkSpaceManagementComponent implements OnInit {
     this.byYear = FormatterUtil.getCurrentFiscalYear() + 2;
     this.setupGrid();
     this.pomService.getLatestPom().subscribe(
-      resp => {
-        this.pom = (resp as any).result;
+      (resp: RestResponse<Pom>) => {
+        this.pom = resp.result;
         this.loadRows();
       },
       error => {
@@ -279,19 +280,18 @@ export class WorkSpaceManagementComponent implements OnInit {
   private loadRows() {
     if (this.pom) {
       this.workspaceService.getByContainerId(this.pom.id).subscribe(resp => {
-        const wskpWalues = (resp as any).result;
+        const wskpValues = (resp as any).result;
         this.rows = [];
-        for (const wkspValue of wskpWalues) {
-          const workspace = wkspValue;
+        for (const workspace of wskpValues) {
           workspace.created = formatDate(workspace.created, 'M/d/yyyy HH:mm', 'en-US');
           workspace.modified = formatDate(workspace.modified, 'M/d/yyyy HH:mm', 'en-US');
-          workspace.fullNameModifiedBy = wkspValue.fullNameModifiedBy;
           const currentRow = {
             ...workspace,
             action: {
               ...this.getAction(workspace)
             },
-            disabled: false
+            disabled: false,
+            active: { ...(workspace.active ? this.checkboxConfig.active : this.checkboxConfig.inactive) }
           };
           currentRow.active = { ...(workspace.active ? this.checkboxConfig.active : this.checkboxConfig.inactive) };
           this.rows.push(currentRow);
@@ -402,7 +402,7 @@ export class WorkSpaceManagementComponent implements OnInit {
     this.router.navigate(['/programming/requests/' + params['id']]);
   }
 
-  private getAction(workspace: Workspace) {
+  private getAction(workspace: Workspace): object {
     if (this.appModel.userDetails.roles.includes(RoleConstants.POM_MANAGER)) {
       if (workspace.version === 1) {
         return this.gridActionState.DUPLICATE_ONLY;
