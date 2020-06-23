@@ -94,7 +94,7 @@ export class UfrJustificationComponent implements OnInit {
     this.pomService
       .getPomById(this.ufr.containerId)
       .pipe(
-        map((resp: any) => {
+        switchMap((resp: any) => {
           const pom = resp.result as Pom;
           if (pom.status === PomStatus.OPEN) {
             return this.workspaceService.getByContainerIdAndVersion(pom.id, 1).pipe(
@@ -104,7 +104,7 @@ export class UfrJustificationComponent implements OnInit {
               })
             );
           } else {
-            return pom.id;
+            return of(pom.id);
           }
         }),
         catchError(error => {

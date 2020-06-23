@@ -7,7 +7,7 @@ import { FundingLineService } from 'src/app/programming-feature/services/funding
 import { FundingData } from 'src/app/programming-feature/models/funding-data.model';
 import { map, switchMap, catchError } from 'rxjs/operators';
 import { FundingLine } from 'src/app/programming-feature/models/funding-line.model';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, of } from 'rxjs';
 import { PropertyService } from '../../../services/property.service';
 import { PropertyType } from '../../../models/enumerations/property-type.model';
 import { DropdownCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/dropdown-cell-renderer/dropdown-cell-renderer.component';
@@ -202,7 +202,7 @@ export class UfrFundsComponent implements OnInit {
     this.pomService
       .getPomById(this.ufr.containerId)
       .pipe(
-        map((resp: any) => {
+        switchMap((resp: any) => {
           const pom = resp.result as Pom;
           if (pom.status === PomStatus.OPEN) {
             return this.workspaceService.getByContainerIdAndVersion(pom.id, 1).pipe(
@@ -212,7 +212,7 @@ export class UfrFundsComponent implements OnInit {
               })
             );
           } else {
-            return pom.id;
+            return of(pom.id);
           }
         }),
         catchError(error => {
