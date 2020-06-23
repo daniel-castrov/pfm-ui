@@ -98,7 +98,7 @@ export class RequestsSummaryComponent implements OnInit {
   selectedWorkspace: any;
 
   constructor(
-    private programmingModel: ProgrammingModel,
+    public programmingModel: ProgrammingModel,
     private pomService: PomService,
     private programmingService: ProgrammingService,
     private roleService: RoleService,
@@ -130,7 +130,11 @@ export class RequestsSummaryComponent implements OnInit {
         }
 
         if (this.programmingModel.pom.status === PomStatus.OPEN) {
+          this.setupWorkspacesDropDown(true);
+        } else if (this.programmingModel.pom.status === PomStatus.LOCKED && this.route.snapshot.paramMap.get('id')) {
           this.setupWorkspacesDropDown();
+          this.setupResquestSummary();
+          this.setupDropDown();
         } else {
           this.setupResquestSummary();
           this.setupDropDown();
@@ -142,8 +146,12 @@ export class RequestsSummaryComponent implements OnInit {
     );
   }
 
-  private setupWorkspacesDropDown() {
-    this.workspaceService.getByContainerIdAndActive(this.programmingModel.pom.id, true).subscribe(
+  private setupWorkspacesDropDown(active?: boolean) {
+    const workspaceSub = active
+      ? this.workspaceService.getByContainerIdAndActive(this.programmingModel.pom.id, active)
+      : this.workspaceService.getByContainerId(this.programmingModel.pom.id);
+
+    workspaceSub.subscribe(
       resp => {
         const workspaces = (resp as any).result;
         const items = new Array<ListItem>();
