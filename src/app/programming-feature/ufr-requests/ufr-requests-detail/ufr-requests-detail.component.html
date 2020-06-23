@@ -68,16 +68,14 @@
   </tab>
 </tabset>
 <pfm-busy [busy]="busy"></pfm-busy>
+
 <ng-container *ngIf="setDispositionDlg.display">
   <pfm-custom-dialog
+    [isLarge]="setDispositionDlg.form.get('dispositionType').value === PARTIALLY_APPROVED"
     [title]="setDispositionDlg.title"
     [body]="createProgramBody"
     [actions]="createProgramActions"
-    (onCancelDialog)="
-      setDispositionDlg.form.get('dispositionType').markAsPristine();
-      setDispositionDlg.form.get('explanation').markAsPristine();
-      setDispositionDlg.display = false
-    "
+    (onCancelDialog)="onCancelDispositionDialog()"
   ></pfm-custom-dialog>
 
   <ng-template #createProgramBody>
@@ -113,6 +111,21 @@
               </small>
             </div>
           </div>
+        </div>
+        <div *ngIf="setDispositionDlg.form.get('dispositionType').value === PARTIALLY_APPROVED">
+          <pfm-datagrid
+            (gridIsReady)="onApprovedFundingLineGridIsReady($event)"
+            [columns]="approvedFundingLineColumnsDefinition"
+            [rows]="approvedFundingLineRows"
+            [showPagination]="false"
+            [overlayNoRowsTemplate]="' '"
+            (cellAction)="onApprovedFundingLineCellAction($event)"
+            (mousedown)="onApprovedFundingLineMouseDown($event)"
+          >
+          </pfm-datagrid>
+          <small class="form-text text-danger" *ngIf="approvedFundingLineErrorMessage">
+            {{ approvedFundingLineErrorMessage }}
+          </small>
         </div>
 
         <div class="form-group row">
@@ -151,13 +164,7 @@
     </div>
 
     <div class="pull-right">
-      <pfm-cancel-cta
-        (onCancelClicked)="
-          setDispositionDlg.form.get('dispositionType').markAsPristine();
-          setDispositionDlg.form.get('explanation').markAsPristine();
-          setDispositionDlg.display = false
-        "
-      ></pfm-cancel-cta>
+      <pfm-cancel-cta (onCancelClicked)="onCancelDispositionDialog()"></pfm-cancel-cta>
     </div>
   </ng-template>
 </ng-container>

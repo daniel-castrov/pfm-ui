@@ -381,7 +381,7 @@ export class UfrFundsComponent implements OnInit {
     return ret;
   }
 
-  private fundingLineToFundingData(fundingLine: FundingLine, hasAction: boolean) {
+  fundingLineToFundingData(fundingLine: FundingLine, hasAction: boolean) {
     const funds = fundingLine.funds;
     const fundingData = { ...fundingLine } as FundingData;
     for (let i = this.pomYear - 3, x = 0; i < this.pomYear + 5; i++, x++) {
@@ -399,7 +399,7 @@ export class UfrFundsComponent implements OnInit {
     return fundingData;
   }
 
-  private convertFiscalYearToFunds(fundingLine: FundingData, convertToThousand = true) {
+  convertFiscalYearToFunds(fundingLine: FundingData, convertToThousand = true) {
     const fundingLineToSave: FundingLine = { ...fundingLine };
     fundingLineToSave.funds = {};
     for (let i = this.pomYear - 3, x = 0; i < this.pomYear + 5; i++, x++) {
@@ -1284,7 +1284,7 @@ export class UfrFundsComponent implements OnInit {
       );
   }
 
-  private updateTotalFields(gridApi: GridApi, rows: FundingData[], tableName: string) {
+  updateTotalFields(gridApi: GridApi, rows: FundingData[], tableName: string) {
     const totalRow = {
       table: tableName,
       appropriationSummary: 'Total Funding',
