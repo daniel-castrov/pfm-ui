@@ -293,7 +293,6 @@ export class WorkSpaceManagementComponent implements OnInit {
             disabled: false,
             active: { ...(workspace.active ? this.checkboxConfig.active : this.checkboxConfig.inactive) }
           };
-          currentRow.active = { ...(workspace.active ? this.checkboxConfig.active : this.checkboxConfig.inactive) };
           this.rows.push(currentRow);
         }
       });
