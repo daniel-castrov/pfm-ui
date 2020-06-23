@@ -6,6 +6,7 @@ import { Component, Input, Output, OnInit, TemplateRef, EventEmitter } from '@an
   styleUrls: ['./custom-dialog.component.scss']
 })
 export class CustomDialogComponent implements OnInit {
+  @Input() isLarge = false;
   @Input() title: string;
   @Input() body: TemplateRef<any>;
   @Input() actions: TemplateRef<any>;

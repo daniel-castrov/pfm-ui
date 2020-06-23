@@ -86,7 +86,6 @@ export class RequestsSummaryComponent implements OnInit {
       type: new FormControl('PROGRAM', [Validators.required]),
       organizationId: new FormControl('', [Validators.required])
     }),
-    bodyText: `At least one year's PR Totals are below the organization TOAs. Do you want to continue?`,
     continueAction: null,
     display: false
   };

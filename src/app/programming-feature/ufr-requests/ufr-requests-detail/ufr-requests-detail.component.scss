@@ -6,3 +6,34 @@
   float: right;
   padding-right: 3px;
 }
+
+:host ::ng-deep {
+  .pfm-data .main-header,
+  .pfm-data .ag-header-group-cell.ag-header-group-cell-no-group {
+    background: white;
+    color: black;
+    border-left: solid 1px #0000002b;
+  }
+
+  .modal-footer {
+    display: flex;
+    flex-grow: 1;
+  }
+
+  .pfm-data .ag-body-viewport .aggregate-cell,
+  .pfm-data .ag-row-pinned {
+    background-color: #ffeb3b59;
+  }
+
+  .pfm-data .ag-body-viewport .regular-cell {
+    background-color: #bbced7;
+  }
+
+  .wrap-text {
+    white-space: normal;
+  }
+
+  pfm-datagrid .pfm-datagrid-extras {
+    display: none;
+  }
+}
