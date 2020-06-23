@@ -211,7 +211,7 @@ export class RequestsSummaryGridComponent implements OnInit {
             deleteRowMessage =
               'This program request has the following related UFRs: <div class="ml-3">' +
               resp.result.map(u => 'ID ' + [u.requestNumber, u.ufrName].filter(Boolean).join(' ')).join(', ') +
-              '</div>Deleting the program request will also delete these UFRs.  Are you sure you want to delete?';
+              '</div>Deleting the program request will also delete these UFRs. Are you sure you want to delete?';
           } else if (this.programmingModel.pom.status === PomStatus.OPEN) {
             deleteRowMessage =
               'This program request has the following related UFRs: <div class="ml-3">' +
