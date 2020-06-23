@@ -84,7 +84,7 @@ export class WorkSpaceManagementComponent implements OnInit {
   ngOnInit() {
     this.byYear = FormatterUtil.getCurrentFiscalYear() + 2;
     this.setupGrid();
-    this.pomService.getOpenPom().subscribe(
+    this.pomService.getLatestPom().subscribe(
       resp => {
         this.pom = (resp as any).result;
         this.loadRows();
@@ -278,30 +278,25 @@ export class WorkSpaceManagementComponent implements OnInit {
 
   private loadRows() {
     if (this.pom) {
-      this.workspaceService.getByContainerId(this.pom.id).subscribe(
-        resp => {
-          const wskpWalues = (resp as any).result;
-          this.rows = [];
-          for (const wkspValue of wskpWalues) {
-            const workspace = wkspValue;
-            workspace.created = formatDate(workspace.created, 'M/d/yyyy HH:mm', 'en-US');
-            workspace.modified = formatDate(workspace.modified, 'M/d/yyyy HH:mm', 'en-US');
-            workspace.fullNameModifiedBy = wkspValue.fullNameModifiedBy;
-            const currentRow = {
-              ...workspace,
-              action: {
-                ...this.getAction(workspace)
-              },
-              disabled: false
-            };
-            currentRow.active = { ...(workspace.active ? this.checkboxConfig.active : this.checkboxConfig.inactive) };
-            this.rows.push(currentRow);
-          }
-        },
-        error => {
-          this.dialogService.displayError(error.error.error);
+      this.workspaceService.getByContainerId(this.pom.id).subscribe(resp => {
+        const wskpWalues = (resp as any).result;
+        this.rows = [];
+        for (const wkspValue of wskpWalues) {
+          const workspace = wkspValue;
+          workspace.created = formatDate(workspace.created, 'M/d/yyyy HH:mm', 'en-US');
+          workspace.modified = formatDate(workspace.modified, 'M/d/yyyy HH:mm', 'en-US');
+          workspace.fullNameModifiedBy = wkspValue.fullNameModifiedBy;
+          const currentRow = {
+            ...workspace,
+            action: {
+              ...this.getAction(workspace)
+            },
+            disabled: false
+          };
+          currentRow.active = { ...(workspace.active ? this.checkboxConfig.active : this.checkboxConfig.inactive) };
+          this.rows.push(currentRow);
         }
-      );
+      });
     }
   }
 
