@@ -11,5 +11,6 @@ export class Workspace {
   createdBy?: any;
 
   action?: any;
+  selectedFinal?: boolean;
   constructor() {}
 }

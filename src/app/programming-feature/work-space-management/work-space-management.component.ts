@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormatterUtil } from 'src/app/util/formatterUtil';
 import { ColDef, GridApi } from '@ag-grid-community/all-modules';
 import { formatDate } from '@angular/common';
@@ -16,11 +16,13 @@ import { Router } from '@angular/router';
 import { Workspace } from '../models/workspace';
 import { RestResponse } from '../../util/rest-response';
 import { PomStatus } from '../models/enumerations/pom-status.model';
+import { WkspSelectionRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/wksp-selection-renderer/wksp-selection-renderer.component';
 
 @Component({
   selector: 'pfm-programming',
   templateUrl: './work-space-management.component.html',
-  styleUrls: ['./work-space-management.component.scss']
+  styleUrls: ['./work-space-management.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class WorkSpaceManagementComponent implements OnInit {
   byYear: number;
@@ -118,8 +120,10 @@ export class WorkSpaceManagementComponent implements OnInit {
         filter: false,
         sortable: false,
         suppressMenu: true,
+        cellRendererFramework: WkspSelectionRendererComponent,
         cellClass: params => {
           return [
+            'selectedws',
             'numeric-class',
             this.currentWorkspaceRowDataState.currentEditingRowIndex === params.rowIndex &&
             this.currentWorkspaceRowDataState.isEditMode
@@ -300,6 +304,7 @@ export class WorkSpaceManagementComponent implements OnInit {
             disabled: false,
             active: { ...(workspace.active ? this.checkboxConfig.active : this.checkboxConfig.inactive) }
           };
+          currentRow.active = { ...(workspace.active ? this.checkboxConfig.active : this.checkboxConfig.inactive) };
           this.rows.push(currentRow);
         }
       });
@@ -353,7 +358,6 @@ export class WorkSpaceManagementComponent implements OnInit {
             const workspace = (resp as any).result;
             workspace.created = formatDate(workspace.created, 'M/d/yyyy HH:mm', 'en-US');
             workspace.modified = formatDate(workspace.modified, 'M/d/yyyy HH:mm', 'en-US');
-            workspace.fullNameModifiedBy = workspace.fullNameModifiedBy;
             workspace.action = { ...this.getAction(workspace) };
             workspace.active = { ...(workspace.active ? this.checkboxConfig.active : this.checkboxConfig.inactive) };
             newRow = {
@@ -377,7 +381,6 @@ export class WorkSpaceManagementComponent implements OnInit {
             const workspace = (resp as any).result;
             workspace.created = formatDate(workspace.created, 'M/d/yyyy HH:mm', 'en-US');
             workspace.modified = formatDate(workspace.modified, 'M/d/yyyy HH:mm', 'en-US');
-            workspace.fullNameModifiedBy = workspace.fullNameModifiedBy;
             workspace.active = { ...(workspace.active ? this.checkboxConfig.active : this.checkboxConfig.inactive) };
             newRow = {
               ...workspace,
