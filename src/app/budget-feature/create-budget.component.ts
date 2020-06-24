@@ -27,13 +27,14 @@ export class CreateBudgetComponent implements OnInit {
     this.budgetService.findAvailableYears().subscribe(res => {
       this.years = res.body ?? [];
       if (this.years.length === 0) {
-        this.toastService.displayWarning('No year is available since there are no LOCKED or CLOSED POMs without budgets.');
+        this.toastService
+          .displayWarning('No year is available since there are no LOCKED or CLOSED POMs without budgets.');
       }
     });
   }
 
   create(): void {
-    // this.isCreating = true;
+    this.isCreating = true;
     // User must select a year before performing this action
     if (!this.selectedYear) {
       this.toastService.displayWarning('Please select a budget year in the dropdown.');
@@ -47,13 +48,14 @@ export class CreateBudgetComponent implements OnInit {
     }, (httpError: HttpErrorResponse) => {
       // if no budget was found for the selected fiscal year, then we can create a new one
       if (httpError.status === 404) {
-        // TODO send the request to create a budget for the current fiscal year
-        /*this.budgetService.create(this.selectedYear).subscribe(res => {
+        // send the request to create a budget for the current fiscal year
+        this.budgetService.create(this.selectedYear).subscribe(() => {
           this.isCreating = false;
           this.toastService.displaySuccess('Budget successfully created.');
-        }, () => {
+        }, (err: HttpErrorResponse) => {
           this.isCreating = false;
-        });*/
+          this.toastService.displayError(err.message);
+        });
       }
     });
   }
