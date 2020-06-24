@@ -82,8 +82,7 @@ export class WorkSpaceManagementComponent implements OnInit {
     private workspaceService: WorkspaceService,
     private pomService: PomService,
     private router: Router
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
     this.byYear = FormatterUtil.getCurrentFiscalYear() + 2;
@@ -104,7 +103,7 @@ export class WorkSpaceManagementComponent implements OnInit {
   }
 
   private setupGrid() {
-    const cellStyle = {display: 'flex', 'align-items': 'center', 'white-space': 'normal'};
+    const cellStyle = { display: 'flex', 'align-items': 'center', 'white-space': 'normal' };
     this.columnDefinitions = [
       {
         headerName: 'Version',
@@ -175,7 +174,7 @@ export class WorkSpaceManagementComponent implements OnInit {
         cellEditorFramework: CheckboxCellRendererComponent,
         valueSetter: params => {
           const disableState = params.data.active.disabled;
-          params.data.active = {...(params.newValue ? this.checkboxConfig.active : this.checkboxConfig.inactive)};
+          params.data.active = { ...(params.newValue ? this.checkboxConfig.active : this.checkboxConfig.inactive) };
           params.data.active.disabled = disableState;
           return true;
         }
@@ -296,9 +295,9 @@ export class WorkSpaceManagementComponent implements OnInit {
               ...this.getAction(workspace)
             },
             disabled: false,
-            active: {...(workspace.active ? this.checkboxConfig.active : this.checkboxConfig.inactive)}
+            active: { ...(workspace.active ? this.checkboxConfig.active : this.checkboxConfig.inactive) }
           };
-          currentRow.active = {...(workspace.active ? this.checkboxConfig.active : this.checkboxConfig.inactive)};
+          currentRow.active = { ...(workspace.active ? this.checkboxConfig.active : this.checkboxConfig.inactive) };
           this.rows.push(currentRow);
         }
       });
@@ -307,7 +306,7 @@ export class WorkSpaceManagementComponent implements OnInit {
 
   editWorkSpace(rowIndex: number, updatePreviousState?: boolean) {
     if (updatePreviousState) {
-      this.currentWorkspaceRowDataState.currentEditingRowData = {...this.rows[rowIndex]};
+      this.currentWorkspaceRowDataState.currentEditingRowData = { ...this.rows[rowIndex] };
     }
     const editRow = this.rows[rowIndex];
     editRow.action = this.gridActionState.EDIT;
@@ -325,7 +324,7 @@ export class WorkSpaceManagementComponent implements OnInit {
       id: params.id,
       version: null,
       name: params.name,
-      active: {...this.checkboxConfig.active},
+      active: { ...this.checkboxConfig.active },
       notes: null,
       createdDate: null,
       lastUpdatedDate: null,
@@ -345,7 +344,7 @@ export class WorkSpaceManagementComponent implements OnInit {
     if (this.validateRow(newRow)) {
       newRow.action = this.gridActionState.VIEW;
       if (this.currentWorkspaceRowDataState.isDuplicateMode) {
-        const newWorkspace = {...newRow};
+        const newWorkspace = { ...newRow };
         newWorkspace.active = newRow.active.checked;
         this.workspaceService.duplicate(newWorkspace).subscribe(
           resp => {
@@ -354,7 +353,7 @@ export class WorkSpaceManagementComponent implements OnInit {
             workspace.created = formatDate(workspace.created, 'M/d/yyyy HH:mm', 'en-US');
             workspace.modified = formatDate(workspace.modified, 'M/d/yyyy HH:mm', 'en-US');
             workspace.fullNameModifiedBy = wkspValue.fullNameModifiedBy;
-            workspace.active = {...(workspace.active ? this.checkboxConfig.active : this.checkboxConfig.inactive)};
+            workspace.active = { ...(workspace.active ? this.checkboxConfig.active : this.checkboxConfig.inactive) };
             newRow = {
               ...workspace,
               action: {
@@ -370,7 +369,7 @@ export class WorkSpaceManagementComponent implements OnInit {
           }
         );
       } else {
-        const newWorkspace = {...newRow};
+        const newWorkspace = { ...newRow };
         newWorkspace.active = newRow.active.checked;
         newWorkspace.created = moment(newWorkspace.created, 'M/d/yyyy HH:mm', 'en-US');
         newWorkspace.modified = null;
@@ -381,7 +380,7 @@ export class WorkSpaceManagementComponent implements OnInit {
             workspace.created = formatDate(workspace.created, 'M/d/yyyy HH:mm', 'en-US');
             workspace.modified = formatDate(workspace.modified, 'M/d/yyyy HH:mm', 'en-US');
             workspace.fullNameModifiedBy = wkspValue.fullNameModifiedBy;
-            workspace.active = {...(workspace.active ? this.checkboxConfig.active : this.checkboxConfig.inactive)};
+            workspace.active = { ...(workspace.active ? this.checkboxConfig.active : this.checkboxConfig.inactive) };
             newRow = {
               ...workspace,
               action: {
@@ -460,7 +459,7 @@ export class WorkSpaceManagementComponent implements OnInit {
     } else {
       this.rows[
         this.currentWorkspaceRowDataState.currentEditingRowIndex
-        ] = this.currentWorkspaceRowDataState.currentEditingRowData;
+      ] = this.currentWorkspaceRowDataState.currentEditingRowData;
     }
     this.gridApi.stopEditing();
     this.startViewMode();

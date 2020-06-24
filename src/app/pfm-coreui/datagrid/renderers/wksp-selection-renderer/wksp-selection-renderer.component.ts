@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ICellEditorAngularComp } from '@ag-grid-community/angular';
 
 @Component({
@@ -7,15 +7,12 @@ import { ICellEditorAngularComp } from '@ag-grid-community/angular';
   styleUrls: ['./wksp-selection-renderer.component.scss']
 })
 export class WkspSelectionRendererComponent implements ICellEditorAngularComp {
-
-  constructor() { }
+  constructor() {}
 
   data: any;
   agInit(params: any): void {
-   this.data = params.data;
+    this.data = params.data;
   }
 
-  getValue(): any {
-  }
-
+  getValue(): any {}
 }

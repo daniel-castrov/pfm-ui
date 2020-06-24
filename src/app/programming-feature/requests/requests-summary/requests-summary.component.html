@@ -63,7 +63,7 @@
     </pfm-dropdown>
   </div>
 </div>
-<div class="state" *ngIf="programmingModelReady">POM is {{programmingModel.pom.status}}</div>
+<div class="state" *ngIf="programmingModelReady">POM is {{ programmingModel.pom.status }}</div>
 <div *ngIf="programmingModelReady" class="section-pods">
   <gridster [options]="options">
     <gridster-item #orgWidetItem [item]="dashboard[0]">

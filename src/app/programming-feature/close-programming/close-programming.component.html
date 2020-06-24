@@ -5,7 +5,7 @@
     </div>
     <div class="button-container col-6 text-right p-0">
       <div class="div-button-return">
-        <button type="button" class="btn btn-primary">
+        <button type="button" class="btn btn-primary" (click)="onValidateCloseProgrammingPhase()">
           Close Programming Phase
         </button>
       </div>
@@ -51,3 +51,39 @@
     </div>
   </div>
 </ng-container>
+
+<ng-container *ngIf="closeConfirmationDlg.display">
+  <pfm-custom-dialog
+    [title]="closeConfirmationDlg.title"
+    [body]="yearSkipBody"
+    [actions]="yearSkipActions"
+    (onCancelDialog)="closeConfirmationDlg.display = false"
+  ></pfm-custom-dialog>
+
+  <ng-template #yearSkipBody>
+    <span
+      ><b>
+        Are you sure you want to close the POM Session?
+      </b>
+    </span>
+    <br />
+    <br />
+    <span>
+      Be advised that this is irreversible.
+    </span>
+  </ng-template>
+
+  <ng-template #yearSkipActions>
+    <div class="pull-left">
+      <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onCloseProgrammingPhase()">
+        Lock
+      </button>
+    </div>
+
+    <div class="pull-right">
+      <pfm-cancel-cta (onCancelClicked)="closeConfirmationDlg.display = false"></pfm-cancel-cta>
+    </div>
+  </ng-template>
+</ng-container>
+
+<pfm-busy [busy]="busy"></pfm-busy>

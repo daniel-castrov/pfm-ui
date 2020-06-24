@@ -64,4 +64,12 @@ export class PomServiceImpl extends PomService {
   lockPom(pom: Pom, workspace: Workspace): Observable<object> {
     return this.put(`pom/${pom.id}/${workspace.id}/lock`);
   }
+
+  canClosePom(pom: Pom): Observable<object> {
+    return this.get(`pom/${pom.id}/canclose`);
+  }
+
+  closePom(pom: Pom): Observable<object> {
+    return this.put(`pom/${pom.id}/close`);
+  }
 }
