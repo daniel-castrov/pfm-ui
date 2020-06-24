@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { switchMap } from 'rxjs/operators';
 
 import { ToastService } from '../pfm-coreui/services/toast.service';
 import { BudgetService } from './budget.service';
@@ -25,7 +24,12 @@ export class CreateBudgetComponent implements OnInit {
     // Values:  4-digit years where the list contains only those years that:
     // have no budget year already created
     // The Programming Phased has been Locked or Closed for the chosen year
-    this.budgetService.findAvailableYears().subscribe(res => this.years = res.body ?? []);
+    this.budgetService.findAvailableYears().subscribe(res => {
+      this.years = res.body ?? [];
+      if (this.years.length === 0) {
+        this.toastService.displayWarning('No year is available since there are no LOCKED or CLOSED POMs without budgets.');
+      }
+    });
   }
 
   create(): void {
@@ -36,7 +40,6 @@ export class CreateBudgetComponent implements OnInit {
       this.isCreating = false;
       return;
     }
-    // TODO Check to make sure the budget phase for this year does not already exist
     // There must not exist a budget phase for this year
     this.budgetService.findByFiscalYear(this.selectedYear).subscribe(() => {
       // if there is a budget, show the warning
@@ -47,32 +50,12 @@ export class CreateBudgetComponent implements OnInit {
         // TODO send the request to create a budget for the current fiscal year
         /*this.budgetService.create(this.selectedYear).subscribe(res => {
           this.isCreating = false;
+          this.toastService.displaySuccess('Budget successfully created.');
         }, () => {
           this.isCreating = false;
         });*/
       }
     });
-    /*
-    Set the Budget Phase status to CREATE
-
-    Create the Budget objects.  Port the CBDP service as your starting point
-
-    be sure the first budget scenario is created at this point.
-
-    What CBDP code does:
-
-    Execution Manager or Funds Manager
-
-    PFM has Execution Manager role but not Funds Manager Role
-
-    Various things:
-
-    Check roles and for existing execution phase
-
-    Budget object is created
-
-    Finally the ID of the newly created Budget Phase is returned to the caller
-    */
   }
 
 }
