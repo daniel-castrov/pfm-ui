@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, TitleCasePipe } from '@angular/common';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ProgrammingFeatureRoutingModule } from './programming-feature-routing.module';
 import { ProgrammingFeatureComponent } from './programming-feature.component';
@@ -14,7 +14,6 @@ import { ToaComponent } from './toa/toa.component';
 import { RequestsComponent } from './requests/requests.component';
 import { RequestsApprovalComponent } from './requests-approval/requests-approval.component';
 import { UfrRequestsComponent } from './ufr-requests/ufr-requests.component';
-import { UfrRequestsApprovalComponent } from './ufr-requests-approval/ufr-requests-approval.component';
 import { TotalAppropriationPriorityComponent } from './total-appropriation-priority/total-appropriation-priority.component';
 import { WorkSpaceManagementComponent } from './work-space-management/work-space-management.component';
 import { RequestsSummaryGridComponent } from './requests/requests-summary/requests-summary-grid/requests-summary-grid.component';
@@ -43,7 +42,7 @@ import { RequestSummaryNavigationHistoryService } from './requests/requests-summ
 import { VisibilityService } from '../services/visibility-service';
 import { VisibilityServiceImpl } from '../services/visibility-service-impl.service';
 import { RequestsDetailsFormComponent } from './requests/requests-details/requests-details-form/requests-details-form.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { JustificationComponent } from './requests/requests-details/justification/justification.component';
 import { ScopeComponent } from './requests/requests-details/scope/scope.component';
@@ -69,6 +68,26 @@ import { PropertyService } from './services/property.service';
 import { PropertyServiceImpl } from './services/property-impl.service';
 import { ScheduleService } from './services/schedule.service';
 import { ScheduleServiceImpl } from './services/schedule-impl.service';
+import { WorkspaceService } from './services/workspace.service';
+import { WorkspaceServiceImpl } from './services/workspace-impl.service';
+import { FundingLineHistoryServiceImpl } from './services/funding-line-history-impl.service';
+import { FundingLineHistoryService } from './services/funding-line-history.service';
+import { CompareWorkSpacesComponent } from './work-space-management/compare-work-spaces/compare-work-spaces.component';
+import { UserService } from '../services/user-impl-service';
+import { UserServiceImpl } from '../services/user-service';
+import { SpinnerModule } from 'primeng/spinner';
+import { UfrRequestsDetailComponent } from './ufr-requests/ufr-requests-detail/ufr-requests-detail.component';
+import { UfrRequestsSummaryComponent } from './ufr-requests/ufr-requests-summary/ufr-requests-summary.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { UfrServiceImpl } from './services/ufr-service-impl.service';
+import { UfrService } from './services/ufr-service';
+import { UfrFormComponent } from './ufr-requests/ufr-requests-detail/ufr-form/ufr-form.component';
+import { UfrProgramFormComponent } from './ufr-requests/ufr-requests-detail/ufr-program-form/ufr-program-form.component';
+import { UfrJustificationComponent } from './ufr-requests/ufr-requests-detail/ufr-justification/ufr-justification.component';
+import { UfrScheduleComponent } from './ufr-requests/ufr-requests-detail/ufr-schedule/ufr-schedule.component';
+import { UfrScopeComponent } from './ufr-requests/ufr-requests-detail/ufr-scope/ufr-scope.component';
+import { UfrAssetsComponent } from './ufr-requests/ufr-requests-detail/ufr-assets/ufr-assets.component';
+import { UfrFundsComponent } from './ufr-requests/ufr-requests-detail/ufr-funds/ufr-funds.component';
 
 @NgModule({
   declarations: [
@@ -81,9 +100,9 @@ import { ScheduleServiceImpl } from './services/schedule-impl.service';
     RequestsComponent,
     RequestsApprovalComponent,
     UfrRequestsComponent,
-    UfrRequestsApprovalComponent,
     TotalAppropriationPriorityComponent,
     WorkSpaceManagementComponent,
+    CompareWorkSpacesComponent,
     RequestsSummaryGridComponent,
     RequestsSummaryOrgWidgetComponent,
     RequestsSummaryToaWidgetComponent,
@@ -96,12 +115,22 @@ import { ScheduleServiceImpl } from './services/schedule-impl.service';
     JustificationComponent,
     RequestsDetailsFormComponent,
     ScopeComponent,
-    AssetsComponent
+    AssetsComponent,
+    UfrRequestsDetailComponent,
+    UfrRequestsSummaryComponent,
+    UfrFormComponent,
+    UfrProgramFormComponent,
+    UfrJustificationComponent,
+    UfrScheduleComponent,
+    UfrScopeComponent,
+    UfrAssetsComponent,
+    UfrFundsComponent
   ],
   imports: [
     CommonModule,
     HttpClientModule,
     ReactiveFormsModule,
+    FormsModule,
     GridsterModule,
     Ng2GoogleChartsModule,
     PfmCoreuiModule,
@@ -109,7 +138,9 @@ import { ScheduleServiceImpl } from './services/schedule-impl.service';
     PfmSecureFiledownloadModule,
     TabsModule.forRoot(),
     ProgrammingFeatureRoutingModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    SpinnerModule,
+    NgbModule
   ],
   providers: [
     { provide: ProgrammingService, useClass: ProgrammingServiceImpl },
@@ -128,8 +159,13 @@ import { ScheduleServiceImpl } from './services/schedule-impl.service';
     { provide: AssetSummaryService, useClass: AssetSummaryServiceImpl },
     { provide: PropertyService, useClass: PropertyServiceImpl },
     { provide: ScheduleService, useClass: ScheduleServiceImpl },
+    { provide: WorkspaceService, useClass: WorkspaceServiceImpl },
+    { provide: FundingLineHistoryService, useClass: FundingLineHistoryServiceImpl },
+    { provide: UserService, useClass: UserServiceImpl },
+    { provide: UfrService, useClass: UfrServiceImpl },
     ProgrammingModel,
-    RequestSummaryNavigationHistoryService
+    RequestSummaryNavigationHistoryService,
+    TitleCasePipe
   ]
 })
 export class ProgrammingFeatureModule {}

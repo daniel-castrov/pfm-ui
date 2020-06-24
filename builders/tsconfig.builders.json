@@ -7,7 +7,5 @@
     "sourceMap": false,
     "target": "es6"
   },
-  "files": [
-    "./plugin-builder/index.ts"
-  ]
+  "files": ["./plugin-builder/index.ts"]
 }

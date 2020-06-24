@@ -173,7 +173,7 @@ export class CreateProgrammingComponent implements OnInit {
     let row = {};
     row['orgid'] = '<strong><span>Baseline</span></strong>';
     this.pom.communityToas.forEach(toa => {
-      row[toa.year] = toa.amount;
+      row[toa.year] = toa.amount / 1000;
     });
 
     const actions = this.getActions();
@@ -184,7 +184,7 @@ export class CreateProgrammingComponent implements OnInit {
     row['orgid'] = '<strong><span>TOA</span></strong>';
     toarow['orgid'] = 'sub TOA Total Goal';
     this.pom.communityToas.forEach((toa: TOA) => {
-      row[toa.year] = toa.amount;
+      row[toa.year] = toa.amount / 1000;
     });
 
     for (let i = 0; i < 5; i++) {
@@ -216,7 +216,7 @@ export class CreateProgrammingComponent implements OnInit {
       row = {};
       row['orgid'] = '<strong><span>' + organization.abbreviation + '</span></strong>';
       this.pom.orgToas[organization.id]?.forEach((toa: TOA) => {
-        row[toa.year] = toa.amount;
+        row[toa.year] = toa.amount / 1000;
       });
 
       row['Organizationactions'] = this.getActions();
@@ -833,7 +833,7 @@ export class CreateProgrammingComponent implements OnInit {
 
     if (!isDelataRowValid) {
       this.dialogService.displayInfo(
-        'The Delta row in the Organization TOA grid has at least one negative value.' +
+        'The Delta row in the Organization TOA grid has at least one negative value. ' +
           'All values must be zero or positive'
       );
       return;
@@ -846,7 +846,7 @@ export class CreateProgrammingComponent implements OnInit {
     const communityToas: TOA[] = [];
     const commToaRow = this.communityData[1];
     for (let i = 0; i < 5; i++) {
-      communityToas.push({ year: this.byYear + i, amount: commToaRow[this.byYear + i] });
+      communityToas.push({ year: this.byYear + i, amount: commToaRow[this.byYear + i] * 1000 });
     }
 
     const orgToas: { [key: string]: TOA[] } = {};
@@ -854,7 +854,7 @@ export class CreateProgrammingComponent implements OnInit {
       const otoa: TOA[] = [];
       const orgRow = this.orgData[rowIndx];
       for (let i = 0; i < 5; i++) {
-        otoa.push({ year: this.byYear + i, amount: orgRow[this.byYear + i] });
+        otoa.push({ year: this.byYear + i, amount: orgRow[this.byYear + i] * 1000 });
       }
 
       let orgName = orgRow['orgid'];
@@ -866,16 +866,20 @@ export class CreateProgrammingComponent implements OnInit {
     this.pom.communityToas = communityToas;
     this.pom.orgToas = orgToas;
 
-    this.pomService.createPom(this.byYear, this.pom).subscribe(
-      resp => {
-        // Update POM from server
-        this.pom = (resp as any).result;
-        this.toastService.displaySuccess(`Programming phase for ${this.byYear} successfully created.`);
-        this.router.navigate(['/home']);
-      },
-      error => {
-        this.dialogService.displayInfo(error.error.error);
-      }
-    );
+    this.busy = true;
+    this.pomService
+      .createPom(this.byYear, this.pom)
+      .subscribe(
+        resp => {
+          // Update POM from server
+          this.pom = (resp as any).result;
+          this.toastService.displaySuccess(`Programming phase for ${this.byYear} successfully created.`);
+          this.router.navigate(['/home']);
+        },
+        error => {
+          this.dialogService.displayInfo(error.error.error);
+        }
+      )
+      .add(() => (this.busy = false));
   }
 }

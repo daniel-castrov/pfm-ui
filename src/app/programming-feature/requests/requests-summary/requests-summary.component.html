@@ -1,7 +1,7 @@
-<div class="main section-banner">
+<div class="main section-banner h-auto">
   <div class="title-line">
-    <div class="float-left w-70">
-      <h3>POM{{ pomDisplayYear }} Program Request Summary</h3>
+    <div class="float-left w-80">
+      <h3 class="w-100">POM{{ pomDisplayYear }} {{ workspaces ? 'Workspace ' : '' }}Program Request Summary</h3>
     </div>
     <div
       *ngIf="appModel.visibilityDef && appModel.visibilityDef['requests-summary-component']"
@@ -29,21 +29,41 @@
       </div>
     </div>
   </div>
-  <pfm-dropdown
-    *ngIf="availableOrgs"
-    (selectionChanged)="organizationSelected($event)"
-    [type]="'labelDropdown'"
-    [label]="'Select Organization to View:'"
-    [required]="true"
-    [id]="'availableOrgsDropDown'"
-    [defaultOption]="dropdownDefault"
-    [fieldName]="'name'"
-    [fieldLabel]="'name'"
-    [options]="availableOrgs"
-  >
-  </pfm-dropdown>
+  <div class="mb-3">
+    <pfm-dropdown
+      *ngIf="workspaces"
+      (selectionChanged)="onWorkspaceChange($event)"
+      [type]="'labelDropdown'"
+      [label]="'Select Workspace to View:'"
+      [required]="true"
+      [id]="'workspaceDropDown'"
+      [defaultOption]="dropdownDefault"
+      [fieldName]="'value'"
+      [fieldLabel]="'name'"
+      [options]="workspaces"
+      class="d-inline-block"
+    ></pfm-dropdown>
+    <span *ngIf="selectedWorkspace" class="ml-3">
+      Last updated on {{ selectedWorkspace.modified | date: 'M/d/yyyy HH:mm':undefined:'en-US' }}
+    </span>
+  </div>
+  <div class="mb-3">
+    <pfm-dropdown
+      *ngIf="availableOrgs"
+      (selectionChanged)="organizationSelected($event)"
+      [type]="'labelDropdown'"
+      [label]="'Select Organization to View:'"
+      [required]="true"
+      [id]="'availableOrgsDropDown'"
+      [defaultOption]="dropdownDefault"
+      [fieldName]="'name'"
+      [fieldLabel]="'name'"
+      [options]="availableOrgs"
+    >
+    </pfm-dropdown>
+  </div>
 </div>
-
+<div class="state" *ngIf="programmingModelReady">POM is {{programmingModel.pom.status}}</div>
 <div *ngIf="programmingModelReady" class="section-pods">
   <gridster [options]="options">
     <gridster-item #orgWidetItem [item]="dashboard[0]">
@@ -210,7 +230,7 @@
               formControlName="organizationId"
               [class.form-control-plaintext]=""
             >
-              <option value="" disabled>Select...</option>
+              <option value="" disabled>Select</option>
               <option *ngFor="let org of orgs" [value]="org.id">{{ org.abbreviation }}</option>
             </select>
             <p class="error-message col align-self-end" *ngIf="organizationErrorMessage">

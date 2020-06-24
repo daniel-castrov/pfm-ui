@@ -14,12 +14,14 @@ export class DropdownComponent implements ValidatedComponent, OnInit {
   @Input() fieldName: string;
   @Input() fieldLabel: string;
   @Input() options: ListItem[];
-  @Input() prompt = 'Please select';
+  @Input() prompt = 'Select';
   @Input() type = 'labelDropdown'; // default
   @Input() iconName: string;
   @Input() title: string;
   @Input() defaultOption: ListItem;
   @Input() showPrompt = true;
+  @Input() promptValue = 'Select';
+  @Input() disablePrompt = true;
   @Input() visible = true;
   @Output() selectionChanged = new EventEmitter<any>();
 
@@ -75,7 +77,7 @@ export class DropdownComponent implements ValidatedComponent, OnInit {
           if (!this.showPrompt) {
             this.selectedItem = this.options[0][this.fieldName];
           } else {
-            this.selectedItem = this.prompt;
+            this.selectedItem = this.promptValue;
           }
         }
       }
@@ -84,6 +86,9 @@ export class DropdownComponent implements ValidatedComponent, OnInit {
 
   private updateIsChecked(): any {
     let item: any;
+    if (this.selectedItem === this.promptValue) {
+      return { name: this.prompt, value: this.selectedItem, rawData: this.selectedItem, isSelected: true };
+    }
     for (const option of this.options) {
       option.isSelected = this.selectedItem === option[this.fieldName];
       if (option.isSelected) {

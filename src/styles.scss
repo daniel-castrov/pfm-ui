@@ -248,6 +248,10 @@ hr {
   font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
 
+.mx-0-auto {
+  margin: 0 auto !important;
+}
+
 // button primary custom colors
 .btn-primary {
   &:hover {
@@ -499,6 +503,7 @@ gridster .gridster-row {
   border: 0px !important;
   border-bottom: 1px solid #7b8389 !important;
   border-right: 1px solid #7b8389 !important;
+  width: 99.99%;
 }
 
 .ag-row-hover {
@@ -1086,6 +1091,10 @@ body {
   width: 70%;
 }
 
+.w-80 {
+  width: 80%;
+}
+
 .btn-blank {
   padding: 0;
   background: none;
@@ -1095,4 +1104,39 @@ body {
 .btn-blank:disabled {
   color: black;
   cursor: default;
+}
+
+.error-message {
+  font-size: small;
+  color: #aa4342;
+}
+
+.input-error,
+pfm-dropdown.input-error .pfm-dropdown > select {
+  border-color: #aa4342;
+}
+
+.ui-spinner-button.ui-button {
+  background-color: #3c6285;
+  border: 1px solid #24527b;
+}
+
+.ui-spinner-button.ui-button:enabled:hover {
+  background-color: #24527b;
+  border: 1px solid #24527b;
+}
+
+body .ui-spinner-input.ui-widget {
+  font-family: 'Lato', sans-serif;
+}
+
+.btn-anchor {
+  background: none;
+  border: none;
+  text-decoration: underline;
+  color: #3366cc;
+}
+
+.d-contents {
+  display: contents;
 }

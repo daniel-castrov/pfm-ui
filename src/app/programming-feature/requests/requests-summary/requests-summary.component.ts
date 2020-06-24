@@ -17,7 +17,7 @@ import { MrdbService } from '../../services/mrdb-service';
 import { Program } from '../../models/Program';
 import { RequestSummaryNavigationHistoryService } from './requests-summary-navigation-history.service';
 import { VisibilityService } from '../../../services/visibility-service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AppModel } from '../../../pfm-common-models/AppModel';
 import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
 import { PlanningStatus } from 'src/app/planning-feature/models/enumerators/planning-status.model';
@@ -25,8 +25,14 @@ import { IntIntMap } from '../../models/IntIntMap';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ProgramStatus } from '../../models/enumerations/program-status.model';
 import { RoleConstants } from 'src/app/pfm-common-models/role-contants.model';
-import { map } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { OrganizationService } from 'src/app/services/organization-service';
+import { PomStatus } from '../../models/enumerations/pom-status.model';
+import { WorkspaceService } from '../../services/workspace.service';
+import { ProgramType } from '../../models/enumerations/program-type.model';
+import { of, throwError } from 'rxjs';
+import { UfrService } from '../../services/ufr-service';
+import { UFR } from '../../models/ufr.model';
 
 @Component({
   selector: 'pfm-requests-summary',
@@ -45,11 +51,11 @@ export class RequestsSummaryComponent implements OnInit {
   griddata: ProgramSummary[];
   availableOrgs: ListItem[];
   selectedOrg: ListItem = {
-    id: 'Please select',
-    name: 'Please select',
-    value: 'Please select',
+    id: 'Select',
+    name: 'Select',
+    value: 'Select',
     isSelected: false,
-    rawData: 'Please select'
+    rawData: 'Select'
   };
   programmingModelReady: boolean;
   pomDisplayYear: string;
@@ -80,7 +86,6 @@ export class RequestsSummaryComponent implements OnInit {
       type: new FormControl('PROGRAM', [Validators.required]),
       organizationId: new FormControl('', [Validators.required])
     }),
-    bodyText: `At least one year's PR Totals are below the organization TOAs. Do you want to continue?`,
     continueAction: null,
     display: false
   };
@@ -88,6 +93,9 @@ export class RequestsSummaryComponent implements OnInit {
   programErrorMessage: string;
   programNameErrorMessage: string;
   organizationErrorMessage: string;
+  containerId: string;
+  workspaces: ListItem[];
+  selectedWorkspace: any;
 
   constructor(
     private programmingModel: ProgrammingModel,
@@ -102,10 +110,65 @@ export class RequestsSummaryComponent implements OnInit {
     private visibilityService: VisibilityService,
     public appModel: AppModel,
     private toastService: ToastService,
-    private organizationService: OrganizationService
+    private organizationService: OrganizationService,
+    private workspaceService: WorkspaceService,
+    private route: ActivatedRoute,
+    private ufrService: UfrService
   ) {}
 
   async ngOnInit() {
+    // Get latest POM
+    await this.setupVisibility();
+    this.containerId =
+      this.route.snapshot.paramMap.get('id') ?? this.requestSummaryNavigationHistoryService.getSelectedContainer();
+    this.pomService.getLatestPom().subscribe(
+      resp => {
+        this.programmingModel.pom = (resp as any).result;
+        if (this.programmingModel.pom.status !== PomStatus.CLOSED) {
+          this.pomDisplayYear = this.programmingModel.pom.fy.toString().substr(2);
+          this.pomYear = this.programmingModel.pom.fy;
+        }
+
+        if (this.programmingModel.pom.status === PomStatus.OPEN) {
+          this.setupWorkspacesDropDown();
+        } else {
+          this.setupResquestSummary();
+          this.setupDropDown();
+        }
+      },
+      error => {
+        this.dialogService.displayDebug(error);
+      }
+    );
+  }
+
+  private setupWorkspacesDropDown() {
+    this.workspaceService.getByContainerIdAndActive(this.programmingModel.pom.id, true).subscribe(
+      resp => {
+        const workspaces = (resp as any).result;
+        const items = new Array<ListItem>();
+        let item: ListItem;
+        for (const workspace of workspaces) {
+          item = new ListItem();
+          item.value = workspace.id;
+          item.rawData = workspace;
+          item.name = `Workspace ${workspace.version} - ${workspace.name}`;
+          item.id = workspace.id;
+          item.isSelected = this.containerId === workspace.id;
+          if (item.isSelected) {
+            this.onWorkspaceChange(item);
+          }
+          items.push(item);
+        }
+        this.workspaces = items;
+      },
+      error => {
+        this.dialogService.displayDebug(error);
+      }
+    );
+  }
+
+  private setupResquestSummary() {
     this.options = {
       minCols: 8,
       maxCols: 8,
@@ -145,8 +208,6 @@ export class RequestsSummaryComponent implements OnInit {
       }
     ];
 
-    await this.setupVisibility();
-
     // Populate dropdown options
     const item: ListItem = new ListItem();
     item.name = 'Previously Funded Program';
@@ -161,21 +222,6 @@ export class RequestsSummaryComponent implements OnInit {
     } else {
       this.addOptions = [item2];
     }
-
-    // Get latest POM
-    this.pomService.getLatestPom().subscribe(
-      resp => {
-        this.programmingModel.pom = (resp as any).result;
-        if (this.programmingModel.pom.status !== PlanningStatus.CLOSED) {
-          this.pomDisplayYear = this.programmingModel.pom.fy.toString().substr(2);
-          this.pomYear = this.programmingModel.pom.fy;
-        }
-        this.setupDropDown();
-      },
-      error => {
-        this.dialogService.displayDebug(error);
-      }
-    );
 
     this.roleService.getMap().subscribe(
       resp => {
@@ -217,11 +263,14 @@ export class RequestsSummaryComponent implements OnInit {
           dropdownOptions.unshift(showAllOrg);
         }
         this.availableOrgs = this.toListItemOrgs(dropdownOptions.concat(orgs));
-        if (this.availableOrgs.length === 1 || this.appModel.userDetails.roles.includes(RoleConstants.POM_MANAGER)) {
+        this.loadPreviousSelection();
+        if (
+          !this.selectedOrg &&
+          (this.availableOrgs.length === 1 || this.appModel.userDetails.roles.includes(RoleConstants.POM_MANAGER))
+        ) {
           this.organizationSelected(this.availableOrgs[0]);
         }
         this.dropdownDefault = this.selectedOrg;
-        this.loadPreviousSelection();
       },
       error => {
         this.dialogService.displayDebug(error);
@@ -291,9 +340,13 @@ export class RequestsSummaryComponent implements OnInit {
   // control view on selection from dropdown
   organizationSelected(organization: ListItem) {
     this.selectedOrg = organization;
-    if (this.selectedOrg.name !== 'Please select') {
+    if (this.selectedOrg.name !== 'Select') {
       if (this.programmingModel.pom.status !== PlanningStatus.CLOSED) {
-        this.getPRs(this.programmingModel.pom.workspaceId, this.selectedOrg.value);
+        this.containerId =
+          this.programmingModel.pom.status === PomStatus.CREATED
+            ? this.programmingModel.pom.id
+            : this.programmingModel.pom.workspaceId;
+        this.getPRs(this.containerId, this.selectedOrg.value);
         // Depending on organization selection change options visible and default chart shown
         if (organization.id === 'Show All') {
           const chartOptions: string[] = ['Community Status', 'Community TOA Difference', 'Funding Line Status'];
@@ -309,6 +362,16 @@ export class RequestsSummaryComponent implements OnInit {
     this.requestSummaryNavigationHistoryService.updateRequestSummaryNavigationHistory({
       selectedOrganization: this.selectedOrg.id.toLowerCase() === 'show all' ? 'show all' : this.selectedOrg.value
     });
+  }
+
+  onWorkspaceChange(selected: ListItem) {
+    this.selectedWorkspace = selected.rawData;
+    this.programmingModel.pom.workspaceId = this.selectedWorkspace.id;
+    this.requestSummaryNavigationHistoryService.updateRequestSummaryNavigationHistory({
+      selectedContainer: this.selectedWorkspace.id
+    });
+    this.setupResquestSummary();
+    this.setupDropDown();
   }
 
   private async getPRs(containerId: string, organizationId: string): Promise<void> {
@@ -385,7 +448,7 @@ export class RequestsSummaryComponent implements OnInit {
             type: mrdbProgram.type,
             organizationId: mrdbProgram.organizationId
           } as Program;
-          program.containerId = this.programmingModel.pom.workspaceId;
+          program.containerId = this.containerId;
           program.programStatus = ProgramStatus.SAVED;
           return program;
         })
@@ -395,13 +458,16 @@ export class RequestsSummaryComponent implements OnInit {
           this.programmingService.create(program).subscribe(
             resp => {
               const resultProgram = resp.result as Program;
-              this.router.navigate([
-                '/programming/requests/details/' + resultProgram.id,
-                {
-                  pomYear: this.pomYear,
-                  tab: 0
-                }
-              ]);
+              this.router.navigate(
+                [
+                  '/programming/requests/details/' + resultProgram.id,
+                  {
+                    pomYear: this.pomYear,
+                    tab: 0
+                  }
+                ],
+                { state: { editMode: true } }
+              );
             },
             error => {
               this.toastService.displayError('An error has occurred while attempting to save program.');
@@ -420,12 +486,7 @@ export class RequestsSummaryComponent implements OnInit {
 
   approveOrganization(skipToaValidation?: boolean) {
     this.programmingService
-      .processPRsForContainer(
-        this.programmingModel.pom.workspaceId,
-        'Approve Organization',
-        this.selectedOrg.value,
-        skipToaValidation
-      )
+      .processPRsForContainer(this.containerId, 'Approve Organization', this.selectedOrg.value, skipToaValidation)
       .subscribe(
         resp => {
           this.organizationSelected(this.selectedOrg);
@@ -440,7 +501,7 @@ export class RequestsSummaryComponent implements OnInit {
 
   onReturnOrganization(): void {
     this.programmingService
-      .processPRsForContainer(this.programmingModel.pom.workspaceId, 'Return Organization', this.selectedOrg.value)
+      .processPRsForContainer(this.containerId, 'Return Organization', this.selectedOrg.value)
       .subscribe(
         resp => {
           this.organizationSelected(this.selectedOrg);
@@ -459,12 +520,7 @@ export class RequestsSummaryComponent implements OnInit {
 
   advanceOrganization(skipToaValidation?: boolean) {
     this.programmingService
-      .processPRsForContainer(
-        this.programmingModel.pom.workspaceId,
-        'Advance Organization',
-        this.selectedOrg.value,
-        skipToaValidation
-      )
+      .processPRsForContainer(this.containerId, 'Advance Organization', this.selectedOrg.value, skipToaValidation)
       .subscribe(
         resp => {
           this.organizationSelected(this.selectedOrg);
@@ -483,7 +539,7 @@ export class RequestsSummaryComponent implements OnInit {
 
   approveAllPRs(skipToaValidation?: boolean): void {
     this.programmingService
-      .processPRsForContainer(this.programmingModel.pom.workspaceId, 'Approve All PRs', undefined, skipToaValidation)
+      .processPRsForContainer(this.containerId, 'Approve All PRs', undefined, skipToaValidation)
       .subscribe(
         resp => {
           this.organizationSelected(this.selectedOrg);
@@ -532,38 +588,100 @@ export class RequestsSummaryComponent implements OnInit {
     this.createProgramDialog.display = false;
   }
 
-  async onCreateProgramAction() {
-    this.programNameErrorMessage = null;
-    this.organizationErrorMessage = null;
-    const program = {
-      shortName: this.createProgramDialog.form.get(['shortName']).value,
-      longName: this.createProgramDialog.form.get(['longName']).value,
-      organizationId: this.createProgramDialog.form.get(['organizationId']).value
-    } as Program;
-    program.containerId = this.programmingModel.pom.workspaceId;
-    program.programStatus = ProgramStatus.SAVED;
-    const canSave = this.createProgramDialog.form.valid;
-    if (canSave) {
-      if ((await this.checkProgramAlreadyExists(program)) || (await this.checkProgramExistInMaster(program))) {
-        return;
-      }
-      this.programmingService.create(program).subscribe(
-        resp => {
-          const resultProgram = resp.result as Program;
-          this.toastService.displaySuccess('Program Request saved successfully.');
-          this.router.navigate([
-            '/programming/requests/details/' + resultProgram.id,
-            {
-              pomYear: this.pomYear,
-              tab: 0
+  onCreateProgramAction() {
+    if (this.createProgramDialog.form.valid) {
+      const program = {
+        shortName: this.createProgramDialog.form.get(['shortName']).value,
+        longName: this.createProgramDialog.form.get(['longName']).value,
+        organizationId: this.createProgramDialog.form.get(['organizationId']).value
+      } as Program;
+      program.containerId = this.containerId;
+      program.programStatus = ProgramStatus.SAVED;
+      program.type = ProgramType.PROGRAM;
+
+      this.mrdbService
+        .getByName(program.shortName)
+        .pipe(
+          switchMap(resp => {
+            if ((resp as any).result) {
+              this.programErrorMessage =
+                'The program ID entered already exists as a previously funded program. ' +
+                'Please cancel out of this and click the + button to add a Previously Funded Program.';
+              return throwError({ showValidationErrors: true });
             }
-          ]);
-        },
-        error => {
-          this.toastService.displayError('An error has occurred while attempting to save program.');
-        },
-        () => (this.busy = false)
-      );
+            return this.ufrService.getByProgramShortName(program.shortName);
+          }),
+          switchMap((resp: any) => {
+            const ufr = resp.result as UFR;
+            if (ufr) {
+              this.programErrorMessage =
+                'The program ID entered already exists on a UFR Request "' + ufr.requestNumber + '"';
+              return throwError({ showValidationErrors: true });
+            }
+            if (this.programmingModel.pom.status === PomStatus.CREATED) {
+              return this.programmingService
+                .findByShortNameAndContainerId(program.shortName, this.programmingModel.pom.id)
+                .pipe(
+                  switchMap((resp2: any) => {
+                    const pomProgram = resp2.result as Program;
+                    if (pomProgram) {
+                      return this.organizationService.getById(pomProgram.organizationId);
+                    }
+                    return of(undefined);
+                  })
+                );
+            }
+            return of(undefined);
+          }),
+          switchMap((resp: any) => {
+            if (resp) {
+              this.programErrorMessage =
+                'The program ID entered already exists on the POM in the  ' +
+                resp.result.abbreviation +
+                ' organization.';
+              return throwError({ showValidationErrors: true });
+            }
+            return this.workspaceService.getByProgramShortName(program.shortName);
+          }),
+          switchMap(resp => {
+            const workspaces = (resp as any).result;
+            if (workspaces?.length) {
+              this.programErrorMessage =
+                'The program ID entered already exists on Workspace(s)  ' +
+                workspaces.map(w => 'ID ' + w.version).join(', ') +
+                '.';
+              return throwError({ showValidationErrors: true });
+            }
+
+            return this.programmingService.create(program);
+          }),
+          catchError(error => {
+            if (!error?.showValidationErrors) {
+              this.dialogService.displayDebug(error);
+            }
+            return of();
+          })
+        )
+        .subscribe(
+          resp => {
+            const resultProgram = resp.result as Program;
+            this.toastService.displaySuccess('Program Request saved successfully.');
+            this.router.navigate(
+              [
+                '/programming/requests/details/' + resultProgram.id,
+                {
+                  pomYear: this.pomYear,
+                  tab: 0
+                }
+              ],
+              { state: { editMode: true } }
+            );
+          },
+          error => {
+            this.toastService.displayError('An error has occurred while attempting to save program.');
+          }
+        )
+        .add(() => (this.busy = false));
     } else {
       if (this.createProgramDialog.form.get('shortName').errors?.required) {
         this.programErrorMessage = 'Value required.';
@@ -575,48 +693,5 @@ export class RequestsSummaryComponent implements OnInit {
         this.organizationErrorMessage = 'Value required.';
       }
     }
-  }
-
-  private async checkProgramExistInMaster(program: Program) {
-    let ret = false;
-    let masterProgram: Program;
-    await this.mrdbService
-      .getByName(program.shortName)
-      .toPromise()
-      .then(resp => {
-        masterProgram = resp.result as Program;
-      });
-    if (masterProgram) {
-      this.programErrorMessage =
-        'The program ID entered already exists as a previously funded program. ' +
-        'Please cancel out of this and click the + button to add a Previously Funded Program.';
-      ret = true;
-    }
-    return ret;
-  }
-
-  private async checkProgramAlreadyExists(program: Program) {
-    let ret = false;
-    let databaseProgram: Program;
-    await this.programmingService
-      .findByShortNameAndContainerId(program.containerId, program.shortName)
-      .toPromise()
-      .then(resp => {
-        databaseProgram = resp.result as Program;
-      });
-    if (databaseProgram) {
-      let organizationAbbreviation: string;
-      await this.organizationService
-        .getById(databaseProgram.organizationId)
-        .toPromise()
-        .then(resp => {
-          const organization = resp.result as Organization;
-          organizationAbbreviation = organization.abbreviation;
-        });
-      this.programErrorMessage =
-        'The program ID entered already exists on the POM in the ' + organizationAbbreviation + ' organization.';
-      ret = true;
-    }
-    return ret;
   }
 }

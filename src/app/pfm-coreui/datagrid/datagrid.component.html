@@ -28,12 +28,18 @@
           [fieldLabel]="'name'"
           [options]="options"
           [showPrompt]="false"
-          [disabled]="api?.getEditingCells().length"
+          [disabled]="api?.getEditingCells().length || disableAddRow"
         >
         </pfm-dropdown>
       </div>
       <div title="Add" *ngIf="showAddSingleRow" (click)="handleAddCta('add-single-row')">
-        <fa-icon [icon]="'plus'" title="Add" [class.disabled]="api?.getEditingCells().length"></fa-icon>
+        <fa-icon
+          [icon]="'plus'"
+          [title]="addRowTooltip ? '' : 'Add'"
+          [attr.placement]="addRowTooltip ? 'left' : null"
+          [ngbTooltip]="addRowTooltip ? addRowTooltip : null"
+          [class.disabled]="api?.getEditingCells().length || disableAddRow"
+        ></fa-icon>
       </div>
     </div>
   </div>
@@ -77,6 +83,9 @@
       (paginationChanged)="agGridPagination.onPaginationChanged($event)"
       domLayout="autoHeight"
       [pinnedTopRowData]="pinnedTopRowData"
+      [overlayNoRowsTemplate]="overlayNoRowsTemplate"
+      [masterDetail]="isMasterDetail"
+      [detailCellRendererParams]="detailCellRendererParams"
     >
     </ag-grid-angular>
     <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>

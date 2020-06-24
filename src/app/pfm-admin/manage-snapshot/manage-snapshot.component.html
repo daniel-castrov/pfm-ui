@@ -1,0 +1,90 @@
+<div class="title-line">
+  <div class="float-left w-80">
+    <h3>Manage Database Snapshots</h3>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="row main-content">
+    <div class="col-md-9">
+      <!-- Export -->
+      <div class="card-header">
+        Save Snapshot
+      </div>
+      <div class="card-container">
+        <div class="row padded">
+          <div class="col-6">
+            <div class="row">
+              <div class="col-12">
+                <label>*Description:</label>
+              </div>
+            </div>
+            <div class="row mb-4">
+              <div class="col-12">
+                <div class="input-group">
+                  <input
+                    type="text"
+                    class="form-control form-input mr-1"
+                    name="description"
+                    [(ngModel)]="snapshot.description"
+                  />
+                  <button class="btn btn-secondary" [disabled]="!snapshot.description" (click)="handleSaveSnapshot()">
+                    Save
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Import -->
+      <div class="card-header">
+        Load Snapshot
+      </div>
+      <div class="card-container">
+        <div class="row mb-4 padded">
+          <div class="col-6">
+            <div class="input-group">
+              <select
+                name="snapshotSelector"
+                class="form-control form-input input-width mr-1"
+                [(ngModel)]="selectedSnapshot"
+              >
+                <option value="Select a Snapshot to load"></option>
+                <option *ngFor="let snapshot of snapshotList" [ngValue]="snapshot">
+                  {{ snapshot.description }}
+                </option>
+              </select>
+              <button class="btn btn-secondary" (click)="showConfirmDialog()">Load</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<pfm-busy [busy]="busy"></pfm-busy>
+<ng-container *ngIf="loadConfirmationDlg.display">
+  <pfm-custom-dialog
+    [title]="loadConfirmationDlg.title"
+    [body]="yearSkipBody"
+    [actions]="yearSkipActions"
+    (onCancelDialog)="loadConfirmationDlg.display = false"
+  ></pfm-custom-dialog>
+
+  <ng-template #yearSkipBody>
+    <p>You are about to change the database for ALL users.</p>
+    <p>Please be sure to get approval from others before continuing.</p>
+  </ng-template>
+
+  <ng-template #yearSkipActions>
+    <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="handleLoadSnapshot()">
+      Load
+    </button>
+
+    <div class="pull-right">
+      <pfm-cancel-cta (onCancelClicked)="loadConfirmationDlg.display = false"></pfm-cancel-cta>
+    </div>
+  </ng-template>
+</ng-container>

@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 
 import { ProgrammingFeatureComponent } from './programming-feature.component';
 import { AuthGuard } from '../pfm-auth-module/services/auth-guard';
@@ -10,12 +10,14 @@ import { LockProgrammingComponent } from './lock-programming/lock-programming.co
 import { CloseProgrammingComponent } from './close-programming/close-programming.component';
 import { RequestsApprovalComponent } from './requests-approval/requests-approval.component';
 import { UfrRequestsComponent } from './ufr-requests/ufr-requests.component';
-import { UfrRequestsApprovalComponent } from './ufr-requests-approval/ufr-requests-approval.component';
 import { ToaComponent } from './toa/toa.component';
 import { TotalAppropriationPriorityComponent } from './total-appropriation-priority/total-appropriation-priority.component';
 import { WorkSpaceManagementComponent } from './work-space-management/work-space-management.component';
 import { RequestsSummaryComponent } from './requests/requests-summary/requests-summary.component';
 import { RequestsDetailsComponent } from './requests/requests-details/requests-details.component';
+import { CompareWorkSpacesComponent } from './work-space-management/compare-work-spaces/compare-work-spaces.component';
+import { UfrRequestsDetailComponent } from './ufr-requests/ufr-requests-detail/ufr-requests-detail.component';
+import { UfrRequestsSummaryComponent } from './ufr-requests/ufr-requests-summary/ufr-requests-summary.component';
 
 const routes: Routes = [
   {
@@ -33,19 +35,32 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         children: [
           { path: '', component: RequestsSummaryComponent, canActivate: [AuthGuard] },
+          { path: ':id', component: RequestsSummaryComponent, canActivate: [AuthGuard] },
           { path: 'details/:id', component: RequestsDetailsComponent, canActivate: [AuthGuard] }
         ]
       },
       { path: 'requests-approval', component: RequestsApprovalComponent, canActivate: [AuthGuard] },
-      { path: 'ufr-requests', component: UfrRequestsComponent, canActivate: [AuthGuard] },
-      { path: 'ufr-requests-approval', component: UfrRequestsApprovalComponent, canActivate: [AuthGuard] },
+      {
+        path: 'ufr-requests',
+        component: UfrRequestsComponent,
+        canActivate: [AuthGuard],
+        children: [
+          { path: '', component: UfrRequestsSummaryComponent, canActivate: [AuthGuard] },
+          { path: 'details/:id', component: UfrRequestsDetailComponent, canActivate: [AuthGuard] }
+        ]
+      },
       { path: 'toa', component: ToaComponent, canActivate: [AuthGuard] },
       {
         path: 'total-appropriation-priority',
         component: TotalAppropriationPriorityComponent,
         canActivate: [AuthGuard]
       },
-      { path: 'work-space-management', component: WorkSpaceManagementComponent, canActivate: [AuthGuard] }
+      {
+        path: 'work-space-management',
+        component: WorkSpaceManagementComponent,
+        canActivate: [AuthGuard]
+      },
+      { path: 'compare-work-spaces', component: CompareWorkSpacesComponent, canActivate: [AuthGuard] }
     ]
   }
 ];

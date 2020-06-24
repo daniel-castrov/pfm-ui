@@ -2,6 +2,7 @@ import { Observable } from 'rxjs';
 import { BaseRestService } from '../../services/base-rest.service';
 import { HttpClient } from '@angular/common/http';
 import { Pom } from '../models/Pom';
+import { Workspace } from '../models/workspace';
 
 export abstract class PomService extends BaseRestService {
   constructor(protected httpClient: HttpClient) {
@@ -16,6 +17,8 @@ export abstract class PomService extends BaseRestService {
 
   abstract getLatestPom(): Observable<object>;
 
+  abstract getPomById(id: string): Observable<object>;
+
   abstract createPom(year: number, pom: Pom): Observable<object>;
 
   abstract getPomForYear(year: number): Observable<object>;
@@ -23,4 +26,12 @@ export abstract class PomService extends BaseRestService {
   abstract getPomYearsByStatus(status: string[]): Observable<object>;
 
   abstract openPom(pom: Pom): Observable<object>;
+
+  abstract updatePom(pom: Pom, returnPrsToFr: boolean): Observable<object>;
+
+  abstract getOpenPom(): Observable<object>;
+
+  abstract canLockPom(pom: Pom, workspace: Workspace): Observable<object>;
+
+  abstract lockPom(pom: Pom, workspaceId: Workspace): Observable<object>;
 }

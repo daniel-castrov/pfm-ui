@@ -1,7 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { GridApi, ColGroupDef, ColumnApi, CellPosition } from '@ag-grid-community/all-modules';
+import { Component, Input, OnInit } from '@angular/core';
+import { CellPosition, ColGroupDef, ColumnApi, GridApi } from '@ag-grid-community/all-modules';
 import { ActionCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/action-cell-renderer/action-cell-renderer.component';
-import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { DataGridMessage } from 'src/app/pfm-coreui/models/DataGridMessage';
 import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
 import { NumericCellEditor } from 'src/app/ag-grid/cell-editors/NumericCellEditor';
@@ -19,6 +19,8 @@ import { Tag } from 'src/app/programming-feature/models/Tag';
 import { AssetSummary } from 'src/app/programming-feature/models/asset-summary.model';
 import { AssetSummaryService } from 'src/app/programming-feature/services/asset-summary.service';
 import { DropdownCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/dropdown-cell-renderer/dropdown-cell-renderer.component';
+import { ListItem } from 'src/app/pfm-common-models/ListItem';
+import { FundingLineType } from 'src/app/programming-feature/models/enumerations/funding-line-type.model';
 
 @Component({
   selector: 'pfm-assets',
@@ -38,14 +40,16 @@ export class AssetsComponent implements OnInit {
       canEdit: true,
       canDelete: true,
       canUpload: false,
-      isSingleDelete: true
+      isSingleDelete: true,
+      editMode: false
     },
     EDIT: {
       canEdit: false,
       canSave: true,
       canDelete: true,
       canUpload: false,
-      isSingleDelete: true
+      isSingleDelete: true,
+      editMode: false
     }
   };
 
@@ -54,7 +58,7 @@ export class AssetsComponent implements OnInit {
   toBeUsedByOptions: Tag[] = [];
   contractorOrManufacturerOptions: Tag[] = [];
 
-  fundingLineOptions: any[] = [];
+  fundingLineOptions: ListItem[];
   selectedAsset: Asset;
   selectedFundingLine: string;
 
@@ -67,6 +71,7 @@ export class AssetsComponent implements OnInit {
   deleteDialog: DeleteDialogInterface = { title: 'Delete' };
 
   style: CSSStyleSheet;
+  pageEditMode: boolean;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -84,6 +89,8 @@ export class AssetsComponent implements OnInit {
     }
     this.loadForm();
     this.setupGrid();
+    this.pageEditMode = history.state.editMode;
+    this.changePageEditMode(this.pageEditMode);
   }
 
   private async setupGrid() {
@@ -98,10 +105,7 @@ export class AssetsComponent implements OnInit {
       remarks: new FormControl('')
     });
     this.form.controls.fundingLineSelect.patchValue(0);
-    this.form.controls.remarks.valueChanges.subscribe(val => {
-      const asset = this.program.assets && this.program.assets.find(a => a.id === this.selectedAsset.id);
-      asset.remarks = val;
-    });
+    this.setupOnChangeRemark();
   }
 
   private async loadToBeUsedBy() {
@@ -109,12 +113,6 @@ export class AssetsComponent implements OnInit {
       .getByType(this.TO_BE_USED_BY)
       .toPromise()
       .then(resp => {
-        this.toBeUsedByOptions.push({
-          id: null,
-          abbr: 'NONE',
-          name: 'Select',
-          type: 'NONE'
-        });
         this.toBeUsedByOptions.push(...(resp.result as Tag[]));
         this.toBeUsedByOptions.push({
           id: null,
@@ -130,18 +128,12 @@ export class AssetsComponent implements OnInit {
       .getByType(this.CONTRACTOR_OR_MANUFACTURER)
       .toPromise()
       .then(resp => {
-        this.contractorOrManufacturerOptions.push({
-          id: null,
-          abbr: 'NONE',
-          name: 'Select',
-          type: 'NONE'
-        });
         this.contractorOrManufacturerOptions.push(...(resp.result as Tag[]));
       });
   }
 
   onChangeFundingLine(event: any) {
-    this.form.get('fundingLineSelect').setValue(event.target.value, {
+    this.form.get('fundingLineSelect').setValue(event.value, {
       onlySelf: true
     });
     this.selectedFundingLine = this.form.get('fundingLineSelect').value;
@@ -180,7 +172,7 @@ export class AssetsComponent implements OnInit {
 
   async getFundingLineOptions() {
     await this.fundingLineService
-      .obtainFundingLinesByProgramId(this.program.id)
+      .obtainFundingLinesByContainerId(this.program.id, FundingLineType.PROGRAM)
       .pipe(
         map(resp => {
           this.form.controls.fundingLineSelect.disable();
@@ -201,8 +193,15 @@ export class AssetsComponent implements OnInit {
       .toPromise()
       .then(
         resp => {
-          this.fundingLineOptions = resp;
-          this.fundingLineOptions.forEach(option => {
+          const fundingLine = resp;
+          this.fundingLineOptions = new Array<ListItem>();
+          fundingLine.forEach(fl => {
+            const item = new ListItem();
+            item.value = fl.id;
+            item.name = fl.value;
+            this.fundingLineOptions.push(item);
+          });
+          fundingLine.forEach(option => {
             const asset = this.program.assets && this.program.assets.find(a => a.fundingLineId === option.id);
             if (!asset) {
               this.assetService.obtainAssetByFundingLineId(option.id).subscribe(
@@ -219,7 +218,7 @@ export class AssetsComponent implements OnInit {
             this.program.assets = [];
           }
           if (this.selectedAsset) {
-            const asset = this.fundingLineOptions.find(option => option.id === this.selectedAsset.fundingLineId);
+            const asset = fundingLine.find(option => option.id === this.selectedAsset.fundingLineId);
             if (!asset) {
               this.form.controls.fundingLineSelect.patchValue(0);
               this.assetSummaryRows = [];
@@ -552,15 +551,15 @@ export class AssetsComponent implements OnInit {
                   'justify-content': 'flex-end'
                 },
                 minWidth: 80,
-                valueGetter: params => params.data.details[i].unitCost,
+                valueGetter: params => params.data.details[i].unitCost / 1000,
                 valueSetter: params => {
-                  params.data.details[i].unitCost = Number(params.newValue);
+                  params.data.details[i].unitCost = Number(params.newValue) * 1000;
                   return true;
                 },
                 cellEditor: NumericCellEditor.create({
                   returnUndefinedOnZero: false
                 }),
-                valueFormatter: params => this.currencyFormatter(params.data.details[i].unitCost)
+                valueFormatter: params => this.currencyFormatter(params.data.details[i].unitCost / 1000)
               },
               {
                 colId: 2 + x * 3 + 2,
@@ -619,16 +618,16 @@ export class AssetsComponent implements OnInit {
                   'justify-content': 'flex-end'
                 },
                 minWidth: 80,
-                valueGetter: params => params.data.details[i].totalCost,
+                valueGetter: params => params.data.details[i].totalCost / 1000,
                 valueSetter: params => {
-                  params.data.details[i].totalCost = Number(params.newValue);
+                  params.data.details[i].totalCost = Number(params.newValue) * 1000;
 
                   return true;
                 },
                 cellEditor: NumericCellEditor.create({
                   returnUndefinedOnZero: false
                 }),
-                valueFormatter: params => this.currencyFormatter(params.data.details[i].totalCost)
+                valueFormatter: params => this.currencyFormatter(params.data.details[i].totalCost / 1000)
               }
             ]
           }
@@ -638,7 +637,7 @@ export class AssetsComponent implements OnInit {
     this.assetColumnsDefinition = [
       {
         groupId: 'main-header',
-        headerName: 'Unit Costs in $K Total Costs in $M',
+        headerName: 'Unit Costs in $K',
         headerClass: this.headerClassFunc,
         marryChildren: true,
         children: [
@@ -844,6 +843,34 @@ export class AssetsComponent implements OnInit {
   resetStyle() {
     if (this.style && this.style.rules.length) {
       this.style.removeRule(0);
+    }
+  }
+
+  private setupOnChangeRemark() {
+    if (this.selectedAsset) {
+      this.form.get('remarks').valueChanges.subscribe(val => {
+        const asset = this.program.assets && this.program.assets.find(a => a.id === this.selectedAsset.id);
+        asset.remarks = val;
+      });
+    }
+  }
+
+  changePageEditMode(editMode: boolean) {
+    this.pageEditMode = editMode;
+    this.actionState.EDIT.editMode = editMode;
+    this.actionState.VIEW.editMode = editMode;
+
+    if (editMode) {
+      this.form.get('remarks').enable();
+      this.setupOnChangeRemark();
+    } else {
+      this.form.get('remarks').disable();
+    }
+    if (this.assetGridApi) {
+      this.assetSummaryRows.forEach(row => {
+        row.action = editMode;
+      });
+      this.assetGridApi.setRowData(this.assetSummaryRows);
     }
   }
 }

@@ -2,7 +2,7 @@ import { Moment } from 'moment';
 
 export class EvaluationMeasure {
   id: string;
-  programId: string;
+  containerId: string;
   measureId: string;
   description: string;
   dataSource: string;

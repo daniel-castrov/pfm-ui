@@ -36,7 +36,7 @@ export class FileUploadComponent implements OnInit {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
       this.fileUploadService.uploadSecureResource(file).then(resp => {
-        this.fileUploadEvent.emit(resp.result as FileMetaData);
+        this.fileUploadEvent.emit(resp as FileMetaData);
       });
     }
   }

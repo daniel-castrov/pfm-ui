@@ -18,6 +18,7 @@ import { ScheduleService } from '../../../services/schedule.service';
 import * as moment from 'moment';
 import { Schedule } from '../../../models/schedule.model';
 import { DropdownCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/dropdown-cell-renderer/dropdown-cell-renderer.component';
+import { FundingLineType } from 'src/app/programming-feature/models/enumerations/funding-line-type.model';
 
 @Component({
   selector: 'pfm-schedule',
@@ -28,10 +29,10 @@ export class ScheduleComponent implements OnInit {
   @Input() program: Program;
   @Input() pomYear: number;
 
+  currentFiscalYear: number;
+
   @ViewChild('googleChart')
   chart: GoogleChartComponent;
-
-  currentFiscalYear = 2019;
 
   fundingGridActionState = {
     VIEW: {
@@ -39,14 +40,16 @@ export class ScheduleComponent implements OnInit {
       canEdit: true,
       canDelete: true,
       canUpload: false,
-      isSingleDelete: true
+      isSingleDelete: true,
+      editMode: false
     },
     EDIT: {
       canEdit: false,
       canSave: true,
       canDelete: true,
       canUpload: false,
-      isSingleDelete: true
+      isSingleDelete: true,
+      editMode: false
     }
   };
 
@@ -84,6 +87,7 @@ export class ScheduleComponent implements OnInit {
 
   busy: boolean;
   currentRowDataState: ScheduleRowDataStateInterface = {};
+  pageEditMode: boolean;
 
   constructor(
     private dialogService: DialogService,
@@ -94,6 +98,9 @@ export class ScheduleComponent implements OnInit {
   ngOnInit() {
     this.loadFundingLines();
     this.loadSchedulesGrid();
+    this.currentFiscalYear = this.pomYear;
+    this.pageEditMode = history.state.editMode;
+    this.changePageEditMode(this.pageEditMode);
   }
 
   loadFundingLines() {
@@ -116,7 +123,7 @@ export class ScheduleComponent implements OnInit {
     this.fundingGridAssociations = [];
     this.scheduleGridRows = [];
     this.fundingLineService
-      .obtainFundingLinesByProgramId(this.program.id)
+      .obtainFundingLinesByContainerId(this.program.id, FundingLineType.PROGRAM)
       .pipe(
         map(resp => {
           const fundingLines = resp.result as FundingLine[];
@@ -154,7 +161,7 @@ export class ScheduleComponent implements OnInit {
 
   private loadSchedules() {
     this.schedulesData = [];
-    this.scheduleService.getByProgramId(this.program.id).subscribe(schResp => {
+    this.scheduleService.getByContainerId(this.program.id).subscribe(schResp => {
       const schedules = (schResp as any).result;
       for (const schedule of schedules) {
         if (schedule.startDate) {
@@ -178,7 +185,7 @@ export class ScheduleComponent implements OnInit {
   }
 
   onScheduleRowAdd(event: any) {
-    if (this.currentRowDataState.isEditMode) {
+    if (this.currentRowDataState.isEditMode || !this.currentFiscalYear) {
       return;
     }
     const maxOrder = this.schedulesData.length
@@ -194,7 +201,7 @@ export class ScheduleComponent implements OnInit {
           ? this.selectedFundingFilter
           : '',
       startDate: formatDate(new Date(this.currentFiscalYear + '-01-01 00:00:00'), 'MM/dd/yyyy', 'en-US'),
-      endDate: formatDate(new Date(this.currentFiscalYear + 5 + '-12-31  00:00:00'), 'MM/dd/yyyy', 'en-US'),
+      endDate: formatDate(new Date(this.currentFiscalYear + 4 + '-12-31  00:00:00'), 'MM/dd/yyyy', 'en-US'),
       order: maxOrder + 1,
       action: this.fundingGridActionState.EDIT
     });
@@ -204,6 +211,9 @@ export class ScheduleComponent implements OnInit {
   }
 
   drawGanttChart(redraw?: boolean) {
+    if (!this.currentFiscalYear) {
+      return;
+    }
     const data: any[] = [
       ['Task ID', 'Task Name', 'Start Date', 'End Date', 'Duration', 'Percent Complete', 'Dependencies']
     ];
@@ -211,7 +221,7 @@ export class ScheduleComponent implements OnInit {
       '0',
       '',
       new Date(this.currentFiscalYear + '-01-01 00:00:00'),
-      new Date(this.currentFiscalYear + 5 + '-12-31 00:00:00'),
+      new Date(this.currentFiscalYear + 4 + '-12-31 00:00:00'),
       0,
       100,
       null
@@ -339,7 +349,6 @@ export class ScheduleComponent implements OnInit {
           return {
             cellHeight: 50,
             values: [
-              ['Select', ''],
               ...this.fundingGridAssociations.map(x => {
                 return [x.name, x.value];
               })
@@ -452,7 +461,7 @@ export class ScheduleComponent implements OnInit {
     const row: ScheduleDataInterface = this.scheduleGridRows[rowIndex];
     const canSave = this.validateRowData(row);
     if (canSave) {
-      row.programId = this.program.id;
+      row.containerId = this.program.id;
       if (row.startDate) {
         row.startDate = moment(row.startDate, 'MM/DD/YYYY');
       }
@@ -512,6 +521,9 @@ export class ScheduleComponent implements OnInit {
   }
 
   private validateRowData(row: ScheduleDataInterface) {
+    if (!this.currentFiscalYear) {
+      return;
+    }
     let errorMessage = '';
     if (!row.taskDescription?.length) {
       errorMessage = 'Task Description cannot be empty.';
@@ -525,13 +537,13 @@ export class ScheduleComponent implements OnInit {
       errorMessage = 'Start Date cannot be greater than End Date.';
     } else if (
       new Date(row.startDate).getFullYear() < this.currentFiscalYear ||
-      new Date(row.endDate).getFullYear() > this.currentFiscalYear + 5
+      new Date(row.endDate).getFullYear() > this.currentFiscalYear + 4
     ) {
       errorMessage =
         'Start Date cannot be less than the current fiscal year (' +
         this.currentFiscalYear +
         ') and End Date cannot greater than ' +
-        (this.currentFiscalYear + 5) +
+        (this.currentFiscalYear + 4) +
         '.';
     }
     if (errorMessage.length) {
@@ -631,11 +643,20 @@ export class ScheduleComponent implements OnInit {
       colKey: 'taskDescription'
     });
   }
+
+  changePageEditMode(editMode: boolean) {
+    this.pageEditMode = editMode;
+    this.fundingGridActionState.VIEW.editMode = editMode;
+    this.fundingGridActionState.EDIT.editMode = editMode;
+    this.scheduleGridRows.forEach((row, index) => {
+      row.action.editMode = editMode;
+    });
+  }
 }
 
 export interface ScheduleDataInterface {
   id?: string;
-  programId?: string;
+  containerId?: string;
   taskDescription?: string;
   fundingLineId?: string;
   startDate?: any;

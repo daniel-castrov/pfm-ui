@@ -1,0 +1,53 @@
+div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action:hover {
+  cursor: pointer;
+}
+
+fa-icon {
+  margin-left: 15px;
+  font-size: x-large;
+}
+
+fa-icon:hover {
+  cursor: pointer;
+  color: red;
+}
+
+.icon-review {
+  position: relative;
+  display: inline;
+  margin-left: 15px;
+  vertical-align: middle;
+  &:hover .review-file {
+    color: red;
+  }
+}
+
+.review-file,
+.review-check {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  text-align: center;
+}
+
+.review-file {
+  color: black;
+  margin-left: 0;
+}
+
+.review-check {
+  font-size: small;
+  color: white;
+  top: -0.3em;
+  margin-left: 2px;
+}
+
+.review-check:hover {
+  color: white;
+}

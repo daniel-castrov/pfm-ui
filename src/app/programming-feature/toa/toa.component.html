@@ -1,8 +1,18 @@
 <div class="section-banner">
   <div class="table w-100">
     <div class="table-row w-100">
-      <div>
+      <div></div>
+    </div>
+    <div class="table-row w-100">
+      <div class="float-left">
         <h3>TOAs</h3>
+      </div>
+      <div style="float: right;">
+        <pfm-primary-button
+          *ngIf="canUpdateToas()"
+          [label]="'Update TOAs'"
+          (onClick)="showUpdateDlg()"
+        ></pfm-primary-button>
       </div>
     </div>
     <div class="table mt-2">
@@ -72,6 +82,14 @@
           <div class="section-datagrid">
             <div>
               <span>&nbsp;Set TOAs for Organization ($K)&nbsp;</span>
+              <pfm-secondary-button
+                [label]="' Reset'"
+                *ngIf="canEditOrganization()"
+                class="reset-button"
+                [icon]="'fa fa-refresh reset-button'"
+                (click)="onResetOrgData()"
+              >
+              </pfm-secondary-button>
             </div>
             <!--<div style="height:300px;width:98%">-->
             <div class="grid-container">
@@ -105,5 +123,33 @@
     </tabset>
   </div>
 </div>
+
+<ng-container *ngIf="saveConfirmationDlg.display">
+  <pfm-custom-dialog
+    [title]="saveConfirmationDlg.title"
+    [body]="yearSkipBody"
+    [actions]="yearSkipActions"
+    (onCancelDialog)="onCancelSaveConfirmationDlg()"
+  ></pfm-custom-dialog>
+
+  <ng-template #yearSkipBody>
+    <span>{{ saveConfirmationDlg.bodyText }}</span>
+  </ng-template>
+
+  <ng-template #yearSkipActions>
+    <div class="pull-left">
+      <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="updatePom(false)">
+        Save TOAs only
+      </button>
+      <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="updatePom(true)">
+        Save TOAs & Reassign all PRs
+      </button>
+    </div>
+
+    <div class="pull-right">
+      <pfm-cancel-cta (onCancelClicked)="onCancelSaveConfirmationDlg()"></pfm-cancel-cta>
+    </div>
+  </ng-template>
+</ng-container>
 
 <pfm-busy [busy]="busy"></pfm-busy>

@@ -24,11 +24,11 @@ export class BaseRestService {
     return this.httpClient.get(this.baseURL + '/' + resource, { headers: this.headers, params });
   }
 
-  protected post(resource: string, data: any): Observable<object> {
+  protected post(resource: string, data?: any): Observable<object> {
     return this.httpClient.post(this.baseURL + '/' + resource, data, { headers: this.headers });
   }
 
-  protected put(resource: string, data: any, params?: HttpParams): Observable<object> {
+  protected put(resource: string, data?: any, params?: HttpParams): Observable<object> {
     return this.httpClient.put(this.baseURL + '/' + resource, data, { headers: this.headers, params });
   }
 

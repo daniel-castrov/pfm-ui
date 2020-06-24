@@ -1,17 +1,17 @@
 <div *ngIf="!disabled && data">
-  <ng-container *ngIf="data.canEdit">
+  <ng-container *ngIf="data.canEdit && this.data.editMode">
     <div class="action" (click)="onSelected('edit')">
       <fa-icon [icon]="'pencil-alt'" title="Edit" [class.disabled]="params.data.isDisabled"></fa-icon>
     </div>
   </ng-container>
 
-  <ng-container *ngIf="data.canSave">
+  <ng-container *ngIf="data.canSave && this.data.editMode">
     <div class="action" (click)="onSelected('save')">
       <fa-icon [icon]="'save'" title="Save"></fa-icon>
     </div>
   </ng-container>
 
-  <ng-container *ngIf="data.canDelete">
+  <ng-container *ngIf="data.canDelete && this.data.editMode">
     <div class="action" title="Delete" *ngIf="!data.isSingleDelete && !data.canSave">
       <pfm-dropdown
         (selectionChanged)="handleDelete($event)"
@@ -37,7 +37,7 @@
     </div>
   </ng-container>
 
-  <ng-container *ngIf="data.canUpload">
+  <ng-container *ngIf="data.canUpload && this.data.editMode">
     <div class="action" (click)="onSelected('upload')">
       <fa-icon [icon]="'upload'" title="Add attachment"></fa-icon>
     </div>

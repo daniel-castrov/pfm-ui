@@ -17,6 +17,7 @@ export class DropdownCellRendererComponent {
   selectedValue: any;
   @Output()
   change: EventEmitter<any> = new EventEmitter<any>();
+  @Input() disablePrompt = false;
 
   constructor(private datagridMBService: DatagridMbService) {}
 

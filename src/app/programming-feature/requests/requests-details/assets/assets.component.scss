@@ -37,3 +37,9 @@
 :host ::ng-deep .editable-cell {
   background-color: none;
 }
+
+.non-editable {
+  background-color: #fff;
+  outline: none !important;
+  border-color: transparent;
+}

@@ -1,7 +1,7 @@
 export class TeamLead {
   id: string;
   name: string;
-  programId: string;
+  containerId: string;
   title: string;
   role: string;
   responsibilities: string;

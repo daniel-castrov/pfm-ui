@@ -1,0 +1,73 @@
+<div>
+  <div class="row col-12">
+    <div class="col-12" *ngIf="forceDrawReload">
+      <google-chart #googleChart [data]="chartData"></google-chart>
+    </div>
+  </div>
+
+  <div class="grid-container">
+    <pfm-datagrid
+      *ngIf="showCurrentFundingGrid"
+      (gridIsReady)="onCurrentFundingLineGridIsReady($event)"
+      [columns]="currentFundingLineColumnsDefinition"
+      [rows]="currentFundingLineRows"
+      [showAddSingleRow]="showCurrentFundingGrid && editMode"
+      [showPagination]="false"
+      (addCtaEvent)="onProposedFundingLineRowAdd($event)"
+      [overlayNoRowsTemplate]="' '"
+    >
+    </pfm-datagrid>
+    <pfm-datagrid
+      (gridIsReady)="onProposedFundingLineGridIsReady($event)"
+      (cellAction)="onProposedFundingLineCellAction($event)"
+      [columns]="proposedFundingLineColumnsDefinition"
+      [rows]="proposedFundingLineRows"
+      [showAddSingleRow]="!showCurrentFundingGrid && editMode"
+      [showPagination]="false"
+      (addCtaEvent)="onProposedFundingLineRowAdd($event)"
+      (mousedown)="onProposedFundingLineMouseDown($event)"
+      [overlayNoRowsTemplate]="' '"
+    >
+    </pfm-datagrid>
+    <pfm-datagrid
+      (gridIsReady)="onTotalRevisedFundingLineGridIsReady($event)"
+      [columns]="totalRevisedFundingLineColumnsDefinition"
+      [rows]="totalRevisedFundingLineRows"
+      [showPagination]="false"
+      [overlayNoRowsTemplate]="' '"
+    >
+    </pfm-datagrid>
+    <pfm-datagrid
+      *ngIf="ufr.disposition && ufr.approvedFundingLines?.length"
+      (gridIsReady)="onApprovedFundingLineGridIsReady($event)"
+      [columns]="approvedFundingLineColumnsDefinition"
+      [rows]="approvedFundingLineRows"
+      [showPagination]="false"
+      [overlayNoRowsTemplate]="' '"
+    >
+    </pfm-datagrid>
+  </div>
+</div>
+
+<ng-container *ngIf="deleteDialog.display">
+  <pfm-custom-dialog
+    [title]="deleteDialog.title"
+    [body]="deleteBody"
+    [actions]="deleteActions"
+    (onCancelDialog)="onCancelDeleteDialog()"
+  ></pfm-custom-dialog>
+
+  <ng-template #deleteBody>
+    <span>{{ deleteDialog.bodyText }}</span>
+  </ng-template>
+
+  <ng-template #deleteActions>
+    <div class="pull-left">
+      <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onDeleteData()">Delete</button>
+    </div>
+
+    <div class="pull-right">
+      <pfm-cancel-cta (onCancelClicked)="onCancelDeleteDialog()"></pfm-cancel-cta>
+    </div>
+  </ng-template>
+</ng-container>

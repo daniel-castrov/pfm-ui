@@ -1,0 +1,170 @@
+<pfm-cancel-cta [label]="'Back'" (onCancelClicked)="goBack()"></pfm-cancel-cta>
+<div class="title-line">
+  <div class="float-left w-70">
+    <h3 *ngIf="ufr">
+      POM{{ pomYear % 100 }} UFR Details:
+      <span *ngIf="ufr.shortName">{{ ufr.shortName }}</span>
+    </h3>
+  </div>
+  <div class="div-buttons" *ngIf="appModel.visibilityDef['ufr-requests-detail-component']">
+    <ng-container *ngIf="showSetDisposition && editMode">
+      <div class="div-button" *pfmIsVisible="'ufr-requests-detail-component.setDisposition'">
+        <button (click)="showDispositionDlg()" class="btn btn-success">
+          <i class="fa fa-check"></i>
+          Set Disposition
+        </button>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="showSubmitButton && editMode">
+      <div class="div-button" *pfmIsVisible="'ufr-requests-detail-component.submit'">
+        <button (click)="onSubmit()" class="btn btn-success">
+          <i class="fa fa-check"></i>
+          Submit
+        </button>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="showSaveButton && editMode">
+      <div class="div-button" *pfmIsVisible="'ufr-requests-detail-component.save'">
+        <button (click)="onSave()" class="btn btn-primary">
+          Save
+        </button>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+<tabset class="program-tab-style" *ngIf="ufr" destroyOnHide="true">
+  <tab heading="UFR" [active]="currentSelectedTab === 0" class="w-100 h-100" (selectTab)="onSelectTab($event)">
+    <div class="section-tab"><pfm-ufr-form #ufrForm [ufr]="ufr"></pfm-ufr-form></div>
+  </tab>
+  <tab heading="Program" [active]="currentSelectedTab === 1" class="w-100 h-100" (selectTab)="onSelectTab($event)">
+    <div class="section-tab">
+      <pfm-ufr-program-form #ufrProgramForm [ufr]="ufr" [pomYear]="pomYear"></pfm-ufr-program-form>
+    </div>
+  </tab>
+  <tab heading="Funds" [active]="currentSelectedTab === 2" class="w-100 h-100" (selectTab)="onSelectTab($event)">
+    <div class="section-tab">
+      <pfm-ufr-funds #ufrFunds [ufr]="ufr" [pomYear]="pomYear"></pfm-ufr-funds>
+    </div>
+  </tab>
+  <tab heading="Schedule" [active]="currentSelectedTab === 3" class="w-100 h-100" (selectTab)="onSelectTab($event)">
+    <div class="section-tab"><pfm-ufr-schedule #ufrSchedule [ufr]="ufr" [pomYear]="pomYear"></pfm-ufr-schedule></div>
+  </tab>
+  <tab heading="Scope" [active]="currentSelectedTab === 4" class="w-100 h-100" (selectTab)="onSelectTab($event)">
+    <div class="section-tab"><pfm-ufr-scope #ufrScope [ufr]="ufr" [pomYear]="pomYear"></pfm-ufr-scope></div>
+  </tab>
+  <tab heading="Assets" [active]="currentSelectedTab === 5" class="w-100 h-100" (selectTab)="onSelectTab($event)">
+    <div class="section-tab"><pfm-ufr-assets #ufrAssets [ufr]="ufr" [pomYear]="pomYear"></pfm-ufr-assets></div>
+  </tab>
+  <tab
+    heading="Justification"
+    [active]="currentSelectedTab === 6"
+    class="w-100 h-100"
+    (selectTab)="onSelectTab($event)"
+  >
+    <div class="section-tab">
+      <pfm-ufr-justification #ufrJustification [ufr]="ufr" [pomYear]="pomYear"></pfm-ufr-justification>
+    </div>
+  </tab>
+</tabset>
+<pfm-busy [busy]="busy"></pfm-busy>
+
+<ng-container *ngIf="setDispositionDlg.display">
+  <pfm-custom-dialog
+    [isLarge]="setDispositionDlg.form.get('dispositionType').value === PARTIALLY_APPROVED"
+    [title]="setDispositionDlg.title"
+    [body]="createProgramBody"
+    [actions]="createProgramActions"
+    (onCancelDialog)="onCancelDispositionDialog()"
+  ></pfm-custom-dialog>
+
+  <ng-template #createProgramBody>
+    <div class="section-form disposition-dialog">
+      <form class="form-horizontal" *ngIf="setDispositionDlg.form" [formGroup]="setDispositionDlg.form">
+        <div class="form-group row">
+          <div class="col-sm-8 col-form-label">
+            <div class="form-check" *ngFor="let item of dispositionTypes; let i = index">
+              <input
+                type="radio"
+                class="form-check-input"
+                formControlName="dispositionType"
+                id="dispositionType{{ i }}"
+                name="dispositionType"
+                [value]="item.code"
+              />
+              <label class="form-check-label" for="dispositionType{{ i }}">
+                {{ item.name || '?' }}
+              </label>
+            </div>
+            <div
+              *ngIf="
+                setDispositionDlg.form.get('dispositionType').invalid &&
+                (setDispositionDlg.form.get('dispositionType').dirty ||
+                  setDispositionDlg.form.get('dispositionType').touched)
+              "
+            >
+              <small
+                class="form-text text-danger"
+                *ngIf="setDispositionDlg.form.get('dispositionType').errors.required"
+              >
+                Value required.
+              </small>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="setDispositionDlg.form.get('dispositionType').value === PARTIALLY_APPROVED">
+          <pfm-datagrid
+            (gridIsReady)="onApprovedFundingLineGridIsReady($event)"
+            [columns]="approvedFundingLineColumnsDefinition"
+            [rows]="approvedFundingLineRows"
+            [showPagination]="false"
+            [overlayNoRowsTemplate]="' '"
+            (cellAction)="onApprovedFundingLineCellAction($event)"
+            (mousedown)="onApprovedFundingLineMouseDown($event)"
+          >
+          </pfm-datagrid>
+          <small class="form-text text-danger" *ngIf="approvedFundingLineErrorMessage">
+            {{ approvedFundingLineErrorMessage }}
+          </small>
+        </div>
+
+        <div class="form-group row">
+          <label for="explanation" class="col-sm-5 col-form-label">*Provide Explanation</label>
+          <div class="col-sm-7">
+            <textarea
+              [class.input-error]="
+                setDispositionDlg.form.get('explanation').invalid &&
+                (setDispositionDlg.form.get('explanation').dirty || setDispositionDlg.form.get('explanation').touched)
+              "
+              class="form-control"
+              id="explanation"
+              formControlName="explanation"
+            ></textarea>
+            <div
+              *ngIf="
+                setDispositionDlg.form.get('explanation').invalid &&
+                (setDispositionDlg.form.get('explanation').dirty || setDispositionDlg.form.get('explanation').touched)
+              "
+            >
+              <small class="form-text text-danger" *ngIf="setDispositionDlg.form.get('explanation').errors.required">
+                An Explanation is required.
+              </small>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+
+  <ng-template #createProgramActions>
+    <div class="pull-left">
+      <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onSetDisposition()">
+        Set Disposition
+      </button>
+    </div>
+
+    <div class="pull-right">
+      <pfm-cancel-cta (onCancelClicked)="onCancelDispositionDialog()"></pfm-cancel-cta>
+    </div>
+  </ng-template>
+</ng-container>

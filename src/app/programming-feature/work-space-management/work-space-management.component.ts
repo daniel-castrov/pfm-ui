@@ -1,34 +1,63 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormatterUtil } from 'src/app/util/formatterUtil';
-import { GridApi, ColDef } from '@ag-grid-community/all-modules';
+import { ColDef, GridApi } from '@ag-grid-community/all-modules';
 import { formatDate } from '@angular/common';
 import { WkspActionCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/wksp-action-cell-renderer/wksp-action-cell-renderer.component';
 import { CheckboxCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/checkbox-cell-renderer/checkbox-cell-renderer.component';
 import { DataGridMessage } from 'src/app/pfm-coreui/models/DataGridMessage';
 import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
 import { AppModel } from 'src/app/pfm-common-models/AppModel';
+import { WorkspaceService } from '../services/workspace.service';
+import { PomService } from '../services/pom-service';
+import { Pom } from '../models/Pom';
+import { RoleConstants } from 'src/app/pfm-common-models/role-contants.model';
+import * as moment from 'moment';
+import { Router } from '@angular/router';
+import { Workspace } from '../models/workspace';
+import { RestResponse } from '../../util/rest-response';
+import { WkspSelectionRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/wksp-selection-renderer/wksp-selection-renderer.component';
 
 @Component({
   selector: 'pfm-programming',
   templateUrl: './work-space-management.component.html',
-  styleUrls: ['./work-space-management.component.scss']
+  styleUrls: ['./work-space-management.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class WorkSpaceManagementComponent implements OnInit {
   byYear: number;
-  rows: any;
+  rows: any[] = [];
   columnDefinitions: ColDef[];
   gridApi: GridApi;
   currentWorkspaceRowDataState: RowDataStateInterface = {};
+  pom: Pom;
   gridActionState = {
     VIEW: {
       canView: true,
-      canViewFundingLine: true,
+      canUpdate: true,
+      canDuplicate: true,
+      disabled: false
+    },
+    DUPLICATE_ONLY: {
+      canView: false,
+      canUpdate: false,
       canDuplicate: true,
       disabled: false
     },
     EDIT: {
-      canEdit: false,
+      canUpdate: false,
       canSave: true,
+      disabled: false
+    },
+    NO_ACTIONS: {
+      canView: false,
+      canUpdate: false,
+      canDuplicate: false,
+      disabled: false
+    },
+    VIEW_ONLY: {
+      canView: true,
+      canUpdate: false,
+      canDuplicate: false,
       disabled: false
     }
   };
@@ -47,21 +76,35 @@ export class WorkSpaceManagementComponent implements OnInit {
     }
   };
 
-  constructor(private dialogService: DialogService, private appModel: AppModel) {}
+  constructor(
+    private dialogService: DialogService,
+    private appModel: AppModel,
+    private workspaceService: WorkspaceService,
+    private pomService: PomService,
+    private router: Router
+  ) {
+  }
 
   ngOnInit() {
     this.byYear = FormatterUtil.getCurrentFiscalYear() + 2;
-    this.rows = [];
     this.setupGrid();
+    this.pomService.getLatestPom().subscribe(
+      (resp: RestResponse<Pom>) => {
+        this.pom = resp.result;
+        this.loadRows();
+      },
+      error => {
+        this.dialogService.displayDebug(error);
+      }
+    );
   }
 
   onGridIsReady(gridApi: GridApi) {
     this.gridApi = gridApi;
-    this.loadRows();
   }
 
   private setupGrid() {
-    const cellStyle = { display: 'flex', 'align-items': 'center', 'white-space': 'normal' };
+    const cellStyle = {display: 'flex', 'align-items': 'center', 'white-space': 'normal'};
     this.columnDefinitions = [
       {
         headerName: 'Version',
@@ -71,8 +114,10 @@ export class WorkSpaceManagementComponent implements OnInit {
         filter: false,
         sortable: false,
         suppressMenu: true,
+        cellRendererFramework: WkspSelectionRendererComponent,
         cellClass: params => {
           return [
+            'selectedws',
             'numeric-class',
             this.currentWorkspaceRowDataState.currentEditingRowIndex === params.rowIndex &&
             this.currentWorkspaceRowDataState.isEditMode
@@ -81,7 +126,8 @@ export class WorkSpaceManagementComponent implements OnInit {
           ];
         },
         cellStyle,
-        maxWidth: 80
+        maxWidth: 80,
+        minWidth: 80
       },
       {
         headerName: 'Workspace Name',
@@ -100,7 +146,10 @@ export class WorkSpaceManagementComponent implements OnInit {
               : ''
           ];
         },
-        cellStyle
+        cellStyle,
+        autoHeight: true,
+        maxWidth: 200,
+        minWidth: 200
       },
       {
         headerName: 'Active',
@@ -121,16 +170,19 @@ export class WorkSpaceManagementComponent implements OnInit {
         },
         cellStyle,
         maxWidth: 80,
+        minWidth: 80,
         cellRendererFramework: CheckboxCellRendererComponent,
         cellEditorFramework: CheckboxCellRendererComponent,
         valueSetter: params => {
-          params.data.active = params.newValue ? this.checkboxConfig.active : this.checkboxConfig.inactive;
+          const disableState = params.data.active.disabled;
+          params.data.active = {...(params.newValue ? this.checkboxConfig.active : this.checkboxConfig.inactive)};
+          params.data.active.disabled = disableState;
           return true;
         }
       },
       {
         headerName: 'Notes',
-        field: 'note',
+        field: 'notes',
         editable: true,
         suppressMovable: true,
         filter: false,
@@ -145,11 +197,13 @@ export class WorkSpaceManagementComponent implements OnInit {
               : ''
           ];
         },
-        cellStyle
+        cellStyle,
+        autoHeight: true,
+        minWidth: 300
       },
       {
         headerName: 'Created Date',
-        field: 'createdDate',
+        field: 'created',
         editable: false,
         suppressMovable: true,
         filter: false,
@@ -164,11 +218,13 @@ export class WorkSpaceManagementComponent implements OnInit {
               : ''
           ];
         },
-        cellStyle
+        cellStyle,
+        maxWidth: 130,
+        minWidth: 130
       },
       {
         headerName: 'Last Updated Date',
-        field: 'lastUpdatedDate',
+        field: 'modified',
         editable: false,
         suppressMovable: true,
         filter: false,
@@ -183,11 +239,13 @@ export class WorkSpaceManagementComponent implements OnInit {
               : ''
           ];
         },
-        cellStyle
+        cellStyle,
+        maxWidth: 140,
+        minWidth: 140
       },
       {
         headerName: 'Last Updated By',
-        field: 'lastUpdatedBy',
+        field: 'fullNameModifiedBy',
         editable: false,
         suppressMovable: true,
         filter: false,
@@ -202,7 +260,10 @@ export class WorkSpaceManagementComponent implements OnInit {
               : ''
           ];
         },
-        cellStyle
+        cellStyle,
+        autoHeight: true,
+        maxWidth: 130,
+        minWidth: 130
       },
       {
         headerName: 'Actions',
@@ -214,30 +275,44 @@ export class WorkSpaceManagementComponent implements OnInit {
         suppressMenu: true,
         cellStyle,
         cellRendererFramework: WkspActionCellRendererComponent,
-        maxWidth: 130
+        maxWidth: 130,
+        minWidth: 130,
+        autoHeight: true
       }
     ];
   }
 
   private loadRows() {
-    if (JSON.parse(sessionStorage.getItem('wkspGridRows'))) {
-      this.rows = JSON.parse(sessionStorage.getItem('wkspGridRows'));
-    } else {
-      this.rows = [
-        {
-          version: 1,
-          name: 'POM22Workspace',
-          active: { ...this.checkboxConfig.inactive },
-          notes: '',
-          createdDate: formatDate(new Date('2020-04-12 10:00'), 'M/d/yyyy HH:mm', 'en-US'),
-          lastUpdatedDate: formatDate(new Date('2020-04-12 10:00'), 'M/d/yyyy HH:mm', 'en-US'),
-          lastUpdatedBy: 'Mary Smith',
-          action: this.gridActionState.VIEW,
-          disabled: false
+    if (this.pom) {
+      this.workspaceService.getByContainerId(this.pom.id).subscribe(resp => {
+        const wskpValues = (resp as any).result;
+        this.rows = [];
+        for (const workspace of wskpValues) {
+          workspace.created = formatDate(workspace.created, 'M/d/yyyy HH:mm', 'en-US');
+          workspace.modified = formatDate(workspace.modified, 'M/d/yyyy HH:mm', 'en-US');
+          const currentRow = {
+            ...workspace,
+            action: {
+              ...this.getAction(workspace)
+            },
+            disabled: false,
+            active: {...(workspace.active ? this.checkboxConfig.active : this.checkboxConfig.inactive)}
+          };
+          currentRow.active = {...(workspace.active ? this.checkboxConfig.active : this.checkboxConfig.inactive)};
+          this.rows.push(currentRow);
         }
-      ];
-      sessionStorage.setItem('wkspGridRows', JSON.stringify(this.rows));
+      });
     }
+  }
+
+  editWorkSpace(rowIndex: number, updatePreviousState?: boolean) {
+    if (updatePreviousState) {
+      this.currentWorkspaceRowDataState.currentEditingRowData = {...this.rows[rowIndex]};
+    }
+    const editRow = this.rows[rowIndex];
+    editRow.action = this.gridActionState.EDIT;
+    editRow.active.disabled = false;
+    this.starEditMode(rowIndex);
   }
 
   duplicateWorkspace(params) {
@@ -245,16 +320,19 @@ export class WorkSpaceManagementComponent implements OnInit {
       return;
     }
 
+    this.currentWorkspaceRowDataState.isDuplicateMode = true;
     this.rows.push({
-      version: this.rows.length + 1,
+      id: params.id,
+      version: null,
       name: params.name,
-      active: { ...this.checkboxConfig.active },
-      notes: '',
-      createdDate: '',
-      lastUpdatedDate: '',
-      lastUpdatedBy: '',
+      active: {...this.checkboxConfig.active},
+      notes: null,
+      createdDate: null,
+      lastUpdatedDate: null,
+      lastUpdatedBy: null,
       action: this.gridActionState.EDIT,
-      disabled: false
+      disabled: false,
+      phaseType: params.phaseType
     });
     this.rows[this.rows.length - 1].active.disabled = false;
     this.gridApi.setRowData(this.rows);
@@ -263,25 +341,95 @@ export class WorkSpaceManagementComponent implements OnInit {
 
   saveRow(rowIndex: number) {
     this.gridApi.stopEditing();
-    const newRow = this.rows[rowIndex];
+    let newRow = this.rows[rowIndex];
     if (this.validateRow(newRow)) {
       newRow.action = this.gridActionState.VIEW;
-      const creactionDate = new Date();
-      newRow.createdDate = formatDate(creactionDate, 'M/d/yyyy HH:mm', 'en-US');
-      newRow.lastUpdatedDate = formatDate(creactionDate, 'M/d/yyyy HH:mm', 'en-US');
-      newRow.lastUpdatedBy = this.appModel.userDetails.fullName;
+      if (this.currentWorkspaceRowDataState.isDuplicateMode) {
+        const newWorkspace = {...newRow};
+        newWorkspace.active = newRow.active.checked;
+        this.workspaceService.duplicate(newWorkspace).subscribe(
+          resp => {
+            const wkspValue = (resp as any).result;
+            const workspace = wkspValue;
+            workspace.created = formatDate(workspace.created, 'M/d/yyyy HH:mm', 'en-US');
+            workspace.modified = formatDate(workspace.modified, 'M/d/yyyy HH:mm', 'en-US');
+            workspace.fullNameModifiedBy = wkspValue.fullNameModifiedBy;
+            workspace.active = {...(workspace.active ? this.checkboxConfig.active : this.checkboxConfig.inactive)};
+            newRow = {
+              ...workspace,
+              action: {
+                ...this.getAction(workspace)
+              },
+              disabled: false
+            };
+            this.rows[rowIndex] = newRow;
+            this.gridApi.setRowData(this.rows);
+          },
+          error => {
+            this.dialogService.displayError(error.error.error);
+          }
+        );
+      } else {
+        const newWorkspace = {...newRow};
+        newWorkspace.active = newRow.active.checked;
+        newWorkspace.created = moment(newWorkspace.created, 'M/d/yyyy HH:mm', 'en-US');
+        newWorkspace.modified = null;
+        this.workspaceService.updateWorkspace(newWorkspace).subscribe(
+          resp => {
+            const wkspValue = (resp as any).result;
+            const workspace = wkspValue;
+            workspace.created = formatDate(workspace.created, 'M/d/yyyy HH:mm', 'en-US');
+            workspace.modified = formatDate(workspace.modified, 'M/d/yyyy HH:mm', 'en-US');
+            workspace.fullNameModifiedBy = wkspValue.fullNameModifiedBy;
+            workspace.active = {...(workspace.active ? this.checkboxConfig.active : this.checkboxConfig.inactive)};
+            newRow = {
+              ...workspace,
+              action: {
+                ...this.getAction(workspace)
+              },
+              disabled: false
+            };
+            this.rows[rowIndex] = newRow;
+            this.gridApi.setRowData(this.rows);
+          },
+          error => {
+            this.dialogService.displayDebug(error);
+          }
+        );
+      }
       this.startViewMode();
-      sessionStorage.setItem('wkspGridRows', JSON.stringify(this.rows));
     } else {
       this.starEditMode(rowIndex);
     }
   }
+
+  viewWorkspace(params) {
+    this.router.navigate(['/programming/requests/' + params['id']]);
+  }
+
+  private getAction(workspace: Workspace): object {
+    if (this.appModel.userDetails.roles.includes(RoleConstants.POM_MANAGER)) {
+      if (workspace.version === 1) {
+        return this.gridActionState.DUPLICATE_ONLY;
+      } else {
+        return this.gridActionState.VIEW;
+      }
+    } else {
+      if (workspace.version === 1) {
+        return this.gridActionState.NO_ACTIONS;
+      } else {
+        return this.gridActionState.VIEW_ONLY;
+      }
+    }
+  }
+
   private validateRow(row) {
     if (!row.name) {
       this.dialogService.displayError('Workspace name cannot be empty');
     }
     return row.name;
   }
+
   private starEditMode(rowIndex: number) {
     this.currentWorkspaceRowDataState.currentEditingRowIndex = rowIndex;
     this.currentWorkspaceRowDataState.isEditMode = true;
@@ -307,7 +455,13 @@ export class WorkSpaceManagementComponent implements OnInit {
   }
 
   private cancelEdit() {
-    this.rows.splice(-1, 1);
+    if (this.currentWorkspaceRowDataState.isDuplicateMode) {
+      this.rows.splice(-1, 1);
+    } else {
+      this.rows[
+        this.currentWorkspaceRowDataState.currentEditingRowIndex
+        ] = this.currentWorkspaceRowDataState.currentEditingRowData;
+    }
     this.gridApi.stopEditing();
     this.startViewMode();
   }
@@ -319,6 +473,7 @@ export class WorkSpaceManagementComponent implements OnInit {
       row.active.disabled = true;
     });
     this.currentWorkspaceRowDataState.isEditMode = false;
+    this.currentWorkspaceRowDataState.isDuplicateMode = false;
     this.gridApi.stopEditing();
     this.gridApi.setRowData(this.rows);
     this.gridActionState.VIEW.disabled = false;
@@ -332,16 +487,30 @@ export class WorkSpaceManagementComponent implements OnInit {
       case 'duplicate':
         this.duplicateWorkspace(cellAction.rowData);
         break;
+      case 'edit':
+        this.editWorkSpace(cellAction.rowIndex, true);
+        break;
       case 'cancel':
         this.cancelEdit();
         break;
+      case 'view':
+        this.viewWorkspace(cellAction.rowData);
+        break;
     }
   }
-  compareVersion() {}
+
+  onColumnResized(params) {
+    params.api.resetRowHeights();
+  }
+
+  compareVersion() {
+    this.router.navigate(['/programming/compare-work-spaces']);
+  }
 }
 
 export interface RowDataStateInterface {
   currentEditingRowIndex?: number;
   isEditMode?: boolean;
+  isDuplicateMode?: boolean;
   currentEditingRowData?: any;
 }

@@ -28,7 +28,7 @@ h3 {
 .section-pods {
   display: flex;
   width: 100%;
-  height: 40%;
+  height: 340px;
 }
 
 .section-datagrid {
@@ -85,12 +85,19 @@ h3 {
   display: flex;
 }
 
-.error-message {
-  font-size: small;
-  color: #aa4342;
+:host #workspaceDropDown::ng-deep .pfm-dropdown {
+  margin-left: 11px;
 }
 
-.input-error,
-:host ::ng-deep pfm-dropdown.input-error .pfm-dropdown > select {
-  border-color: #aa4342;
+:host ::ng-deep .pfm-dropdown {
+  width: 350px !important;
+}
+
+.state {
+  text-align: center;
+  background-color: #808080;
+  color: white;
+  width: 135px;
+  margin-left:auto;
+  margin-right:0;
 }

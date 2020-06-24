@@ -1,89 +1,143 @@
 <div>
-  <div class="row col-12">
-    <google-chart #googleChart [data]="chartData"></google-chart>
-    <div class="row col-12 mx-auto">
-      <pfm-dropdown
-        #displayDropdown
-        class="col-2"
-        (selectionChanged)="onDisplayDropdownChange($event)"
-        [fieldName]="'name'"
-        [fieldLabel]="'name'"
-        [defaultOption]="displayDropdownOptions[0]"
-        [options]="displayDropdownOptions"
-        [label]="'Display'"
-        [showPrompt]="false"
-      >
-      </pfm-dropdown>
-      <pfm-dropdown
-        #appropriationDropdown
-        class="col-1"
-        (selectionChanged)="onAppropiationDropdownChange($event)"
-        [fieldName]="'name'"
-        [fieldLabel]="'name'"
-        [options]="appropriationDropdownOptions"
-        [visible]="appropriationDropdownOptions.length > 2"
-        [showPrompt]="false"
-      >
-      </pfm-dropdown>
-      <pfm-dropdown
-        #bablinDropdown
-        class="col-1"
-        (selectionChanged)="onBablinDropdownChange($event)"
-        [fieldName]="'name'"
-        [fieldLabel]="'name'"
-        [defaultOption]="'Select'"
-        [options]="bablinDropdownOptions"
-        [visible]="bablinDropdownOptions.length > 2"
-        [showPrompt]="false"
-      >
-      </pfm-dropdown>
-      <pfm-dropdown
-        #sagDropdown
-        class="col-1"
-        (selectionChanged)="onSagDropdownChange($event)"
-        [fieldName]="'name'"
-        [fieldLabel]="'name'"
-        [defaultOption]="'Select'"
-        [options]="sagDropdownOptions"
-        [visible]="sagDropdownOptions.length > 2"
-        [showPrompt]="false"
-      >
-      </pfm-dropdown>
-      <pfm-dropdown
-        #wucdDropdown
-        class="col-1"
-        (selectionChanged)="onWucdDropdownChange($event)"
-        [fieldName]="'name'"
-        [fieldLabel]="'name'"
-        [defaultOption]="'Select'"
-        [options]="wucdDropdownOptions"
-        [visible]="wucdDropdownOptions.length > 2"
-        [showPrompt]="false"
-      >
-      </pfm-dropdown>
-      <pfm-dropdown
-        #expTypeDropdown
-        class="col-1"
-        [fieldName]="'name'"
-        [fieldLabel]="'name'"
-        [defaultOption]="'Select'"
-        [options]="expTypeDropdownOptions"
-        [visible]="expTypeDropdownOptions.length > 2"
-        [showPrompt]="false"
-      >
-      </pfm-dropdown>
-      <button class="col-1" type="button" class="btn btn-primary" (click)="drawLineChart()">
-        Go
-      </button>
+  <div class="row p-0 m-0 col-12">
+    <div class="col-8 border left-chart">
+      <google-chart #googleChart [data]="chartData"></google-chart>
+      <div class="row">
+        <div class="row col-11">
+          <pfm-dropdown
+            #displayDropdown
+            class="col-2"
+            (selectionChanged)="onDisplayDropdownChange($event)"
+            [fieldName]="'name'"
+            [fieldLabel]="'name'"
+            [defaultOption]="displayDropdownOptions[0]"
+            [options]="displayDropdownOptions"
+            [label]="'Display'"
+            [showPrompt]="false"
+          >
+          </pfm-dropdown>
+          <pfm-dropdown
+            #appropriationDropdown
+            class="col-2"
+            (selectionChanged)="onAppropiationDropdownChange($event)"
+            [fieldName]="'name'"
+            [fieldLabel]="'name'"
+            [options]="appropriationDropdownOptions"
+            [visible]="appropriationDropdownOptions.length > 1"
+            [disablePrompt]="false"
+          >
+          </pfm-dropdown>
+          <pfm-dropdown
+            #bablinDropdown
+            class="col-2"
+            (selectionChanged)="onBablinDropdownChange($event)"
+            [fieldName]="'name'"
+            [fieldLabel]="'name'"
+            [options]="bablinDropdownOptions"
+            [visible]="bablinDropdownOptions.length > 1"
+            [disablePrompt]="false"
+          >
+          </pfm-dropdown>
+          <pfm-dropdown
+            #sagDropdown
+            class="col-2"
+            (selectionChanged)="onSagDropdownChange($event)"
+            [fieldName]="'name'"
+            [fieldLabel]="'name'"
+            [options]="sagDropdownOptions"
+            [visible]="sagDropdownOptions.length > 1"
+            [disablePrompt]="false"
+          >
+          </pfm-dropdown>
+          <pfm-dropdown
+            #wucdDropdown
+            class="col-2"
+            (selectionChanged)="onWucdDropdownChange($event)"
+            [fieldName]="'name'"
+            [fieldLabel]="'name'"
+            [options]="wucdDropdownOptions"
+            [visible]="wucdDropdownOptions.length > 1"
+            [disablePrompt]="false"
+          >
+          </pfm-dropdown>
+          <pfm-dropdown
+            #expTypeDropdown
+            class="col-2"
+            [fieldName]="'name'"
+            [fieldLabel]="'name'"
+            [options]="expTypeDropdownOptions"
+            [visible]="expTypeDropdownOptions.length > 1"
+            [disablePrompt]="false"
+          >
+          </pfm-dropdown>
+        </div>
+        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+        <button type="button" class="btn btn-primary pull-right" (click)="drawLineChart()">
+          Go
+        </button>
+      </div>
+    </div>
+    <div class="col-4 p-0 border right-chart" *ngIf="showHistoryGraph">
+      <google-chart #historyChart [data]="historyChartData"></google-chart>
     </div>
   </div>
-  <div class="mt-5">
+  <div class="mt-5 mb-1">
     <pfm-toggle-input
       [checked]="showSubtotals"
       [label]="'Show Subtotals'"
       (valueChanged)="onToggleValueChanged($event)"
     >
     </pfm-toggle-input>
+  </div>
+  <div
+    *ngIf="!showSubtotals && isPomOpenStatus && editMode"
+    class="bulk-change-container form-control row col-12 m-0 h-100"
+  >
+    <div class="col-4 d-inline-block p-0">
+      <pfm-dropdown
+        #bulkDropdown
+        (selectionChanged)="onBulkDropdownChange($event)"
+        [fieldName]="'name'"
+        [fieldLabel]="'name'"
+        [options]="bulkDropdownOptions"
+        [label]="'Bulk change these funding lines'"
+        [disablePrompt]="false"
+      >
+      </pfm-dropdown>
+    </div>
+    <div class="col-2 d-inline-block align-middle p-0">
+      <pfm-dropdown
+        #bulkFilterDropdown
+        class="row col-12"
+        (selectionChanged)="onBulkFilterDropdownChange($event)"
+        [fieldName]="'name'"
+        [fieldLabel]="'name'"
+        [options]="bulkFilterDropdownOptions"
+        [visible]="bulkFilterDropdownOptions.length > 1"
+        [disablePrompt]="false"
+      >
+      </pfm-dropdown>
+    </div>
+    <div class="col-1 d-inline-block align-middle p-0">
+      <p-spinner size="8" [(ngModel)]="bulkChangeAmount"></p-spinner>
+    </div>
+    <div class="col-1 d-inline-block align-middle">
+      <pfm-toggle-input
+        [checked]="showPercent"
+        [onOffLabel]="showPercent ? '%' : '$'"
+        [activeClass]="''"
+        (valueChanged)="onCurrencyDisplayChanged($event)"
+      >
+      </pfm-toggle-input>
+    </div>
+    <div class="col-1 d-inline-block align-middle">
+      <button type="button" class="btn btn-primary mx-0-auto" (click)="onBlukApplyChange()">
+        Apply
+      </button>
+    </div>
+    <button type="button" class="btn-anchor" (click)="onBulkClearFilter()">
+      Clear Filter
+    </button>
   </div>
   <div class="grid-container" *ngIf="showSubtotals">
     <pfm-datagrid
@@ -99,18 +153,24 @@
   </div>
   <div class="grid-container" *ngIf="!showSubtotals">
     <pfm-datagrid
+      [extras]="expandCollapse"
       (gridIsReady)="onNonSummaryGridIsReady($event)"
       (cellAction)="onNonSummaryCellAction($event)"
       [columns]="nonSummaryFundingLineColumnsDefinition"
       [rows]="nonSummaryFundingLineRows"
-      [showAddSingleRow]="true"
+      [showAddSingleRow]="editMode"
       [showPagination]="false"
       (addCtaEvent)="onNonSummaryRowAdd($event)"
       (mousedown)="onNonSummaryMouseDown($event)"
+      [isMasterDetail]="true"
+      [detailCellRendererParams]="detailCellRendererParams"
+      [disableAddRow]="isFiltered"
+      [addRowTooltip]="isFiltered ? 'To enable, click &ldquo;Clear Filter&ldquo; link' : null"
     >
     </pfm-datagrid>
   </div>
 </div>
+
 <ng-container *ngIf="deleteDialog.display">
   <pfm-custom-dialog
     [title]="deleteDialog.title"
@@ -135,8 +195,47 @@
 </ng-container>
 
 <ng-template #expandCollapse>
-  <div>
+  <div *ngIf="pom?.status !== 'CREATED'">
     <fa-icon [icon]="'angle-double-down'" title="Expand all rows" *ngIf="!expanded" (click)="expand()"></fa-icon>
     <fa-icon [icon]="'angle-double-up'" title="Collapse all rows" *ngIf="expanded" (click)="collapse()"></fa-icon>
   </div>
 </ng-template>
+
+<ng-container *ngIf="historyReasonDialog.display">
+  <pfm-custom-dialog
+    [title]="historyReasonDialog.title"
+    [body]="historyReasonBody"
+    [actions]="historyReasonActions"
+    (onCancelDialog)="onCancelHistoryReasonDialog()"
+  ></pfm-custom-dialog>
+
+  <ng-template #historyReasonBody>
+    <span>
+      <form [formGroup]="historyReasonForm">
+        <div class="form-group row">
+          <label for="reason" class="col-sm-2 col-form-label">*Reason</label>
+          <div class="col-sm-10">
+            <textarea
+              class="form-control reason-text-area"
+              [class.input-error]="historyReasonDialogError"
+              formControlName="reason"
+            ></textarea>
+            <p class="error-message col align-self-end m-0" *ngIf="historyReasonDialogError">
+              Reason field is required.
+            </p>
+          </div>
+        </div>
+      </form>
+    </span>
+  </ng-template>
+
+  <ng-template #historyReasonActions>
+    <div class="pull-left">
+      <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onSaveHistoryReason()">Save</button>
+    </div>
+
+    <div class="pull-right">
+      <pfm-cancel-cta (onCancelClicked)="onCancelHistoryReasonDialog()"></pfm-cancel-cta>
+    </div>
+  </ng-template>
+</ng-container>

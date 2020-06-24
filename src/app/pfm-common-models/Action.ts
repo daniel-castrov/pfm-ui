@@ -4,4 +4,5 @@ export class Action {
   canUpload: boolean;
   canSave: boolean;
   isSingleDelete?: boolean;
+  editMode?: boolean;
 }

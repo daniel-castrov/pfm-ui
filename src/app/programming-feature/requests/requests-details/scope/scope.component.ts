@@ -16,6 +16,9 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { SecureDownloadComponent } from 'src/app/pfm-secure-filedownload/secure-download/secure-download.component';
 import { ListItem } from 'src/app/pfm-common-models/ListItem';
 import { DropdownCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/dropdown-cell-renderer/dropdown-cell-renderer.component';
+import { ProgrammingService } from '../../../services/programming-service';
+import { Schedule } from '../../../models/schedule.model';
+import { FundingLine } from '../../../models/funding-line.model';
 
 @Component({
   selector: 'pfm-scope',
@@ -28,6 +31,8 @@ export class ScopeComponent implements OnInit {
 
   @Input() program: Program;
 
+  @Input() pomYear: number;
+
   form: FormGroup;
 
   actionState = {
@@ -36,14 +41,16 @@ export class ScopeComponent implements OnInit {
       canEdit: true,
       canDelete: true,
       canUpload: false,
-      isSingleDelete: true
+      isSingleDelete: true,
+      editMode: false
     },
     EDIT: {
       canEdit: false,
       canSave: true,
       canDelete: true,
       canUpload: false,
-      isSingleDelete: true
+      isSingleDelete: true,
+      editMode: false
     }
   };
 
@@ -75,24 +82,26 @@ export class ScopeComponent implements OnInit {
   attachmentsUploaded: ListItem[] = [];
   programAttachments: Attachment[] = [];
   deleteDialog: DeleteDialogInterface = { title: 'Delete' };
+  editMode: boolean;
 
   constructor(
     private evaluationMeasureService: EvaluationMeasureService,
     private processPrioritizationService: ProcessPrioritizationService,
     private teamLeadService: TeamLeadService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private programmingService: ProgrammingService
   ) {}
 
   ngOnInit() {
-    this.budget = 210000000;
-    this.schedule = 'Oct. 1, 2020 - Nov. 30, 2022';
-
     this.loadForm();
+    this.loadExternalInfo();
     this.updateForm(this.program);
 
     this.setupEvaluationMeasureGrid();
     this.setupTeamLeadsGrid();
     this.setupProcessPriorizationGrid();
+    this.editMode = history.state.editMode;
+    this.changeEditMode(this.editMode);
   }
 
   loadForm() {
@@ -102,6 +111,35 @@ export class ScopeComponent implements OnInit {
       quality: new FormControl(''),
       other: new FormControl('')
     });
+  }
+
+  loadExternalInfo() {
+    this.programmingService.getProgramById(this.program.id).subscribe(resp => {
+      const program = resp.result as Program;
+      this.loadBudget(program.fundingLines);
+      this.loadScheduleRange(program.schedules);
+    });
+  }
+
+  loadBudget(fundingLines: Array<FundingLine>) {
+    let total = 0;
+    fundingLines.forEach(fundingLine => {
+      for (let i = this.pomYear; i < this.pomYear + 5; i++) {
+        total += Number(fundingLine.funds[i] ?? 0);
+      }
+    });
+    this.budget = total;
+  }
+
+  loadScheduleRange(schedules: Array<Schedule>) {
+    if (schedules?.length) {
+      const startDate = schedules.map(x => x.startDate).sort((a, b) => a.diff(b))[0];
+      const endDate = schedules.map(x => x.endDate).sort((a, b) => b.diff(a))[0];
+
+      this.schedule = `${startDate.format('MMM. D, YYYY')} - ${endDate.format('MMM. D, YYYY')}`;
+    } else {
+      this.schedule = '';
+    }
   }
 
   downloadAttachment(file: ListItem) {
@@ -131,7 +169,7 @@ export class ScopeComponent implements OnInit {
   }
 
   loadEvaluationMeasures() {
-    this.evaluationMeasureService.getByProgram(this.program.id).subscribe(resp => {
+    this.evaluationMeasureService.getByContainerId(this.program.id).subscribe(resp => {
       const result = (resp as any).result;
       this.evaluationMeasureRows = result;
       for (let i = 0; i < result.length; i++) {
@@ -145,7 +183,7 @@ export class ScopeComponent implements OnInit {
   }
 
   loadTeamLeads() {
-    this.teamLeadService.getByProgram(this.program.id).subscribe(resp => {
+    this.teamLeadService.getByContainerId(this.program.id).subscribe(resp => {
       const result = (resp as any).result;
       this.teamLeadRows = result;
       for (let i = 0; i < result.length; i++) {
@@ -155,7 +193,7 @@ export class ScopeComponent implements OnInit {
   }
 
   loadProcessPrioritizations() {
-    this.processPrioritizationService.getByProgram(this.program.id).subscribe(resp => {
+    this.processPrioritizationService.getByContainerId(this.program.id).subscribe(resp => {
       const result = (resp as any).result;
       this.processPriorizationRows = result;
       for (let i = 0; i < result.length; i++) {
@@ -1039,6 +1077,44 @@ export class ScopeComponent implements OnInit {
     this.deleteDialog.cellAction = null;
     this.deleteDialog.delete = null;
     this.deleteDialog.display = false;
+  }
+
+  changeEditMode(editMode: boolean) {
+    this.editMode = editMode;
+    this.actionState.EDIT.editMode = editMode;
+    this.actionState.VIEW.editMode = editMode;
+
+    if (editMode) {
+      this.form.get('aim').enable();
+      this.form.get('goal').enable();
+      this.form.get('quality').enable();
+      this.form.get('other').enable();
+    } else {
+      this.form.get('aim').disable();
+      this.form.get('goal').disable();
+      this.form.get('quality').disable();
+      this.form.get('other').disable();
+    }
+    this.evaluationMeasureRows.forEach(row => {
+      row.action.editMode = editMode;
+    });
+    if (this.evaluationMeasureGridApi) {
+      this.evaluationMeasureGridApi.setRowData(this.evaluationMeasureRows);
+    }
+
+    this.teamLeadRows.forEach(row => {
+      row.action.editMode = editMode;
+    });
+    if (this.teamLeadGridApi) {
+      this.teamLeadGridApi.setRowData(this.evaluationMeasureRows);
+    }
+
+    this.processPriorizationRows.forEach(row => {
+      row.action.editMode = editMode;
+    });
+    if (this.processPriorizationGridApi) {
+      this.processPriorizationGridApi.setRowData(this.processPriorizationRows);
+    }
   }
 }
 

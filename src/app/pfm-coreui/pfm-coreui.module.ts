@@ -49,6 +49,9 @@ import { WkspActionCellRendererComponent } from './datagrid/renderers/wksp-actio
 import { CheckboxInputComponent } from './form-inputs/checkbox-input/checkbox-input.component';
 import { CheckboxCellRendererComponent } from './datagrid/renderers/checkbox-cell-renderer/checkbox-cell-renderer.component';
 import { PrsActionCellRendererComponent } from './datagrid/renderers/prs-action-cell-renderer/prs-action-cell-renderer.component';
+import { FundingLineActionCellRendererComponent } from './datagrid/renderers/funding-line-action-cell-renderer/funding-line-action-cell-renderer.component';
+import { UfrActionCellRendererComponent } from './datagrid/renderers/ufr-action-cell-renderer/ufr-action-cell-renderer.component';
+import { WkspSelectionRendererComponent } from './datagrid/renderers/wksp-selection-renderer/wksp-selection-renderer.component';
 
 @NgModule({
   declarations: [
@@ -91,7 +94,10 @@ import { PrsActionCellRendererComponent } from './datagrid/renderers/prs-action-
     WkspActionCellRendererComponent,
     CheckboxInputComponent,
     CheckboxCellRendererComponent,
-    PrsActionCellRendererComponent
+    PrsActionCellRendererComponent,
+    FundingLineActionCellRendererComponent,
+    UfrActionCellRendererComponent,
+    WkspSelectionRendererComponent
   ],
   imports: [
     ToastModule,
@@ -114,7 +120,8 @@ import { PrsActionCellRendererComponent } from './datagrid/renderers/prs-action-
       AtmActionCellRendererComponent,
       DropdownCellRendererComponent,
       CActionCellRendererComponent,
-      PrsActionCellRendererComponent
+      PrsActionCellRendererComponent,
+      FundingLineActionCellRendererComponent
     ]),
     BsDatepickerModule.forRoot()
   ],
@@ -153,7 +160,8 @@ import { PrsActionCellRendererComponent } from './datagrid/renderers/prs-action-
     MprActionCellRendererComponent,
     WkspActionCellRendererComponent,
     CheckboxInputComponent,
-    CheckboxCellRendererComponent
+    CheckboxCellRendererComponent,
+    UfrActionCellRendererComponent
   ],
   providers: [MessageService]
 })

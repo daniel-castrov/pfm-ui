@@ -26,6 +26,11 @@ export class DatagridComponent implements OnInit {
   @Input() suppressKeyboardEvent = true;
   @Input() rowDragManaged = true;
   @Input() pinnedTopRowData = [];
+  @Input() overlayNoRowsTemplate: string;
+  @Input() isMasterDetail = false;
+  @Input() detailCellRendererParams = null;
+  @Input() disableAddRow: boolean;
+  @Input() addRowTooltip: string;
 
   private dropdownCtaOptions: ListItem[];
 
@@ -48,6 +53,7 @@ export class DatagridComponent implements OnInit {
   @Output() rowDragLeaveEvent: EventEmitter<any> = new EventEmitter<any>();
   @Output() rowDragEndEvent: EventEmitter<any> = new EventEmitter<any>();
   @Output() columnIsReady: EventEmitter<ColumnApi> = new EventEmitter<ColumnApi>();
+  @Output() columnResized: EventEmitter<ColumnApi> = new EventEmitter<any>();
 
   excelMessageHeader: any;
   excelMessageFooter: any;
@@ -119,6 +125,9 @@ export class DatagridComponent implements OnInit {
 
   onGridSizeChanged() {
     this.api.sizeColumnsToFit();
+    if (this.api.getPinnedTopRow(0)) {
+      this.api.hideOverlay();
+    }
   }
 
   ngOnInit() {
@@ -205,6 +214,7 @@ export class DatagridComponent implements OnInit {
   }
 
   onColumnResized(params) {
+    this.columnResized.emit(params);
     if (params.source === 'columnResized' && params.finished) {
       this.api.sizeColumnsToFit();
     }

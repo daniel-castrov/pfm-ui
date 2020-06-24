@@ -46,4 +46,16 @@ export class MrdbServiceImpl extends MrdbService {
       })
     );
   }
+
+  getPrevFundedProgramsValidForUFR(): Observable<object> {
+    return this.get('mrdb/ufr/prev-funded-programs');
+  }
+
+  getProgramRequestValidForUFR(): Observable<object> {
+    return this.get('mrdb/ufr/program-requests');
+  }
+
+  getPRsAndMrdbPRsValidForUFR(): Observable<object> {
+    return this.get('mrdb/ufr/prs-and-mrdb-prs');
+  }
 }

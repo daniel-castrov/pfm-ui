@@ -3,6 +3,10 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ProgrammingService } from './programming-service';
 import { Program } from '../models/Program';
+import { RestResponse } from '../../util/rest-response';
+import * as moment from 'moment';
+import { Schedule } from '../models/schedule.model';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -38,7 +42,8 @@ export class ProgrammingServiceImpl extends ProgrammingService {
   }
 
   findByShortNameAndContainerId(shortName: string, containerId: string) {
-    return this.get('program/name/' + shortName + '/container/' + containerId);
+    const params: HttpParams = new HttpParams().set('shortName', shortName).set('containerId', containerId);
+    return this.get('program/name-and-containerId', params);
   }
 
   getPRForYearAndShortName(year: number, shortName: string) {
@@ -47,7 +52,7 @@ export class ProgrammingServiceImpl extends ProgrammingService {
   }
 
   getProgramById(id: string) {
-    return this.get('program/' + id);
+    return this.get('program/' + id).pipe(map((res: RestResponse<any>) => this.convertDateFromServer(res)));
   }
 
   updateProgram(program: Program) {
@@ -72,5 +77,21 @@ export class ProgrammingServiceImpl extends ProgrammingService {
 
   remove(id: string) {
     return this.delete('program/' + id);
+  }
+
+  protected convertDateFromServer(res: RestResponse<any>): RestResponse<any> {
+    if (res.result) {
+      if (res.result.schedules) {
+        res.result.schedules.forEach((schedule: Schedule) => {
+          schedule.startDate = schedule.startDate != null ? moment(schedule.startDate) : null;
+          schedule.endDate = schedule.endDate != null ? moment(schedule.endDate) : null;
+        });
+      }
+    }
+    return res;
+  }
+
+  canEditPR(id: string): Observable<any> {
+    return this.get(`program/${id}/canEdit`);
   }
 }

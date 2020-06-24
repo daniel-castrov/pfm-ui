@@ -16,6 +16,7 @@ import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
 import { RequestsFundingLineGridComponent } from './requests-funding-line-grid/requests-funding-line-grid.component';
 import { ProgramStatus } from '../../models/enumerations/program-status.model';
 import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
+import { PomService } from '../../services/pom-service';
 
 @Component({
   selector: 'pfm-requests-details',
@@ -41,6 +42,7 @@ export class RequestsDetailsComponent implements OnInit {
   program: Program;
   busy: boolean;
   disableSchedule = false;
+  editMode: boolean;
 
   constructor(
     public programmingModel: ProgrammingModel,
@@ -51,7 +53,8 @@ export class RequestsDetailsComponent implements OnInit {
     private visibilityService: VisibilityService,
     public appModel: AppModel,
     private toastService: ToastService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private pomService: PomService
   ) {}
 
   goBack(): void {
@@ -82,9 +85,22 @@ export class RequestsDetailsComponent implements OnInit {
     this.programmingModel.selectedProgramId = this.route.snapshot.paramMap.get('id');
     this.pomYear = Number(this.route.snapshot.paramMap.get('pomYear'));
     const openTab = Number(this.route.snapshot.paramMap.get('tab') ?? 1);
+    this.loadPom();
     this.loadProgram();
     this.setupVisibility();
+    this.editMode = history.state.editMode;
     this.currentSelectedTab = openTab < 0 || openTab > 5 ? 1 : openTab;
+  }
+
+  private loadPom() {
+    this.pomService.getLatestPom().subscribe(
+      resp => {
+        this.programmingModel.pom = (resp as any).result;
+      },
+      error => {
+        this.dialogService.displayDebug(error);
+      }
+    );
   }
 
   async loadProgram() {
@@ -287,10 +303,14 @@ export class RequestsDetailsComponent implements OnInit {
         this.currentSelectedTab = 1;
         break;
       case 'schedule':
-        setTimeout(() => this.pfmSchedule.ngOnInit(), 0);
+        setTimeout(() => {
+          this.pfmSchedule.ngOnInit();
+          this.pfmSchedule.changePageEditMode(this.editMode);
+        }, 0);
         this.currentSelectedTab = 2;
         break;
       case 'scope':
+        this.scopeComponent.loadExternalInfo();
         this.currentSelectedTab = 3;
         break;
       case 'assets':
@@ -315,9 +335,10 @@ export class RequestsDetailsComponent implements OnInit {
       type: this.requestDetailsFormComponent.addMode
         ? this.requestDetailsFormComponent.form.get(['type']).value
         : program.type,
-      organizationId: this.requestDetailsFormComponent.addMode
-        ? this.requestDetailsFormComponent.form.get(['organizationId']).value
-        : program.organizationId,
+      organizationId:
+        this.requestDetailsFormComponent.addMode || this.requestDetailsFormComponent.isPreviousYear
+          ? this.requestDetailsFormComponent.form.get(['organizationId']).value
+          : program.organizationId,
       divisionId: this.requestDetailsFormComponent.form.get(['divisionId']).value,
       missionPriorityId:
         this.requestDetailsFormComponent.showMissionPriority &&
@@ -356,5 +377,15 @@ export class RequestsDetailsComponent implements OnInit {
       ...program,
       assets: this.assetsComponent.getProgramAssets()
     };
+  }
+
+  onEditModeChange(editMode: boolean) {
+    this.editMode = editMode;
+    this.requestDetailsFormComponent.changeEditMode(editMode);
+    this.fundingLinesComponent.changeEditMode(editMode);
+    this.pfmSchedule.changePageEditMode(editMode);
+    this.scopeComponent.changeEditMode(editMode);
+    this.assetsComponent.changePageEditMode(editMode);
+    this.justificationComponent.changeEditMode(editMode);
   }
 }
