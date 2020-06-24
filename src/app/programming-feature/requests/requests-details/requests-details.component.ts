@@ -138,7 +138,7 @@ export class RequestsDetailsComponent implements OnInit {
             this.program = (resp as any).result;
           },
           error => {
-            this.toastService.displayError('An error has ocurred while attempting to approve this program.');
+            this.toastService.displayError(error.error.error);
           },
           () => (this.busy = false)
         );
