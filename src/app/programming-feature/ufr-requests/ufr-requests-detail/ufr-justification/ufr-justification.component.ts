@@ -104,7 +104,7 @@ export class UfrJustificationComponent implements OnInit {
               })
             );
           } else {
-            return pom.id;
+            return of(pom.id);
           }
         }),
         catchError(error => {
