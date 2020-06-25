@@ -6,8 +6,5 @@ import { AppModel } from '../../../../../../src/app/pfm-common-models/AppModel';
   templateUrl: './create-planning.component.html'
 })
 export class CreatePlanningComponent {
-
-  constructor(public appModel:AppModel){
-
-  }
+  constructor(public appModel: AppModel) {}
 }

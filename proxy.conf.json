@@ -4,7 +4,6 @@
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug",
-    "pathRewrite": {"^/uploadFile" : ""}
+    "pathRewrite": { "^/uploadFile": "" }
   }
-
 }
