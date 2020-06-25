@@ -51,6 +51,7 @@ import { CheckboxCellRendererComponent } from './datagrid/renderers/checkbox-cel
 import { PrsActionCellRendererComponent } from './datagrid/renderers/prs-action-cell-renderer/prs-action-cell-renderer.component';
 import { FundingLineActionCellRendererComponent } from './datagrid/renderers/funding-line-action-cell-renderer/funding-line-action-cell-renderer.component';
 import { UfrActionCellRendererComponent } from './datagrid/renderers/ufr-action-cell-renderer/ufr-action-cell-renderer.component';
+import { WkspSelectionRendererComponent } from './datagrid/renderers/wksp-selection-renderer/wksp-selection-renderer.component';
 
 @NgModule({
   declarations: [
@@ -95,7 +96,8 @@ import { UfrActionCellRendererComponent } from './datagrid/renderers/ufr-action-
     CheckboxCellRendererComponent,
     PrsActionCellRendererComponent,
     FundingLineActionCellRendererComponent,
-    UfrActionCellRendererComponent
+    UfrActionCellRendererComponent,
+    WkspSelectionRendererComponent
   ],
   imports: [
     ToastModule,

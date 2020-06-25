@@ -866,16 +866,20 @@ export class CreateProgrammingComponent implements OnInit {
     this.pom.communityToas = communityToas;
     this.pom.orgToas = orgToas;
 
-    this.pomService.createPom(this.byYear, this.pom).subscribe(
-      resp => {
-        // Update POM from server
-        this.pom = (resp as any).result;
-        this.toastService.displaySuccess(`Programming phase for ${this.byYear} successfully created.`);
-        this.router.navigate(['/home']);
-      },
-      error => {
-        this.dialogService.displayInfo(error.error.error);
-      }
-    );
+    this.busy = true;
+    this.pomService
+      .createPom(this.byYear, this.pom)
+      .subscribe(
+        resp => {
+          // Update POM from server
+          this.pom = (resp as any).result;
+          this.toastService.displaySuccess(`Programming phase for ${this.byYear} successfully created.`);
+          this.router.navigate(['/home']);
+        },
+        error => {
+          this.dialogService.displayInfo(error.error.error);
+        }
+      )
+      .add(() => (this.busy = false));
   }
 }

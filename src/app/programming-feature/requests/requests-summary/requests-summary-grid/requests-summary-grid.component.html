@@ -23,7 +23,7 @@
   ></pfm-custom-dialog>
 
   <ng-template #deleteBody>
-    <span>{{ deleteDialog.bodyText }}</span>
+    <span [innerHTML]="deleteDialog.bodyText"></span>
   </ng-template>
 
   <ng-template #deleteActions>

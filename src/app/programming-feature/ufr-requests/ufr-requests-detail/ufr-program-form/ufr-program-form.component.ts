@@ -219,12 +219,13 @@ export class UfrProgramFormComponent implements OnInit {
           this.agencyObjectives = resp.result as Tag[];
           return iif(
             () =>
-              this.ufr.shortyType === ShortyType.NEW_FOS_FOR_MRDB_PROGRAM ||
-              this.ufr.shortyType === ShortyType.NEW_FOS_FOR_PR ||
-              this.ufr.shortyType === ShortyType.NEW_FOS ||
-              this.ufr.shortyType === ShortyType.NEW_INCREMENT_FOR_MRDB_PROGRAM ||
-              this.ufr.shortyType === ShortyType.NEW_INCREMENT_FOR_PR ||
-              this.ufr.shortyType === ShortyType.NEW_INCREMENT,
+              (this.ufr.shortyType === ShortyType.NEW_FOS_FOR_MRDB_PROGRAM ||
+                this.ufr.shortyType === ShortyType.NEW_FOS_FOR_PR ||
+                this.ufr.shortyType === ShortyType.NEW_FOS ||
+                this.ufr.shortyType === ShortyType.NEW_INCREMENT_FOR_MRDB_PROGRAM ||
+                this.ufr.shortyType === ShortyType.NEW_INCREMENT_FOR_PR ||
+                this.ufr.shortyType === ShortyType.NEW_INCREMENT) &&
+              this.ufr.parentId !== null,
             this.programmingService.getProgramById(this.ufr.parentId).pipe(
               catchError(error => of(undefined)),
               switchMap(prog => {

@@ -7,7 +7,7 @@ import { FundingLineService } from 'src/app/programming-feature/services/funding
 import { FundingData } from 'src/app/programming-feature/models/funding-data.model';
 import { map, switchMap, catchError } from 'rxjs/operators';
 import { FundingLine } from 'src/app/programming-feature/models/funding-line.model';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, of } from 'rxjs';
 import { PropertyService } from '../../../services/property.service';
 import { PropertyType } from '../../../models/enumerations/property-type.model';
 import { DropdownCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/dropdown-cell-renderer/dropdown-cell-renderer.component';
@@ -212,7 +212,7 @@ export class UfrFundsComponent implements OnInit {
               })
             );
           } else {
-            return pom.id;
+            return of(pom.id);
           }
         }),
         catchError(error => {
@@ -381,7 +381,7 @@ export class UfrFundsComponent implements OnInit {
     return ret;
   }
 
-  private fundingLineToFundingData(fundingLine: FundingLine, hasAction: boolean) {
+  fundingLineToFundingData(fundingLine: FundingLine, hasAction: boolean) {
     const funds = fundingLine.funds;
     const fundingData = { ...fundingLine } as FundingData;
     for (let i = this.pomYear - 3, x = 0; i < this.pomYear + 5; i++, x++) {
@@ -399,7 +399,7 @@ export class UfrFundsComponent implements OnInit {
     return fundingData;
   }
 
-  private convertFiscalYearToFunds(fundingLine: FundingData, convertToThousand = true) {
+  convertFiscalYearToFunds(fundingLine: FundingData, convertToThousand = true) {
     const fundingLineToSave: FundingLine = { ...fundingLine };
     fundingLineToSave.funds = {};
     for (let i = this.pomYear - 3, x = 0; i < this.pomYear + 5; i++, x++) {
@@ -1284,7 +1284,7 @@ export class UfrFundsComponent implements OnInit {
       );
   }
 
-  private updateTotalFields(gridApi: GridApi, rows: FundingData[], tableName: string) {
+  updateTotalFields(gridApi: GridApi, rows: FundingData[], tableName: string) {
     const totalRow = {
       table: tableName,
       appropriationSummary: 'Total Funding',

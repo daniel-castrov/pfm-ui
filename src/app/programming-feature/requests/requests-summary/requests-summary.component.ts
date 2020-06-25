@@ -86,7 +86,6 @@ export class RequestsSummaryComponent implements OnInit {
       type: new FormControl('PROGRAM', [Validators.required]),
       organizationId: new FormControl('', [Validators.required])
     }),
-    bodyText: `At least one year's PR Totals are below the organization TOAs. Do you want to continue?`,
     continueAction: null,
     display: false
   };
@@ -266,7 +265,7 @@ export class RequestsSummaryComponent implements OnInit {
         this.availableOrgs = this.toListItemOrgs(dropdownOptions.concat(orgs));
         this.loadPreviousSelection();
         if (
-          !this.selectedOrg &&
+          (!this.selectedOrg || this.selectedOrg.value.toLowerCase() === 'select') &&
           (this.availableOrgs.length === 1 || this.appModel.userDetails.roles.includes(RoleConstants.POM_MANAGER))
         ) {
           this.organizationSelected(this.availableOrgs[0]);

@@ -11,6 +11,12 @@ import { RoleConstants } from 'src/app/pfm-common-models/role-contants.model';
 import { PrsActionCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/prs-action-cell-renderer/prs-action-cell-renderer.component';
 import { ProgrammingService } from 'src/app/programming-feature/services/programming-service';
 import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
+import { RestResponse } from 'src/app/util/rest-response';
+import { Observable, of } from 'rxjs';
+import { UfrService } from 'src/app/programming-feature/services/ufr-service';
+import { switchMap } from 'rxjs/operators';
+import { UFR } from 'src/app/programming-feature/models/ufr.model';
+import { PomStatus } from 'src/app/programming-feature/models/enumerations/pom-status.model';
 
 @Component({
   selector: 'pfm-requests-summary-grid',
@@ -41,7 +47,8 @@ export class RequestsSummaryGridComponent implements OnInit {
     private appModel: AppModel,
     private router: Router,
     private programmingService: ProgrammingService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private ufrService: UfrService
   ) {
     this.columns = [
       {
@@ -162,8 +169,10 @@ export class RequestsSummaryGridComponent implements OnInit {
   handleCellAction(cellAction: DataGridMessage): void {
     switch (cellAction.message) {
       case 'delete-program':
-        this.deleteDialog.bodyText = 'Are you sure you want to delete?';
-        this.displayDeleteDialog(cellAction, this.deleteRow.bind(this));
+        this.getDeleteRowMessage(cellAction.rowIndex).subscribe((resp: string) => {
+          this.deleteDialog.bodyText = resp;
+          this.displayDeleteDialog(cellAction, this.deleteRow.bind(this));
+        });
         break;
       case 'cellClicked':
         this.onCellClicked(cellAction);
@@ -174,13 +183,46 @@ export class RequestsSummaryGridComponent implements OnInit {
   onCellClicked(cellAction: DataGridMessage): void {
     if (cellAction.columnId === 'programName') {
       // navigate to the program details
-      this.router.navigate([
-        '/programming/requests/details/' + cellAction.rowData['id'],
-        {
-          pomYear: this.pomYear
-        }
-      ]);
+      this.programmingService.canEditPR(cellAction.rowData['id']).subscribe(
+        (resp: RestResponse<boolean>) => {
+          this.router.navigate(
+            [
+              '/programming/requests/details/' + cellAction.rowData['id'],
+              {
+                pomYear: this.pomYear
+              }
+            ],
+            { state: { editMode: resp.result } }
+          );
+        },
+        error => this.dialogService.displayDebug(error)
+      );
     }
+  }
+
+  private getDeleteRowMessage(rowIndex: number): Observable<string> {
+    const program = this.gridData[rowIndex];
+
+    return this.ufrService.getByProgramShortName(program.programName).pipe(
+      switchMap((resp: RestResponse<UFR[]>) => {
+        let deleteRowMessage = 'Are you sure you want to delete?';
+        if (resp.result) {
+          if (this.programmingModel.pom.status === PomStatus.CREATED) {
+            deleteRowMessage =
+              'This program request has the following related UFRs: <div class="ml-3">' +
+              resp.result.map(u => 'ID ' + [u.requestNumber, u.ufrName].filter(Boolean).join(' ')).join(', ') +
+              '</div>Deleting the program request will also delete these UFRs. Are you sure you want to delete?';
+          } else if (this.programmingModel.pom.status === PomStatus.OPEN) {
+            deleteRowMessage =
+              'This program request has the following related UFRs: <div class="ml-3">' +
+              resp.result.map(u => 'ID ' + [u.requestNumber, u.ufrName].filter(Boolean).join(' ')).join(', ') +
+              '</div>Are you sure you want to delete?' +
+              ' (UFRs will not be deleted since other workspaces have this same program.)';
+          }
+        }
+        return of(deleteRowMessage);
+      })
+    );
   }
 
   onGridIsReady(gridApi: GridApi): void {

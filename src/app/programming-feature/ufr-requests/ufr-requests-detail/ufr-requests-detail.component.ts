@@ -27,6 +27,10 @@ import { UfrFundsComponent } from './ufr-funds/ufr-funds.component';
 import { FundingLine } from '../../models/funding-line.model';
 import { FundingLineService } from '../../services/funding-line.service';
 import { FundingLineType } from '../../models/enumerations/funding-line-type.model';
+import { Disposition } from '../../models/enumerations/disposition.model';
+import { FundingData } from '../../models/funding-data.model';
+import { ColGroupDef, GridApi } from '@ag-grid-community/all-modules';
+import { DataGridMessage } from 'src/app/pfm-coreui/models/DataGridMessage';
 
 @Component({
   selector: 'pfm-ufr-requests-detail',
@@ -49,6 +53,8 @@ export class UfrRequestsDetailComponent implements OnInit {
   @ViewChild('ufrJustification')
   ufrJustification: UfrJustificationComponent;
 
+  private readonly PARTIALLY_APPROVED = Disposition.PARTIALLY_APPROVED;
+
   pomYear: number;
   ufr: UFR;
   busy: boolean;
@@ -61,6 +67,12 @@ export class UfrRequestsDetailComponent implements OnInit {
   clickedReviewForApproval: boolean;
   selectUfrId: string;
   editMode: boolean;
+
+  approvedFundingLineGridApi: GridApi;
+  approvedFundingLineColumnsDefinition: ColGroupDef[];
+  approvedFundingLineRows: FundingData[];
+  approvedFundingLineRowDataState: RowDataStateInterface = {};
+  approvedFundingLineErrorMessage: string;
 
   setDispositionDlg = {
     title: 'Select Disposition',
@@ -298,6 +310,12 @@ export class UfrRequestsDetailComponent implements OnInit {
       return;
     }
 
+    this.approvedFundingLineRows = JSON.parse(JSON.stringify(this.ufrFunds.totalRevisedFundingLineRows));
+    this.approvedFundingLineRows.forEach(fundingLine => {
+      fundingLine.action = this.ufrFunds.actionState.VIEW_NO_DELETE;
+    });
+    this.approvedFundingLineColumnsDefinition = [...this.ufrFunds.totalRevisedFundingLineColumnsDefinition];
+
     this.setDispositionDlg.form.patchValue({
       dispositionType: '',
       explanation: ''
@@ -311,9 +329,59 @@ export class UfrRequestsDetailComponent implements OnInit {
     if (!this.setDispositionDlg.form.invalid) {
       this.ufr.disposition = this.setDispositionDlg.form.get(['dispositionType']).value;
       this.ufr.explanation = this.setDispositionDlg.form.get(['explanation']).value;
+      const ufrToProcess: UFR = { ...JSON.parse(JSON.stringify(this.ufr)) };
+      if (this.ufr.disposition === Disposition.PARTIALLY_APPROVED) {
+        let total = 0;
+        const approvedFundingLines: FundingLine[] = [];
+        this.approvedFundingLineRows.forEach(fundingLine => {
+          total += fundingLine.fyTotal;
+          approvedFundingLines.push(this.ufrFunds.convertFiscalYearToFunds(fundingLine));
+        });
+        if (!total) {
+          this.approvedFundingLineErrorMessage =
+            'All BY through BY+4 values for all funding lines are set to $0. ' +
+            'If these values are accurate, click the Disapprove radio button. ' +
+            'Otherwise edit the values to reflect the approved amounts.';
+          return;
+        }
+        const totalRevisedFundingLines: FundingLine[] = [];
+        this.ufrFunds.totalRevisedFundingLineRows.forEach(fundingLine => {
+          totalRevisedFundingLines.push(this.ufrFunds.convertFiscalYearToFunds(fundingLine));
+        });
+        let canSave = false;
+        approvedFundingLines.some(fundingLine => {
+          if (canSave) {
+            return true;
+          }
+          totalRevisedFundingLines.some(revisedFundingLine => {
+            if (
+              fundingLine.appropriation === revisedFundingLine.appropriation &&
+              fundingLine.baOrBlin === revisedFundingLine.baOrBlin &&
+              fundingLine.sag === revisedFundingLine.sag &&
+              fundingLine.wucd === revisedFundingLine.wucd &&
+              fundingLine.expenditureType === revisedFundingLine.expenditureType
+            ) {
+              for (let i = this.pomYear; i < this.pomYear + 5; i++) {
+                if (fundingLine.funds[i] !== revisedFundingLine.funds[i]) {
+                  canSave = true;
+                  return true;
+                }
+              }
+            }
+          });
+        });
+        if (!canSave) {
+          this.approvedFundingLineErrorMessage =
+            'You have not changed any values. ' +
+            'If you wish to approve all values, then click the Approved radio button. ' +
+            'If you wish to partially approve values, edit the values to reflect the new amounts.';
+          return;
+        }
+        ufrToProcess.approvedFundingLines = approvedFundingLines;
+      }
       this.busy = true;
       this.ufrService
-        .disposition(this.ufr)
+        .disposition(ufrToProcess)
         .subscribe(
           resp => {
             this.toastService.displaySuccess('Disposition saved successfully.');
@@ -539,4 +607,112 @@ export class UfrRequestsDetailComponent implements OnInit {
     this.ufrAssets.changePageEditMode(editMode);
     this.ufrJustification.changeEditMode(editMode);
   }
+
+  onApprovedFundingLineGridIsReady(api: GridApi) {
+    this.approvedFundingLineGridApi = api;
+    this.ufrFunds.updateTotalFields(this.approvedFundingLineGridApi, this.approvedFundingLineRows, 'Approved');
+    this.approvedFundingLineGridApi.hideOverlay();
+  }
+
+  onApprovedFundingLineCellAction(cellAction: DataGridMessage) {
+    switch (cellAction.message) {
+      case 'save':
+        this.saveRow(cellAction.rowIndex);
+        break;
+      case 'edit':
+        if (!this.approvedFundingLineRowDataState.isEditMode) {
+          this.editRow(cellAction.rowIndex, true);
+        }
+        break;
+      case 'cancel':
+        this.performNonSummaryCancel(cellAction.rowIndex);
+        break;
+    }
+  }
+
+  private performNonSummaryCancel(rowIndex: number) {
+    if (this.approvedFundingLineRowDataState.isEditMode && !this.approvedFundingLineRowDataState.isAddMode) {
+      this.cancelRow(rowIndex);
+    }
+  }
+
+  private cancelRow(rowIndex: number) {
+    this.approvedFundingLineRows[rowIndex] = this.approvedFundingLineRowDataState.currentEditingRowData;
+    this.viewProposedFundingLineMode(rowIndex);
+  }
+
+  private saveRow(rowIndex: number) {
+    this.clearRowState();
+    this.approvedFundingLineGridApi.stopEditing();
+    this.approvedFundingLineRows[rowIndex].action = this.ufrFunds.actionState.VIEW_NO_DELETE;
+    this.approvedFundingLineRows.forEach((row, index) => {
+      row.isDisabled = false;
+    });
+    this.ufrFunds.updateTotalFields(this.approvedFundingLineGridApi, this.approvedFundingLineRows, 'Approved');
+    this.approvedFundingLineGridApi.setRowData(this.approvedFundingLineRows);
+  }
+
+  private editRow(rowIndex: number, updatePreviousState?: boolean) {
+    if (updatePreviousState) {
+      this.approvedFundingLineRowDataState.currentEditingRowData = { ...this.approvedFundingLineRows[rowIndex] };
+    }
+    this.editProposedFundingLineMode(rowIndex);
+  }
+
+  private editProposedFundingLineMode(rowIndex: number) {
+    this.approvedFundingLineRowDataState.currentEditingRowIndex = rowIndex;
+    this.approvedFundingLineRowDataState.isEditMode = true;
+    this.approvedFundingLineRows[rowIndex].action = this.ufrFunds.actionState.EDIT;
+    this.approvedFundingLineRows.forEach((row, index) => {
+      if (rowIndex !== index) {
+        row.isDisabled = true;
+      }
+    });
+    this.approvedFundingLineGridApi.setRowData(this.approvedFundingLineRows);
+    this.approvedFundingLineGridApi.startEditingCell({
+      rowIndex,
+      colKey: '0'
+    });
+  }
+
+  private viewProposedFundingLineMode(rowIndex: number) {
+    this.clearRowState();
+    this.approvedFundingLineGridApi.stopEditing();
+
+    this.approvedFundingLineRows[rowIndex].action = this.ufrFunds.actionState.VIEW_NO_DELETE;
+    this.approvedFundingLineRows.forEach(row => {
+      row.isDisabled = false;
+    });
+    this.approvedFundingLineGridApi.setRowData(this.approvedFundingLineRows);
+  }
+
+  onApprovedFundingLineMouseDown(mouseEvent: MouseEvent) {
+    if (this.approvedFundingLineRowDataState.isEditMode) {
+      this.approvedFundingLineGridApi.startEditingCell({
+        rowIndex: this.approvedFundingLineRowDataState.currentEditingRowIndex,
+        colKey: '0'
+      });
+    }
+  }
+
+  private clearRowState() {
+    this.approvedFundingLineRowDataState.currentEditingRowIndex = -1;
+    this.approvedFundingLineRowDataState.isEditMode = false;
+    this.approvedFundingLineRowDataState.isAddMode = false;
+  }
+
+  onCancelDispositionDialog() {
+    this.clearRowState();
+    this.setDispositionDlg.form.get('dispositionType').markAsPristine();
+    this.setDispositionDlg.form.get('explanation').markAsPristine();
+    this.setDispositionDlg.display = false;
+    this.approvedFundingLineErrorMessage = null;
+  }
+}
+
+export interface RowDataStateInterface {
+  currentEditingRowIndex?: number;
+  isAddMode?: boolean;
+  isEditMode?: boolean;
+  currentEditingRowData?: any;
 }
