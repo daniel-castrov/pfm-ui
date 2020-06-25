@@ -23,7 +23,7 @@ export const preserveServerState = (keyName: string, emptyResult: any = null) =>
   const key = makeStateKey(keyName);
   return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
     const method = descriptor.value;
-    descriptor.value = function() {
+    descriptor.value = function () {
       if (isBrowser && transferState.hasKey(key)) {
         const state = transferState.get(key, emptyResult);
         return of(state);

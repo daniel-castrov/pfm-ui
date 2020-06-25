@@ -8,9 +8,8 @@ describe('WkspSelectionRendererComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ WkspSelectionRendererComponent ]
-    })
-    .compileComponents();
+      declarations: [WkspSelectionRendererComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

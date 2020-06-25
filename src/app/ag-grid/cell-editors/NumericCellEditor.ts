@@ -46,7 +46,7 @@ export class NumericCellEditor {
 
     function NumericCellEditorJS() {}
 
-    NumericCellEditorJS.prototype.initLimit = function(cellEditorParams: ICellEditorParams, limiterString: string) {
+    NumericCellEditorJS.prototype.initLimit = function (cellEditorParams: ICellEditorParams, limiterString: string) {
       if (!['min', 'max'].includes(limiterString)) {
         throw new Error('wrong cellRendererParam ' + limiterString);
       }
@@ -63,7 +63,7 @@ export class NumericCellEditor {
       }
     };
 
-    NumericCellEditorJS.prototype.init = function(params) {
+    NumericCellEditorJS.prototype.init = function (params) {
       this.params = params;
       this.initLimit(params.colDef.cellRendererParams, 'min');
       this.initLimit(params.colDef.cellRendererParams, 'max');
@@ -92,27 +92,27 @@ export class NumericCellEditor {
       });
     };
 
-    NumericCellEditorJS.prototype.getGui = function() {
+    NumericCellEditorJS.prototype.getGui = function () {
       if (this.eInput.value === 'undefined') {
         this.eInput.value = '';
       }
       return this.eInput;
     };
 
-    NumericCellEditorJS.prototype.afterGuiAttached = function() {
+    NumericCellEditorJS.prototype.afterGuiAttached = function () {
       if (this.focusAfterAttached) {
         this.eInput.focus();
         this.eInput.select();
       }
     };
 
-    NumericCellEditorJS.prototype.isCancelBeforeStart = function() {
+    NumericCellEditorJS.prototype.isCancelBeforeStart = function () {
       return this.cancelBeforeStart;
     };
 
     NumericCellEditorJS.prototype.isCancelAfterEnd = () => {};
 
-    NumericCellEditorJS.prototype.getValue = function() {
+    NumericCellEditorJS.prototype.getValue = function () {
       const value = +this.eInput.value;
       if (
         isNaN(value) ||
@@ -126,7 +126,7 @@ export class NumericCellEditor {
       }
     };
 
-    NumericCellEditorJS.prototype.focusIn = function() {
+    NumericCellEditorJS.prototype.focusIn = function () {
       const eInput = this.getGui();
       eInput.focus();
       eInput.select();
