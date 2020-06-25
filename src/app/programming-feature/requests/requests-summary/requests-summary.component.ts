@@ -350,6 +350,8 @@ export class RequestsSummaryComponent implements OnInit {
       if (this.programmingModel.pom.status !== PomStatus.CLOSED) {
         if (this.programmingModel.pom.status === PomStatus.CREATED) {
           this.containerId = this.programmingModel.pom.id;
+        } else if (this.programmingModel.pom.status === PomStatus.OPEN) {
+          this.containerId = this.programmingModel.pom.workspaceId;
         } else if (this.programmingModel.pom.status === PomStatus.LOCKED) {
           if (this.selectedWorkspace) {
             if (this.selectedWorkspace.selectedFinal) {
@@ -388,7 +390,6 @@ export class RequestsSummaryComponent implements OnInit {
     });
     this.setupResquestSummary();
     this.selectedOrg.value = 'select';
-    1;
     this.setupDropDown();
   }
 
