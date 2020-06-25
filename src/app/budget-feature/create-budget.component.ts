@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 
 import { ToastService } from '../pfm-coreui/services/toast.service';
 import { BudgetService } from './budget.service';
-import { HttpErrorResponse } from '@angular/common/http';
+import { VisibilityService } from '../services/visibility-service';
+import { AppModel } from '../pfm-common-models/AppModel';
 
 @Component({
   selector: 'pfm-create-budget',
@@ -16,11 +18,16 @@ export class CreateBudgetComponent implements OnInit {
   isCreating: boolean;
 
   constructor(
+    protected visibilityService: VisibilityService,
+    private appModel: AppModel,
     protected budgetService: BudgetService,
     protected toastService: ToastService
   ) {}
 
   ngOnInit(): void {
+    this.visibilityService.isCurrentlyVisible('budget-phase-component').subscribe(res => {
+      this.appModel.visibilityDef['budget-phase-component'] = (res as any).result;
+    });
     // Values:  4-digit years where the list contains only those years that:
     // have no budget year already created
     // The Programming Phased has been Locked or Closed for the chosen year
@@ -33,7 +40,7 @@ export class CreateBudgetComponent implements OnInit {
     });
   }
 
-  create(): void {
+  createBudget(): void {
     this.isCreating = true;
     // User must select a year before performing this action
     if (!this.selectedYear) {
@@ -54,7 +61,7 @@ export class CreateBudgetComponent implements OnInit {
           this.toastService.displaySuccess('Budget successfully created.');
         }, (err: HttpErrorResponse) => {
           this.isCreating = false;
-          this.toastService.displayError(err.message);
+          this.toastService.displayError(err.error.error);
         });
       }
     });
