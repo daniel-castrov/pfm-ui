@@ -1,3 +1,4 @@
+// TODO change this file's name to auth.service.ts
 import { Injectable } from '@angular/core';
 import { UserDetailsModel } from './UserDetailsModel';
 import { PlanningPhase } from '../planning-feature/models/PlanningPhase';
@@ -7,6 +8,8 @@ import { fas } from '@fortawesome/free-solid-svg-icons';
 @Injectable({
   providedIn: 'root'
 })
+// FIXME we should use the observer pattern for the data in this service
+// Using RxJS to listen to changes in this service's data is a good way to make sure everyone has the latest changes
 export class AppModel {
   constructor(library: FaIconLibrary) {
     library.addIconPacks(fas);
