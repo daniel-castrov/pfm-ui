@@ -47,10 +47,10 @@
       [options]="workspaces"
       class="d-inline-block"
     ></pfm-dropdown>
-    <span *ngIf="selectedWorkspace && selectedWorkspace.active" class="ml-3 text-danger">
+    <span *ngIf="selectedWorkspace && selectedWorkspace.selectedFinal" class="ml-3 text-danger">
       Final workspace
     </span>
-    <span *ngIf="selectedWorkspace && !selectedWorkspace.active" class="ml-3">
+    <span *ngIf="selectedWorkspace && !selectedWorkspace.selectedFinal" class="ml-3">
       Last updated on {{ selectedWorkspace.modified | date: 'M/d/yyyy HH:mm':undefined:'en-US' }}
     </span>
   </div>

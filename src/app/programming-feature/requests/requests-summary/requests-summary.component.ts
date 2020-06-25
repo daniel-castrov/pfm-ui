@@ -20,7 +20,6 @@ import { VisibilityService } from '../../../services/visibility-service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppModel } from '../../../pfm-common-models/AppModel';
 import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
-import { PlanningStatus } from 'src/app/planning-feature/models/enumerators/planning-status.model';
 import { IntIntMap } from '../../models/IntIntMap';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ProgramStatus } from '../../models/enumerations/program-status.model';
@@ -134,7 +133,6 @@ export class RequestsSummaryComponent implements OnInit {
         } else if (this.programmingModel.pom.status === PomStatus.LOCKED && this.route.snapshot.paramMap.get('id')) {
           this.setupWorkspacesDropDown();
           this.setupResquestSummary();
-          this.setupDropDown();
         } else {
           this.setupResquestSummary();
           this.setupDropDown();
@@ -349,11 +347,21 @@ export class RequestsSummaryComponent implements OnInit {
   organizationSelected(organization: ListItem) {
     this.selectedOrg = organization;
     if (this.selectedOrg.name !== 'Select') {
-      if (this.programmingModel.pom.status !== PlanningStatus.CLOSED) {
-        this.containerId =
-          this.programmingModel.pom.status === PomStatus.CREATED
-            ? this.programmingModel.pom.id
-            : this.programmingModel.pom.workspaceId;
+      if (this.programmingModel.pom.status !== PomStatus.CLOSED) {
+        if (this.programmingModel.pom.status === PomStatus.CREATED) {
+          this.containerId = this.programmingModel.pom.id;
+        } else if (this.programmingModel.pom.status === PomStatus.LOCKED) {
+          if (this.selectedWorkspace) {
+            if (this.selectedWorkspace.selectedFinal) {
+              this.containerId = this.programmingModel.pom.id;
+            } else {
+              this.containerId = this.programmingModel.pom.workspaceId;
+            }
+          } else {
+            this.containerId = this.programmingModel.pom.id;
+          }
+        }
+
         this.getPRs(this.containerId, this.selectedOrg.value);
         // Depending on organization selection change options visible and default chart shown
         if (organization.id === 'Show All') {
@@ -379,6 +387,8 @@ export class RequestsSummaryComponent implements OnInit {
       selectedContainer: this.selectedWorkspace.id
     });
     this.setupResquestSummary();
+    this.selectedOrg.value = 'select';
+    1;
     this.setupDropDown();
   }
 
