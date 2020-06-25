@@ -40,7 +40,7 @@ export class CreateBudgetComponent implements OnInit {
     });
   }
 
-  createBudget(): void {
+  onClickCreateBudget(): void {
     this.isCreating = true;
     // User must select a year before performing this action
     if (!this.selectedYear) {
