@@ -308,18 +308,24 @@ export class RequestsDetailsComponent implements OnInit {
 
   onValidateAndSave(): void {
     this.busy = true;
+    let prog = this.program;
+    prog = this.getFromDetailForm(prog);
+    prog = this.getFromScopeForm(prog);
+    prog = this.getFromAssets(prog);
+    prog = this.getFromJustificationForm(prog);
+
     of(this.onValidate(false))
       .pipe(
         takeWhile(Boolean),
-        switchMap(() => this.programmingService.validateAndSave(this.program))
+        switchMap(() => this.programmingService.validateAndSave(prog))
       )
       .subscribe(
         (resp: RestResponse<Program>) => {
-          this.toastService.displaySuccess('PR successfully approved');
+          this.toastService.displaySuccess('PR successfully validated and saved');
           this.program = resp.result;
         },
         error => {
-          this.toastService.displayError(error);
+          this.toastService.displayError(error.error.error);
         }
       )
       .add(() => (this.busy = false));
