@@ -139,6 +139,7 @@ export class RequestsDetailsComponent implements OnInit {
     } else {
       if (this.onValidate(false)) {
         this.busy = true;
+<<<<<<< HEAD
         this.programmingService
           .approve(this.program)
           .subscribe(
@@ -151,6 +152,18 @@ export class RequestsDetailsComponent implements OnInit {
             }
           )
           .add(() => (this.busy = false));
+=======
+        this.programmingService.approve(this.program).subscribe(
+          resp => {
+            this.toastService.displaySuccess('PR successfully approved');
+            this.program = (resp as any).result;
+          },
+          error => {
+            this.toastService.displayError(error.error.error);
+          },
+          () => (this.busy = false)
+        );
+>>>>>>> develop
       }
     }
   }
