@@ -25,7 +25,7 @@ import { ToastService } from '../../pfm-coreui/services/toast.service';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'pfm-programming',
+  selector: 'pfm-lock-programming',
   templateUrl: './lock-programming.component.html',
   styleUrls: ['./lock-programming.component.scss']
 })

@@ -17,13 +17,12 @@
   background-color: white;
 }
 
-.selectedws > :first-child  {
+.selectedws > :first-child {
   width: 100%;
-  > div > :nth-child(1){
+  > div > :nth-child(1) {
     line-height: 30px;
   }
   > div > :nth-child(2) {
     text-align: center;
   }
 }
-
