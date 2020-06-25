@@ -94,4 +94,8 @@ export class ProgrammingServiceImpl extends ProgrammingService {
   canEditPR(id: string): Observable<any> {
     return this.get(`program/${id}/canEdit`);
   }
+
+  validateAndSave(program: Program) {
+    return this.put('program/validate-and-save', program);
+  }
 }
