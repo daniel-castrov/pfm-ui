@@ -16,6 +16,7 @@ import { of, iif } from 'rxjs';
 import { ProgrammingService } from 'src/app/programming-feature/services/programming-service';
 import { Program } from 'src/app/programming-feature/models/Program';
 import { MrdbService } from 'src/app/programming-feature/services/mrdb-service';
+import { RestResponse } from 'src/app/util/rest-response';
 
 @Component({
   selector: 'pfm-ufr-program-form',
@@ -196,10 +197,10 @@ export class UfrProgramFormComponent implements OnInit {
           }
           return of(undefined);
         }),
-        switchMap(missionPriorities => {
-          if (missionPriorities?.length) {
+        switchMap((resp: RestResponse<MissionPriority[]>) => {
+          if (resp) {
             this.showMissionPriority = true;
-            this.missionPriorities = missionPriorities.result;
+            this.missionPriorities = resp.result;
           }
           return this.tagService.getByType(this.DIVISIONS);
         }),
