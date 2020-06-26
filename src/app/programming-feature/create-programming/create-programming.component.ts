@@ -182,7 +182,7 @@ export class CreateProgrammingComponent implements OnInit {
     // Community Toas
     row = {};
     row['orgid'] = '<strong><span>TOA</span></strong>';
-    toarow['orgid'] = 'sub TOA Total Goal';
+    toarow['orgid'] = 'sub TOA-Total Goal';
     this.pom.communityToas.forEach((toa: TOA) => {
       row[toa.year] = toa.amount / 1000;
     });
@@ -196,7 +196,7 @@ export class CreateProgrammingComponent implements OnInit {
     row['Communityactions'] = actions;
     this.communityData.push(row);
 
-    toarow['orgid'] = 'sub TOA Total Goal';
+    toarow['orgid'] = 'sub-TOA Total Goal';
     this.subToasData.push(toarow);
 
     this.communityData.forEach(commRow => {
@@ -210,7 +210,7 @@ export class CreateProgrammingComponent implements OnInit {
 
   buildOrgToaRows(fy: number) {
     let row = null;
-    const toarow = this.subToasData[0];
+    const subToaTotalGoal = this.subToasData[0];
     // Org TOAs
     this.orgs.forEach(organization => {
       row = {};
@@ -231,7 +231,7 @@ export class CreateProgrammingComponent implements OnInit {
       }
     });
 
-    const subtoarow = this.calculateSubToaTotals();
+    const subToaTotalActual = this.calculateSubToaTotals();
 
     this.tableHeaders = [];
     this.tableHeaders.push('orgid');
@@ -239,14 +239,14 @@ export class CreateProgrammingComponent implements OnInit {
       this.tableHeaders.push((fy + i).toString());
     }
 
-    this.orgData.push(toarow);
-    this.orgData.push(subtoarow);
+    this.orgData.push(subToaTotalGoal);
+    this.orgData.push(subToaTotalActual);
 
-    subtoarow['orgid'] = 'sub-TOA Total Actual';
-    this.subToasData.push(subtoarow);
+    subToaTotalActual['orgid'] = 'sub-TOA Total Actual';
+    this.subToasData.push(subToaTotalActual);
 
     let toaDeltarow = {};
-    toaDeltarow = this.calculateDeltaRow(subtoarow, toarow);
+    toaDeltarow = this.calculateDeltaRow(subToaTotalActual, subToaTotalGoal);
 
     this.orgData.push(toaDeltarow);
     toaDeltarow['orgid'] = 'Delta';
@@ -326,15 +326,12 @@ export class CreateProgrammingComponent implements OnInit {
     this.busy = true;
     this.pomService.pBYearExists(pbYear).subscribe(
       resp => {
-        const response: any = resp;
-
         this.busy = false;
         const pyear = 'PB' + FormatterUtil.pad(pbYear - 2000, 2);
         const years: string[] = [pyear, 'Spreadsheet'];
         this.availableYears = this.toListItem(years);
       },
       error => {
-        const response: any = error;
         this.busy = false;
         const years: string[] = ['Spreadsheet'];
         this.availableYears = this.toListItem(years);
@@ -581,12 +578,12 @@ export class CreateProgrammingComponent implements OnInit {
       this.orgGridApi.stopEditing();
 
       // update subtotal row
-      const subtoaRow = this.calculateSubToaTotals();
-      this.refreshOrgsTotalsRow(subtoaRow);
+      const subToaTotalActual = this.calculateSubToaTotals();
+      this.refreshOrgsTotalsRow(subToaTotalActual);
 
       // update delta row
       let deltaRow = {};
-      deltaRow = this.calculateDeltaRow(subtoaRow, this.communityData[1]);
+      deltaRow = this.calculateDeltaRow(subToaTotalActual, this.communityData[1]);
       this.refreshDeltaRow(deltaRow);
 
       this.orgGridApi.setRowData(this.orgData);
@@ -680,22 +677,21 @@ export class CreateProgrammingComponent implements OnInit {
 
   onCommunityToaChange(rowId: number) {
     const fy = this.byYear;
-    const communityTOARow = this.communityData[rowId];
+    const subToaTotalGoal = this.communityData[rowId];
     this.orgData.forEach(row => {
       const rval = row['orgid'];
-      if (rval === 'sub TOA Total Goal') {
+      if (rval === 'sub-TOA Total Goal') {
         for (let i = 0; i < 5; i++) {
-          row[fy + i] = communityTOARow[fy + i];
+          row[fy + i] = subToaTotalGoal[fy + i];
         }
       }
     });
 
-    const orgtotals = this.calculateSubToaTotals();
-    const deltarow = this.calculateDeltaRow(orgtotals, communityTOARow);
+    const subToaTotalActual = this.calculateSubToaTotals();
+    const deltarow = this.calculateDeltaRow(subToaTotalActual, subToaTotalGoal);
     this.refreshDeltaRow(deltarow);
 
     this.orgGridApi.setRowData(this.orgData);
-    // toarow['orgid'] = "sub TOA Total Goal"
   }
 
   calculateSubToaTotals(): any {
@@ -733,13 +729,13 @@ export class CreateProgrammingComponent implements OnInit {
     });
   }
 
-  calculateDeltaRow(totalsrow: any, subtoasrow: any): any {
+  calculateDeltaRow(subToaTotalActual: any, subToaTotalGoal: any): any {
     const toaDeltarow = {};
 
     const fy = this.byYear;
     toaDeltarow['orgid'] = 'Delta';
     for (let i = 0; i < 5; i++) {
-      toaDeltarow[fy + i] = totalsrow[fy + i] - subtoasrow[fy + i];
+      toaDeltarow[fy + i] = subToaTotalGoal[fy + i] - subToaTotalActual[fy + i];
     }
 
     return toaDeltarow;
@@ -809,36 +805,6 @@ export class CreateProgrammingComponent implements OnInit {
   }
 
   onCreateProgramPhase() {
-    const isOrgDataValid = true;
-    let isDelataRowValid = true;
-
-    for (const row of this.orgData) {
-      for (let i = 0; i < 5; i++) {
-        const cellVal = row[this.byYear + i];
-        /*if ( (cellVal <= 0) && (row["orgid"] != "Delta")){
-            isOrgDataValid = false;
-            break;
-        }*/
-
-        if (cellVal < 0 && row['orgid'] === 'Delta') {
-          isDelataRowValid = false;
-          break;
-        }
-      }
-
-      if (!isOrgDataValid || !isDelataRowValid) {
-        break;
-      }
-    }
-
-    if (!isDelataRowValid) {
-      this.dialogService.displayInfo(
-        'The Delta row in the Organization TOA grid has at least one negative value. ' +
-          'All values must be zero or positive'
-      );
-      return;
-    }
-
     this.createPom();
   }
 
@@ -877,7 +843,7 @@ export class CreateProgrammingComponent implements OnInit {
           this.router.navigate(['/home']);
         },
         error => {
-          this.dialogService.displayInfo(error.error.error);
+          this.dialogService.displayError(error.error.error);
         }
       )
       .add(() => (this.busy = false));
