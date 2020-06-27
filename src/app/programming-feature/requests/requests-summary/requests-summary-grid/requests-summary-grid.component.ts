@@ -348,7 +348,7 @@ export class RequestsSummaryGridComponent implements OnInit {
   ctaDropdownVisibility(): boolean {
     if (this.programmingModel.pom.status !== 'CLOSED') {
       if (this.programmingModel.pom.status === 'LOCKED') {
-        if (this.appModel.userDetails.roles.includes('POM_MANAGER')) {
+        if (this.appModel.userDetails.roles.includes('POM_MANAGER') && !this.workspaces) {
           return true;
         } else {
           return false;
