@@ -7,9 +7,5 @@ export interface IBudget {
 }
 
 export class Budget implements IBudget {
-  constructor(
-    public id?: string,
-    public fy?: number,
-    status?: BudgetStatus
-  ) {}
+  constructor(public id?: string, public fy?: number, status?: BudgetStatus) {}
 }
