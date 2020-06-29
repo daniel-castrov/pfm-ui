@@ -7,11 +7,9 @@ import { IBudget } from '../shared/models/budget.model';
 
 @Injectable({ providedIn: 'root' })
 export class BudgetService {
-
   private resourceUrl = `${SERVER_API_URL}/budget`;
 
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
 
   findAll(): Observable<HttpResponse<IBudget[]>> {
     return this.http.get<IBudget[]>(this.resourceUrl, { observe: 'response' });
@@ -30,7 +28,6 @@ export class BudgetService {
   }
 
   create(fy: number): Observable<HttpResponse<IBudget>> {
-    return this.http.post<IBudget>(`${this.resourceUrl}/year/${fy}`, null,{ observe: 'response' });
+    return this.http.post<IBudget>(`${this.resourceUrl}/year/${fy}`, null, { observe: 'response' });
   }
-
 }

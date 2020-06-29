@@ -4,8 +4,13 @@
     <h3>Create Budget Phase</h3>
   </div>
   <div class="col-6" *ngIf="isVisibilityLoaded">
-    <button id="btn-create" class="btn btn-primary float-right" (click)="onClickCreateBudget()"
-            *pfmIsVisible="'budget-phase-component.createBudget'" [disabled]="isCreating">
+    <button
+      id="btn-create"
+      class="btn btn-primary float-right"
+      (click)="onClickCreateBudget()"
+      *pfmIsVisible="'budget-phase-component.createBudget'"
+      [disabled]="isCreating"
+    >
       Create Budget Phase
     </button>
   </div>

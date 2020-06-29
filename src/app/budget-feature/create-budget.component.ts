@@ -11,7 +11,6 @@ import { AppModel } from '../pfm-common-models/AppModel';
   templateUrl: './create-budget.component.html'
 })
 export class CreateBudgetComponent implements OnInit {
-
   // list of years for the first dropdown
   years: number[];
   selectedYear: number = null;
@@ -36,8 +35,9 @@ export class CreateBudgetComponent implements OnInit {
     this.budgetService.findAvailableYears().subscribe(res => {
       this.years = res.body ?? [];
       if (this.years.length === 0) {
-        this.toastService
-          .displayWarning('No year is available since there are no LOCKED or CLOSED POMs without budgets.');
+        this.toastService.displayWarning(
+          'No year is available since there are no LOCKED or CLOSED POMs without budgets.'
+        );
       }
     });
   }
@@ -51,22 +51,27 @@ export class CreateBudgetComponent implements OnInit {
       return;
     }
     // There must not exist a budget phase for this year
-    this.budgetService.findByFiscalYear(this.selectedYear).subscribe(() => {
-      // if there is a budget, show the warning
-      this.toastService.displayWarning('The budget phase already exists for the selected year.');
-    }, (httpError: HttpErrorResponse) => {
-      // if no budget was found for the selected fiscal year, then we can create a new one
-      if (httpError.status === 404) {
-        // send the request to create a budget for the current fiscal year
-        this.budgetService.create(this.selectedYear).subscribe(() => {
-          this.isCreating = false;
-          this.toastService.displaySuccess('Budget successfully created.');
-        }, (err: HttpErrorResponse) => {
-          this.isCreating = false;
-          this.toastService.displayError(err.error.error);
-        });
+    this.budgetService.findByFiscalYear(this.selectedYear).subscribe(
+      () => {
+        // if there is a budget, show the warning
+        this.toastService.displayWarning('The budget phase already exists for the selected year.');
+      },
+      (httpError: HttpErrorResponse) => {
+        // if no budget was found for the selected fiscal year, then we can create a new one
+        if (httpError.status === 404) {
+          // send the request to create a budget for the current fiscal year
+          this.budgetService.create(this.selectedYear).subscribe(
+            () => {
+              this.isCreating = false;
+              this.toastService.displaySuccess('Budget successfully created.');
+            },
+            (err: HttpErrorResponse) => {
+              this.isCreating = false;
+              this.toastService.displayError(err.error.error);
+            }
+          );
+        }
       }
-    });
+    );
   }
-
 }
