@@ -206,7 +206,11 @@ export class UfrRequestsSummaryComponent implements OnInit {
         cellClass: 'numeric-class justify-content-center',
         cellStyle,
         maxWidth: 150,
-        minWidth: 150
+        minWidth: 150,
+        valueGetter: ({ node }) => {
+          const ufr: UFR = node.data;
+          return ufr.missionPriorityId ? ufr.agencyPriority : null;
+        }
       },
       {
         headerName: 'Status',
@@ -599,7 +603,14 @@ export class UfrRequestsSummaryComponent implements OnInit {
               organizationId: validateProgram.organizationId,
               containerId: this.selectedPom.value,
               shortyType: this.selectedShortyType,
-              type: ProgramType.PROGRAM
+              type: ProgramType.PROGRAM,
+              divisionId: validateProgram.divisionId,
+              missionPriorityId: validateProgram.missionPriorityId,
+              agencyPriority: validateProgram.agencyPriority,
+              directoratePriority: validateProgram.directoratePriority,
+              secDefLOEId: validateProgram.secDefLOEId,
+              strategicImperativeId: validateProgram.strategicImperativeId,
+              agencyObjectiveId: validateProgram.agencyObjectiveId
             } as UFR;
             if (this.selectedShortyType === ShortyType.PR) {
               ufr.proposedFundingLines = [];
