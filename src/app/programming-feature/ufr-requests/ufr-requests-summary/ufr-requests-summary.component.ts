@@ -607,6 +607,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
               divisionId: validateProgram.divisionId,
               missionPriorityId: validateProgram.missionPriorityId,
               agencyPriority: validateProgram.agencyPriority,
+              directoratePriority: validateProgram.directoratePriority,
               secDefLOEId: validateProgram.secDefLOEId,
               strategicImperativeId: validateProgram.strategicImperativeId,
               agencyObjectiveId: validateProgram.agencyObjectiveId
