@@ -16,6 +16,7 @@ export class CreateBudgetComponent implements OnInit {
   years: number[];
   selectedYear: number = null;
   isCreating: boolean;
+  isVisibilityLoaded = false;
 
   constructor(
     protected visibilityService: VisibilityService,
@@ -27,6 +28,7 @@ export class CreateBudgetComponent implements OnInit {
   ngOnInit(): void {
     this.visibilityService.isCurrentlyVisible('budget-phase-component').subscribe(res => {
       this.appModel.visibilityDef['budget-phase-component'] = (res as any).result;
+      this.isVisibilityLoaded = true;
     });
     // Values:  4-digit years where the list contains only those years that:
     // have no budget year already created
