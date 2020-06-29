@@ -7,18 +7,18 @@
       {{ program.shortName === 'undefined' ? '' : program.shortName }}
     </h3>
   </div>
-  <div class="div-buttons" *ngIf="appModel.visibilityDef['programming-detail-component']">
-    <div class="div-button-validate" *ngIf="editMode && !isPOMLocked">
+  <div class="div-buttons" *ngIf="editMode && appModel.visibilityDef['programming-detail-component']">
+    <div class="div-button-validate" *ngIf="!isPOMLocked">
       <button (click)="onValidate(true)" type="button" class="btn btn-outline-dark">
         Validate
       </button>
     </div>
-    <div class="div-button-save" *ngIf="editMode && !isPOMLocked">
+    <div class="div-button-save" *ngIf="!isPOMLocked">
       <button (click)="onSave()" class="btn btn-primary" *pfmIsVisible="'programming-detail-component.saveProgram'">
         Save
       </button>
     </div>
-    <div class="div-button-approve" *ngIf="editMode && !isPOMLocked">
+    <div class="div-button-approve" *ngIf="!isPOMLocked">
       <button
         (click)="onApprove()"
         class="btn btn-success"
@@ -28,13 +28,13 @@
         Approve
       </button>
     </div>
-    <div class="div-button-reject" *ngIf="editMode && !isPOMLocked">
+    <div class="div-button-reject" *ngIf="!isPOMLocked">
       <button (click)="onReject()" class="btn btn-danger" *pfmIsVisible="'programming-detail-component.rejectProgram'">
         <i class="fa fa-arrow-left"></i>
         Reject
       </button>
     </div>
-    <div class="div-button-save" *ngIf="editMode && isPOMLocked">
+    <div class="div-button-save" *ngIf="isPOMLocked">
       <button
         (click)="onValidateAndSave()"
         class="btn btn-primary"
