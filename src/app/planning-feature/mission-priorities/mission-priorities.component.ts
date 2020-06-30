@@ -271,6 +271,12 @@ export class MissionPrioritiesComponent implements OnInit {
     }
   }
 
+  onBtSuppressRowDrag() {
+    if (this.selectedPlanningPhase.state === 'CLOSED') {
+      this.gridApi.setSuppressRowDrag(true);
+    }
+  }
+
   onRowDragEnter(event: any): void {
     this.rowDragEnterEvent = event;
   }
@@ -310,6 +316,7 @@ export class MissionPrioritiesComponent implements OnInit {
 
   onGridIsReady(gridApi: GridApi): void {
     this.gridApi = gridApi;
+    this.onBtSuppressRowDrag();
   }
 
   onColumnIsReady(columnApi: ColumnApi): void {
@@ -788,6 +795,7 @@ export class MissionPrioritiesComponent implements OnInit {
         resp => {
           this.busy = false;
           // Update model state
+          this.gridApi.setSuppressRowDrag(true);
           this.selectedPlanningPhase.state = PlanningStatus.CLOSED;
           this.toastService.displaySuccess(`Planning Phase for ${this.selectedYear} successfully closed.`);
           this.yearSelected({ name: this.selectedYear });

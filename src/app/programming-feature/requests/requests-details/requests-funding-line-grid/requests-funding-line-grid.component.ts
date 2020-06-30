@@ -192,7 +192,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
   wucdDropdownOptions: ListItem[] = [];
   expTypeDropdownOptions: ListItem[] = [];
 
-  isPomOpenStatus: boolean;
+  isPomOpenOrLockedStatus: boolean;
 
   historyReasonForm: FormGroup;
   historyReasonDialog: HistoryReasonDialogInterface = { title: 'Enter Update Reason' };
@@ -231,7 +231,8 @@ export class RequestsFundingLineGridComponent implements OnInit {
     this.pomService.getLatestPom().subscribe((res: RestResponse<Pom>) => {
       this.pom = res.result;
     });
-    this.isPomOpenStatus = this.programmingModel.pom.status === PomStatus.OPEN;
+    this.isPomOpenOrLockedStatus =
+      this.programmingModel.pom.status === PomStatus.OPEN || this.programmingModel.pom.status === PomStatus.LOCKED;
     this.setupSummaryFundingLineGrid();
     this.setupNonSummaryFundingLineGrid();
     this.loadDropDownValues();
@@ -354,7 +355,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
   }
 
   private loadBulkDropdownValue() {
-    if (!this.isPomOpenStatus) {
+    if (!this.isPomOpenOrLockedStatus) {
       return;
     }
     this.bulkDropdownOptions = [
@@ -420,7 +421,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
         this.nonSummaryFundingLineGridApi.hideOverlay();
         this.drawLineChart();
 
-        if (this.isPomOpenStatus) {
+        if (this.isPomOpenOrLockedStatus) {
           this.storeUserFullNameFromHistory(fundingLines);
           this.loadMasterDetail();
           this.loadBulkDropdownValue();
@@ -1002,7 +1003,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
     this.nonSummaryFundingLineGridApi.stopEditing();
     const canSave = this.validateNonSummaryRowData(rowIndex);
     if (canSave) {
-      if (this.isPomOpenStatus) {
+      if (this.isPomOpenOrLockedStatus) {
         this.displayHistoryReasonDialog(rowIndex, this.prepareNonSummarySave.bind(this));
       } else {
         this.prepareNonSummarySave(rowIndex);
@@ -1054,7 +1055,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
           this.drawLineChart();
           this.program.programStatus = ProgramStatus.SAVED;
 
-          if (this.isPomOpenStatus) {
+          if (this.isPomOpenOrLockedStatus) {
             const reason = this.historyReasonForm.get('reason').value;
             if (reason?.length) {
               this.historyReasonDialog.rowIndex = rowIndex;
@@ -1189,7 +1190,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
   private deleteRow(rowIndex: number) {
     const fundingLineId = this.nonSummaryFundingLineRows[rowIndex].id;
     if (fundingLineId) {
-      if (this.isPomOpenStatus) {
+      if (this.isPomOpenOrLockedStatus) {
         this.fundingLineHistoryService.deleteFundingLineHistory(fundingLineId).subscribe(() => {
           this.fundingLineService.removeFundingLineById(fundingLineId).subscribe(
             () => {
@@ -1282,7 +1283,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
     this.summaryFundingLineGridApi.stopEditing();
     if (this.currentSummaryRowDataState.isEditMode) {
       this.historyReasonDialog.gridApiRowIndex = gridApiRowIndex;
-      if (this.isPomOpenStatus) {
+      if (this.isPomOpenOrLockedStatus) {
         this.displayHistoryReasonDialog(rowIndex, this.prepareSummarySave.bind(this));
       } else {
         this.prepareSummarySave(rowIndex);
@@ -1313,7 +1314,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
           this.reloadDropdownOptions();
           this.drawLineChart();
 
-          if (this.isPomOpenStatus) {
+          if (this.isPomOpenOrLockedStatus) {
             this.historyReasonDialog.rowIndex = rowIndex;
             const reason = this.historyReasonForm.get('reason').value;
             this.performSaveFundingLineHistory(reason, this.viewSummaryMode.bind(this));
@@ -1922,7 +1923,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
         }
       }
     }
-    if (this.isPomOpenStatus) {
+    if (this.isPomOpenOrLockedStatus) {
       this.performReloadFilterDropdown();
     }
   }

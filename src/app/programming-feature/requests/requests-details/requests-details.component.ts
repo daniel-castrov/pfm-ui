@@ -17,6 +17,11 @@ import { RequestsFundingLineGridComponent } from './requests-funding-line-grid/r
 import { ProgramStatus } from '../../models/enumerations/program-status.model';
 import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
 import { PomService } from '../../services/pom-service';
+import { RestResponse } from 'src/app/util/rest-response';
+import { Pom } from '../../models/Pom';
+import { PomStatus } from '../../models/enumerations/pom-status.model';
+import { of } from 'rxjs';
+import { switchMap, takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'pfm-requests-details',
@@ -43,6 +48,7 @@ export class RequestsDetailsComponent implements OnInit {
   busy: boolean;
   disableSchedule = false;
   editMode: boolean;
+  isPOMLocked: boolean;
 
   constructor(
     public programmingModel: ProgrammingModel,
@@ -94,8 +100,9 @@ export class RequestsDetailsComponent implements OnInit {
 
   private loadPom() {
     this.pomService.getLatestPom().subscribe(
-      resp => {
-        this.programmingModel.pom = (resp as any).result;
+      (resp: RestResponse<Pom>) => {
+        this.programmingModel.pom = resp.result;
+        this.isPOMLocked = this.programmingModel.pom.status === PomStatus.LOCKED;
       },
       error => {
         this.dialogService.displayDebug(error);
@@ -132,16 +139,18 @@ export class RequestsDetailsComponent implements OnInit {
     } else {
       if (this.onValidate(false)) {
         this.busy = true;
-        this.programmingService.approve(this.program).subscribe(
-          resp => {
-            this.toastService.displaySuccess('PR successfully approved');
-            this.program = (resp as any).result;
-          },
-          error => {
-            this.toastService.displayError('An error has ocurred while attempting to approve this program.');
-          },
-          () => (this.busy = false)
-        );
+        this.programmingService
+          .approve(this.program)
+          .subscribe(
+            resp => {
+              this.toastService.displaySuccess('PR successfully approved');
+              this.program = (resp as any).result;
+            },
+            error => {
+              this.toastService.displayError(error.error.error);
+            }
+          )
+          .add(() => (this.busy = false));
       }
     }
   }
@@ -165,16 +174,17 @@ export class RequestsDetailsComponent implements OnInit {
   }
 
   private performSaveOrCreate(programServiceCall, program: Program) {
-    programServiceCall(program).subscribe(
-      resp => {
-        this.program = resp.result as Program;
-        this.toastService.displaySuccess('Program request saved successfully.');
-      },
-      error => {
-        this.toastService.displayError('An error has ocurred while attempting to save program.');
-      },
-      () => (this.busy = false)
-    );
+    programServiceCall(program)
+      .subscribe(
+        resp => {
+          this.program = resp.result as Program;
+          this.toastService.displaySuccess('Program request saved successfully.');
+        },
+        error => {
+          this.toastService.displayError('An error has ocurred while attempting to save program.');
+        }
+      )
+      .add(() => (this.busy = false));
   }
 
   private hasNoEditingGrids(isSave: boolean, displayToast: boolean = true) {
@@ -239,20 +249,22 @@ export class RequestsDetailsComponent implements OnInit {
       pro = this.getFromScopeForm(pro);
       pro = this.getFromAssets(pro);
       pro = this.getFromJustificationForm(pro);
-      this.programmingService.reject(pro).subscribe(
-        resp => {
-          this.toastService.displaySuccess('Program request was successfully rejected.');
-          this.program = resp.result as Program;
-        },
-        error => {
-          if (error.status === 400) {
-            this.toastService.displayWarning(error.error.error);
-          } else {
-            this.toastService.displayError(error.error.error);
+      this.programmingService
+        .reject(pro)
+        .subscribe(
+          resp => {
+            this.toastService.displaySuccess('Program request was successfully rejected.');
+            this.program = resp.result as Program;
+          },
+          error => {
+            if (error.status === 400) {
+              this.toastService.displayWarning(error.error.error);
+            } else {
+              this.toastService.displayError(error.error.error);
+            }
           }
-        },
-        () => (this.busy = false)
-      );
+        )
+        .add(() => (this.busy = false));
     }
   }
 
@@ -292,6 +304,31 @@ export class RequestsDetailsComponent implements OnInit {
       this.toastService.displaySuccess('All validations passed.');
     }
     return passedValidation;
+  }
+
+  onValidateAndSave(): void {
+    this.busy = true;
+    let prog = this.program;
+    prog = this.getFromDetailForm(prog);
+    prog = this.getFromScopeForm(prog);
+    prog = this.getFromAssets(prog);
+    prog = this.getFromJustificationForm(prog);
+
+    of(this.onValidate(false))
+      .pipe(
+        takeWhile(Boolean),
+        switchMap(() => this.programmingService.validateAndSave(prog))
+      )
+      .subscribe(
+        (resp: RestResponse<Program>) => {
+          this.toastService.displaySuccess('PR successfully validated and saved');
+          this.program = resp.result;
+        },
+        error => {
+          this.toastService.displayError(error.error.error);
+        }
+      )
+      .add(() => (this.busy = false));
   }
 
   onSelectTab(event: TabDirective) {

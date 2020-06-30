@@ -25,7 +25,7 @@ import { ToastService } from '../../pfm-coreui/services/toast.service';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'pfm-programming',
+  selector: 'pfm-lock-programming',
   templateUrl: './lock-programming.component.html',
   styleUrls: ['./lock-programming.component.scss']
 })
@@ -151,7 +151,6 @@ export class LockProgrammingComponent implements OnInit {
 
   onLockProgrammingPhase() {
     this.busy = true;
-    this.selectedWorkspace.selectedFinal = true;
     this.pomService
       .lockPom(this.programmingModel.pom, this.selectedWorkspace)
       .subscribe(
@@ -167,13 +166,6 @@ export class LockProgrammingComponent implements OnInit {
         }
       )
       .add(() => (this.busy = false));
-
-    this.workspaceService.updateWorkspace(this.selectedWorkspace).subscribe(
-      resp => {},
-      error => {
-        this.dialogService.displayDebug(error);
-      }
-    );
   }
 
   private loadPOMData() {
