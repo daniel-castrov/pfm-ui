@@ -244,7 +244,7 @@ export class UfrRequestsDetailComponent implements OnInit {
         passedValidation = false;
         this.toastService.displayError('Organization field must not be empty.', 'Program');
       }
-      if (this.ufrProgramForm.showMissionPriority && !this.ufrProgramForm.showMissionPriorityMessage) {
+      if (this.ufrProgramForm.form.get('missionPriorityId')?.enabled) {
         if (!ufr.missionPriorityId) {
           passedValidation = false;
           this.toastService.displayError('Mission Priority field must not be empty.', 'Program');
@@ -554,10 +554,9 @@ export class UfrRequestsDetailComponent implements OnInit {
         ? this.ufrProgramForm.form.get(['organizationId']).value
         : ufr.organizationId,
       divisionId: this.ufrProgramForm.form.get(['divisionId']).value,
-      missionPriorityId:
-        this.ufrProgramForm.showMissionPriority && !!this.ufrProgramForm.showMissionPriorityMessage
-          ? this.ufrProgramForm.form.get(['missionPriorityId']).value
-          : ufr.missionPriorityId,
+      missionPriorityId: this.ufrProgramForm.form.get(['missionPriorityId'])?.enabled
+        ? this.ufrProgramForm.form.get(['missionPriorityId']).value
+        : ufr.missionPriorityId,
       agencyPriority: this.ufrProgramForm.addMode
         ? this.ufrProgramForm.form.get(['agencyPriority']).value
         : ufr.agencyPriority,

@@ -19,10 +19,7 @@ fa-icon:hover {
 }
 
 .icon-review {
-  position: relative;
-  display: inline;
   margin-left: 15px;
-  vertical-align: middle;
   &:hover .review-file {
     color: red;
   }
@@ -30,9 +27,6 @@ fa-icon:hover {
 
 .review-file,
 .review-check {
-  position: absolute;
-  left: 0;
-  width: 100%;
   text-align: center;
 }
 
@@ -44,8 +38,8 @@ fa-icon:hover {
 .review-check {
   font-size: small;
   color: white;
-  top: -0.3em;
-  margin-left: 2px;
+  margin-left: -15px;
+  top: 11px;
 }
 
 .review-check:hover {
