@@ -4,7 +4,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ToastService } from '../pfm-coreui/services/toast.service';
 import { BudgetService } from './budget.service';
 import { VisibilityService } from '../services/visibility-service';
-import { AppModel } from '../pfm-common-models/AppModel';
+import { LocalVisibilityService } from '../core/local-visibility.service';
+import { VisibilityDef } from '../pfm-common-models/visibility-def.model';
 
 @Component({
   selector: 'pfm-create-budget',
@@ -15,19 +16,18 @@ export class CreateBudgetComponent implements OnInit {
   years: number[];
   selectedYear: number = null;
   isCreating: boolean;
-  isVisibilityLoaded = false;
 
   constructor(
     protected visibilityService: VisibilityService,
-    private appModel: AppModel,
+    private localVisibilityService: LocalVisibilityService,
     protected budgetService: BudgetService,
     protected toastService: ToastService
   ) {}
 
   ngOnInit(): void {
-    this.visibilityService.isCurrentlyVisible('budget-phase-component').subscribe(res => {
-      this.appModel.visibilityDef['budget-phase-component'] = (res as any).result;
-      this.isVisibilityLoaded = true;
+    this.visibilityService.isVisible('budget-phase-component').subscribe(res => {
+      const visibilityDef: VisibilityDef = { 'budget-phase-component': (res as any).result };
+      this.localVisibilityService.updateVisibilityDef(visibilityDef);
     });
     // Values:  4-digit years where the list contains only those years that:
     // have no budget year already created
