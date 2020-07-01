@@ -35,7 +35,7 @@ export class CreateBudgetComponent implements OnInit {
     this.budgetService.findAvailableYears().subscribe(res => {
       this.years = res.body ?? [];
       if (this.years.length === 0) {
-        this.toastService.displayWarning(
+        this.toastService.displayError(
           'No year is available since there are no LOCKED or CLOSED POMs without budgets.'
         );
       }
