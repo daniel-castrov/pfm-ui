@@ -261,7 +261,8 @@ export class RequestsSummaryComponent implements OnInit {
         this.orgs = orgs;
         const dropdownOptions: Organization[] = [];
         if (
-          self.appModel.visibilityDef['requests-summary-component']['availableOrgsDropDown,option,Show All'] !== false
+          self.appModel.visibilityDef['requests-summary-component'] &&
+          self.appModel.visibilityDef['requests-summary-component']['availableOrgsDropDown,option,Show All'] === true
         ) {
           const showAllOrg = new Organization();
           showAllOrg.id = null;
@@ -272,7 +273,9 @@ export class RequestsSummaryComponent implements OnInit {
         this.loadPreviousSelection();
         if (
           (!this.selectedOrg || this.selectedOrg.value.toLowerCase() === 'select') &&
-          (this.availableOrgs.length === 1 || this.appModel.userDetails.roles.includes(RoleConstants.POM_MANAGER))
+          (this.availableOrgs.length === 1 ||
+            this.appModel.userDetails.roles.includes(RoleConstants.POM_MANAGER) ||
+            this.appModel.userDetails.roles.includes(RoleConstants.READ_ONLY))
         ) {
           this.organizationSelected(this.availableOrgs[0]);
         }
