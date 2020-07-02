@@ -12,6 +12,8 @@ import { environment } from '../../../environments/environment';
 export class SecureUploadComponent implements OnInit {
   @ViewChild('secureUploadTemplate') private secureUploadTemplate: TemplateRef<any>;
   @Input() uploadTypeDisplay = 'Files';
+  @Input() uploadToServer = true;
+  @Input() accept: string;
   @Output() onFilesUploaded: EventEmitter<FileMetaData> = new EventEmitter<FileMetaData>();
 
   uploadInprogressFlag: boolean;
@@ -54,10 +56,24 @@ export class SecureUploadComponent implements OnInit {
       this.uploader.queue = [file];
       file.withCredentials = false;
     };
-
     this.hasBaseDropZoneOver = false;
     this.response = '';
-    this.uploader.response.subscribe(res => (this.response = res));
+    if (!this.uploadToServer) {
+      this.uploader.onAfterAddingFile = (fileItem: FileItem) => {
+        fileItem._file.arrayBuffer().then(bufferedData => {
+          const blobFile: Blob = new Blob([bufferedData]);
+          const file = new FileMetaData();
+          (file.name = fileItem.file.name), (file.contentType = fileItem.file.type);
+          file.file = blobFile;
+          this.onFilesUploaded.emit(file);
+        });
+        this.uploader.removeFromQueue(fileItem);
+      };
+    }
+
+    this.uploader.response.subscribe(res => {
+      this.response = res;
+    });
     (this.uploader.onSuccessItem = (item, response, status, headers) => {
       const data = JSON.parse(response); // success server response
       this.fileMetaData = new FileMetaData();

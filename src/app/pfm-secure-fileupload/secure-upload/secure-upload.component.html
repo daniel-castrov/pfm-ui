@@ -12,12 +12,26 @@
         <ng-container *ngIf="isFileSelected()">
           <input type="text" value="{{ uploader.queue[0].file.name }}" disabled />
           <label for="file">Browse</label>
-          <input id="file" class="fileupload-input-hidden" type="file" ng2FileSelect [uploader]="uploader" /><br />
+          <input
+            id="file"
+            class="fileupload-input-hidden"
+            type="file"
+            [accept]="accept"
+            ng2FileSelect
+            [uploader]="uploader"
+          /><br />
         </ng-container>
         <ng-container *ngIf="!isFileSelected()">
           <input type="text" disabled />
           <label for="file">Browse</label>
-          <input id="file" class="fileupload-input-hidden" type="file" ng2FileSelect [uploader]="uploader" /><br />
+          <input
+            id="file"
+            class="fileupload-input-hidden"
+            type="file"
+            [accept]="accept"
+            ng2FileSelect
+            [uploader]="uploader"
+          /><br />
         </ng-container>
       </div>
     </div>
