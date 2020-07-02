@@ -7,42 +7,52 @@
       {{ program.shortName === 'undefined' ? '' : program.shortName }}
     </h3>
   </div>
-  <div class="div-buttons" *ngIf="editMode && appModel.visibilityDef['programming-detail-component']">
-    <div class="div-button-validate" *ngIf="!isPOMLocked">
-      <button (click)="onValidate(true)" type="button" class="btn btn-outline-dark">
-        Validate
-      </button>
-    </div>
-    <div class="div-button-save" *ngIf="!isPOMLocked">
-      <button (click)="onSave()" class="btn btn-primary" *pfmIsVisible="'programming-detail-component.saveProgram'">
-        Save
-      </button>
-    </div>
-    <div class="div-button-approve" *ngIf="!isPOMLocked">
-      <button
-        (click)="onApprove()"
-        class="btn btn-success"
-        *pfmIsVisible="'programming-detail-component.approveProgram'"
-      >
-        <i class="fa fa-check"></i>
-        Approve
-      </button>
-    </div>
-    <div class="div-button-reject" *ngIf="!isPOMLocked">
-      <button (click)="onReject()" class="btn btn-danger" *pfmIsVisible="'programming-detail-component.rejectProgram'">
-        <i class="fa fa-arrow-left"></i>
-        Reject
-      </button>
-    </div>
-    <div class="div-button-save" *ngIf="isPOMLocked">
-      <button
-        (click)="onValidateAndSave()"
-        class="btn btn-primary"
-        *pfmIsVisible="'programming-detail-component.validateAndSaveProgram'"
-      >
-        Validate and Save
-      </button>
-    </div>
+  <div class="div-buttons">
+    <ng-container *ngIf="editMode">
+      <div class="div-button-validate" *ngIf="!isPOMLocked">
+        <button (click)="onValidate(true)" type="button" class="btn btn-outline-dark">
+          Validate
+        </button>
+      </div>
+      <div class="div-button-save" *ngIf="!isPOMLocked">
+        <button
+          (click)="onSave()"
+          class="btn btn-primary"
+          *pfmHasVisibility="'programming-detail-component.saveProgram'"
+        >
+          Save
+        </button>
+      </div>
+      <div class="div-button-approve" *ngIf="!isPOMLocked">
+        <button
+          (click)="onApprove()"
+          class="btn btn-success"
+          *pfmHasVisibility="'programming-detail-component.approveProgram'"
+        >
+          <i class="fa fa-check"></i>
+          Approve
+        </button>
+      </div>
+      <div class="div-button-reject" *ngIf="!isPOMLocked">
+        <button
+          (click)="onReject()"
+          class="btn btn-danger"
+          *pfmHasVisibility="'programming-detail-component.rejectProgram'"
+        >
+          <i class="fa fa-arrow-left"></i>
+          Reject
+        </button>
+      </div>
+      <div class="div-button-save" *ngIf="isPOMLocked">
+        <button
+          (click)="onValidateAndSave()"
+          class="btn btn-primary"
+          *pfmHasVisibility="'programming-detail-component.validateAndSaveProgram'"
+        >
+          Validate and Save
+        </button>
+      </div>
+    </ng-container>
   </div>
 </div>
 

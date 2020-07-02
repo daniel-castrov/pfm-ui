@@ -19,14 +19,20 @@ export class HasVisibilityDirective implements OnDestroy {
   private componentPath: string;
   private appModelSubscription: Subscription;
 
-  constructor(private appModelService: LocalVisibilityService, private templateRef: TemplateRef<any>, private viewContainerRef: ViewContainerRef) {}
+  constructor(
+    private localVisibilityService: LocalVisibilityService,
+    private templateRef: TemplateRef<any>,
+    private viewContainerRef: ViewContainerRef
+  ) {}
 
   @Input()
   set pfmHasVisibility(value: string) {
     this.componentPath = value;
     this.updateView({});
     // Get notified each time authentication state changes.
-    this.appModelSubscription = this.appModelService.getVisibilityDef().subscribe(visibilityDef => this.updateView(visibilityDef));
+    this.appModelSubscription = this.localVisibilityService
+      .getVisibilityDef()
+      .subscribe(visibilityDef => this.updateView(visibilityDef));
   }
 
   ngOnDestroy(): void {
