@@ -4,7 +4,7 @@
     (columnIsReady)="onColumnIsReady($event)"
     (cellAction)="handleCellAction($event)"
     (addCtaEvent)="onAddProgram($event)"
-    [showAddDropdownCta]="true"
+    [showAddDropdownCta]="ctaDropdownVisibility()"
     [addDropdownCtaOptions]="dropdownOptions"
     [addDropdownCtaTooltip]="'Add Programming Request for'"
     [columns]="columns"

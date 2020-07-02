@@ -25,6 +25,7 @@ import { PomStatus } from 'src/app/programming-feature/models/enumerations/pom-s
 })
 export class RequestsSummaryGridComponent implements OnInit {
   @Input() pomYear: number;
+  @Input() workspaces: ListItem[];
   @Input() dropdownOptions: ListItem[];
   @Output() addCtaEvent: EventEmitter<any> = new EventEmitter<any>();
   @Output() gridDataChange = new EventEmitter();
@@ -345,6 +346,21 @@ export class RequestsSummaryGridComponent implements OnInit {
     this.deleteDialog.cellAction = null;
     this.deleteDialog.delete = null;
     this.deleteDialog.display = false;
+  }
+
+  ctaDropdownVisibility(): boolean {
+    if (this.programmingModel.pom.status !== PomStatus.CLOSED) {
+      if (this.programmingModel.pom.status === PomStatus.LOCKED) {
+        if (this.appModel.userDetails.roles.includes('POM_MANAGER') && !this.workspaces) {
+          return true;
+        }
+      } else {
+        return true;
+      }
+    } else {
+      return true;
+    }
+    return false;
   }
 }
 
