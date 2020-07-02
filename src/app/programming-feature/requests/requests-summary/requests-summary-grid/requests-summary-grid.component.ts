@@ -297,7 +297,10 @@ export class RequestsSummaryGridComponent implements OnInit {
   }
 
   isExternalFilterPresent() {
-    return !this.appModel.userDetails.roles.includes(RoleConstants.POM_MANAGER);
+    return (
+      !this.appModel.userDetails.roles.includes(RoleConstants.POM_MANAGER) &&
+      !this.appModel.userDetails.roles.includes(RoleConstants.READ_ONLY)
+    );
   }
 
   doesExternalFilterPass(node) {

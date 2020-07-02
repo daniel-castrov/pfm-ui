@@ -244,7 +244,7 @@ export class UfrRequestsDetailComponent implements OnInit {
         passedValidation = false;
         this.toastService.displayError('Organization field must not be empty.', 'Program');
       }
-      if (this.ufrProgramForm.showMissionPriority && !this.ufrProgramForm.showMissionPriorityMessage) {
+      if (this.ufrProgramForm.form.get('missionPriorityId')?.enabled) {
         if (!ufr.missionPriorityId) {
           passedValidation = false;
           this.toastService.displayError('Mission Priority field must not be empty.', 'Program');
@@ -554,15 +554,22 @@ export class UfrRequestsDetailComponent implements OnInit {
         ? this.ufrProgramForm.form.get(['organizationId']).value
         : ufr.organizationId,
       divisionId: this.ufrProgramForm.form.get(['divisionId']).value,
-      missionPriorityId:
-        this.ufrProgramForm.showMissionPriority && !this.ufrProgramForm.showMissionPriorityMessage
-          ? this.ufrProgramForm.form.get(['missionPriorityId']).value
-          : null,
-      agencyPriority: this.ufrProgramForm.form.get(['agencyPriority']).value,
-      directoratePriority: this.ufrProgramForm.form.get(['directoratePriority']).value,
-      secDefLOEId: this.ufrProgramForm.form.get(['secDefLOEId']).value,
-      strategicImperativeId: this.ufrProgramForm.form.get(['strategicImperativeId']).value,
-      agencyObjectiveId: this.ufrProgramForm.form.get(['agencyObjectiveId']).value
+      missionPriorityId: this.ufrProgramForm.form.get(['missionPriorityId'])?.enabled
+        ? this.ufrProgramForm.form.get(['missionPriorityId']).value
+        : ufr.missionPriorityId,
+      agencyPriority: this.ufrProgramForm.addMode
+        ? this.ufrProgramForm.form.get(['agencyPriority']).value
+        : ufr.agencyPriority,
+      directoratePriority: this.ufrProgramForm.addMode
+        ? this.ufrProgramForm.form.get(['directoratePriority']).value
+        : ufr.directoratePriority,
+      secDefLOEId: this.ufrProgramForm.addMode ? this.ufrProgramForm.form.get(['secDefLOEId']).value : ufr.secDefLOEId,
+      strategicImperativeId: this.ufrProgramForm.addMode
+        ? this.ufrProgramForm.form.get(['strategicImperativeId']).value
+        : ufr.strategicImperativeId,
+      agencyObjectiveId: this.ufrProgramForm.addMode
+        ? this.ufrProgramForm.form.get(['agencyObjectiveId']).value
+        : ufr.agencyObjectiveId
     };
   }
 

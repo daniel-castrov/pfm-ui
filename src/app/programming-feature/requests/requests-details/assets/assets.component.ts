@@ -847,12 +847,12 @@ export class AssetsComponent implements OnInit {
   }
 
   private setupOnChangeRemark() {
-    if (this.selectedAsset) {
-      this.form.get('remarks').valueChanges.subscribe(val => {
+    this.form.get('remarks').valueChanges.subscribe(val => {
+      if (this.selectedAsset) {
         const asset = this.program.assets && this.program.assets.find(a => a.id === this.selectedAsset.id);
         asset.remarks = val;
-      });
-    }
+      }
+    });
   }
 
   changePageEditMode(editMode: boolean) {

@@ -105,13 +105,17 @@ export class UfrRequestsSummaryComponent implements OnInit {
       )
       .subscribe(resp => {
         this.pom = (resp as any).result as Pom;
-        this.showGridAddCta =
-          (this.pom.status === PomStatus.CREATED || this.pom.status === PomStatus.OPEN) &&
-          this.appModel['visibilityDef']['ufr-requests-summary-component']?.gridAdd;
+        this.hasShowGridAddCta();
         this.loadPreviousContainerSelection();
       });
     this.infoIconMessage =
       'Only those programs that are not assigned to the Funds Requestor appear in the dropdown list.';
+  }
+
+  private hasShowGridAddCta() {
+    this.showGridAddCta =
+      (this.pom.status === PomStatus.CREATED || this.pom.status === PomStatus.OPEN) &&
+      this.appModel['visibilityDef']['ufr-requests-summary-component']?.gridAdd;
   }
 
   setupVisibility() {
@@ -206,7 +210,11 @@ export class UfrRequestsSummaryComponent implements OnInit {
         cellClass: 'numeric-class justify-content-center',
         cellStyle,
         maxWidth: 150,
-        minWidth: 150
+        minWidth: 150,
+        valueGetter: ({ node }) => {
+          const ufr: UFR = node.data;
+          return ufr.missionPriorityId ? ufr.agencyPriority : null;
+        }
       },
       {
         headerName: 'Status',
@@ -599,7 +607,14 @@ export class UfrRequestsSummaryComponent implements OnInit {
               organizationId: validateProgram.organizationId,
               containerId: this.selectedPom.value,
               shortyType: this.selectedShortyType,
-              type: ProgramType.PROGRAM
+              type: ProgramType.PROGRAM,
+              divisionId: validateProgram.divisionId,
+              missionPriorityId: validateProgram.missionPriorityId,
+              agencyPriority: validateProgram.agencyPriority,
+              directoratePriority: validateProgram.directoratePriority,
+              secDefLOEId: validateProgram.secDefLOEId,
+              strategicImperativeId: validateProgram.strategicImperativeId,
+              agencyObjectiveId: validateProgram.agencyObjectiveId
             } as UFR;
             if (this.selectedShortyType === ShortyType.PR) {
               ufr.proposedFundingLines = [];
@@ -768,18 +783,29 @@ export class UfrRequestsSummaryComponent implements OnInit {
     this.requestSummaryNavigationHistoryService.updateRequestSummaryNavigationHistory({
       selectedContainer: this.selectedPom.value
     });
-    this.ufrService.getByContainerId(this.selectedPom.value).subscribe(resp => {
-      const ufrs = resp.result as UFR[];
-      ufrs?.forEach(ufr => {
-        ufr.shortyTypeDescription = getShortyTypeDescription(ufr.shortyType);
-        ufr.ufrStatusDescription = getUFRStatusDescription(ufr.ufrStatus);
-        if (ufr.disposition) {
-          ufr.dispositionDescription = getDispositionDescription(ufr.disposition);
-        }
-        ufr.action = this.getActionState(ufr);
-      });
-      this.rows = ufrs;
-    });
+    this.busy = true;
+    this.ufrService
+      .getByContainerId(this.selectedPom.value)
+      .pipe(
+        switchMap((resp: RestResponse<UFR[]>) => {
+          const ufrs = resp.result;
+          ufrs?.forEach(ufr => {
+            ufr.shortyTypeDescription = getShortyTypeDescription(ufr.shortyType);
+            ufr.ufrStatusDescription = getUFRStatusDescription(ufr.ufrStatus);
+            if (ufr.disposition) {
+              ufr.dispositionDescription = getDispositionDescription(ufr.disposition);
+            }
+            ufr.action = this.getActionState(ufr);
+          });
+          this.rows = ufrs;
+          return this.pomService.getPomById(this.selectedPom.value);
+        })
+      )
+      .subscribe((resp: RestResponse<Pom>) => {
+        this.pom = resp.result;
+        this.hasShowGridAddCta();
+      })
+      .add(() => (this.busy = false));
   }
 
   onParentProgramChanged(event: any) {

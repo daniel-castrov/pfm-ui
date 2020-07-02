@@ -34,4 +34,8 @@ export abstract class PomService extends BaseRestService {
   abstract canLockPom(pom: Pom, workspace: Workspace): Observable<object>;
 
   abstract lockPom(pom: Pom, workspaceId: Workspace): Observable<object>;
+
+  abstract canClosePom(pom: Pom): Observable<object>;
+
+  abstract closePom(pom: Pom): Observable<object>;
 }

@@ -429,7 +429,7 @@ export class ScopeComponent implements OnInit {
         row.currentPerformanceDate = moment(row.currentPerformanceDate, 'MM/DD/YYYY');
       }
       if (!row.id) {
-        row.programId = this.program.id;
+        row.containerId = this.program.id;
         this.evaluationMeasureService.createEvaluationMeasure(row).subscribe(
           resp => {
             this.busy = false;
@@ -603,7 +603,7 @@ export class ScopeComponent implements OnInit {
     const canSave = this.validateTeamLeadRowData(row);
     if (canSave) {
       if (!row.id) {
-        row.programId = this.program.id;
+        row.containerId = this.program.id;
         this.teamLeadService.createTeamLead(row).subscribe(
           resp => {
             this.busy = false;
@@ -762,7 +762,7 @@ export class ScopeComponent implements OnInit {
         row.estimatedCompletionDate = moment(row.estimatedCompletionDate, 'MM/DD/YYYY');
       }
       if (!row.id) {
-        row.programId = this.program.id;
+        row.containerId = this.program.id;
         this.processPrioritizationService.createProcessPrioritization(row).subscribe(
           resp => {
             this.busy = false;

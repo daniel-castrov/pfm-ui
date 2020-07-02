@@ -5,7 +5,7 @@
   </div>
   <div class="col-6">
     <button id="btn-create" class="btn btn-primary float-right" (click)="onClickCreateBudget()"
-            *pfmIsVisible="'budget-phase-component.createBudget'" [disabled]="isCreating">
+            *pfmHasVisibility="'budget-phase-component.createBudget'" [disabled]="isCreating">
       Create Budget Phase
     </button>
   </div>
@@ -17,8 +17,8 @@
     <div class="form-inline">
       <div class="form-group">
         <label class="form-control-label" for="field_year">For:</label>
-        <select class="form-control custom-select ml-2" id="field_year" [(ngModel)]="selectedYear">
-          <option [ngValue]="null">-- Select a year --</option>
+        <select class="form-control ml-2" id="field_year" [(ngModel)]="selectedYear">
+          <option [ngValue]="null">Select</option>
           <option *ngFor="let year of years" [value]="year">{{ year }}</option>
         </select>
       </div>
