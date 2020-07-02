@@ -8,7 +8,6 @@ import { VisibilityDef } from '../pfm-common-models/visibility-def.model';
  */
 @Injectable({ providedIn: 'root' })
 export class LocalVisibilityService {
-
   private visibilityDef: BehaviorSubject<VisibilityDef> = new BehaviorSubject({});
 
   constructor() {}
