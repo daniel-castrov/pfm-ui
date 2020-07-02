@@ -49,6 +49,12 @@ export class CloseProgrammingComponent implements OnInit {
   options: GridsterConfig;
   busy: boolean;
 
+  closeConfirmationDlg = {
+    title: 'Close POM Session',
+    continueAction: null,
+    display: false
+  };
+
   constructor(
     public programmingModel: ProgrammingModel,
     private programmingService: ProgrammingService,
@@ -99,6 +105,43 @@ export class CloseProgrammingComponent implements OnInit {
     ];
   }
 
+  onValidateCloseProgrammingPhase() {
+    this.busy = true;
+
+    this.pomService
+      .canClosePom(this.programmingModel.pom)
+      .subscribe(
+        resp => {
+          const valid = (resp as any).result;
+          if (valid) {
+            this.closeConfirmationDlg.display = true;
+          }
+        },
+        error => {
+          this.toastService.displayError(error.error.error);
+        }
+      )
+      .add(() => (this.busy = false));
+  }
+
+  onCloseProgrammingPhase() {
+    this.busy = true;
+    this.pomService
+      .closePom(this.programmingModel.pom)
+      .subscribe(
+        resp => {
+          this.toastService.displaySuccess(
+            `Programming phase for ${this.programmingModel.pom.fy} successfully closed.`
+          );
+          this.router.navigate(['/home']);
+        },
+        error => this.toastService.displayError(error.error.error),
+        () => {
+          this.closeConfirmationDlg.display = false;
+        }
+      )
+      .add(() => (this.busy = false));
+  }
   onOpenProgrammingPhase() {
     this.busy = true;
     this.pomService.openPom(this.programmingModel.pom).subscribe(

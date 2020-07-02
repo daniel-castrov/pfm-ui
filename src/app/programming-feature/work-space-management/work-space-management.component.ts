@@ -381,12 +381,10 @@ export class WorkSpaceManagementComponent implements OnInit {
             const workspace = (resp as any).result;
             workspace.created = formatDate(workspace.created, 'M/d/yyyy HH:mm', 'en-US');
             workspace.modified = formatDate(workspace.modified, 'M/d/yyyy HH:mm', 'en-US');
+            workspace.action = { ...this.getAction(workspace) };
             workspace.active = { ...(workspace.active ? this.checkboxConfig.active : this.checkboxConfig.inactive) };
             newRow = {
               ...workspace,
-              action: {
-                ...this.getAction(workspace)
-              },
               disabled: false
             };
             this.rows[rowIndex] = newRow;
