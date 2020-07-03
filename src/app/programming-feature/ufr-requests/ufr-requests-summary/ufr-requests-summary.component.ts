@@ -104,7 +104,6 @@ export class UfrRequestsSummaryComponent implements OnInit {
       this.canAddToGrid = resp.visibility.result?.gridAdd;
       const poms = resp.poms.result;
       this.poms = ListItemHelper.generateListItemFromArray(poms.map(pom => ['POM ' + pom.fy, pom.id]));
-      this.hasShowGridAddCta();
       this.loadPreviousContainerSelection();
     });
 
