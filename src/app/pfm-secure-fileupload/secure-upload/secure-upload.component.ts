@@ -17,7 +17,7 @@ export class SecureUploadComponent implements OnInit {
   @Output() onFilesUploaded: EventEmitter<FileMetaData> = new EventEmitter<FileMetaData>();
 
   uploadInprogressFlag: boolean;
-  private fileMetaData: FileMetaData;
+  fileMetaData: FileMetaData;
   private url: string;
   uploader: FileUploader;
   hasBaseDropZoneOver: boolean;
@@ -65,7 +65,7 @@ export class SecureUploadComponent implements OnInit {
           const file = new FileMetaData();
           (file.name = fileItem.file.name), (file.contentType = fileItem.file.type);
           file.file = blobFile;
-          this.onFilesUploaded.emit(file);
+          this.fileMetaData = file;
         });
         this.uploader.removeFromQueue(fileItem);
       };
@@ -91,6 +91,12 @@ export class SecureUploadComponent implements OnInit {
     if (this.isFileSelected) {
       this.uploadInprogressFlag = true;
       this.uploader.uploadAll();
+    }
+  }
+
+  onFinishUpload() {
+    if (this.isFileSelected) {
+      this.onFilesUploaded.emit(this.fileMetaData);
     }
   }
 }

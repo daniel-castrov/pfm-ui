@@ -8,6 +8,8 @@ import { RestResponse } from 'src/app/util/rest-response';
 import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
 import { of } from 'rxjs';
 import { takeWhile, switchMap, finalize } from 'rxjs/operators';
+import { LocalVisibilityService } from 'src/app/core/local-visibility.service';
+import { VisibilityService } from 'src/app/services/visibility-service';
 
 @Component({
   selector: 'pfm-create-execution',
@@ -25,15 +27,25 @@ export class CreateExecutionComponent implements OnInit {
   constructor(
     private dialogService: DialogService,
     private executionService: ExecutionService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private visibilityService: VisibilityService,
+    private localVisibilityService: LocalVisibilityService
   ) {}
 
   ngOnInit(): void {
+    this.setupVisibility();
     this.executionService.getYearsReadyForExecution().subscribe(resp => {
       const years = (resp as any).result;
       this.years = ListItemHelper.generateListItemFromArray(
         years.map(y => ['FY' + y.toString().substring(2, 4), y.toString()])
       );
+    });
+  }
+
+  private setupVisibility() {
+    const componentId = 'create-execution-component';
+    this.visibilityService.isVisible(componentId).subscribe((resp: RestResponse<any>) => {
+      this.localVisibilityService.updateVisibilityDef({ [componentId]: resp.result });
     });
   }
 
@@ -65,6 +77,9 @@ export class CreateExecutionComponent implements OnInit {
       .subscribe(
         (resp: RestResponse<any>) => {
           this.execution = resp.result;
+          // TODO remove next line when we can see execution phase data.
+          this.dialogService.displayDebug(this.execution);
+          this.ousdFile = null;
           this.toastService.displaySuccess(`Execution phase for ${this.execution.fy} successfully created.`);
         },
         error => {
