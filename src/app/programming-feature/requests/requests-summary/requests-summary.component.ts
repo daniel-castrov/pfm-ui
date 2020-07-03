@@ -133,6 +133,9 @@ export class RequestsSummaryComponent implements OnInit {
         } else if (this.programmingModel.pom.status === PomStatus.LOCKED && this.route.snapshot.paramMap.get('id')) {
           this.setupWorkspacesDropDown(true);
           this.setupResquestSummary();
+        } else if (this.programmingModel.pom.status === PomStatus.CLOSED && this.route.snapshot.paramMap.get('id')) {
+          this.setupWorkspacesDropDown();
+          this.setupResquestSummary();
         } else {
           this.setupResquestSummary();
           this.setupDropDown();
