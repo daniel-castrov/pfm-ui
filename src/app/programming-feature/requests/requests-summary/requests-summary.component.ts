@@ -353,34 +353,33 @@ export class RequestsSummaryComponent implements OnInit {
   organizationSelected(organization: ListItem) {
     this.selectedOrg = organization;
     if (this.selectedOrg.name !== 'Select') {
-      if (this.programmingModel.pom.status !== PomStatus.CLOSED) {
-        if (this.programmingModel.pom.status === PomStatus.CREATED) {
-          this.containerId = this.programmingModel.pom.id;
-        } else if (this.programmingModel.pom.status === PomStatus.OPEN) {
-          this.containerId = this.programmingModel.pom.workspaceId;
-        } else if (this.programmingModel.pom.status === PomStatus.LOCKED) {
-          if (this.selectedWorkspace) {
-            if (this.selectedWorkspace.selectedFinal) {
-              this.containerId = this.programmingModel.pom.id;
-            } else {
-              this.containerId = this.programmingModel.pom.workspaceId;
-            }
-          } else {
+      if (this.programmingModel.pom.status === PomStatus.CREATED) {
+        this.containerId = this.programmingModel.pom.id;
+      } else if (this.programmingModel.pom.status === PomStatus.OPEN) {
+        this.containerId = this.programmingModel.pom.workspaceId;
+      } else if (
+        this.programmingModel.pom.status === PomStatus.LOCKED ||
+        this.programmingModel.pom.status === PomStatus.CLOSED
+      ) {
+        if (this.selectedWorkspace) {
+          if (this.selectedWorkspace.selectedFinal) {
             this.containerId = this.programmingModel.pom.id;
+          } else {
+            this.containerId = this.programmingModel.pom.workspaceId;
           }
-        }
-
-        this.getPRs(this.containerId, this.selectedOrg.value);
-        // Depending on organization selection change options visible and default chart shown
-        if (organization.id === 'Show All') {
-          const chartOptions: string[] = ['Community Status', 'Community TOA Difference', 'Funding Line Status'];
-          this.availableToaCharts = this.toListItem(chartOptions);
         } else {
-          const chartOptions: string[] = ['Organization Status', 'Organization TOA Difference', 'Funding Line Status'];
-          this.availableToaCharts = this.toListItem(chartOptions);
+          this.containerId = this.programmingModel.pom.id;
         }
+      }
+
+      this.getPRs(this.containerId, this.selectedOrg.value);
+      // Depending on organization selection change options visible and default chart shown
+      if (organization.id === 'Show All') {
+        const chartOptions: string[] = ['Community Status', 'Community TOA Difference', 'Funding Line Status'];
+        this.availableToaCharts = this.toListItem(chartOptions);
       } else {
-        this.programmingModelReady = false;
+        const chartOptions: string[] = ['Organization Status', 'Organization TOA Difference', 'Funding Line Status'];
+        this.availableToaCharts = this.toListItem(chartOptions);
       }
     }
     this.requestSummaryNavigationHistoryService.updateRequestSummaryNavigationHistory({
