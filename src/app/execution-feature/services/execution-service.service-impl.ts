@@ -7,4 +7,8 @@ export class ExecutionServiceServiceImpl extends ExecutionService {
   getYearsReadyForExecution(): Observable<any> {
     return this.get('execution/years-for-execution');
   }
+
+  getExecutionYears(): Observable<any> {
+    return this.get('execution');
+  }
 }

@@ -5,4 +5,5 @@ import { Observable } from 'rxjs';
 @Injectable()
 export abstract class ExecutionService extends BaseRestService {
   abstract getYearsReadyForExecution(): Observable<any>;
+  abstract getExecutionYears(): Observable<any>;
 }
