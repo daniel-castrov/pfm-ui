@@ -4,6 +4,7 @@ export class FileMetaData {
   nickName: string;
   contentType: string;
   size: number;
+  file?: Blob;
 
   created: Date;
   modified: Date;

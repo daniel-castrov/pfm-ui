@@ -4,6 +4,12 @@ import { ListItemHelper } from 'src/app/util/ListItemHelper';
 import { FileMetaData } from 'src/app/pfm-common-models/FileMetaData';
 import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
 import { ExecutionService } from '../services/execution.service';
+import { RestResponse } from 'src/app/util/rest-response';
+import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
+import { of } from 'rxjs';
+import { takeWhile, switchMap, finalize } from 'rxjs/operators';
+import { LocalVisibilityService } from 'src/app/core/local-visibility.service';
+import { VisibilityService } from 'src/app/services/visibility-service';
 
 @Component({
   selector: 'pfm-create-execution',
@@ -14,11 +20,20 @@ export class CreateExecutionComponent implements OnInit {
   years: ListItem[];
   busy: boolean;
   showUploadDialog: boolean;
-  filename: string;
+  ousdFile: FileMetaData;
+  selectedYear: ListItem;
+  execution: any;
 
-  constructor(private dialogService: DialogService, private executionService: ExecutionService) {}
+  constructor(
+    private dialogService: DialogService,
+    private executionService: ExecutionService,
+    private toastService: ToastService,
+    private visibilityService: VisibilityService,
+    private localVisibilityService: LocalVisibilityService
+  ) {}
 
   ngOnInit(): void {
+    this.setupVisibility();
     this.executionService.getYearsReadyForExecution().subscribe(resp => {
       const years = (resp as any).result;
       this.years = ListItemHelper.generateListItemFromArray(
@@ -27,14 +42,62 @@ export class CreateExecutionComponent implements OnInit {
     });
   }
 
-  handleAttachments(newFile: FileMetaData) {
+  private setupVisibility() {
+    const componentId = 'create-execution-component';
+    this.visibilityService.isVisible(componentId).subscribe((resp: RestResponse<any>) => {
+      this.localVisibilityService.updateVisibilityDef({ [componentId]: resp.result });
+    });
+  }
+
+  handleAttachments(newFile: FileMetaData): void {
     this.showUploadDialog = false;
     if (newFile) {
-      this.filename = newFile.name;
+      this.ousdFile = newFile;
     }
   }
 
-  onFileUploadClick() {
+  onFileUploadClick(): void {
     this.showUploadDialog = true;
+  }
+
+  onSelectYearChanged(year: ListItem): void {
+    this.selectedYear = year;
+  }
+
+  onCreate(): void {
+    this.busy = true;
+    of(this.isReadyForCreation())
+      .pipe(
+        takeWhile(Boolean),
+        switchMap(() =>
+          this.executionService.create(Number(this.selectedYear.value), this.ousdFile.file, this.ousdFile.name)
+        ),
+        finalize(() => (this.busy = false))
+      )
+      .subscribe(
+        (resp: RestResponse<any>) => {
+          this.execution = resp.result;
+          // TODO remove next line when we can see execution phase data.
+          this.dialogService.displayDebug(this.execution);
+          this.ousdFile = null;
+          this.toastService.displaySuccess(`Execution phase for ${this.execution.fy} successfully created.`);
+        },
+        error => {
+          this.toastService.displayError(error.error.error);
+        }
+      );
+  }
+
+  private isReadyForCreation(): boolean {
+    let valid = true;
+    if (!this.selectedYear) {
+      this.toastService.displayError('Please select an execution year in the dropdown', 'Execution');
+      valid = false;
+    }
+    if (!this.ousdFile?.file.size) {
+      this.toastService.displayError('Please upload the OUSD file.', 'Execution');
+      valid = false;
+    }
+    return valid;
   }
 }
