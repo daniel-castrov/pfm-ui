@@ -408,19 +408,25 @@ export class WorkSpaceManagementComponent implements OnInit {
   private getAction(workspace: Workspace): object {
     if (this.appModel.userDetails.roles.includes(RoleConstants.POM_MANAGER)) {
       if (workspace.version === 1) {
-        return this.gridActionState.DUPLICATE_ONLY;
+        return this.pom.status === PomStatus.OPEN || this.pom.status === PomStatus.LOCKED
+          ? this.gridActionState.DUPLICATE_ONLY
+          : this.gridActionState.NO_ACTIONS;
       } else {
-        return (this.pom.status === PomStatus.OPEN || this.pom.status === PomStatus.LOCKED) && workspace.active
-          ? this.gridActionState.VIEW
-          : this.gridActionState.DUPLICATE_UPDATE;
+        return this.pom.status === PomStatus.OPEN || this.pom.status === PomStatus.LOCKED
+          ? workspace.active
+            ? this.gridActionState.VIEW
+            : this.gridActionState.DUPLICATE_UPDATE
+          : this.gridActionState.VIEW_ONLY;
       }
     } else {
       if (workspace.version === 1) {
         return this.gridActionState.NO_ACTIONS;
       } else {
-        return (this.pom.status === PomStatus.OPEN || this.pom.status === PomStatus.LOCKED) && workspace.active
-          ? this.gridActionState.VIEW_ONLY
-          : this.gridActionState.NO_ACTIONS;
+        return this.pom.status === PomStatus.OPEN || this.pom.status === PomStatus.LOCKED
+          ? workspace.active
+            ? this.gridActionState.VIEW_ONLY
+            : this.gridActionState.NO_ACTIONS
+          : this.gridActionState.VIEW_ONLY;
       }
     }
   }
