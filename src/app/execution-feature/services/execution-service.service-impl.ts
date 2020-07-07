@@ -9,6 +9,10 @@ export class ExecutionServiceServiceImpl extends ExecutionService {
     return this.get('execution/years-for-execution');
   }
 
+  getExecutionYears(): Observable<any> {
+    return this.get('execution');
+  }
+
   create(year: number, file: Blob, filename: string): Observable<any> {
     const formData = new FormData();
 

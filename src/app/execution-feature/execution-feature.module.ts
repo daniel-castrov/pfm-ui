@@ -14,9 +14,10 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ExecutionLineService } from './services/execution-line.service';
 import { ExecutionLineServiceImpl } from './services/execution-line.service-impl';
+import { FundsUpdateComponent } from './funds-update/funds-update.component';
 
 @NgModule({
-  declarations: [ExecutionFeatureComponent, CreateExecutionComponent, RealignFundsComponent],
+  declarations: [ExecutionFeatureComponent, CreateExecutionComponent, FundsUpdateComponent, RealignFundsComponent],
   imports: [
     CommonModule,
     ExecutionFeatureRoutingModule,

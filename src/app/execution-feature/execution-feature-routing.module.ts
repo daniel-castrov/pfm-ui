@@ -5,6 +5,7 @@ import { ExecutionFeatureComponent } from './execution-feature.component';
 import { AuthGuard } from '../pfm-auth-module/services/auth-guard';
 import { CreateExecutionComponent } from './create-execution/create-execution.component';
 import { RealignFundsComponent } from './funds-update/realign-funds/realign-funds.component';
+import { FundsUpdateComponent } from './funds-update/funds-update.component';
 
 const routes: Routes = [
   {
@@ -15,7 +16,7 @@ const routes: Routes = [
       { path: 'create-execution', component: CreateExecutionComponent, canActivate: [AuthGuard] },
       {
         path: 'funds-update',
-        component: ExecutionFeatureComponent,
+        component: FundsUpdateComponent,
         canActivate: [AuthGuard],
         children: [
           { path: '', component: CreateExecutionComponent, canActivate: [AuthGuard] },
