@@ -1,11 +1,10 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { ListItemHelper } from '../../util/ListItemHelper';
 import { ListItem } from '../../pfm-common-models/ListItem';
-import { DialogService } from '../../pfm-coreui/services/dialog.service';
 import { ExecutionService } from '../services/execution.service';
 import { ColDef } from '@ag-grid-community/all-modules';
-import { AttachmentCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/attachment-cell-renderer/attachment-cell-renderer.component';
-import { MpActionCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/mp-action-cell-renderer/mp-action-cell-renderer.component';
+import { ExecutionLineService } from '../services/execution-line.service';
+import { ExecutionLine } from '../models/execution-line.model';
+import { RestResponse } from 'src/app/util/rest-response';
 
 @Component({
   selector: 'app-funds-update',
@@ -16,9 +15,11 @@ import { MpActionCellRendererComponent } from '../../pfm-coreui/datagrid/rendere
 export class FundsUpdateComponent implements OnInit {
   years: ListItem[];
   columnDefs: ColDef[];
-  yearSelected: number;
+  selectedYear: number;
 
-  constructor(private executionService: ExecutionService) {}
+  rows = [];
+
+  constructor(private executionService: ExecutionService, private executionLineService: ExecutionLineService) {}
 
   ngOnInit(): void {
     this.executionService.getExecutionYears().subscribe(resp => {
@@ -98,6 +99,7 @@ export class FundsUpdateComponent implements OnInit {
       },
       {
         headerName: 'PBxx',
+        headerValueGetter: params => (this.selectedYear ? 'PB' + (this.selectedYear % 100) : 'Initial Funds'),
         field: 'pb',
         minWidth: 55,
         cellClass: 'pfm-datagrid-numeric-class',
@@ -143,55 +145,31 @@ export class FundsUpdateComponent implements OnInit {
   }
 
   onYearChange(year: any): void {
-    this.yearSelected = year ? year.rawData : undefined;
-  }
-
-  //Just for testing purpose
-  rows = [
-    {
-      program: 'CAS',
-      appn: 'PROC',
-      blin: 'BA4',
-      sag: 'xxx',
-      wucd: 'xxx',
-      exp: 'xxx',
-      oa: 'SY',
-      pe: '0604883BP',
-      pb: 32456000,
-      toa: 32456000,
-      released: 8500000,
-      withhold: 1000000,
-      actions: ''
-    },
-    {
-      program: 'BAS',
-      appn: 'PROC',
-      blin: 'BA4',
-      sag: 'xxx',
-      wucd: 'xxx',
-      exp: 'xxx',
-      oa: 'SY',
-      pe: '0604883BP',
-      pb: 32456000,
-      toa: 32456000,
-      released: 8500000,
-      withhold: 1000000,
-      actions: ''
-    },
-    {
-      program: 'AAS',
-      appn: 'PROC',
-      blin: 'BA4',
-      sag: 'xxx',
-      wucd: 'xxx',
-      exp: 'xxx',
-      oa: 'SY',
-      pe: '0604883BP',
-      pb: 32456000,
-      toa: 32456000,
-      released: 8500000,
-      withhold: 1000000,
-      actions: ''
+    this.selectedYear = year ? year.rawData : undefined;
+    if (this.selectedYear) {
+      this.executionLineService.retrieveByYear(this.selectedYear).subscribe((resp: RestResponse<ExecutionLine[]>) => {
+        const executionLines = resp.result;
+        this.rows = [];
+        executionLines.forEach(executionLine => {
+          const row = {
+            program: executionLine.programName,
+            appn: executionLine.appropriation,
+            blin: executionLine.blin,
+            sag: '',
+            wucd: '',
+            exp: '',
+            oa: executionLine.opAgency,
+            pe: executionLine.programElement,
+            pb: 0,
+            toa: 0,
+            released: 0,
+            withhold: 0,
+            actions: ''
+          };
+          this.rows.push(row);
+          this.setupGrid();
+        });
+      });
     }
-  ];
+  }
 }
