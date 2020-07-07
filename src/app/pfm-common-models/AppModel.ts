@@ -5,6 +5,9 @@ import { PlanningPhase } from '../planning-feature/models/PlanningPhase';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 
+/**
+ * @deprecated use LocalVisibilityService instead
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -21,5 +24,6 @@ export class AppModel {
   visibilityDef: {};
 
   planningData: PlanningPhase[];
+  // FIXME shouldn't this be a number??
   selectedYear: string;
 }

@@ -126,7 +126,7 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
     ];
     for (let i = 0; i < 5; i++) {
       const year: string = 'FY' + (this.pomYear + i - 2000);
-      const toa: number = this.programmingModel.pom.communityToas[i].amount;
+      const toa: number = this.programmingModel.pom.communityToas[i].amount / 1000;
       const approved = rows[this.pomYear + i].approved;
       const rejected = rows[this.pomYear + i].rejected;
       const saved = rows[this.pomYear + i].saved;
@@ -155,7 +155,10 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
     // Add difference to data
     for (let i = 0; i < 5; i++) {
       const year: string = 'FY' + (totals[i].year - 2000);
-      const difference: number = totals[i].amount - this.programmingModel.pom.communityToas[i].amount;
+      const difference: number = parseInt(
+        (totals[i].amount - this.programmingModel.pom.communityToas[i].amount / 1000).toString(),
+        10
+      );
       data.push([year, difference]);
     }
     // Set data to char and refresh

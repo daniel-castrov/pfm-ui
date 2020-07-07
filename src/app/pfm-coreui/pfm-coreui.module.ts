@@ -52,6 +52,7 @@ import { PrsActionCellRendererComponent } from './datagrid/renderers/prs-action-
 import { FundingLineActionCellRendererComponent } from './datagrid/renderers/funding-line-action-cell-renderer/funding-line-action-cell-renderer.component';
 import { UfrActionCellRendererComponent } from './datagrid/renderers/ufr-action-cell-renderer/ufr-action-cell-renderer.component';
 import { WkspSelectionRendererComponent } from './datagrid/renderers/wksp-selection-renderer/wksp-selection-renderer.component';
+import { HasVisibilityDirective } from './directives/has-visibility.directive';
 
 @NgModule({
   declarations: [
@@ -85,6 +86,7 @@ import { WkspSelectionRendererComponent } from './datagrid/renderers/wksp-select
     DatePickerCellRendererComponent,
     DropdownCellRendererComponent,
     IsVisibleDirective,
+    HasVisibilityDirective,
     ToggleInputComponent,
     MpActionCellRendererComponent,
     AgGridPaginationComponent,
@@ -155,6 +157,7 @@ import { WkspSelectionRendererComponent } from './datagrid/renderers/wksp-select
     DatePickerCellRendererComponent,
     DropdownCellRendererComponent,
     IsVisibleDirective,
+    HasVisibilityDirective,
     ToggleInputComponent,
     MpActionCellRendererComponent,
     MprActionCellRendererComponent,

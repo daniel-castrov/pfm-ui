@@ -133,6 +133,9 @@ export class RequestsSummaryComponent implements OnInit {
         } else if (this.programmingModel.pom.status === PomStatus.LOCKED && this.route.snapshot.paramMap.get('id')) {
           this.setupWorkspacesDropDown(true);
           this.setupResquestSummary();
+        } else if (this.programmingModel.pom.status === PomStatus.CLOSED && this.route.snapshot.paramMap.get('id')) {
+          this.setupWorkspacesDropDown();
+          this.setupResquestSummary();
         } else {
           this.setupResquestSummary();
           this.setupDropDown();
@@ -261,7 +264,8 @@ export class RequestsSummaryComponent implements OnInit {
         this.orgs = orgs;
         const dropdownOptions: Organization[] = [];
         if (
-          self.appModel.visibilityDef['requests-summary-component']['availableOrgsDropDown,option,Show All'] !== false
+          self.appModel.visibilityDef['requests-summary-component'] &&
+          self.appModel.visibilityDef['requests-summary-component']['availableOrgsDropDown,option,Show All'] === true
         ) {
           const showAllOrg = new Organization();
           showAllOrg.id = null;
@@ -272,7 +276,9 @@ export class RequestsSummaryComponent implements OnInit {
         this.loadPreviousSelection();
         if (
           (!this.selectedOrg || this.selectedOrg.value.toLowerCase() === 'select') &&
-          (this.availableOrgs.length === 1 || this.appModel.userDetails.roles.includes(RoleConstants.POM_MANAGER))
+          (this.availableOrgs.length === 1 ||
+            this.appModel.userDetails.roles.includes(RoleConstants.POM_MANAGER) ||
+            this.appModel.userDetails.roles.includes(RoleConstants.READ_ONLY))
         ) {
           this.organizationSelected(this.availableOrgs[0]);
         }
@@ -347,34 +353,33 @@ export class RequestsSummaryComponent implements OnInit {
   organizationSelected(organization: ListItem) {
     this.selectedOrg = organization;
     if (this.selectedOrg.name !== 'Select') {
-      if (this.programmingModel.pom.status !== PomStatus.CLOSED) {
-        if (this.programmingModel.pom.status === PomStatus.CREATED) {
-          this.containerId = this.programmingModel.pom.id;
-        } else if (this.programmingModel.pom.status === PomStatus.OPEN) {
-          this.containerId = this.programmingModel.pom.workspaceId;
-        } else if (this.programmingModel.pom.status === PomStatus.LOCKED) {
-          if (this.selectedWorkspace) {
-            if (this.selectedWorkspace.selectedFinal) {
-              this.containerId = this.programmingModel.pom.id;
-            } else {
-              this.containerId = this.programmingModel.pom.workspaceId;
-            }
-          } else {
+      if (this.programmingModel.pom.status === PomStatus.CREATED) {
+        this.containerId = this.programmingModel.pom.id;
+      } else if (this.programmingModel.pom.status === PomStatus.OPEN) {
+        this.containerId = this.programmingModel.pom.workspaceId;
+      } else if (
+        this.programmingModel.pom.status === PomStatus.LOCKED ||
+        this.programmingModel.pom.status === PomStatus.CLOSED
+      ) {
+        if (this.selectedWorkspace) {
+          if (this.selectedWorkspace.selectedFinal) {
             this.containerId = this.programmingModel.pom.id;
+          } else {
+            this.containerId = this.programmingModel.pom.workspaceId;
           }
-        }
-
-        this.getPRs(this.containerId, this.selectedOrg.value);
-        // Depending on organization selection change options visible and default chart shown
-        if (organization.id === 'Show All') {
-          const chartOptions: string[] = ['Community Status', 'Community TOA Difference', 'Funding Line Status'];
-          this.availableToaCharts = this.toListItem(chartOptions);
         } else {
-          const chartOptions: string[] = ['Organization Status', 'Organization TOA Difference', 'Funding Line Status'];
-          this.availableToaCharts = this.toListItem(chartOptions);
+          this.containerId = this.programmingModel.pom.id;
         }
+      }
+
+      this.getPRs(this.containerId, this.selectedOrg.value);
+      // Depending on organization selection change options visible and default chart shown
+      if (organization.id === 'Show All') {
+        const chartOptions: string[] = ['Community Status', 'Community TOA Difference', 'Funding Line Status'];
+        this.availableToaCharts = this.toListItem(chartOptions);
       } else {
-        this.programmingModelReady = false;
+        const chartOptions: string[] = ['Organization Status', 'Organization TOA Difference', 'Funding Line Status'];
+        this.availableToaCharts = this.toListItem(chartOptions);
       }
     }
     this.requestSummaryNavigationHistoryService.updateRequestSummaryNavigationHistory({

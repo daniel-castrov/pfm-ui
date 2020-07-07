@@ -22,6 +22,8 @@ import { Pom } from '../../models/Pom';
 import { PomStatus } from '../../models/enumerations/pom-status.model';
 import { of } from 'rxjs';
 import { switchMap, takeWhile } from 'rxjs/operators';
+import { LocalVisibilityService } from 'src/app/core/local-visibility.service';
+import { VisibilityDef } from 'src/app/pfm-common-models/visibility-def.model';
 
 @Component({
   selector: 'pfm-requests-details',
@@ -57,7 +59,7 @@ export class RequestsDetailsComponent implements OnInit {
     private router: Router,
     private requestSummaryNavigationHistoryService: RequestSummaryNavigationHistoryService,
     private visibilityService: VisibilityService,
-    public appModel: AppModel,
+    private localVisibilityService: LocalVisibilityService,
     private toastService: ToastService,
     private dialogService: DialogService,
     private pomService: PomService
@@ -120,12 +122,10 @@ export class RequestsDetailsComponent implements OnInit {
   }
 
   async setupVisibility() {
-    await this.visibilityService
-      .isCurrentlyVisible('programming-detail-component')
-      .toPromise()
-      .then(response => {
-        this.appModel['visibilityDef']['programming-detail-component'] = (response as any).result;
-      });
+    this.visibilityService.isVisible('programming-detail-component').subscribe(res => {
+      const visibilityDef: VisibilityDef = { 'programming-detail-component': (res as any).result };
+      this.localVisibilityService.updateVisibilityDef(visibilityDef);
+    });
   }
 
   onApprove(): void {

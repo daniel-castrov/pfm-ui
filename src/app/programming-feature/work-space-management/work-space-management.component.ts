@@ -381,12 +381,10 @@ export class WorkSpaceManagementComponent implements OnInit {
             const workspace = (resp as any).result;
             workspace.created = formatDate(workspace.created, 'M/d/yyyy HH:mm', 'en-US');
             workspace.modified = formatDate(workspace.modified, 'M/d/yyyy HH:mm', 'en-US');
+            workspace.action = { ...this.getAction(workspace) };
             workspace.active = { ...(workspace.active ? this.checkboxConfig.active : this.checkboxConfig.inactive) };
             newRow = {
               ...workspace,
-              action: {
-                ...this.getAction(workspace)
-              },
               disabled: false
             };
             this.rows[rowIndex] = newRow;
@@ -410,19 +408,25 @@ export class WorkSpaceManagementComponent implements OnInit {
   private getAction(workspace: Workspace): object {
     if (this.appModel.userDetails.roles.includes(RoleConstants.POM_MANAGER)) {
       if (workspace.version === 1) {
-        return this.gridActionState.DUPLICATE_ONLY;
+        return this.pom.status === PomStatus.OPEN || this.pom.status === PomStatus.LOCKED
+          ? this.gridActionState.DUPLICATE_ONLY
+          : this.gridActionState.NO_ACTIONS;
       } else {
-        return (this.pom.status === PomStatus.OPEN || this.pom.status === PomStatus.LOCKED) && workspace.active
-          ? this.gridActionState.VIEW
-          : this.gridActionState.DUPLICATE_UPDATE;
+        return this.pom.status === PomStatus.OPEN || this.pom.status === PomStatus.LOCKED
+          ? workspace.active
+            ? this.gridActionState.VIEW
+            : this.gridActionState.DUPLICATE_UPDATE
+          : this.gridActionState.VIEW_ONLY;
       }
     } else {
       if (workspace.version === 1) {
         return this.gridActionState.NO_ACTIONS;
       } else {
-        return (this.pom.status === PomStatus.OPEN || this.pom.status === PomStatus.LOCKED) && workspace.active
-          ? this.gridActionState.VIEW_ONLY
-          : this.gridActionState.NO_ACTIONS;
+        return this.pom.status === PomStatus.OPEN || this.pom.status === PomStatus.LOCKED
+          ? workspace.active
+            ? this.gridActionState.VIEW_ONLY
+            : this.gridActionState.NO_ACTIONS
+          : this.gridActionState.VIEW_ONLY;
       }
     }
   }

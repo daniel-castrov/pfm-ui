@@ -1,6 +1,9 @@
 import { Directive, Input, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
 import { AppModel } from '../../pfm-common-models/AppModel';
 
+/**
+ * @deprecated use HasVisibilityDirective instead.
+ */
 @Directive({
   selector: '[pfmIsVisible]'
 })
