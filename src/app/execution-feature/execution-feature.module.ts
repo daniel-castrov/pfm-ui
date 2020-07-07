@@ -8,9 +8,10 @@ import { PfmCoreuiModule } from '../pfm-coreui/pfm-coreui.module';
 import { PfmSecureFileuploadModule } from '../pfm-secure-fileupload/pfm-secure-fileupload.module';
 import { ExecutionService } from './services/execution.service';
 import { ExecutionServiceServiceImpl } from './services/execution-service.service-impl';
+import { FundsUpdateComponent } from './funds-update/funds-update.component';
 
 @NgModule({
-  declarations: [ExecutionFeatureComponent, CreateExecutionComponent],
+  declarations: [ExecutionFeatureComponent, CreateExecutionComponent, FundsUpdateComponent],
   imports: [CommonModule, ExecutionFeatureRoutingModule, PfmCoreuiModule, PfmSecureFileuploadModule],
   providers: [{ provide: ExecutionService, useClass: ExecutionServiceServiceImpl }]
 })
