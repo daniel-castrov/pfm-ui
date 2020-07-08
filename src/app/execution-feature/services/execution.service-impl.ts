@@ -4,9 +4,13 @@ import { ExecutionService } from './execution.service';
 import { tap, switchMap } from 'rxjs/operators';
 
 @Injectable()
-export class ExecutionServiceServiceImpl extends ExecutionService {
+export class ExecutionServiceImpl extends ExecutionService {
   getYearsReadyForExecution(): Observable<any> {
     return this.get('execution/years-for-execution');
+  }
+
+  getExecutionYears(): Observable<any> {
+    return this.get('execution');
   }
 
   create(year: number, file: Blob, filename: string): Observable<any> {
