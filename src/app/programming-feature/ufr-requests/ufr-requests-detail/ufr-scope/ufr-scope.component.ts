@@ -20,6 +20,7 @@ import { Schedule } from '../../../models/schedule.model';
 import { FundingLine } from '../../../models/funding-line.model';
 import { UfrService } from 'src/app/programming-feature/services/ufr-service';
 import { UFR } from 'src/app/programming-feature/models/ufr.model';
+import { UFRStatus } from '../../../models/enumerations/ufr-status.model';
 
 @Component({
   selector: 'pfm-ufr-scope',
@@ -1081,11 +1082,11 @@ export class UfrScopeComponent implements OnInit {
   }
 
   changeEditMode(editMode: boolean) {
-    this.editMode = editMode;
+    this.editMode = editMode && this.ufr.ufrStatus === UFRStatus.SAVED;
     this.actionState.EDIT.editMode = editMode;
-    this.actionState.VIEW.editMode = editMode;
+    this.actionState.VIEW.editMode = editMode && this.ufr.ufrStatus === UFRStatus.SAVED;
 
-    if (editMode) {
+    if (editMode && this.ufr.ufrStatus === UFRStatus.SAVED) {
       this.form.get('aim').enable();
       this.form.get('goal').enable();
       this.form.get('quality').enable();

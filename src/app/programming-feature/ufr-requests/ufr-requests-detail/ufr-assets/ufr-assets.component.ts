@@ -21,6 +21,7 @@ import { DropdownCellRendererComponent } from 'src/app/pfm-coreui/datagrid/rende
 import { ListItem } from 'src/app/pfm-common-models/ListItem';
 import { UFR } from 'src/app/programming-feature/models/ufr.model';
 import { FundingLineType } from 'src/app/programming-feature/models/enumerations/funding-line-type.model';
+import { UFRStatus } from '../../../models/enumerations/ufr-status.model';
 
 @Component({
   selector: 'pfm-ufr-assets',
@@ -850,18 +851,18 @@ export class UfrAssetsComponent implements OnInit {
   }
 
   changePageEditMode(editMode: boolean) {
-    this.pageEditMode = editMode;
-    this.actionState.EDIT.editMode = editMode;
-    this.actionState.VIEW.editMode = editMode;
+    this.pageEditMode = editMode && this.ufr.ufrStatus === UFRStatus.SAVED;
+    this.actionState.EDIT.editMode = editMode && this.ufr.ufrStatus === UFRStatus.SAVED;
+    this.actionState.VIEW.editMode = editMode && this.ufr.ufrStatus === UFRStatus.SAVED;
 
-    if (editMode) {
+    if (editMode && this.ufr.ufrStatus === UFRStatus.SAVED) {
       this.form.get('remarks').enable();
     } else {
       this.form.get('remarks').disable();
     }
     if (this.assetGridApi) {
       this.assetSummaryRows.forEach(row => {
-        row.action = editMode;
+        row.action = editMode && this.ufr.ufrStatus === UFRStatus.SAVED;
       });
       this.assetGridApi.setRowData(this.assetSummaryRows);
     }

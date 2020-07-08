@@ -19,6 +19,7 @@ import { Schedule } from '../../../models/schedule.model';
 import { DropdownCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/dropdown-cell-renderer/dropdown-cell-renderer.component';
 import { UFR } from 'src/app/programming-feature/models/ufr.model';
 import { FundingLineType } from 'src/app/programming-feature/models/enumerations/funding-line-type.model';
+import { UFRStatus } from '../../../models/enumerations/ufr-status.model';
 
 @Component({
   selector: 'pfm-ufr-schedule',
@@ -645,11 +646,11 @@ export class UfrScheduleComponent implements OnInit {
   }
 
   changePageEditMode(editMode: boolean) {
-    this.pageEditMode = editMode;
-    this.fundingGridActionState.VIEW.editMode = editMode;
-    this.fundingGridActionState.EDIT.editMode = editMode;
+    this.pageEditMode = editMode && this.ufr.ufrStatus === UFRStatus.SAVED;
+    this.fundingGridActionState.VIEW.editMode = editMode && this.ufr.ufrStatus === UFRStatus.SAVED;
+    this.fundingGridActionState.EDIT.editMode = editMode && this.ufr.ufrStatus === UFRStatus.SAVED;
     this.scheduleGridRows.forEach((row, index) => {
-      row.action.editMode = editMode;
+      row.action.editMode = editMode && this.ufr.ufrStatus === UFRStatus.SAVED;
     });
   }
 }

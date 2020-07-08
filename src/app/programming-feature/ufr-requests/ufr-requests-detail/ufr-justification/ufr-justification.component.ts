@@ -16,6 +16,7 @@ import { ProgrammingService } from '../../../services/programming-service';
 import { FundingLineService } from '../../../services/funding-line.service';
 import { ShortyType } from '../../../models/enumerations/shorty-type.model';
 import { FundingLineType } from 'src/app/programming-feature/models/enumerations/funding-line-type.model';
+import { UFRStatus } from '../../../models/enumerations/ufr-status.model';
 
 @Component({
   selector: 'pfm-ufr-justification',
@@ -310,7 +311,7 @@ export class UfrJustificationComponent implements OnInit {
   changeEditMode(editMode: boolean) {
     this.editMode = editMode;
 
-    if (editMode) {
+    if (editMode && this.ufr.ufrStatus === UFRStatus.SAVED) {
       this.form.get('justification').enable();
       this.form.get('impactN').enable();
       this.form.get('milestoneImpact').enable();
