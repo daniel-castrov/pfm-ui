@@ -40,8 +40,7 @@
               <fa-icon
                 [icon]="'arrows-alt-v'"
                 class="swap-icon"
-                [ngbTooltip]="'Switch from and to'"
-                toolTip="'Switch from and to'"
+                title="Switch from and to"
                 (click)="swapGrids()"
               ></fa-icon
             ></span>
@@ -59,7 +58,7 @@
                 [columns]="toColumnDefinitions"
                 [rows]="toRows"
                 [showPagination]="false"
-                [showAddSingleRow]="true"
+                [showAddSingleRow]="fromRows.length === 1"
               >
               </pfm-datagrid
             ></span>
@@ -85,7 +84,7 @@
               ></pfm-dropdown>
             </span>
             <span class="col-1">
-              <i class="fa fa-upload col-1 text-center" (click)="onFileUploadClick()"></i>
+              <i class="fa fa-upload col-1 text-center" title="Upload" (click)="onFileUploadClick()"></i>
             </span>
           </div>
         </div>
@@ -108,6 +107,29 @@
 
 <ng-container *ngIf="showUploadDialog">
   <pfm-secure-upload (onFilesUploaded)="handleAttachment($event)"></pfm-secure-upload>
+</ng-container>
+
+<ng-container *ngIf="deleteDialog.display">
+  <pfm-custom-dialog
+    [title]="deleteDialog.title"
+    [body]="deleteBody"
+    [actions]="deleteActions"
+    (onCancelDialog)="onCancelDeleteDialog()"
+  ></pfm-custom-dialog>
+
+  <ng-template #deleteBody>
+    <span>{{ deleteDialog.bodyText }}</span>
+  </ng-template>
+
+  <ng-template #deleteActions>
+    <div class="pull-left">
+      <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onDeleteData()">Delete</button>
+    </div>
+
+    <div class="pull-right">
+      <pfm-cancel-cta (onCancelClicked)="onCancelDeleteDialog()"></pfm-cancel-cta>
+    </div>
+  </ng-template>
 </ng-container>
 
 <pfm-busy [busy]="busy"></pfm-busy>

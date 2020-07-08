@@ -30,10 +30,11 @@ export class ExecutionLine implements IExecutionLine {
 
   actions?: any;
   isDisabled?: boolean;
+  isTotalRow?: boolean;
 
   constructor(
     public id?: string,
-    public phaseId?: string,
+    public containerId?: string,
     public initial?: number,
     public appropriated?: boolean,
     public hasTransactions?: boolean,

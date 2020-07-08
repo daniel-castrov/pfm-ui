@@ -5,7 +5,7 @@ import { RestResponse } from 'src/app/util/rest-response';
 import { ListItem } from 'src/app/pfm-common-models/ListItem';
 import { getListItems } from '../../models/enumerations/execution-btr-subtype.model';
 import { FormGroup, FormControl, Validators, ValidatorFn, ValidationErrors } from '@angular/forms';
-import { GridApi, ColDef } from '@ag-grid-community/all-modules';
+import { GridApi, ColDef, ICellEditorComp } from '@ag-grid-community/all-modules';
 import { ExecutionLine } from '../../models/execution-line.model';
 import { ExecutionLineService } from '../../services/execution-line.service';
 import { SecureDownloadComponent } from 'src/app/pfm-secure-filedownload/secure-download/secure-download.component';
@@ -16,6 +16,9 @@ import { NumericCellEditor } from 'src/app/ag-grid/cell-editors/NumericCellEdito
 import { AllowedCharacters } from 'src/app/ag-grid/cell-editors/AllowedCharacters';
 import { DataGridMessage } from 'src/app/pfm-coreui/models/DataGridMessage';
 import { Attachment } from 'src/app/pfm-common-models/Attachment';
+import { ExecutionService } from '../../services/execution.service';
+import { tap } from 'rxjs/operators';
+import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
 
 @Component({
   selector: 'pfm-realign-funds',
@@ -71,12 +74,16 @@ export class RealignFundsComponent implements OnInit {
   attachmentsUploaded: ListItem[] = [];
   attachments: Attachment[] = [];
   currentToRowDataState: RowDataStateInterface = {};
+  executionLinesToRealign: ExecutionLine[] = [];
+  deleteDialog: DeleteDialogInterface = { title: 'Delete' };
 
   constructor(
     private route: ActivatedRoute,
     private executionLineService: ExecutionLineService,
+    private executionService: ExecutionService,
     private currencyPipe: CurrencyPipe,
-    private router: Router
+    private router: Router,
+    private dialogService: DialogService
   ) {}
 
   ngOnInit(): void {
@@ -122,7 +129,18 @@ export class RealignFundsComponent implements OnInit {
         filter: false,
         sortable: false,
         suppressMenu: true,
-        cellClass: 'pfm-datagrid-text'
+        cellClass: 'pfm-datagrid-text',
+        valueFormatter: params => {
+          if (params.value) {
+            const find = this.executionLinesToRealign.find(x => x.id === params.value);
+            if (find) {
+              return find.executionLine;
+            } else {
+              return params.value;
+            }
+          }
+          return null;
+        }
       },
       {
         headerName: `FY${this.executionYearTwoDigits}`,
@@ -135,7 +153,9 @@ export class RealignFundsComponent implements OnInit {
         cellClass: 'justify-content-center',
         cellStyle: this.cellStyle,
         maxWidth: 80,
-        minWidth: 80
+        minWidth: 80,
+        valueFormatter: params =>
+          this.currencyPipe.transform(params.data[params.colDef.field], 'USD', 'symbol', '1.2-2')
       },
       {
         headerName: 'TOA',
@@ -197,10 +217,26 @@ export class RealignFundsComponent implements OnInit {
         sortable: false,
         suppressMenu: true,
         cellClass: 'pfm-datagrid-text',
+        valueFormatter: params => {
+          if (params.value) {
+            const find = this.executionLinesToRealign.find(x => x.id === params.value);
+            if (find) {
+              return find.executionLine;
+            } else {
+              return params.value;
+            }
+          }
+          return null;
+        },
         cellEditorFramework: DropdownCellRendererComponent,
         cellEditorParams: () => {
           return {
-            values: ['Exe5', 'Exe6', 'Exe7']
+            values: this.executionLinesToRealign
+              .filter(exe => exe.id !== this.selectedExecutionLine.id)
+              .map(exe => {
+                exe.executionLine = this.getExecutionLineName(exe);
+                return [exe.executionLine, exe.id];
+              })
           };
         }
       },
@@ -215,7 +251,9 @@ export class RealignFundsComponent implements OnInit {
         cellClass: 'justify-content-center',
         cellStyle: this.cellStyle,
         maxWidth: 80,
-        minWidth: 80
+        minWidth: 80,
+        valueFormatter: params =>
+          this.currencyPipe.transform(params.data[params.colDef.field], 'USD', 'symbol', '1.2-2')
       },
       {
         headerName: 'TOA',
@@ -259,8 +297,13 @@ export class RealignFundsComponent implements OnInit {
         cellStyle: this.cellStyle,
         maxWidth: 150,
         minWidth: 150,
-        valueFormatter: params =>
-          this.currencyPipe.transform(params.data[params.colDef.field], 'USD', 'symbol', '1.2-2')
+        valueFormatter: params => {
+          if (params.data.isTotalRow) {
+            return 'Total';
+          } else {
+            return this.currencyPipe.transform(params.data[params.colDef.field], 'USD', 'symbol', '1.2-2');
+          }
+        }
       },
       {
         headerName: 'Amount',
@@ -278,7 +321,6 @@ export class RealignFundsComponent implements OnInit {
           returnUndefinedOnZero: false,
           allowedCharacters: AllowedCharacters.DIGITS_AND_MINUS_AND_DECIMAL_POINT
         }),
-        cellRenderer: params => params.value,
         valueFormatter: params =>
           this.currencyPipe.transform(params.data[params.colDef.field], 'USD', 'symbol', '1.2-2')
       },
@@ -299,27 +341,43 @@ export class RealignFundsComponent implements OnInit {
     ];
   }
 
-  setupFromLoadRows(): void {
+  loadFromRows(): void {
     const executionLineId = this.route.snapshot.paramMap.get('id');
-    this.executionLineService.getById(executionLineId).subscribe((resp: RestResponse<ExecutionLine>) => {
-      this.selectedExecutionLine = resp.result;
-      this.fromRows = [this.selectedExecutionLine];
-      this.fromGridApi.setRowData(this.fromRows);
-    });
+    this.executionLineService
+      .getById(executionLineId)
+      .pipe(
+        tap((resp: RestResponse<ExecutionLine>) => {
+          const el = resp.result;
+          this.executionLineService
+            .getByContainerId(el.containerId, null, null, null, null, el.programElement)
+            .subscribe((elResp: RestResponse<ExecutionLine[]>) => {
+              const exes = elResp.result ?? [];
+              if (exes.length) {
+                this.executionLinesToRealign = exes;
+              }
+            });
+        })
+      )
+      .subscribe((resp: RestResponse<ExecutionLine>) => {
+        this.selectedExecutionLine = resp.result;
+        this.selectedExecutionLine.executionLine = this.getExecutionLineName(this.selectedExecutionLine);
+        this.fromRows = [this.selectedExecutionLine];
+        this.fromGridApi.setRowData(this.fromRows);
+      });
   }
 
-  setupToLoadRows(): void {
+  loadToRows(): void {
     this.toGridApi.setRowData(this.toRows);
   }
 
   onFromGridIsReady(gridApi: GridApi): void {
     this.fromGridApi = gridApi;
-    this.setupFromLoadRows();
+    this.loadFromRows();
   }
 
   onToGridIsReady(gridApi: GridApi): void {
     this.toGridApi = gridApi;
-    this.setupToLoadRows();
+    this.loadToRows();
   }
 
   handleAttachment(newFile: FileMetaData): void {
@@ -391,7 +449,6 @@ export class RealignFundsComponent implements OnInit {
     this.currentToRowDataState.isAddMode = true;
 
     const el = new ExecutionLine();
-    el.actions = this.actionState.EDIT;
     this.toRows.push(el);
 
     this.editRow(this.toRows.length - 1);
@@ -418,14 +475,27 @@ export class RealignFundsComponent implements OnInit {
       case 'cancel':
         this.cancelEdit(cellAction.rowIndex);
         break;
+      case 'save':
+        this.saveRowLocally(cellAction.rowIndex);
+        break;
+      case 'edit':
+        this.editRow(cellAction.rowIndex, true);
+        break;
+      case 'delete-row':
+        this.deleteDialog.bodyText = 'Are you sure you want to delete?';
+        this.displayDeleteDialog(cellAction, this.deleteRow.bind(this));
+        break;
     }
   }
 
   private editRow(rowIndex: number, updatePreviousState?: boolean) {
+    const el = this.toRows[rowIndex];
     if (updatePreviousState) {
-      this.currentToRowDataState.currentEditingRowData = { ...this.toRows[rowIndex] };
+      this.currentToRowDataState.currentEditingRowData = { ...el };
     }
+    el.actions = this.actionState.EDIT;
     this.starEditMode(rowIndex);
+    this.setupExecutionLineDependency(rowIndex);
   }
 
   private cancelEdit(rowIndex: number) {
@@ -434,10 +504,11 @@ export class RealignFundsComponent implements OnInit {
     } else {
       this.toRows[rowIndex] = this.currentToRowDataState.currentEditingRowData;
     }
-    this.startViewMode(rowIndex);
+    this.startViewMode();
+    this.toGridApi.setRowData(this.toRows);
   }
 
-  private startViewMode(rowIndex: number) {
+  private startViewMode() {
     this.currentToRowDataState.currentEditingRowIndex = -1;
     this.currentToRowDataState.isEditMode = false;
     this.currentToRowDataState.isAddMode = false;
@@ -446,7 +517,6 @@ export class RealignFundsComponent implements OnInit {
       row.isDisabled = false;
     });
     this.toGridApi.stopEditing();
-    this.toGridApi.setRowData(this.toRows);
   }
 
   onToGridMouseDown(mouseEvent: MouseEvent): void {
@@ -457,6 +527,107 @@ export class RealignFundsComponent implements OnInit {
       });
     }
   }
+
+  saveRowLocally(rowIndex: number) {
+    this.toGridApi.stopEditing();
+    const newEl: ExecutionLine = this.toRows[rowIndex];
+    if (this.validateRow(newEl)) {
+      newEl.actions = this.actionState.VIEW;
+      this.toGridApi.setRowData(this.toRows);
+      this.setTotalRow();
+      this.startViewMode();
+    } else {
+      this.starEditMode(rowIndex);
+    }
+  }
+
+  private deleteRow(rowIndex: number) {
+    this.toRows.splice(rowIndex, 1);
+    this.setTotalRow();
+    this.toGridApi.setRowData(this.toRows);
+  }
+
+  private validateRow(el: ExecutionLine) {
+    let result = true;
+    if (el.amount > el.released) {
+      this.dialogService.displayError('Amount cannot exceed the released amount.');
+      result = false;
+    }
+    return result;
+  }
+
+  private getExecutionLineName(el: ExecutionLine): string {
+    let elName = '';
+    elName = el.programName + '/' + el.appropriation + '/' + el.blin + '/' + el.item + '/' + el.programElement;
+
+    return elName;
+  }
+
+  setupExecutionLineDependency(rowIndex: number) {
+    const elCell = this.toGridApi.getEditingCells()[0];
+
+    const elCellEditor = this.toGridApi.getCellEditorInstances({
+      columns: [elCell.column]
+    })[0] as ICellEditorComp;
+
+    const elDropdownComponent: DropdownCellRendererComponent = elCellEditor.getFrameworkComponentInstance();
+    if (elDropdownComponent) {
+      elDropdownComponent.change.subscribe(() => {
+        const elId = elDropdownComponent.selectedValue;
+        const el = this.executionLinesToRealign.find(exeLine => exeLine.id === elId);
+        if (el) {
+          const editingExeLine = this.toRows[rowIndex];
+          editingExeLine.toa = el.toa;
+          editingExeLine.released = el.released;
+          editingExeLine.withheld = el.withheld;
+          editingExeLine.id = elId;
+          editingExeLine.executionLine = this.getExecutionLineName(el);
+          this.toGridApi.setRowData(this.toRows);
+          this.editRow(rowIndex);
+        }
+      });
+    }
+  }
+
+  private displayDeleteDialog(cellAction: DataGridMessage, deleteFunction: (rowIndex: number) => void) {
+    this.deleteDialog.cellAction = cellAction;
+    this.deleteDialog.delete = deleteFunction;
+    this.deleteDialog.display = true;
+  }
+
+  onCancelDeleteDialog() {
+    this.closeDeleteDialog();
+  }
+
+  onDeleteData() {
+    this.deleteDialog.delete(this.deleteDialog.cellAction.rowIndex);
+    this.closeDeleteDialog();
+  }
+
+  private closeDeleteDialog() {
+    this.deleteDialog.cellAction = null;
+    this.deleteDialog.delete = null;
+    this.deleteDialog.display = false;
+  }
+
+  private calculateTotalAmount(): ExecutionLine {
+    let totalRow = new ExecutionLine();
+    totalRow.amount = 0;
+    totalRow.isTotalRow = true;
+    totalRow = this.toRows.reduce((accumulator, currentValue) => {
+      accumulator.amount += Number(currentValue.amount);
+      return accumulator;
+    }, totalRow);
+    return totalRow;
+  }
+
+  private setTotalRow(): void {
+    if (this.toRows.length) {
+      this.toGridApi.setPinnedBottomRowData([this.calculateTotalAmount()]);
+    } else {
+      this.toGridApi.setPinnedBottomRowData([]);
+    }
+  }
 }
 
 export interface RowDataStateInterface {
@@ -464,4 +635,12 @@ export interface RowDataStateInterface {
   isAddMode?: boolean;
   isEditMode?: boolean;
   currentEditingRowData?: any;
+}
+
+export interface DeleteDialogInterface {
+  title: string;
+  bodyText?: string;
+  display?: boolean;
+  cellAction?: DataGridMessage;
+  delete?: (rowIndex: number) => void;
 }
