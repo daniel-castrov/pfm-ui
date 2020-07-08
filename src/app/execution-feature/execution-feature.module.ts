@@ -7,7 +7,7 @@ import { CreateExecutionComponent } from './create-execution/create-execution.co
 import { PfmCoreuiModule } from '../pfm-coreui/pfm-coreui.module';
 import { PfmSecureFileuploadModule } from '../pfm-secure-fileupload/pfm-secure-fileupload.module';
 import { ExecutionService } from './services/execution.service';
-import { ExecutionServiceServiceImpl } from './services/execution-service.service-impl';
+import { ExecutionServiceImpl } from './services/execution.service-impl';
 import { RealignFundsComponent } from './funds-update/realign-funds/realign-funds.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -32,7 +32,7 @@ import { PfmSecureFiledownloadModule } from '../pfm-secure-filedownload/pfm-secu
   ],
   providers: [
     CurrencyPipe,
-    { provide: ExecutionService, useClass: ExecutionServiceServiceImpl },
+    { provide: ExecutionService, useClass: ExecutionServiceImpl },
     { provide: ExecutionLineService, useClass: ExecutionLineServiceImpl }
   ]
 })

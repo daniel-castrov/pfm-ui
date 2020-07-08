@@ -7,4 +7,8 @@ export class ExecutionLineServiceImpl extends ExecutionLineService {
   getById(id: string): Observable<any> {
     return this.get('executionlines/' + id);
   }
+
+  retrieveByYear(year: number): Observable<any> {
+    return this.get('executionlines/year/' + year);
+  }
 }
