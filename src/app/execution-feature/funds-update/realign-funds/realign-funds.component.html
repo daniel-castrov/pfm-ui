@@ -41,7 +41,8 @@
                 [icon]="'arrows-alt-v'"
                 class="swap-icon"
                 [ngbTooltip]="'Switch from and to'"
-                *ngIf="'Switch from and to'"
+                toolTip="'Switch from and to'"
+                (click)="swapGrids()"
               ></fa-icon
             ></span>
           </div>
@@ -52,6 +53,9 @@
             <span class="col-10"
               ><pfm-datagrid
                 (gridIsReady)="onToGridIsReady($event)"
+                (addCtaEvent)="onRowAdd($event)"
+                (mousedown)="onToGridMouseDown($event)"
+                (cellAction)="onCellAction($event)"
                 [columns]="toColumnDefinitions"
                 [rows]="toRows"
                 [showPagination]="false"
@@ -105,6 +109,6 @@
 <ng-container *ngIf="showUploadDialog">
   <pfm-secure-upload (onFilesUploaded)="handleAttachment($event)"></pfm-secure-upload>
 </ng-container>
-<br /><br />
 
 <pfm-busy [busy]="busy"></pfm-busy>
+<pfm-secure-download></pfm-secure-download>

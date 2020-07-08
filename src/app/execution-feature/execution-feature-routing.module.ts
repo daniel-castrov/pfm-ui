@@ -16,11 +16,11 @@ const routes: Routes = [
       { path: 'create-execution', component: CreateExecutionComponent, canActivate: [AuthGuard] },
       {
         path: 'funds-update',
-        component: FundsUpdateComponent,
+        component: ExecutionFeatureComponent,
         canActivate: [AuthGuard],
         children: [
-          { path: '', component: CreateExecutionComponent, canActivate: [AuthGuard] },
-          { path: 'realign-funds', component: RealignFundsComponent, canActivate: [AuthGuard] }
+          { path: '', component: FundsUpdateComponent, canActivate: [AuthGuard] },
+          { path: 'realign-funds/:id', component: RealignFundsComponent, canActivate: [AuthGuard] }
         ]
       }
     ]
