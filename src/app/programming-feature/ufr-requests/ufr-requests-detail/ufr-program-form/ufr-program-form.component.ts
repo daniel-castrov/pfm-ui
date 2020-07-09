@@ -17,6 +17,7 @@ import { ProgrammingService } from 'src/app/programming-feature/services/program
 import { Program } from 'src/app/programming-feature/models/Program';
 import { MrdbService } from 'src/app/programming-feature/services/mrdb-service';
 import { RestResponse } from 'src/app/util/rest-response';
+import { UFRStatus } from '../../../models/enumerations/ufr-status.model';
 
 @Component({
   selector: 'pfm-ufr-program-form',
@@ -331,9 +332,9 @@ export class UfrProgramFormComponent implements OnInit {
   }
 
   changeEditMode(editMode: boolean) {
-    this.editMode = editMode;
+    this.editMode = editMode && this.ufr.ufrStatus === UFRStatus.SAVED;
 
-    if (this.addMode && editMode) {
+    if (this.addMode && editMode && this.ufr.ufrStatus === UFRStatus.SAVED) {
       this.form.get('longName').enable();
       if (this.ufr.shortyType === ShortyType.NEW_PROGRAM) {
         this.form.get('organizationId').disable();
