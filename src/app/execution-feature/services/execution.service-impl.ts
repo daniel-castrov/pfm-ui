@@ -30,4 +30,8 @@ export class ExecutionServiceImpl extends ExecutionService {
       )
     );
   }
+
+  getById(id: string): Observable<any> {
+    return this.get('execution/' + id);
+  }
 }
