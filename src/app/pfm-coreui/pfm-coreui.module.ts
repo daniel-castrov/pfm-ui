@@ -53,6 +53,7 @@ import { FundingLineActionCellRendererComponent } from './datagrid/renderers/fun
 import { UfrActionCellRendererComponent } from './datagrid/renderers/ufr-action-cell-renderer/ufr-action-cell-renderer.component';
 import { WkspSelectionRendererComponent } from './datagrid/renderers/wksp-selection-renderer/wksp-selection-renderer.component';
 import { HasVisibilityDirective } from './directives/has-visibility.directive';
+import { FundsUpdateActionCellRendererComponent } from './datagrid/renderers/funds-update-action-cell-renderer/funds-update-action-cell-renderer.component';
 
 @NgModule({
   declarations: [
@@ -99,7 +100,8 @@ import { HasVisibilityDirective } from './directives/has-visibility.directive';
     PrsActionCellRendererComponent,
     FundingLineActionCellRendererComponent,
     UfrActionCellRendererComponent,
-    WkspSelectionRendererComponent
+    WkspSelectionRendererComponent,
+    FundsUpdateActionCellRendererComponent
   ],
   imports: [
     ToastModule,

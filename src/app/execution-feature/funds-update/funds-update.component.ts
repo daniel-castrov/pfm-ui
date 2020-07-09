@@ -5,6 +5,9 @@ import { ColDef } from '@ag-grid-community/all-modules';
 import { ExecutionLineService } from '../services/execution-line.service';
 import { ExecutionLine } from '../models/execution-line.model';
 import { RestResponse } from 'src/app/util/rest-response';
+import { FundsUpdateActionCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/funds-update-action-cell-renderer/funds-update-action-cell-renderer.component';
+import { AppModel } from 'src/app/pfm-common-models/AppModel';
+import { RoleConstants } from 'src/app/pfm-common-models/role-contants.model';
 
 @Component({
   selector: 'app-funds-update',
@@ -16,10 +19,21 @@ export class FundsUpdateComponent implements OnInit {
   years: ListItem[];
   columnDefs: ColDef[];
   selectedYear: number;
+  actionsControl: {};
 
   rows = [];
 
-  constructor(private executionService: ExecutionService, private executionLineService: ExecutionLineService) {}
+  gridActionState = {
+    EDIT: {
+      canFunds: true
+    }
+  };
+
+  constructor(
+    private executionService: ExecutionService,
+    private executionLineService: ExecutionLineService,
+    private appModel: AppModel
+  ) {}
 
   ngOnInit(): void {
     this.executionService.getExecutionYears().subscribe(resp => {
@@ -37,6 +51,7 @@ export class FundsUpdateComponent implements OnInit {
           } as ListItem;
         });
     });
+    this.actionsRoleAccess();
     this.setupGrid();
   }
 
@@ -130,7 +145,7 @@ export class FundsUpdateComponent implements OnInit {
         headerName: 'Actions',
         field: 'actions',
         minWidth: 70,
-        cellClass: 'text-class'
+        cellRendererFramework: FundsUpdateActionCellRendererComponent
       }
     ];
   }
@@ -171,5 +186,34 @@ export class FundsUpdateComponent implements OnInit {
         });
       });
     }
+  }
+
+  // Test Purpose
+  actionsRoleAccess() {
+    if (this.appModel.userDetails.roles.includes(RoleConstants.FUNDS_MANAGER)) {
+      this.actionsControl = this.gridActionState.EDIT;
+    }
+    this.runrows();
+  }
+
+  // Test Purpose
+  runrows() {
+    this.rows = [
+      {
+        program: 'CAS',
+        appn: 'PROC',
+        blin: 'BA4',
+        sag: 'xxx',
+        wucd: 'xxx',
+        exp: 'xxx',
+        oa: 'SY',
+        pe: '0604883BP',
+        pb: 32456000,
+        toa: 32456000,
+        released: 8500000,
+        withhold: 1000000,
+        actions: this.actionsControl
+      }
+    ];
   }
 }

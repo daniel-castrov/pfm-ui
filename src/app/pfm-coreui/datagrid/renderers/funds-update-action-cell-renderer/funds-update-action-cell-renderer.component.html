@@ -1,0 +1,18 @@
+<ng-container *ngIf="data.canFunds">
+  <div title="Funds">
+    <pfm-dropdown
+      (selectionChanged)="handleFunds($event)"
+      [type]="'iconDropdown'"
+      [iconName]="'dollar-sign'"
+      [label]="'Funds'"
+      [title]="'Funds'"
+      [required]="true"
+      [fieldName]="'name'"
+      [fieldLabel]="'name'"
+      [options]="dollarOptions"
+      [showPrompt]="false"
+      [disabled]="false"
+    >
+    </pfm-dropdown>
+  </div>
+</ng-container>
