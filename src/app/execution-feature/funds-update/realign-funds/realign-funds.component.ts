@@ -561,9 +561,18 @@ export class RealignFundsComponent implements OnInit {
     return true;
   }
 
-  private getExecutionLineName(el: ExecutionLine): string {
+  private getExecutionLineName(executionLine: ExecutionLine): string {
     let elName = '';
-    elName = el.programName + '/' + el.appropriation + '/' + el.blin + '/' + el.item + '/' + el.programElement;
+    elName =
+      executionLine.programName +
+      '/' +
+      executionLine.appropriation +
+      '/' +
+      executionLine.baOrBlin +
+      '/' +
+      executionLine.item +
+      '/' +
+      executionLine.programElement;
 
     return elName;
   }

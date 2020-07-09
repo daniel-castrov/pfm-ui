@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ExecutionLineService } from './execution-line.service';
 import { HttpParams } from '@angular/common/http';
+import { ExecutionLine } from '../models/execution-line.model';
 
 @Injectable()
 export class ExecutionLineServiceImpl extends ExecutionLineService {
@@ -43,5 +44,17 @@ export class ExecutionLineServiceImpl extends ExecutionLineService {
     }
 
     return this.get('executionlines/container/' + containerId, params);
+  }
+
+  create(executionLine: ExecutionLine): Observable<any> {
+    return this.post('executionlines', executionLine);
+  }
+
+  update(executionLine: ExecutionLine): Observable<any> {
+    return this.put('executionlines', executionLine);
+  }
+
+  removeById(executionLineId: string): Observable<any> {
+    return this.delete('executionlines/' + executionLineId);
   }
 }
