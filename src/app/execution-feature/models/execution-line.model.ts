@@ -26,7 +26,6 @@ export class ExecutionLine implements IExecutionLine {
   fullNameModifiedBy?: string;
 
   executionLine?: string;
-  fy?: number;
 
   actions?: any;
   isDisabled?: boolean;
