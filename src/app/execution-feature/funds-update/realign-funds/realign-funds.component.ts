@@ -362,7 +362,6 @@ export class RealignFundsComponent implements OnInit {
               history.state.type === 'BTR'
                 ? `BTR Update for Execution FY${this.executionYearTwoDigits}`
                 : `Update for Execution FY${this.executionYearTwoDigits}`;
-            console.log('title', this.title);
           });
         })
       )
@@ -563,16 +562,15 @@ export class RealignFundsComponent implements OnInit {
 
   private getExecutionLineName(executionLine: ExecutionLine): string {
     let elName = '';
-    elName =
-      executionLine.programName +
-      '/' +
-      executionLine.appropriation +
-      '/' +
-      executionLine.baOrBlin +
-      '/' +
-      executionLine.item +
-      '/' +
-      executionLine.programElement;
+    elName = [
+      executionLine.programName,
+      executionLine.appropriation,
+      executionLine.baOrBlin,
+      executionLine.sag,
+      executionLine.wucd,
+      executionLine.expenditureType,
+      executionLine.programElement
+    ].join('/');
 
     return elName;
   }
