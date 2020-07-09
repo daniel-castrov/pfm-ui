@@ -1,0 +1,136 @@
+<div class="section-banner">
+  <div class="table w-100">
+    <div class="table-row w-100">
+      <div>
+        <h3 [innerText]="title"></h3>
+      </div>
+    </div>
+    <form *ngIf="form" [formGroup]="form">
+      <div class="main d-flex flex-column w-100">
+        <div class="subtitle p-1">Enter Details</div>
+        <div class="p-1">
+          <div class="row">
+            <div class="col-2">
+              <label>*Subtype</label>
+            </div>
+            <span class="col-10"
+              ><select class="form-control-sm" formControlName="subtype">
+                <option [ngValue]="null">Select</option>
+                <option [ngValue]="item.value" *ngFor="let item of subtypes">{{ item.name }}</option>
+              </select></span
+            >
+          </div>
+          <div class="row">
+            <div class="col-2">
+              <label>From</label>
+            </div>
+            <span class="col-10">
+              <pfm-datagrid
+                (gridIsReady)="onFromGridIsReady($event)"
+                [columns]="fromColumnDefinitions"
+                [rows]="fromRows"
+                [showPagination]="false"
+              >
+              </pfm-datagrid
+            ></span>
+          </div>
+          <div class="row">
+            <div class="col-2"></div>
+            <span class="col-10">
+              <fa-icon
+                [icon]="'arrows-alt-v'"
+                class="swap-icon"
+                title="Switch from and to"
+                (click)="swapGrids()"
+              ></fa-icon
+            ></span>
+          </div>
+          <div class="row">
+            <div class="col-2">
+              <label>*To</label>
+            </div>
+            <span class="col-10"
+              ><pfm-datagrid
+                (gridIsReady)="onToGridIsReady($event)"
+                (addCtaEvent)="onRowAdd($event)"
+                (mousedown)="onToGridMouseDown($event)"
+                (cellAction)="onCellAction($event)"
+                [columns]="toColumnDefinitions"
+                [rows]="toRows"
+                [showPagination]="false"
+                [showAddSingleRow]="fromRows.length === 1"
+              >
+              </pfm-datagrid
+            ></span>
+          </div>
+          <div class="row">
+            <div class="col-2">
+              <label>Notes</label>
+            </div>
+            <span class="col-10"><textarea formControlName="notes"></textarea></span>
+          </div>
+          <div class="row attachment-container">
+            <div class="col-2">
+              <label>Attachment</label>
+            </div>
+            <span class="col-5">
+              <pfm-dropdown
+                class="p-0"
+                (selectionChanged)="downloadAttachment($event)"
+                [type]="'attatchmentDropdown'"
+                [options]="attachmentsUploaded"
+                [fieldLabel]="'name'"
+                [fieldName]="'name'"
+              ></pfm-dropdown>
+            </span>
+            <span class="col-1">
+              <i class="fa fa-upload col-1 text-center" title="Upload" (click)="onFileUploadClick()"></i>
+            </span>
+          </div>
+        </div>
+        <hr class="mt-2 mb-3 separator" />
+        <div class="modal-footer">
+          <div class="pull-left">
+            <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onSubmit()">
+              Submit
+            </button>
+          </div>
+
+          <div class="pull-right">
+            <pfm-cancel-cta (onCancelClicked)="onCancel()"></pfm-cancel-cta>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<ng-container *ngIf="showUploadDialog">
+  <pfm-secure-upload (onFilesUploaded)="handleAttachment($event)"></pfm-secure-upload>
+</ng-container>
+
+<ng-container *ngIf="deleteDialog.display">
+  <pfm-custom-dialog
+    [title]="deleteDialog.title"
+    [body]="deleteBody"
+    [actions]="deleteActions"
+    (onCancelDialog)="onCancelDeleteDialog()"
+  ></pfm-custom-dialog>
+
+  <ng-template #deleteBody>
+    <span>{{ deleteDialog.bodyText }}</span>
+  </ng-template>
+
+  <ng-template #deleteActions>
+    <div class="pull-left">
+      <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onDeleteData()">Delete</button>
+    </div>
+
+    <div class="pull-right">
+      <pfm-cancel-cta (onCancelClicked)="onCancelDeleteDialog()"></pfm-cancel-cta>
+    </div>
+  </ng-template>
+</ng-container>
+
+<pfm-busy [busy]="busy"></pfm-busy>
+<pfm-secure-download></pfm-secure-download>

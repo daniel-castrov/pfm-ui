@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { ExecutionFeatureComponent } from './execution-feature.component';
 import { AuthGuard } from '../pfm-auth-module/services/auth-guard';
 import { CreateExecutionComponent } from './create-execution/create-execution.component';
+import { RealignFundsComponent } from './funds-update/realign-funds/realign-funds.component';
 import { FundsUpdateComponent } from './funds-update/funds-update.component';
 
 const routes: Routes = [
@@ -12,15 +13,15 @@ const routes: Routes = [
     component: ExecutionFeatureComponent,
     canActivate: [AuthGuard],
     children: [
-      {
-        path: 'create-execution',
-        component: CreateExecutionComponent,
-        canActivate: [AuthGuard]
-      },
+      { path: 'create-execution', component: CreateExecutionComponent, canActivate: [AuthGuard] },
       {
         path: 'funds-update',
-        component: FundsUpdateComponent,
-        canActivate: [AuthGuard]
+        component: ExecutionFeatureComponent,
+        canActivate: [AuthGuard],
+        children: [
+          { path: '', component: FundsUpdateComponent, canActivate: [AuthGuard] },
+          { path: 'realign-funds/:id', component: RealignFundsComponent, canActivate: [AuthGuard] }
+        ]
       }
     ]
   }
