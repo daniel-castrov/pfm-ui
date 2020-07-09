@@ -127,9 +127,7 @@ export class UfrRequestsDetailComponent implements OnInit {
       .subscribe(
         resp => {
           this.pom = (resp as any).result;
-          this.showSaveButton =
-            this.isPomCreatedOrOpen() &&
-            (this.ufr.ufrStatus === UFRStatus.SAVED || this.ufr.ufrStatus === UFRStatus.SUBMITTED);
+          this.showSaveButton = this.isPomCreatedOrOpen() && this.ufr.ufrStatus === UFRStatus.SAVED;
           this.showSubmitButton = this.isPomCreatedOrOpen() && this.ufr.ufrStatus === UFRStatus.SAVED;
           this.showSetDisposition = this.isPomCreatedOrOpen() && this.clickedReviewForApproval;
         },
