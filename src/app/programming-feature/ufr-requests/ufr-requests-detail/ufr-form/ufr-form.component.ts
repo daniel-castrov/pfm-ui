@@ -4,6 +4,7 @@ import { UFR } from 'src/app/programming-feature/models/ufr.model';
 import { ShortyType } from 'src/app/programming-feature/models/enumerations/shorty-type.model';
 import { formatDate, TitleCasePipe } from '@angular/common';
 import { Disposition } from 'src/app/programming-feature/models/enumerations/disposition.model';
+import { UFRStatus } from '../../../models/enumerations/ufr-status.model';
 
 @Component({
   selector: 'pfm-ufr-form',
@@ -118,7 +119,7 @@ export class UfrFormComponent implements OnInit {
 
   changeEditMode(editMode: boolean) {
     this.editMode = editMode;
-    if (editMode) {
+    if (editMode && this.ufr.ufrStatus === UFRStatus.SAVED) {
       this.form.get('ufrName').enable();
       this.form.get('notes').enable();
     } else {
