@@ -435,12 +435,12 @@ export class UfrFundsComponent implements OnInit {
         }
         break;
       case 'cancel':
-        this.performNonSummaryCancel(cellAction.rowIndex);
+        this.performCancel(cellAction.rowIndex);
         break;
     }
   }
 
-  private performNonSummaryCancel(rowIndex: number) {
+  private performCancel(rowIndex: number) {
     if (this.proposedFundingLineRowDataState.isEditMode && !this.proposedFundingLineRowDataState.isAddMode) {
       this.cancelRow(rowIndex);
     } else {

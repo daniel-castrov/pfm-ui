@@ -17,7 +17,7 @@
   <br />
 
   <div *ngIf="selectedYear">
-    <div class="action">
+    <div class="bulk-action">
       <p>Apply action to selected rows</p>
       <div>
         <pfm-dropdown
@@ -31,7 +31,17 @@
     </div>
 
     <div class="grid-container">
-      <pfm-datagrid [columns]="columnDefs" [rows]="rows" [showAddSingleRow]="false" [showPagination]="false">
+      <pfm-datagrid
+        (gridIsReady)="onExecutionLineGridIsReady($event)"
+        (cellAction)="onExecutionLineCellAction($event)"
+        [columns]="columnDefs"
+        [rows]="executionLineRows"
+        [showAddSingleRow]="true"
+        [showPagination]="true"
+        (addCtaEvent)="onExecutionLineRowAdd($event)"
+        (mousedown)="onExecutionLineGridMouseDown($event)"
+        [overlayNoRowsTemplate]="' '"
+      >
       </pfm-datagrid>
     </div>
   </div>

@@ -16,6 +16,8 @@ import { ExecutionLineService } from './services/execution-line.service';
 import { ExecutionLineServiceImpl } from './services/execution-line.service-impl';
 import { FundsUpdateComponent } from './funds-update/funds-update.component';
 import { PfmSecureFiledownloadModule } from '../pfm-secure-filedownload/pfm-secure-filedownload.module';
+import { PropertyService } from '../programming-feature/services/property.service';
+import { PropertyServiceImpl } from '../programming-feature/services/property-impl.service';
 
 @NgModule({
   declarations: [ExecutionFeatureComponent, CreateExecutionComponent, FundsUpdateComponent, RealignFundsComponent],
@@ -33,7 +35,9 @@ import { PfmSecureFiledownloadModule } from '../pfm-secure-filedownload/pfm-secu
   providers: [
     CurrencyPipe,
     { provide: ExecutionService, useClass: ExecutionServiceImpl },
-    { provide: ExecutionLineService, useClass: ExecutionLineServiceImpl }
+    { provide: ExecutionLineService, useClass: ExecutionLineServiceImpl },
+    { provide: PropertyService, useClass: PropertyServiceImpl },
+    CurrencyPipe
   ]
 })
 export class ExecutionFeatureModule {}

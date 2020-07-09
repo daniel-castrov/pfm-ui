@@ -1,4 +1,20 @@
 import { OSDGoalPlan } from './enumerations/ousd-goal-plan.model';
+export interface IExecutionLine {
+  id?: string;
+  containerId?: string;
+  initial?: number;
+  appropriated?: boolean;
+  hasTransactions?: boolean;
+  appropriation?: string;
+  baOrBlin?: string;
+  sag?: string;
+  wucd?: string;
+  expenditureType?: string;
+  opAgency?: string;
+  item?: string;
+  programElement?: string;
+  programName?: string;
+}
 
 export class ExecutionLine implements IExecutionLine {
   created?: any;
@@ -39,24 +55,13 @@ export class ExecutionLine implements IExecutionLine {
     public appropriated?: boolean,
     public hasTransactions?: boolean,
     public appropriation?: string,
-    public blin?: string,
+    public baOrBlin?: string,
+    public sag?: string,
+    public wucd?: string,
+    public expenditureType?: string,
     public opAgency?: string,
     public item?: string,
     public programElement?: string,
     public programName?: string
   ) {}
-}
-
-export interface IExecutionLine {
-  id?: string;
-  containerId?: string;
-  initial?: number;
-  appropriated?: boolean;
-  hasTransactions?: boolean;
-  appropriation?: string;
-  blin?: string;
-  opAgency?: string;
-  item?: string;
-  programElement?: string;
-  programName?: string;
 }
