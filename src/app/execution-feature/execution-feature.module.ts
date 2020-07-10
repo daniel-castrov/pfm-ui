@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule, CurrencyPipe } from '@angular/common';
+import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 
 import { ExecutionFeatureRoutingModule } from './execution-feature-routing.module';
 import { ExecutionFeatureComponent } from './execution-feature.component';
@@ -36,6 +36,7 @@ import { ExecutionEventServiceImpl } from './services/execution-event.service-im
   ],
   providers: [
     CurrencyPipe,
+    DatePipe,
     { provide: ExecutionService, useClass: ExecutionServiceImpl },
     { provide: ExecutionLineService, useClass: ExecutionLineServiceImpl },
     { provide: ExecutionEventService, useClass: ExecutionEventServiceImpl },

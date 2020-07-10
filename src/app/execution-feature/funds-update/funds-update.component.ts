@@ -10,7 +10,7 @@ import { BasicActionState } from 'src/app/pfm-coreui/datagrid/model/basic-action
 import { DataGridMessage } from 'src/app/pfm-coreui/models/DataGridMessage';
 import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
 import { DropdownCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/dropdown-cell-renderer/dropdown-cell-renderer.component';
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import { from, Observable } from 'rxjs';
 import { concatMap, map } from 'rxjs/operators';
 import { IExecutionLineGrid } from '../models/execution-line-grid.model';
@@ -65,6 +65,7 @@ export class FundsUpdateComponent implements OnInit {
     private propertyService: PropertyService,
     private currencyPipe: CurrencyPipe,
     private executionEventService: ExecutionEventService,
+    private datePipe: DatePipe,
     private appModel: AppModel
   ) {}
 
@@ -272,7 +273,7 @@ export class FundsUpdateComponent implements OnInit {
         headerName: 'PBxx',
         headerValueGetter: params => (this.selectedYear ? 'PB' + (this.selectedYear % 100) : 'Initial Funds'),
         field: 'pb',
-        minWidth: 55,
+        minWidth: 120,
         cellClass: 'pfm-datagrid-numeric-class',
         suppressMovable: true,
         filter: false,
@@ -342,7 +343,7 @@ export class FundsUpdateComponent implements OnInit {
         let row: IExecutionLineGrid;
         from(executionLines)
           .pipe(
-            concatMap((executionLine: IExecutionLine) => {
+            concatMap((executionLine: ExecutionLine) => {
               row = {
                 id: executionLine.id,
                 phaseId: this.selectedExecution.id,
@@ -354,10 +355,10 @@ export class FundsUpdateComponent implements OnInit {
                 expenditureType: executionLine.expenditureType,
                 opAgency: executionLine.opAgency,
                 programElement: executionLine.programElement,
-                pb: 0,
-                toa: 0,
-                released: 0,
-                withhold: 0,
+                pb: executionLine.initial,
+                toa: executionLine.toa,
+                released: executionLine.released,
+                withhold: executionLine.withheld,
                 events: null,
                 action: { ...BasicActionState.VIEW, canFunds: true, hasHistory: false }
               };
@@ -437,89 +438,88 @@ export class FundsUpdateComponent implements OnInit {
     this.detailCellRendererParams = {
       detailGridOptions: {
         getRowHeight: params => {
-          return (params.data.value.reason ?? '').length < 90 ? 40 : (Number(params.data.notes.length / 90) + 1) * 25;
+          return (params.data.reason ?? '').length < 90 ? 40 : (Number(params.data.notes.length / 90) + 1) * 25;
         },
         columnDefs: [
           {
+            field: 'update',
+            headerName: 'Update',
             editable: false,
             suppressMovable: true,
             filter: false,
             sortable: false,
             suppressMenu: true,
-            field: 'update',
-            headerName: 'Update',
-            cellStyle: { display: 'flex', 'align-items': 'center' },
+            cellClass: 'cell-style',
             minWidth: 75,
             maxWidth: 75
           },
           {
-            editable: false,
-            suppressMovable: true,
-            filter: false,
-            sortable: false,
-            suppressMenu: true,
             field: 'updatedDate',
             headerName: 'Updated Date',
-            cellStyle: { display: 'flex', 'align-items': 'center' },
-            minWidth: 150,
-            maxWidth: 150
-          },
-          {
             editable: false,
             suppressMovable: true,
             filter: false,
             sortable: false,
             suppressMenu: true,
+            cellClass: 'cell-style',
+            minWidth: 150,
+            maxWidth: 150
+          },
+          {
             field: 'category',
             headerName: 'category',
-            cellClass: 'word-break',
-            cellStyle: { display: 'flex', 'align-items': 'center' }
-          },
-          {
             editable: false,
             suppressMovable: true,
             filter: false,
             sortable: false,
             suppressMenu: true,
+            cellClass: 'cell-style'
+          },
+          {
             field: 'type',
             headerName: 'Type',
-            cellStyle: { display: 'flex', 'align-items': 'center' },
-            minWidth: 150,
-            maxWidth: 150
-          },
-          {
             editable: false,
             suppressMovable: true,
             filter: false,
             sortable: false,
             suppressMenu: true,
+            cellClass: 'cell-style',
+            minWidth: 150,
+            maxWidth: 150
+          },
+          {
             field: 'tag',
             headerName: 'Tag',
-            cellStyle: { display: 'flex', 'align-items': 'center' },
-            minWidth: 150,
-            maxWidth: 150
-          },
-          {
             editable: false,
             suppressMovable: true,
             filter: false,
             sortable: false,
             suppressMenu: true,
+            cellClass: 'cell-style',
+            minWidth: 150,
+            maxWidth: 150
+          },
+          {
             field: 'transfer',
             headerName: 'Transfer To/From',
-            cellStyle: { display: 'flex', 'align-items': 'center' },
-            minWidth: 150,
-            maxWidth: 150
-          },
-          {
             editable: false,
             suppressMovable: true,
             filter: false,
             sortable: false,
             suppressMenu: true,
+            cellClass: 'cell-style',
+            minWidth: 150,
+            maxWidth: 150
+          },
+          {
             field: 'amount',
             headerName: 'Amount',
-            cellClass: params => ['numeric-class'],
+            editable: false,
+            suppressMovable: true,
+            filter: false,
+            sortable: false,
+            suppressMenu: true,
+            cellClass: 'pfm-datagrid-numeric-class cell-style',
             cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
             minWidth: 75,
             maxWidth: 75,
@@ -527,15 +527,14 @@ export class FundsUpdateComponent implements OnInit {
               this.currencyPipe.transform(params.data[params.colDef.field], 'USD', 'symbol', '1.2-2')
           },
           {
+            field: 'reason',
+            headerName: 'Notes',
             editable: false,
             suppressMovable: true,
             filter: false,
             sortable: false,
             suppressMenu: true,
-            field: 'notes',
-            headerName: 'Notes',
-            cellClass: params => ['numeric-class'],
-            cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
+            cellClass: 'cell-style',
             minWidth: 75,
             maxWidth: 75
           },
@@ -547,7 +546,7 @@ export class FundsUpdateComponent implements OnInit {
             suppressMenu: true,
             field: 'updatedBy',
             headerName: 'Updated By',
-            cellStyle: { display: 'flex', 'align-items': 'center' },
+            cellClass: 'cell-style',
             minWidth: 150,
             maxWidth: 150
           }
@@ -556,8 +555,24 @@ export class FundsUpdateComponent implements OnInit {
       },
       getDetailRowData: params => {
         const el: ExecutionLine = params.data;
-        const event = el.events;
-        params.successCallback(event);
+        const details = [];
+        el.events.forEach((evt: Event<ExecutionEventData>, index) => {
+          ExecutionEventData.setuptypeInstance(evt.value);
+          const detail = {
+            update: index + 1,
+            updatedDate: this.datePipe.transform(evt.value.modified, 'M/d/yyyy HH:mm', 'en-US'),
+            category: evt.value.typeInstance.getType().getType().getDescripction(),
+            type: evt.value.typeInstance.getShortname(),
+            tag: null,
+            transfer: null,
+            amount: this.currencyPipe.transform(null, 'USD', 'symbol', '1.2-2'),
+            reason: null,
+            updatedBy: null
+          };
+          details.push(detail);
+        });
+
+        params.successCallback(details);
       }
     };
   }
