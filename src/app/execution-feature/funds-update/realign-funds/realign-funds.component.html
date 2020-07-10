@@ -25,14 +25,8 @@
               <label>From</label>
             </div>
             <span class="col-10">
-              <pfm-datagrid
-                (gridIsReady)="onFromGridIsReady($event)"
-                [columns]="fromColumnDefinitions"
-                [rows]="fromRows"
-                [showPagination]="false"
-              >
-              </pfm-datagrid
-            ></span>
+              <ng-container *ngTemplateOutlet="swap ? toGrid : fromGrid"></ng-container>
+            </span>
           </div>
           <div class="row">
             <div class="col-2"></div>
@@ -49,19 +43,9 @@
             <div class="col-2">
               <label>*To</label>
             </div>
-            <span class="col-10"
-              ><pfm-datagrid
-                (gridIsReady)="onToGridIsReady($event)"
-                (addCtaEvent)="onRowAdd($event)"
-                (mousedown)="onToGridMouseDown($event)"
-                (cellAction)="onCellAction($event)"
-                [columns]="toColumnDefinitions"
-                [rows]="toRows"
-                [showPagination]="false"
-                [showAddSingleRow]="fromRows.length === 1"
-              >
-              </pfm-datagrid
-            ></span>
+            <span class="col-10">
+              <ng-container *ngTemplateOutlet="swap ? fromGrid : toGrid"></ng-container>
+            </span>
           </div>
           <div class="row">
             <div class="col-2">
@@ -131,6 +115,31 @@
     </div>
   </ng-template>
 </ng-container>
+
+<ng-template #fromGrid>
+  <pfm-datagrid
+    #fromGrid2
+    (gridIsReady)="onFromGridIsReady($event)"
+    [columns]="fromColumnDefinitions"
+    [rows]="fromRows"
+    [showPagination]="false"
+  >
+  </pfm-datagrid>
+</ng-template>
+
+<ng-template #toGrid>
+  <pfm-datagrid
+    #toGrid2
+    (gridIsReady)="onToGridIsReady($event)"
+    (addCtaEvent)="onRowAdd($event)"
+    (mousedown)="onToGridMouseDown($event)"
+    (cellAction)="onCellAction($event)"
+    [columns]="toColumnDefinitions"
+    [rows]="toRows"
+    [showPagination]="false"
+    [showAddSingleRow]="true"
+  ></pfm-datagrid>
+</ng-template>
 
 <pfm-busy [busy]="busy"></pfm-busy>
 <pfm-secure-download></pfm-secure-download>

@@ -8,6 +8,11 @@ export interface IExecution {
   fileId?: string;
   osdObligationGoals?: { [key: string]: OSDGoalPlan };
   osdExpenditureGoals?: { [key: string]: OSDGoalPlan };
+
+  created?: any;
+  createdBy?: string;
+  modified?: any;
+  modifiedBy?: string;
 }
 
 export class Execution implements IExecution {

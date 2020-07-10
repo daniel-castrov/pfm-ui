@@ -4,9 +4,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { RestResponse } from 'src/app/util/rest-response';
 import { ListItem } from 'src/app/pfm-common-models/ListItem';
 import { getListItems } from '../../models/enumerations/execution-btr-subtype.model';
-import { FormGroup, FormControl, Validators, ValidatorFn, ValidationErrors } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { GridApi, ColDef, ICellEditorComp } from '@ag-grid-community/all-modules';
 import { ExecutionLine } from '../../models/execution-line.model';
+import { Execution } from '../../models/execution.model';
 import { ExecutionLineService } from '../../services/execution-line.service';
 import { SecureDownloadComponent } from 'src/app/pfm-secure-filedownload/secure-download/secure-download.component';
 import { CurrencyPipe } from '@angular/common';
@@ -76,6 +77,7 @@ export class RealignFundsComponent implements OnInit {
   currentToRowDataState: RowDataStateInterface = {};
   executionLinesToRealign: ExecutionLine[] = [];
   deleteDialog: DeleteDialogInterface = { title: 'Delete' };
+  swap: boolean;
 
   constructor(
     private route: ActivatedRoute,
@@ -88,16 +90,8 @@ export class RealignFundsComponent implements OnInit {
 
   ngOnInit(): void {
     history.state.type = 'BTR'; // TODO delete this
-    this.executionYear = Number(this.route.snapshot.paramMap.get('exeYear'));
-    if (this.executionYear) {
-      this.executionYearTwoDigits = this.executionYear.toString().substr(2, 4);
-    }
-    if (history.state.type) {
-      this.title =
-        history.state.type === 'BTR'
-          ? `BTR Update for Execution FY${this.executionYearTwoDigits}`
-          : `Update for Execution FY${this.executionYearTwoDigits}`;
 
+    if (history.state.type) {
       this.subtypes = getListItems();
       this.loadForm();
       this.cellStyle = { display: 'flex', 'align-items': 'center', 'white-space': 'normal' };
@@ -143,8 +137,8 @@ export class RealignFundsComponent implements OnInit {
         }
       },
       {
-        headerName: `FY${this.executionYearTwoDigits}`,
-        field: 'fy',
+        headerName: `PB${this.executionYearTwoDigits}`,
+        field: 'initial',
         editable: false,
         suppressMovable: true,
         filter: false,
@@ -152,8 +146,8 @@ export class RealignFundsComponent implements OnInit {
         suppressMenu: true,
         cellClass: 'justify-content-center',
         cellStyle: this.cellStyle,
-        maxWidth: 80,
-        minWidth: 80,
+        maxWidth: 150,
+        minWidth: 150,
         valueFormatter: params =>
           this.currencyPipe.transform(params.data[params.colDef.field], 'USD', 'symbol', '1.2-2')
       },
@@ -167,8 +161,8 @@ export class RealignFundsComponent implements OnInit {
         suppressMenu: true,
         cellClass: 'pfm-datagrid-numeric-class',
         cellStyle: this.cellStyle,
-        maxWidth: 200,
-        minWidth: 200,
+        maxWidth: 150,
+        minWidth: 150,
         valueFormatter: params =>
           this.currencyPipe.transform(params.data[params.colDef.field], 'USD', 'symbol', '1.2-2')
       },
@@ -182,8 +176,8 @@ export class RealignFundsComponent implements OnInit {
         suppressMenu: true,
         cellClass: 'pfm-datagrid-numeric-class',
         cellStyle: this.cellStyle,
-        maxWidth: 120,
-        minWidth: 120,
+        maxWidth: 150,
+        minWidth: 150,
         valueFormatter: params =>
           this.currencyPipe.transform(params.data[params.colDef.field], 'USD', 'symbol', '1.2-2')
       },
@@ -229,10 +223,12 @@ export class RealignFundsComponent implements OnInit {
           return null;
         },
         cellEditorFramework: DropdownCellRendererComponent,
-        cellEditorParams: () => {
+        cellEditorParams: params => {
+          // It also includes the current selected which should not be filtered out.
+          const toBeFilteredOut = [...this.toRows, ...this.fromRows];
           return {
             values: this.executionLinesToRealign
-              .filter(exe => exe.id !== this.selectedExecutionLine.id)
+              .filter(exe => !toBeFilteredOut.find(e => exe.id === e.id && e.id !== params.value))
               .map(exe => {
                 exe.executionLine = this.getExecutionLineName(exe);
                 return [exe.executionLine, exe.id];
@@ -241,8 +237,8 @@ export class RealignFundsComponent implements OnInit {
         }
       },
       {
-        headerName: `FY${this.executionYearTwoDigits}`,
-        field: 'fy',
+        headerName: `PB${this.executionYearTwoDigits}`,
+        field: 'initial',
         editable: false,
         suppressMovable: true,
         filter: false,
@@ -250,8 +246,8 @@ export class RealignFundsComponent implements OnInit {
         suppressMenu: true,
         cellClass: 'justify-content-center',
         cellStyle: this.cellStyle,
-        maxWidth: 80,
-        minWidth: 80,
+        maxWidth: 150,
+        minWidth: 150,
         valueFormatter: params =>
           this.currencyPipe.transform(params.data[params.colDef.field], 'USD', 'symbol', '1.2-2')
       },
@@ -265,8 +261,8 @@ export class RealignFundsComponent implements OnInit {
         suppressMenu: true,
         cellClass: 'pfm-datagrid-numeric-class',
         cellStyle: this.cellStyle,
-        maxWidth: 200,
-        minWidth: 200,
+        maxWidth: 150,
+        minWidth: 150,
         valueFormatter: params =>
           this.currencyPipe.transform(params.data[params.colDef.field], 'USD', 'symbol', '1.2-2')
       },
@@ -280,8 +276,8 @@ export class RealignFundsComponent implements OnInit {
         suppressMenu: true,
         cellClass: 'pfm-datagrid-numeric-class',
         cellStyle: this.cellStyle,
-        maxWidth: 120,
-        minWidth: 120,
+        maxWidth: 150,
+        minWidth: 150,
         valueFormatter: params =>
           this.currencyPipe.transform(params.data[params.colDef.field], 'USD', 'symbol', '1.2-2')
       },
@@ -319,7 +315,7 @@ export class RealignFundsComponent implements OnInit {
         minWidth: 150,
         cellEditor: NumericCellEditor.create({
           returnUndefinedOnZero: false,
-          allowedCharacters: AllowedCharacters.DIGITS_AND_MINUS_AND_DECIMAL_POINT
+          allowedCharacters: AllowedCharacters.DIGITS_AND_DECIMAL_POINT
         }),
         valueFormatter: params =>
           this.currencyPipe.transform(params.data[params.colDef.field], 'USD', 'symbol', '1.2-2')
@@ -334,8 +330,8 @@ export class RealignFundsComponent implements OnInit {
         suppressMenu: true,
         cellClass: 'text-class',
         cellStyle: this.cellStyle,
-        maxWidth: 150,
-        minWidth: 150,
+        maxWidth: 100,
+        minWidth: 100,
         cellRendererFramework: ActionCellRendererComponent
       }
     ];
@@ -346,6 +342,7 @@ export class RealignFundsComponent implements OnInit {
     this.executionLineService
       .getById(executionLineId)
       .pipe(
+        // Get all the Execution line with the same containerId and PE
         tap((resp: RestResponse<ExecutionLine>) => {
           const el = resp.result;
           this.executionLineService
@@ -356,6 +353,16 @@ export class RealignFundsComponent implements OnInit {
                 this.executionLinesToRealign = exes;
               }
             });
+        }),
+        // Get the execution
+        tap((elResp: RestResponse<ExecutionLine>) => {
+          this.executionService.getById(elResp.result.containerId).subscribe((exeResp: RestResponse<Execution>) => {
+            this.executionYearTwoDigits = exeResp.result.fy.toString().substr(2, 4);
+            this.title =
+              history.state.type === 'BTR'
+                ? `BTR Update for Execution FY${this.executionYearTwoDigits}`
+                : `Update for Execution FY${this.executionYearTwoDigits}`;
+          });
         })
       )
       .subscribe((resp: RestResponse<ExecutionLine>) => {
@@ -428,20 +435,7 @@ export class RealignFundsComponent implements OnInit {
   }
 
   swapGrids(): void {
-    this.fromRows.forEach(el => {
-      el.actions = { ...this.actionState.VIEW };
-    });
-
-    this.toRows.forEach(el => {
-      el.amount = null;
-      el.actions = null;
-    });
-
-    const tempRows = this.fromRows;
-    this.fromRows = this.toRows;
-    this.toRows = tempRows;
-    this.fromGridApi.setRowData(this.toRows);
-    this.toGridApi.setRowData(this.fromRows);
+    this.swap = !this.swap;
   }
 
   onRowAdd(params: any): void {
@@ -548,26 +542,35 @@ export class RealignFundsComponent implements OnInit {
   }
 
   private validateRow(el: ExecutionLine) {
-    let result = true;
-    if (el.amount > el.released) {
-      this.dialogService.displayError('Amount cannot exceed the released amount.');
-      result = false;
+    if (!el.executionLine) {
+      this.dialogService.displayError('Please select an execution line.');
+      return false;
     }
-    return result;
+
+    if (!Number(el.amount)) {
+      this.dialogService.displayError('The Amount cannot be empty or 0.');
+      return false;
+    }
+
+    if (Number(el.amount) > Number(el.released ?? 0)) {
+      this.dialogService.displayError('Amount cannot exceed the released amount.');
+      return false;
+    }
+
+    return true;
   }
 
   private getExecutionLineName(executionLine: ExecutionLine): string {
     let elName = '';
-    elName =
-      executionLine.programName +
-      '/' +
-      executionLine.appropriation +
-      '/' +
-      executionLine.baOrBlin +
-      '/' +
-      executionLine.item +
-      '/' +
-      executionLine.programElement;
+    elName = [
+      executionLine.programName,
+      executionLine.appropriation,
+      executionLine.baOrBlin,
+      executionLine.sag,
+      executionLine.wucd,
+      executionLine.expenditureType,
+      executionLine.programElement
+    ].join('/');
 
     return elName;
   }
@@ -586,6 +589,7 @@ export class RealignFundsComponent implements OnInit {
         const el = this.executionLinesToRealign.find(exeLine => exeLine.id === elId);
         if (el) {
           const editingExeLine = this.toRows[rowIndex];
+          editingExeLine.initial = el.initial;
           editingExeLine.toa = el.toa;
           editingExeLine.released = el.released;
           editingExeLine.withheld = el.withheld;

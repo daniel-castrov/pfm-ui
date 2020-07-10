@@ -253,7 +253,6 @@ export class FundsUpdateComponent implements OnInit {
         suppressMenu: true,
         cellEditorFramework: DropdownCellRendererComponent,
         cellEditorParams: params => {
-          console.log(this.programElementOptions);
           return {
             values: [...this.programElementOptions]
           };
