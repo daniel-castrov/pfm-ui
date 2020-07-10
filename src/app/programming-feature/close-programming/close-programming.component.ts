@@ -142,6 +142,7 @@ export class CloseProgrammingComponent implements OnInit {
       )
       .add(() => (this.busy = false));
   }
+
   onOpenProgrammingPhase() {
     this.busy = true;
     this.pomService.openPom(this.programmingModel.pom).subscribe(
