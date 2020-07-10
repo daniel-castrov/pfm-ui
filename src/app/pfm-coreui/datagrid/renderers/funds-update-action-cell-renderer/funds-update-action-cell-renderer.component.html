@@ -1,6 +1,7 @@
-<ng-container *ngIf="data.canFunds">
-  <div title="Funds">
+<ng-template #extraActions>
+  <ng-container *ngIf="data.canFunds">
     <pfm-dropdown
+      class="action"
       (selectionChanged)="handleFunds($event)"
       [type]="'iconDropdown'"
       [iconName]="'dollar-sign'"
@@ -14,5 +15,14 @@
       [disabled]="false"
     >
     </pfm-dropdown>
-  </div>
-</ng-container>
+  </ng-container>
+</ng-template>
+<pfm-action-cell-renderer
+  [data]="data"
+  [params]="params"
+  [columnApi]="columnApi"
+  [options]="options"
+  [disabled]="disabled"
+  [extraActions]="extraActions"
+>
+</pfm-action-cell-renderer>
