@@ -9,10 +9,17 @@ export class ExecutionEventData {
   fileIds: string[];
   other: string;
 
+  created?: any;
+  modified?: any;
+  modifiedBy?: string;
+  createdBy?: string;
   typeInstance: ExecutionSubtype;
-  constructor() {
+
+  constructor() {}
+
+  static setuptypeInstance(executionEventData: ExecutionEventData): void {
     // ExecutionSubtype is class not an enum as in the backend so we recieve type as a string and use it as a
     // property to get the real type instance.
-    this.typeInstance = ExecutionSubtype[this.type];
+    executionEventData.typeInstance = ExecutionSubtype[executionEventData.type];
   }
 }

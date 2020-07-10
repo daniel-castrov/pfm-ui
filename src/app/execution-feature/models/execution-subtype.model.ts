@@ -226,4 +226,8 @@ export class ExecutionSubtype {
   getType(): EventEnum {
     return this.type;
   }
+
+  getShortname(): string {
+    return this.shortname;
+  }
 }
