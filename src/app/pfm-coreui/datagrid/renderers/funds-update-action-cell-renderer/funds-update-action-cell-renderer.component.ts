@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActionCellRendererComponent } from '../action-cell-renderer/action-cell-renderer.component';
-import { DataGridMessage } from 'src/app/pfm-coreui/models/DataGridMessage';
 import { ListItem } from '../../../../pfm-common-models/ListItem';
 
 @Component({
