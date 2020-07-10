@@ -3,7 +3,7 @@ import { ListItem } from '../../pfm-common-models/ListItem';
 import { ExecutionService } from '../services/execution.service';
 import { ColDef, GridApi } from '@ag-grid-community/all-modules';
 import { ExecutionLineService } from '../services/execution-line.service';
-import { IExecutionLine } from '../models/execution-line.model';
+import { IExecutionLine, ExecutionLine } from '../models/execution-line.model';
 import { RestResponse } from 'src/app/util/rest-response';
 import { BasicRowDataStateInterface } from 'src/app/pfm-coreui/datagrid/model/basic-row-data-state.model';
 import { BasicActionState } from 'src/app/pfm-coreui/datagrid/model/basic-action-state.model';
@@ -11,8 +11,8 @@ import { DataGridMessage } from 'src/app/pfm-coreui/models/DataGridMessage';
 import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
 import { DropdownCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/dropdown-cell-renderer/dropdown-cell-renderer.component';
 import { CurrencyPipe } from '@angular/common';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, from } from 'rxjs';
+import { map, concatMap } from 'rxjs/operators';
 import { IExecutionLineGrid } from '../models/execution-line-grid.model';
 import { PropertyService } from 'src/app/programming-feature/services/property.service';
 import { PropertyType } from 'src/app/programming-feature/models/enumerations/property-type.model';
@@ -20,6 +20,9 @@ import { IExecution } from '../models/execution.model';
 import { FundsUpdateActionCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/funds-update-action-cell-renderer/funds-update-action-cell-renderer.component';
 import { AppModel } from 'src/app/pfm-common-models/AppModel';
 import { RoleConstants } from 'src/app/pfm-common-models/role-contants.model';
+import { ExecutionEventService } from '../services/execution-event.service';
+import { Event } from 'src/app/pfm-coreui/models/event.model';
+import { ExecutionEventData } from '../models/execution-event-data.model';
 
 @Component({
   selector: 'app-funds-update',
@@ -50,6 +53,8 @@ export class FundsUpdateComponent implements OnInit {
   executionLineRowDataState: BasicRowDataStateInterface = {};
 
   deleteDialog: DeleteDialogInterface = { title: 'Delete' };
+  detailCellRendererParams: any;
+  busy: boolean;
 
   constructor(
     private executionService: ExecutionService,
@@ -57,6 +62,7 @@ export class FundsUpdateComponent implements OnInit {
     private dialogService: DialogService,
     private propertyService: PropertyService,
     private currencyPipe: CurrencyPipe,
+    private executionEventService: ExecutionEventService,
     private appModel: AppModel
   ) {}
 
@@ -80,6 +86,7 @@ export class FundsUpdateComponent implements OnInit {
     });
     this.setupGrid();
     this.actionsRoleAccess();
+    this.loadMasterDetail();
   }
 
   actionsRoleAccess() {
@@ -311,7 +318,7 @@ export class FundsUpdateComponent implements OnInit {
       {
         headerName: 'Actions',
         field: 'action',
-        minWidth: 70,
+        minWidth: 170,
         cellRendererFramework: FundsUpdateActionCellRendererComponent,
         cellClass: 'text-class',
         suppressMovable: true,
@@ -324,31 +331,47 @@ export class FundsUpdateComponent implements OnInit {
 
   onYearChange(year: any): void {
     this.selectedYear = year ? year.rawData : undefined;
+    this.busy = true;
     if (this.selectedYear) {
       this.executionLineService.retrieveByYear(this.selectedYear).subscribe((resp: RestResponse<IExecutionLine[]>) => {
         this.selectedExecution = this.executions.find(execution => execution.fy === this.selectedYear);
         const executionLines = resp.result;
         this.executionLineRows = [];
-        executionLines.forEach(executionLine => {
-          const row: IExecutionLineGrid = {
-            phaseId: this.selectedExecution.id,
-            programName: executionLine.programName,
-            appropriation: executionLine.appropriation,
-            baOrBlin: executionLine.baOrBlin,
-            sag: executionLine.sag,
-            wucd: executionLine.wucd,
-            expenditureType: executionLine.expenditureType,
-            opAgency: executionLine.opAgency,
-            programElement: executionLine.programElement,
-            pb: 0,
-            toa: 0,
-            released: 0,
-            withhold: 0,
-            action: { ...BasicActionState.VIEW, canFunds: true }
-          };
-          this.executionLineRows.push(row);
-        });
-        this.executionLineGridApi.refreshHeader();
+        let row: IExecutionLineGrid;
+        from(executionLines)
+          .pipe(
+            concatMap((executionLine: IExecutionLine) => {
+              row = {
+                id: executionLine.id,
+                phaseId: this.selectedExecution.id,
+                programName: executionLine.programName,
+                appropriation: executionLine.appropriation,
+                baOrBlin: executionLine.baOrBlin,
+                sag: executionLine.sag,
+                wucd: executionLine.wucd,
+                expenditureType: executionLine.expenditureType,
+                opAgency: executionLine.opAgency,
+                programElement: executionLine.programElement,
+                pb: 0,
+                toa: 0,
+                released: 0,
+                withhold: 0,
+                events: null,
+                action: { ...BasicActionState.VIEW, canFunds: true, hasHistory: false }
+              };
+              return this.executionEventService.getByExecutionLineId(row.id);
+            })
+          )
+          .subscribe((respEvent: RestResponse<Event<ExecutionEventData>[]>) => {
+            row.events = respEvent.result;
+            row.action.hasHistory = Boolean(row.events);
+            this.executionLineRows.push(row);
+          })
+          .add(() => {
+            this.busy = false;
+            this.executionLineGridApi.refreshHeader();
+            this.executionLineGridApi.setRowData(this.executionLineRows);
+          });
       });
     }
   }
@@ -402,8 +425,152 @@ export class FundsUpdateComponent implements OnInit {
       case 'cancel':
         this.performCancel(cellAction.rowIndex);
         break;
+      case 'history-grid':
+        this.showHistoryGrid(cellAction.rowIndex);
+        break;
     }
   }
+
+  private loadMasterDetail(): void {
+    this.detailCellRendererParams = {
+      detailGridOptions: {
+        getRowHeight: params => {
+          return (params.data.value.reason ?? '').length < 90 ? 40 : (Number(params.data.notes.length / 90) + 1) * 25;
+        },
+        columnDefs: [
+          {
+            editable: false,
+            suppressMovable: true,
+            filter: false,
+            sortable: false,
+            suppressMenu: true,
+            field: 'update',
+            headerName: 'Update',
+            cellStyle: { display: 'flex', 'align-items': 'center' },
+            minWidth: 75,
+            maxWidth: 75
+          },
+          {
+            editable: false,
+            suppressMovable: true,
+            filter: false,
+            sortable: false,
+            suppressMenu: true,
+            field: 'updatedDate',
+            headerName: 'Updated Date',
+            cellStyle: { display: 'flex', 'align-items': 'center' },
+            minWidth: 150,
+            maxWidth: 150
+          },
+          {
+            editable: false,
+            suppressMovable: true,
+            filter: false,
+            sortable: false,
+            suppressMenu: true,
+            field: 'category',
+            headerName: 'category',
+            cellClass: 'word-break',
+            cellStyle: { display: 'flex', 'align-items': 'center' }
+          },
+          {
+            editable: false,
+            suppressMovable: true,
+            filter: false,
+            sortable: false,
+            suppressMenu: true,
+            field: 'type',
+            headerName: 'Type',
+            cellStyle: { display: 'flex', 'align-items': 'center' },
+            minWidth: 150,
+            maxWidth: 150
+          },
+          {
+            editable: false,
+            suppressMovable: true,
+            filter: false,
+            sortable: false,
+            suppressMenu: true,
+            field: 'tag',
+            headerName: 'Tag',
+            cellStyle: { display: 'flex', 'align-items': 'center' },
+            minWidth: 150,
+            maxWidth: 150
+          },
+          {
+            editable: false,
+            suppressMovable: true,
+            filter: false,
+            sortable: false,
+            suppressMenu: true,
+            field: 'transfer',
+            headerName: 'Transfer To/From',
+            cellStyle: { display: 'flex', 'align-items': 'center' },
+            minWidth: 150,
+            maxWidth: 150
+          },
+          {
+            editable: false,
+            suppressMovable: true,
+            filter: false,
+            sortable: false,
+            suppressMenu: true,
+            field: 'amount',
+            headerName: 'Amount',
+            cellClass: params => ['numeric-class'],
+            cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
+            minWidth: 75,
+            maxWidth: 75,
+            valueFormatter: params =>
+              this.currencyPipe.transform(params.data[params.colDef.field], 'USD', 'symbol', '1.2-2')
+          },
+          {
+            editable: false,
+            suppressMovable: true,
+            filter: false,
+            sortable: false,
+            suppressMenu: true,
+            field: 'notes',
+            headerName: 'Notes',
+            cellClass: params => ['numeric-class'],
+            cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
+            minWidth: 75,
+            maxWidth: 75
+          },
+          {
+            editable: false,
+            suppressMovable: true,
+            filter: false,
+            sortable: false,
+            suppressMenu: true,
+            field: 'updatedBy',
+            headerName: 'Updated By',
+            cellStyle: { display: 'flex', 'align-items': 'center' },
+            minWidth: 150,
+            maxWidth: 150
+          }
+        ],
+        defaultColDef: { flex: 1 }
+      },
+      getDetailRowData: params => {
+        const el: ExecutionLine = params.data;
+        const event = el.events;
+        params.successCallback(event);
+      }
+    };
+  }
+
+  private showHistoryGrid(rowIndex: number): void {
+    if (!this.executionLineRowDataState.isEditMode) {
+      this.executionLineGridApi.forEachNode(node => {
+        if (node.childIndex === rowIndex) {
+          node.setExpanded(!node.expanded);
+        }
+      });
+    }
+  }
+
+  private setActionHasHistory(row: IExecutionLineGrid) {}
 
   private saveRow(rowIndex: number) {
     this.executionLineGridApi.stopEditing();

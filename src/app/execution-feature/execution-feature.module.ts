@@ -18,6 +18,8 @@ import { FundsUpdateComponent } from './funds-update/funds-update.component';
 import { PfmSecureFiledownloadModule } from '../pfm-secure-filedownload/pfm-secure-filedownload.module';
 import { PropertyService } from '../programming-feature/services/property.service';
 import { PropertyServiceImpl } from '../programming-feature/services/property-impl.service';
+import { ExecutionEventService } from './services/execution-event.service';
+import { ExecutionEventServiceImpl } from './services/execution-event.service-impl';
 
 @NgModule({
   declarations: [ExecutionFeatureComponent, CreateExecutionComponent, FundsUpdateComponent, RealignFundsComponent],
@@ -36,6 +38,7 @@ import { PropertyServiceImpl } from '../programming-feature/services/property-im
     CurrencyPipe,
     { provide: ExecutionService, useClass: ExecutionServiceImpl },
     { provide: ExecutionLineService, useClass: ExecutionLineServiceImpl },
+    { provide: ExecutionEventService, useClass: ExecutionEventServiceImpl },
     { provide: PropertyService, useClass: PropertyServiceImpl },
     CurrencyPipe
   ]

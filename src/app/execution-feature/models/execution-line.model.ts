@@ -1,4 +1,6 @@
 import { OSDGoalPlan } from './enumerations/ousd-goal-plan.model';
+import { Event } from 'src/app/pfm-coreui/models/event.model';
+import { ExecutionEventData } from './execution-event-data.model';
 export interface IExecutionLine {
   id?: string;
   containerId?: string;
@@ -42,6 +44,7 @@ export class ExecutionLine implements IExecutionLine {
   fullNameModifiedBy?: string;
 
   executionLine?: string;
+  events?: Event<ExecutionEventData>[];
 
   actions?: any;
   isDisabled?: boolean;

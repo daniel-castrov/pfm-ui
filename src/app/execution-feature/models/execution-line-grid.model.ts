@@ -1,3 +1,6 @@
+import { Event } from '../../pfm-coreui/models/event.model';
+import { ExecutionEventData } from './execution-event-data.model';
+
 export interface IExecutionLineGrid {
   id?: string;
   phaseId: string;
@@ -15,6 +18,7 @@ export interface IExecutionLineGrid {
   withhold?: number;
   action: any;
   isDisabled?: boolean;
+  events?: Event<ExecutionEventData>[];
 }
 
 export class ExecutionLineGrid implements IExecutionLineGrid {
@@ -34,6 +38,7 @@ export class ExecutionLineGrid implements IExecutionLineGrid {
     public withhold: number,
     public action: any,
     public id?: string,
-    public isDisabled?: boolean
+    public isDisabled?: boolean,
+    public events?: Event<ExecutionEventData>[]
   ) {}
 }

@@ -16,6 +16,13 @@
     >
     </pfm-dropdown>
   </ng-container>
+  <div class="action" (click)="onSelected('history-grid')">
+    <span title="View History Grid">
+      <ng-container *ngIf="data.hasHistory">
+        <fa-icon icon="history" [class.disabled]="params.data.isDisabled"></fa-icon>
+      </ng-container>
+    </span>
+  </div>
 </ng-template>
 <pfm-action-cell-renderer
   [data]="data"

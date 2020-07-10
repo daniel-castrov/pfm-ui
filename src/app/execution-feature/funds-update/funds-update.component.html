@@ -38,6 +38,8 @@
         [rows]="executionLineRows"
         [showAddSingleRow]="true"
         [showPagination]="true"
+        [isMasterDetail]="true"
+        [detailCellRendererParams]="detailCellRendererParams"
         (addCtaEvent)="onExecutionLineRowAdd($event)"
         (mousedown)="onExecutionLineGridMouseDown($event)"
         [overlayNoRowsTemplate]="' '"
@@ -47,3 +49,5 @@
     </div>
   </div>
 </div>
+
+<pfm-busy [busy]="busy"></pfm-busy>
