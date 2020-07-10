@@ -20,6 +20,7 @@ import { IExecution } from '../models/execution.model';
 import { FundsUpdateActionCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/funds-update-action-cell-renderer/funds-update-action-cell-renderer.component';
 import { AppModel } from 'src/app/pfm-common-models/AppModel';
 import { RoleConstants } from 'src/app/pfm-common-models/role-contants.model';
+import { ActionCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/action-cell-renderer/action-cell-renderer.component';
 
 @Component({
   selector: 'app-funds-update',
@@ -83,7 +84,7 @@ export class FundsUpdateComponent implements OnInit {
 
   actionsRoleAccess() {
     if (this.appModel.userDetails.roles.includes(RoleConstants.FUNDS_MANAGER)) {
-      this.actionsControl = BasicActionState.EDIT;
+      this.actionsControl = BasicActionState.VIEW;
     }
   }
 
@@ -311,7 +312,7 @@ export class FundsUpdateComponent implements OnInit {
         headerName: 'Actions',
         field: 'action',
         minWidth: 70,
-        cellRendererFramework: FundsUpdateActionCellRendererComponent,
+        cellRendererFramework: ActionCellRendererComponent,
         cellClass: 'text-class',
         suppressMovable: true,
         filter: false,
