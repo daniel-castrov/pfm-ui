@@ -3,7 +3,7 @@ import { ListItem } from '../../pfm-common-models/ListItem';
 import { ExecutionService } from '../services/execution.service';
 import { ColDef, GridApi } from '@ag-grid-community/all-modules';
 import { ExecutionLineService } from '../services/execution-line.service';
-import { IExecutionLine, ExecutionLine } from '../models/execution-line.model';
+import { ExecutionLine, IExecutionLine } from '../models/execution-line.model';
 import { RestResponse } from 'src/app/util/rest-response';
 import { BasicRowDataStateInterface } from 'src/app/pfm-coreui/datagrid/model/basic-row-data-state.model';
 import { BasicActionState } from 'src/app/pfm-coreui/datagrid/model/basic-action-state.model';
@@ -11,8 +11,8 @@ import { DataGridMessage } from 'src/app/pfm-coreui/models/DataGridMessage';
 import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
 import { DropdownCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/dropdown-cell-renderer/dropdown-cell-renderer.component';
 import { CurrencyPipe } from '@angular/common';
-import { Observable, from } from 'rxjs';
-import { map, concatMap } from 'rxjs/operators';
+import { from, Observable } from 'rxjs';
+import { concatMap, map } from 'rxjs/operators';
 import { IExecutionLineGrid } from '../models/execution-line-grid.model';
 import { PropertyService } from 'src/app/programming-feature/services/property.service';
 import { PropertyType } from 'src/app/programming-feature/models/enumerations/property-type.model';
@@ -55,6 +55,8 @@ export class FundsUpdateComponent implements OnInit {
   deleteDialog: DeleteDialogInterface = { title: 'Delete' };
   detailCellRendererParams: any;
   busy: boolean;
+
+  expanded: boolean;
 
   constructor(
     private executionService: ExecutionService,
@@ -763,6 +765,24 @@ export class FundsUpdateComponent implements OnInit {
       this.dialogService.displayError(errorMessage);
     }
     return !errorMessage.length;
+  }
+
+  collapse() {
+    this.expanded = false;
+    this.executionLineGridApi.forEachNode(node => {
+      if (node.data.events) {
+        node.setExpanded(false);
+      }
+    });
+  }
+
+  expand() {
+    this.expanded = true;
+    this.executionLineGridApi.forEachNode(node => {
+      if (node.data.events) {
+        node.setExpanded(true);
+      }
+    });
   }
 
   setupAppnDependency() {
