@@ -8,9 +8,8 @@ describe('FundsUpdateActionCellRendererComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FundsUpdateActionCellRendererComponent ]
-    })
-    .compileComponents();
+      declarations: [FundsUpdateActionCellRendererComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
