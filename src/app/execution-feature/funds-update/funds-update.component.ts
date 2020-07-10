@@ -564,9 +564,9 @@ export class FundsUpdateComponent implements OnInit {
         defaultColDef: { flex: 1 }
       },
       getDetailRowData: params => {
-        const el: ExecutionLine = params.data;
+        const events: Event<ExecutionEventData>[] = params.data.events ?? [];
         const details = [];
-        el.events.forEach((evt: Event<ExecutionEventData>, index) => {
+        events.forEach((evt: Event<ExecutionEventData>, index) => {
           ExecutionEventData.setuptypeInstance(evt.value);
           const detail = {
             update: index + 1,
@@ -709,7 +709,8 @@ export class FundsUpdateComponent implements OnInit {
     this.executionLineRows[rowIndex].action = {
       ...this.actionState.VIEW,
       canFund: this.appModel.userDetails.roles.includes(RoleConstants.FUNDS_MANAGER),
-      canRemove: this.executionLineRows[rowIndex].userCreated
+      canRemove: this.executionLineRows[rowIndex].userCreated,
+      hasHistory: false
     };
     this.executionLineRows.forEach(row => {
       row.isDisabled = false;
@@ -904,11 +905,7 @@ export class FundsUpdateComponent implements OnInit {
       released: 0,
       withhold: 0,
       userCreated,
-      action: {
-        ...this.actionState.VIEW,
-        canFund: this.appModel.userDetails.roles.includes(RoleConstants.FUNDS_MANAGER),
-        canRemove: userCreated
-      }
+      action: null // It will be set when viewExecutionLineMode is called.
     };
     return converted;
   }
