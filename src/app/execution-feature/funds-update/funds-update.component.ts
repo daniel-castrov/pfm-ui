@@ -3,7 +3,7 @@ import { ListItem } from '../../pfm-common-models/ListItem';
 import { ExecutionService } from '../services/execution.service';
 import { ColDef, GridApi } from '@ag-grid-community/all-modules';
 import { ExecutionLineService } from '../services/execution-line.service';
-import { IExecutionLine } from '../models/execution-line.model';
+import { IExecutionLine, ExecutionLine } from '../models/execution-line.model';
 import { RestResponse } from 'src/app/util/rest-response';
 import { BasicRowDataStateInterface } from 'src/app/pfm-coreui/datagrid/model/basic-row-data-state.model';
 import { BasicActionState } from 'src/app/pfm-coreui/datagrid/model/basic-action-state.model';
@@ -18,6 +18,7 @@ import { ActionCellRendererComponent } from 'src/app/pfm-coreui/datagrid/rendere
 import { PropertyService } from 'src/app/programming-feature/services/property.service';
 import { PropertyType } from 'src/app/programming-feature/models/enumerations/property-type.model';
 import { IExecution } from '../models/execution.model';
+import { ExecutionSubtype } from '../models/execution-subtype.model';
 
 @Component({
   selector: 'app-funds-update',
@@ -46,6 +47,7 @@ export class FundsUpdateComponent implements OnInit {
   executionLineRowDataState: BasicRowDataStateInterface = {};
 
   deleteDialog: DeleteDialogInterface = { title: 'Delete' };
+  detailCellRendererParams: any;
 
   constructor(
     private executionService: ExecutionService,
@@ -389,6 +391,137 @@ export class FundsUpdateComponent implements OnInit {
         this.performCancel(cellAction.rowIndex);
         break;
     }
+  }
+
+  private loadMasterDetail(): void {
+    this.detailCellRendererParams = {
+      detailGridOptions: {
+        getRowHeight: params => {
+          return params.data.notes.length < 90 ? 40 : (Number(params.data.notes.length / 90) + 1) * 25;
+        },
+        columnDefs: [
+          {
+            editable: false,
+            suppressMovable: true,
+            filter: false,
+            sortable: false,
+            suppressMenu: true,
+            field: 'update',
+            headerName: 'Update',
+            cellStyle: { display: 'flex', 'align-items': 'center' },
+            minWidth: 75,
+            maxWidth: 75
+          },
+          {
+            editable: false,
+            suppressMovable: true,
+            filter: false,
+            sortable: false,
+            suppressMenu: true,
+            field: 'updatedDate',
+            headerName: 'Updated Date',
+            cellStyle: { display: 'flex', 'align-items': 'center' },
+            minWidth: 150,
+            maxWidth: 150
+          },
+          {
+            editable: false,
+            suppressMovable: true,
+            filter: false,
+            sortable: false,
+            suppressMenu: true,
+            field: 'category',
+            headerName: 'category',
+            cellClass: 'word-break',
+            cellStyle: { display: 'flex', 'align-items': 'center' }
+          },
+          {
+            editable: false,
+            suppressMovable: true,
+            filter: false,
+            sortable: false,
+            suppressMenu: true,
+            field: 'type',
+            headerName: 'Type',
+            cellStyle: { display: 'flex', 'align-items': 'center' },
+            minWidth: 150,
+            maxWidth: 150
+          },
+          {
+            editable: false,
+            suppressMovable: true,
+            filter: false,
+            sortable: false,
+            suppressMenu: true,
+            field: 'tag',
+            headerName: 'Tag',
+            cellStyle: { display: 'flex', 'align-items': 'center' },
+            minWidth: 150,
+            maxWidth: 150
+          },
+          {
+            editable: false,
+            suppressMovable: true,
+            filter: false,
+            sortable: false,
+            suppressMenu: true,
+            field: 'transfer',
+            headerName: 'Transfer To/From',
+            cellStyle: { display: 'flex', 'align-items': 'center' },
+            minWidth: 150,
+            maxWidth: 150
+          },
+          {
+            editable: false,
+            suppressMovable: true,
+            filter: false,
+            sortable: false,
+            suppressMenu: true,
+            field: 'amount',
+            headerName: 'Amount',
+            cellClass: params => ['numeric-class'],
+            cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
+            minWidth: 75,
+            maxWidth: 75,
+            valueFormatter: params =>
+              this.currencyPipe.transform(params.data[params.colDef.field], 'USD', 'symbol', '1.2-2')
+          },
+          {
+            editable: false,
+            suppressMovable: true,
+            filter: false,
+            sortable: false,
+            suppressMenu: true,
+            field: 'notes',
+            headerName: 'Notes',
+            cellClass: params => ['numeric-class'],
+            cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
+            minWidth: 75,
+            maxWidth: 75
+          },
+          {
+            editable: false,
+            suppressMovable: true,
+            filter: false,
+            sortable: false,
+            suppressMenu: true,
+            field: 'updatedBy',
+            headerName: 'Updated By',
+            cellStyle: { display: 'flex', 'align-items': 'center' },
+            minWidth: 150,
+            maxWidth: 150
+          }
+        ],
+        defaultColDef: { flex: 1 }
+      },
+      getDetailRowData: params => {
+        const el: ExecutionLine = params.data;
+
+        const executionEventData = el.events;
+
+        params.successCallback(executionEventData);
+      }
+    };
   }
 
   private saveRow(rowIndex: number) {

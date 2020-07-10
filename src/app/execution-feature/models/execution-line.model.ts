@@ -1,4 +1,5 @@
 import { OSDGoalPlan } from './enumerations/ousd-goal-plan.model';
+import { ExecutionEventData } from './execution-event-data.model';
 export interface IExecutionLine {
   id?: string;
   containerId?: string;
@@ -42,6 +43,7 @@ export class ExecutionLine implements IExecutionLine {
   fullNameModifiedBy?: string;
 
   executionLine?: string;
+  events?: ExecutionEventData[];
 
   actions?: any;
   isDisabled?: boolean;
