@@ -1,5 +1,14 @@
+<pfm-action-cell-renderer
+  [data]="data"
+  [params]="params"
+  [columnApi]="columnApi"
+  [options]="options"
+  [disabled]="disabled"
+  [extraActions]="extraActions"
+>
+</pfm-action-cell-renderer>
 <ng-template #extraActions>
-  <ng-container *ngIf="data.canFunds">
+  <ng-container *ngIf="data.canFund">
     <pfm-dropdown
       class="action"
       (selectionChanged)="handleFunds($event)"
@@ -12,7 +21,7 @@
       [fieldLabel]="'name'"
       [options]="dollarOptions"
       [showPrompt]="false"
-      [disabled]="false"
+      [disabled]="params.data.isDisabled"
     >
     </pfm-dropdown>
   </ng-container>
@@ -23,13 +32,7 @@
       </ng-container>
     </span>
   </div>
+  <div class="action" (click)="onSelected('delete-row')" *ngIf="data.canRemove">
+    <fa-icon [icon]="'trash-alt'" title="Delete" [class.disabled]="params.data.isDisabled"></fa-icon>
+  </div>
 </ng-template>
-<pfm-action-cell-renderer
-  [data]="data"
-  [params]="params"
-  [columnApi]="columnApi"
-  [options]="options"
-  [disabled]="disabled"
-  [extraActions]="extraActions"
->
-</pfm-action-cell-renderer>

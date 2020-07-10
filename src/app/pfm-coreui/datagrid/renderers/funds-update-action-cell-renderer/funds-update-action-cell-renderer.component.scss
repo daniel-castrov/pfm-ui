@@ -1,8 +1,29 @@
+div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .action {
   margin-left: 15px;
 }
 
+fa-icon:hover {
+  cursor: pointer;
+  color: red;
+}
+
 fa-icon {
   font-size: x-large;
-  cursor: pointer;
+  line-height: 36px;
+}
+
+.disabled,
+.icon-dropdown > button:disabled {
+  opacity: 0.6;
+}
+
+.disabled:hover {
+  color: inherit;
+  cursor: default;
 }

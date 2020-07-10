@@ -16,6 +16,7 @@ export interface IExecutionLine {
   item?: string;
   programElement?: string;
   programName?: string;
+  userCreated?: boolean;
 }
 
 export class ExecutionLine implements IExecutionLine {
@@ -64,6 +65,7 @@ export class ExecutionLine implements IExecutionLine {
     public opAgency?: string,
     public item?: string,
     public programElement?: string,
-    public programName?: string
+    public programName?: string,
+    public userCreated?: boolean
   ) {}
 }
