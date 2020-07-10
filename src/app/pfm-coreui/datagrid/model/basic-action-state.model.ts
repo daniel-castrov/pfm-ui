@@ -10,6 +10,7 @@ export const BasicActionState = Object.freeze({
     canEdit: false,
     canSave: true,
     canDelete: true,
-    isSingleDelete: true
+    isSingleDelete: true,
+    canFunds: true
   }
 });
