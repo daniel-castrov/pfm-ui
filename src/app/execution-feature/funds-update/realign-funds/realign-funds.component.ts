@@ -95,7 +95,6 @@ export class RealignFundsComponent implements OnInit {
       this.subtypes = getListItems();
       this.loadForm();
       this.cellStyle = { display: 'flex', 'align-items': 'center', 'white-space': 'normal' };
-      this.setupGrids();
       this.getAttachment();
     }
   }
@@ -105,11 +104,6 @@ export class RealignFundsComponent implements OnInit {
       subtype: new FormControl(null, [Validators.required]),
       notes: new FormControl()
     });
-  }
-
-  setupGrids(): void {
-    this.setupFromGrid();
-    this.setupToGrid();
   }
 
   setupFromGrid(): void {
@@ -137,14 +131,15 @@ export class RealignFundsComponent implements OnInit {
         }
       },
       {
-        headerName: `PB${this.executionYearTwoDigits}`,
+        headerName: 'PBxx',
+        headerValueGetter: () => 'PB' + (this.executionYear % 100),
         field: 'initial',
         editable: false,
         suppressMovable: true,
         filter: false,
         sortable: false,
         suppressMenu: true,
-        cellClass: 'justify-content-center',
+        cellClass: 'pfm-datagrid-numeric-class',
         cellStyle: this.cellStyle,
         maxWidth: 150,
         minWidth: 150,
@@ -357,11 +352,12 @@ export class RealignFundsComponent implements OnInit {
         // Get the execution
         tap((elResp: RestResponse<ExecutionLine>) => {
           this.executionService.getById(elResp.result.containerId).subscribe((exeResp: RestResponse<Execution>) => {
-            this.executionYearTwoDigits = exeResp.result.fy.toString().substr(2, 4);
+            this.executionYear = exeResp.result.fy;
             this.title =
               history.state.type === 'BTR'
                 ? `BTR Update for Execution FY${this.executionYearTwoDigits}`
                 : `Update for Execution FY${this.executionYearTwoDigits}`;
+            this.setupFromGrid();
           });
         })
       )
@@ -384,6 +380,7 @@ export class RealignFundsComponent implements OnInit {
 
   onToGridIsReady(gridApi: GridApi): void {
     this.toGridApi = gridApi;
+    this.setupToGrid();
     this.loadToRows();
   }
 

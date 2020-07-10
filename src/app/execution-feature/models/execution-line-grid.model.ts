@@ -3,7 +3,7 @@ import { ExecutionEventData } from './execution-event-data.model';
 
 export interface IExecutionLineGrid {
   id?: string;
-  phaseId: string;
+  containerId: string;
   appropriation: string;
   baOrBlin: string;
   sag: string;
@@ -19,11 +19,12 @@ export interface IExecutionLineGrid {
   action: any;
   isDisabled?: boolean;
   events?: Event<ExecutionEventData>[];
+  userCreated?: boolean;
 }
 
 export class ExecutionLineGrid implements IExecutionLineGrid {
   constructor(
-    public phaseId: string,
+    public containerId: string,
     public appropriation: string,
     public baOrBlin: string,
     public sag: string,
@@ -39,6 +40,7 @@ export class ExecutionLineGrid implements IExecutionLineGrid {
     public action: any,
     public id?: string,
     public isDisabled?: boolean,
-    public events?: Event<ExecutionEventData>[]
+    public events?: Event<ExecutionEventData>[],
+    public userCreated?: boolean
   ) {}
 }

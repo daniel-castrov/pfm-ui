@@ -10,7 +10,7 @@ import { BasicActionState } from 'src/app/pfm-coreui/datagrid/model/basic-action
 import { DataGridMessage } from 'src/app/pfm-coreui/models/DataGridMessage';
 import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
 import { DropdownCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/dropdown-cell-renderer/dropdown-cell-renderer.component';
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import { from, Observable } from 'rxjs';
 import { concatMap, map } from 'rxjs/operators';
 import { IExecutionLineGrid } from '../models/execution-line-grid.model';
@@ -36,17 +36,23 @@ export class FundsUpdateComponent implements OnInit {
   selectedYear: number;
   executions: IExecution[];
   selectedExecution: IExecution;
-  rows = [];
+  actionState = {
+    VIEW: {
+      canRemove: true,
+      isSingleDelete: true,
+      hasHistory: true,
+      canFund: false
+    }
+  };
 
+  programOptions = [];
   appnOptions = [];
   allBaBlins = [];
-  baOptions = [];
   sagOptions = [];
   wucdOptions = [];
   expTypeOptions = [];
   opAgencyOptions = [];
   programElementOptions = [];
-  actionsControl: {};
 
   executionLineGridApi: GridApi;
   executionLineRows: IExecutionLineGrid[] = [];
@@ -65,6 +71,7 @@ export class FundsUpdateComponent implements OnInit {
     private propertyService: PropertyService,
     private currencyPipe: CurrencyPipe,
     private executionEventService: ExecutionEventService,
+    private datePipe: DatePipe,
     private appModel: AppModel
   ) {}
 
@@ -87,14 +94,7 @@ export class FundsUpdateComponent implements OnInit {
         });
     });
     this.setupGrid();
-    this.actionsRoleAccess();
     this.loadMasterDetail();
-  }
-
-  actionsRoleAccess() {
-    if (this.appModel.userDetails.roles.includes(RoleConstants.FUNDS_MANAGER)) {
-      this.actionsControl = BasicActionState.VIEW;
-    }
   }
 
   private loadDropDownValues() {
@@ -117,7 +117,7 @@ export class FundsUpdateComponent implements OnInit {
       this.opAgencyOptions = res.properties.map(x => x.value).map(x => x.code);
     });
     this.propertyService.getByType(PropertyType.PROGRAM_ELEMENT).subscribe((res: any) => {
-      this.programElementOptions = res.properties.map(x => x.value).map(x => x.programElement);
+      this.programElementOptions = res.properties.map(x => x.value);
     });
     this.setupGrid();
   }
@@ -140,7 +140,13 @@ export class FundsUpdateComponent implements OnInit {
         suppressMovable: true,
         filter: false,
         sortable: false,
-        suppressMenu: true
+        suppressMenu: true,
+        cellEditorFramework: DropdownCellRendererComponent,
+        cellEditorParams: params => {
+          return {
+            values: [...this.programOptions]
+          };
+        }
       },
       {
         colId: '1',
@@ -264,7 +270,11 @@ export class FundsUpdateComponent implements OnInit {
         cellEditorFramework: DropdownCellRendererComponent,
         cellEditorParams: params => {
           return {
-            values: [...this.programElementOptions]
+            values: [
+              ...this.programElementOptions
+                .filter(x => params.data.appropriation === x.appropriation && params.data.baOrBlin === x.ba)
+                .map(x => x.programElement)
+            ]
           };
         }
       },
@@ -272,7 +282,7 @@ export class FundsUpdateComponent implements OnInit {
         headerName: 'PBxx',
         headerValueGetter: params => (this.selectedYear ? 'PB' + (this.selectedYear % 100) : 'Initial Funds'),
         field: 'pb',
-        minWidth: 55,
+        minWidth: 120,
         cellClass: 'pfm-datagrid-numeric-class',
         suppressMovable: true,
         filter: false,
@@ -338,14 +348,15 @@ export class FundsUpdateComponent implements OnInit {
       this.executionLineService.retrieveByYear(this.selectedYear).subscribe((resp: RestResponse<IExecutionLine[]>) => {
         this.selectedExecution = this.executions.find(execution => execution.fy === this.selectedYear);
         const executionLines = resp.result;
+        this.programOptions = [...new Set(executionLines.map(executionLine => executionLine.programName))];
         this.executionLineRows = [];
         let row: IExecutionLineGrid;
         from(executionLines)
           .pipe(
-            concatMap((executionLine: IExecutionLine) => {
+            concatMap((executionLine: ExecutionLine) => {
               row = {
                 id: executionLine.id,
-                phaseId: this.selectedExecution.id,
+                containerId: this.selectedExecution.id,
                 programName: executionLine.programName,
                 appropriation: executionLine.appropriation,
                 baOrBlin: executionLine.baOrBlin,
@@ -354,12 +365,17 @@ export class FundsUpdateComponent implements OnInit {
                 expenditureType: executionLine.expenditureType,
                 opAgency: executionLine.opAgency,
                 programElement: executionLine.programElement,
-                pb: 0,
-                toa: 0,
-                released: 0,
-                withhold: 0,
+                pb: executionLine.initial,
+                toa: executionLine.toa,
+                released: executionLine.released,
+                withhold: executionLine.withheld,
                 events: null,
-                action: { ...BasicActionState.VIEW, canFunds: true, hasHistory: false }
+                action: {
+                  ...this.actionState.VIEW,
+                  canFund: this.appModel.userDetails.roles.includes(RoleConstants.FUNDS_MANAGER),
+                  hasHistory: false,
+                  canRemove: !!executionLine.userCreated
+                }
               };
               return this.executionEventService.getByExecutionLineId(row.id);
             })
@@ -387,7 +403,7 @@ export class FundsUpdateComponent implements OnInit {
       return;
     }
     this.executionLineRows.push({
-      phaseId: this.selectedExecution.id,
+      containerId: this.selectedExecution.id,
       programName: null,
       appropriation: null,
       baOrBlin: null,
@@ -413,13 +429,8 @@ export class FundsUpdateComponent implements OnInit {
       case 'save':
         this.saveRow(cellAction.rowIndex);
         break;
-      case 'edit':
-        if (!this.executionLineRowDataState.isEditMode) {
-          this.editRow(cellAction.rowIndex, true);
-        }
-        break;
       case 'delete-row':
-        if (!this.executionLineRowDataState.isEditMode) {
+        if (!this.executionLineRowDataState.isAddMode) {
           this.deleteDialog.bodyText = 'Are you sure you want to delete this row?';
           this.displayDeleteDialog(cellAction, this.deleteRow.bind(this));
         }
@@ -437,89 +448,88 @@ export class FundsUpdateComponent implements OnInit {
     this.detailCellRendererParams = {
       detailGridOptions: {
         getRowHeight: params => {
-          return (params.data.value.reason ?? '').length < 90 ? 40 : (Number(params.data.notes.length / 90) + 1) * 25;
+          return (params.data.reason ?? '').length < 90 ? 40 : (Number(params.data.notes.length / 90) + 1) * 25;
         },
         columnDefs: [
           {
+            field: 'update',
+            headerName: 'Update',
             editable: false,
             suppressMovable: true,
             filter: false,
             sortable: false,
             suppressMenu: true,
-            field: 'update',
-            headerName: 'Update',
-            cellStyle: { display: 'flex', 'align-items': 'center' },
+            cellClass: 'cell-style',
             minWidth: 75,
             maxWidth: 75
           },
           {
-            editable: false,
-            suppressMovable: true,
-            filter: false,
-            sortable: false,
-            suppressMenu: true,
             field: 'updatedDate',
             headerName: 'Updated Date',
-            cellStyle: { display: 'flex', 'align-items': 'center' },
-            minWidth: 150,
-            maxWidth: 150
-          },
-          {
             editable: false,
             suppressMovable: true,
             filter: false,
             sortable: false,
             suppressMenu: true,
+            cellClass: 'cell-style',
+            minWidth: 150,
+            maxWidth: 150
+          },
+          {
             field: 'category',
             headerName: 'category',
-            cellClass: 'word-break',
-            cellStyle: { display: 'flex', 'align-items': 'center' }
-          },
-          {
             editable: false,
             suppressMovable: true,
             filter: false,
             sortable: false,
             suppressMenu: true,
+            cellClass: 'cell-style'
+          },
+          {
             field: 'type',
             headerName: 'Type',
-            cellStyle: { display: 'flex', 'align-items': 'center' },
-            minWidth: 150,
-            maxWidth: 150
-          },
-          {
             editable: false,
             suppressMovable: true,
             filter: false,
             sortable: false,
             suppressMenu: true,
+            cellClass: 'cell-style',
+            minWidth: 150,
+            maxWidth: 150
+          },
+          {
             field: 'tag',
             headerName: 'Tag',
-            cellStyle: { display: 'flex', 'align-items': 'center' },
-            minWidth: 150,
-            maxWidth: 150
-          },
-          {
             editable: false,
             suppressMovable: true,
             filter: false,
             sortable: false,
             suppressMenu: true,
+            cellClass: 'cell-style',
+            minWidth: 150,
+            maxWidth: 150
+          },
+          {
             field: 'transfer',
             headerName: 'Transfer To/From',
-            cellStyle: { display: 'flex', 'align-items': 'center' },
-            minWidth: 150,
-            maxWidth: 150
-          },
-          {
             editable: false,
             suppressMovable: true,
             filter: false,
             sortable: false,
             suppressMenu: true,
+            cellClass: 'cell-style',
+            minWidth: 150,
+            maxWidth: 150
+          },
+          {
             field: 'amount',
             headerName: 'Amount',
-            cellClass: params => ['numeric-class'],
+            editable: false,
+            suppressMovable: true,
+            filter: false,
+            sortable: false,
+            suppressMenu: true,
+            cellClass: 'pfm-datagrid-numeric-class cell-style',
             cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
             minWidth: 75,
             maxWidth: 75,
@@ -527,15 +537,14 @@ export class FundsUpdateComponent implements OnInit {
               this.currencyPipe.transform(params.data[params.colDef.field], 'USD', 'symbol', '1.2-2')
           },
           {
+            field: 'reason',
+            headerName: 'Notes',
             editable: false,
             suppressMovable: true,
             filter: false,
             sortable: false,
             suppressMenu: true,
-            field: 'notes',
-            headerName: 'Notes',
-            cellClass: params => ['numeric-class'],
-            cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
+            cellClass: 'cell-style',
             minWidth: 75,
             maxWidth: 75
           },
@@ -547,7 +556,7 @@ export class FundsUpdateComponent implements OnInit {
             suppressMenu: true,
             field: 'updatedBy',
             headerName: 'Updated By',
-            cellStyle: { display: 'flex', 'align-items': 'center' },
+            cellClass: 'cell-style',
             minWidth: 150,
             maxWidth: 150
           }
@@ -556,8 +565,24 @@ export class FundsUpdateComponent implements OnInit {
       },
       getDetailRowData: params => {
         const el: ExecutionLine = params.data;
-        const event = el.events;
-        params.successCallback(event);
+        const details = [];
+        el.events.forEach((evt: Event<ExecutionEventData>, index) => {
+          ExecutionEventData.setuptypeInstance(evt.value);
+          const detail = {
+            update: index + 1,
+            updatedDate: this.datePipe.transform(evt.value.modified, 'M/d/yyyy HH:mm', 'en-US'),
+            category: evt.value.typeInstance.getType().getType().getDescripction(),
+            type: evt.value.typeInstance.getShortname(),
+            tag: null,
+            transfer: null,
+            amount: this.currencyPipe.transform(null, 'USD', 'symbol', '1.2-2'),
+            reason: null,
+            updatedBy: null
+          };
+          details.push(detail);
+        });
+
+        params.successCallback(details);
       }
     };
   }
@@ -681,7 +706,11 @@ export class FundsUpdateComponent implements OnInit {
     this.executionLineRowDataState.isAddMode = false;
     this.executionLineGridApi.stopEditing();
 
-    this.executionLineRows[rowIndex].action = BasicActionState.VIEW;
+    this.executionLineRows[rowIndex].action = {
+      ...this.actionState.VIEW,
+      canFund: this.appModel.userDetails.roles.includes(RoleConstants.FUNDS_MANAGER),
+      canRemove: this.executionLineRows[rowIndex].userCreated
+    };
     this.executionLineRows.forEach(row => {
       row.isDisabled = false;
     });
@@ -731,7 +760,9 @@ export class FundsUpdateComponent implements OnInit {
   private validateExecutionLineRowData(rowIndex: any) {
     const row = this.executionLineRows[rowIndex];
     let errorMessage = '';
-    if (!row.appropriation || !row.appropriation?.length || row.appropriation?.toLowerCase() === 'select') {
+    if (!row.programName || !row.programName?.length || row.programName?.toLowerCase() === 'select') {
+      errorMessage = 'Please, select a Program.';
+    } else if (!row.appropriation || !row.appropriation?.length || row.appropriation?.toLowerCase() === 'select') {
       errorMessage = 'Please, select an APPN.';
     } else if (!row.baOrBlin || !row.baOrBlin?.length || row.baOrBlin?.toLowerCase() === 'select') {
       errorMessage = 'Please, select a BA/BLIN.';
@@ -745,6 +776,10 @@ export class FundsUpdateComponent implements OnInit {
       row.expenditureType?.toLowerCase() === 'select'
     ) {
       errorMessage = 'Please, select a EXP Type.';
+    } else if (!row.opAgency || !row.opAgency?.length || row.opAgency?.toLowerCase() === 'select') {
+      errorMessage = 'Please, select a Operating Agency.';
+    } else if (!row.programElement || !row.programElement?.length || row.programElement?.toLowerCase() === 'select') {
+      errorMessage = 'Please, select a Program Element.';
     }
 
     if (
@@ -755,7 +790,9 @@ export class FundsUpdateComponent implements OnInit {
           executionLine.baOrBlin === row.baOrBlin &&
           executionLine.sag === row.sag &&
           executionLine.wucd === row.wucd &&
-          executionLine.expenditureType === row.expenditureType
+          executionLine.expenditureType === row.expenditureType &&
+          executionLine.programName === row.programName &&
+          executionLine.programElement === row.programElement
         );
       })
     ) {
@@ -788,6 +825,7 @@ export class FundsUpdateComponent implements OnInit {
   setupAppnDependency() {
     const appnCell = this.executionLineGridApi.getEditingCells()[0];
     const baBlinCell = this.executionLineGridApi.getEditingCells()[1];
+    const peCell = this.executionLineGridApi.getEditingCells()[6];
 
     const appnCellEditor = this.executionLineGridApi.getCellEditorInstances({
       columns: [appnCell.column]
@@ -797,8 +835,12 @@ export class FundsUpdateComponent implements OnInit {
       columns: [baBlinCell.column]
     })[0] as any;
 
+    const peCellEditor = this.executionLineGridApi.getCellEditorInstances({
+      columns: [peCell.column]
+    })[0] as any;
+
     const appnDropdownComponent = appnCellEditor._frameworkComponentInstance as DropdownCellRendererComponent;
-    if (appnDropdownComponent) {
+    if (appnDropdownComponent && !appnDropdownComponent.change.observers.length) {
       const baBlinDropdownComponent = bablinCellEditor._frameworkComponentInstance as DropdownCellRendererComponent;
 
       appnDropdownComponent.change.subscribe(() => {
@@ -807,6 +849,23 @@ export class FundsUpdateComponent implements OnInit {
         ];
         baBlinDropdownComponent.updateList(list);
       });
+
+      if (baBlinDropdownComponent) {
+        const peDropdownComponent = peCellEditor._frameworkComponentInstance as DropdownCellRendererComponent;
+
+        baBlinDropdownComponent.change.subscribe(() => {
+          const list = [
+            ...this.programElementOptions
+              .filter(
+                x =>
+                  baBlinDropdownComponent.selectedValue === x.ba &&
+                  appnDropdownComponent.selectedValue === x.appropriation
+              )
+              .map(x => x.programElement)
+          ];
+          peDropdownComponent.updateList(list);
+        });
+      }
     }
   }
 
@@ -817,7 +876,8 @@ export class FundsUpdateComponent implements OnInit {
 
   private convertExecutionLineToExecutionLineGrid(executionLine: IExecutionLine): IExecutionLineGrid {
     const {
-      containerId: phaseId,
+      id,
+      containerId,
       programName,
       appropriation,
       baOrBlin,
@@ -825,10 +885,12 @@ export class FundsUpdateComponent implements OnInit {
       wucd,
       expenditureType,
       opAgency,
-      programElement
+      programElement,
+      userCreated
     } = executionLine;
     const converted: IExecutionLineGrid = {
-      phaseId,
+      id,
+      containerId,
       programName,
       appropriation,
       baOrBlin,
@@ -841,7 +903,12 @@ export class FundsUpdateComponent implements OnInit {
       toa: 0,
       released: 0,
       withhold: 0,
-      action: { ...BasicActionState.VIEW, canFunds: true }
+      userCreated,
+      action: {
+        ...this.actionState.VIEW,
+        canFund: this.appModel.userDetails.roles.includes(RoleConstants.FUNDS_MANAGER),
+        canRemove: userCreated
+      }
     };
     return converted;
   }
