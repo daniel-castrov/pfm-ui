@@ -564,7 +564,7 @@ export class FundsUpdateComponent implements OnInit {
         defaultColDef: { flex: 1 }
       },
       getDetailRowData: params => {
-        const events: Event<ExecutionEventData>[] = params.data.events ?? [];
+        const events: Event<ExecutionEventData>[] = params.data.events;
         const details = [];
         events.forEach((evt: Event<ExecutionEventData>, index) => {
           ExecutionEventData.setuptypeInstance(evt.value);
