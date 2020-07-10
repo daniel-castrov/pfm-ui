@@ -13,14 +13,13 @@ import { DropdownCellRendererComponent } from 'src/app/pfm-coreui/datagrid/rende
 import { CurrencyPipe } from '@angular/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { IExecutionLineGrid, ExecutionLineGrid } from '../models/execution-line-grid.model';
+import { IExecutionLineGrid } from '../models/execution-line-grid.model';
 import { PropertyService } from 'src/app/programming-feature/services/property.service';
 import { PropertyType } from 'src/app/programming-feature/models/enumerations/property-type.model';
 import { IExecution } from '../models/execution.model';
 import { FundsUpdateActionCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/funds-update-action-cell-renderer/funds-update-action-cell-renderer.component';
 import { AppModel } from 'src/app/pfm-common-models/AppModel';
 import { RoleConstants } from 'src/app/pfm-common-models/role-contants.model';
-import { ActionCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/action-cell-renderer/action-cell-renderer.component';
 
 @Component({
   selector: 'app-funds-update',
@@ -79,6 +78,7 @@ export class FundsUpdateComponent implements OnInit {
           } as ListItem;
         });
     });
+    this.setupGrid();
     this.actionsRoleAccess();
   }
 
@@ -122,7 +122,7 @@ export class FundsUpdateComponent implements OnInit {
         checkboxSelection: true
       },
       {
-        //colId: '0',
+        colId: '0',
         headerName: 'Program',
         field: 'programName',
         editable: true,
@@ -134,7 +134,7 @@ export class FundsUpdateComponent implements OnInit {
         suppressMenu: true
       },
       {
-        //colId: '1',
+        colId: '1',
         headerName: 'APPN',
         field: 'appropriation',
         editable: true,
@@ -152,7 +152,7 @@ export class FundsUpdateComponent implements OnInit {
         }
       },
       {
-        //colId: '2',
+        colId: '2',
         headerName: 'BA/BLIN',
         field: 'baOrBlin',
         editable: true,
@@ -170,7 +170,7 @@ export class FundsUpdateComponent implements OnInit {
         }
       },
       {
-        //colId: '3',
+        colId: '3',
         headerName: 'SAG',
         field: 'sag',
         editable: true,
@@ -188,7 +188,7 @@ export class FundsUpdateComponent implements OnInit {
         }
       },
       {
-        //colId: '4',
+        colId: '4',
         headerName: 'WUCD',
         field: 'wucd',
         editable: true,
@@ -206,7 +206,7 @@ export class FundsUpdateComponent implements OnInit {
         }
       },
       {
-        //colId: '5',
+        colId: '5',
         headerName: 'EXP Type',
         field: 'expenditureType',
         editable: true,
@@ -224,7 +224,7 @@ export class FundsUpdateComponent implements OnInit {
         }
       },
       {
-        //colId: '6',
+        colId: '6',
         headerName: 'OA',
         field: 'opAgency',
         editable: true,
@@ -242,7 +242,7 @@ export class FundsUpdateComponent implements OnInit {
         }
       },
       {
-        //colId: '7',
+        colId: '7',
         headerName: 'PE',
         field: 'programElement',
         editable: true,
@@ -312,7 +312,7 @@ export class FundsUpdateComponent implements OnInit {
         headerName: 'Actions',
         field: 'action',
         minWidth: 70,
-        cellRendererFramework: ActionCellRendererComponent,
+        cellRendererFramework: FundsUpdateActionCellRendererComponent,
         cellClass: 'text-class',
         suppressMovable: true,
         filter: false,
@@ -344,11 +344,11 @@ export class FundsUpdateComponent implements OnInit {
             toa: 0,
             released: 0,
             withhold: 0,
-            action: this.actionsControl
+            action: { ...BasicActionState.VIEW, canFunds: true }
           };
           this.executionLineRows.push(row);
         });
-        this.setupGrid();
+        this.executionLineGridApi.refreshHeader();
       });
     }
   }
@@ -654,7 +654,7 @@ export class FundsUpdateComponent implements OnInit {
       toa: 0,
       released: 0,
       withhold: 0,
-      action: this.actionsControl
+      action: { ...BasicActionState.VIEW, canFunds: true }
     };
     return converted;
   }
