@@ -353,6 +353,7 @@ export class FundsUpdateComponent implements OnInit {
         this.executionLineRows = [];
         let row: IExecutionLineGrid;
 
+        const eventsMap = new Map();
         this.executionEventService
           .getByContainer(this.selectedExecution.id, ...Object.keys(EventEnum).filter(e => e.startsWith('EXE_')))
           .pipe(
@@ -398,19 +399,31 @@ export class FundsUpdateComponent implements OnInit {
     }
   }
 
-  private setUpEvents(events: Event<ExecutionEventData>[], exeLine: IExecutionLine[]): void {
+  private setUpEvents(events: Event<ExecutionEventData>[], exeLines: IExecutionLine[]): void {
+    const eventsMap = new Map();
     if (events) {
-      exeLine.forEach(el => {
-        events = events.filter(evt => {
-          if (el.id === evt.value.fromId || evt.value.toIdAmtLkp.hasOwnProperty(el.id)) {
-            el.events = el.events ?? [];
-            el.events.push(evt);
-            return false;
-          }
-          return true;
-        });
+      events.forEach(evt => {
+        if (eventsMap.has(evt.value.fromId)) {
+          const savedEvents = eventsMap.get(evt.value.fromId);
+          savedEvents.push(evt);
+          eventsMap.set(evt.value.fromId, savedEvents);
+        } else {
+          eventsMap.set(evt.value.fromId, [evt]);
+        }
+        if (evt.value.toIdAmtLkp) {
+          Object.keys(evt.value.toIdAmtLkp).forEach(exeLineId => {
+            if (eventsMap.has(exeLineId)) {
+              const savedEvents = eventsMap.get(exeLineId);
+              savedEvents.push(evt);
+              eventsMap.set(exeLineId, savedEvents);
+            } else {
+              eventsMap.set(exeLineId, [evt]);
+            }
+          });
+        }
       });
     }
+    exeLines.forEach(el => (el.events = eventsMap.get(el.id)));
   }
 
   onExecutionLineGridIsReady(event: GridApi) {
