@@ -12,7 +12,7 @@ import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
 import { DropdownCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/dropdown-cell-renderer/dropdown-cell-renderer.component';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { from, Observable } from 'rxjs';
-import { concatMap, map } from 'rxjs/operators';
+import { concatMap, map, switchMap, finalize } from 'rxjs/operators';
 import { IExecutionLineGrid } from '../models/execution-line-grid.model';
 import { PropertyService } from 'src/app/programming-feature/services/property.service';
 import { PropertyType } from 'src/app/programming-feature/models/enumerations/property-type.model';
@@ -23,6 +23,7 @@ import { RoleConstants } from 'src/app/pfm-common-models/role-contants.model';
 import { ExecutionEventService } from '../services/execution-event.service';
 import { Event } from 'src/app/pfm-coreui/models/event.model';
 import { ExecutionEventData } from '../models/execution-event-data.model';
+import { EventEnum } from 'src/app/pfm-coreui/models/event-enum.model';
 
 @Component({
   selector: 'app-funds-update',
@@ -351,9 +352,18 @@ export class FundsUpdateComponent implements OnInit {
         this.programOptions = [...new Set(executionLines.map(executionLine => executionLine.programName))];
         this.executionLineRows = [];
         let row: IExecutionLineGrid;
-        from(executionLines)
+
+        this.executionEventService
+          .getByContainer(this.selectedExecution.id, ...Object.keys(EventEnum).filter(e => e.startsWith('EXE_')))
           .pipe(
-            concatMap((executionLine: ExecutionLine) => {
+            map((evtResp: RestResponse<Event<ExecutionEventData>[]>) => {
+              this.setUpEvents(evtResp.result, executionLines);
+              return executionLines;
+            }),
+            finalize(() => (this.busy = false))
+          )
+          .subscribe((exeLines: IExecutionLine[]) => {
+            executionLines.forEach(executionLine => {
               row = {
                 id: executionLine.id,
                 containerId: this.selectedExecution.id,
@@ -366,10 +376,10 @@ export class FundsUpdateComponent implements OnInit {
                 opAgency: executionLine.opAgency,
                 programElement: executionLine.programElement,
                 pb: executionLine.initial,
-                toa: executionLine.toa,
-                released: executionLine.released,
-                withhold: executionLine.withheld,
-                events: null,
+                toa: null,
+                released: null,
+                withhold: null,
+                events: executionLine.events,
                 action: {
                   ...this.actionState.VIEW,
                   canFund: this.appModel.userDetails.roles.includes(RoleConstants.FUNDS_MANAGER),
@@ -377,19 +387,28 @@ export class FundsUpdateComponent implements OnInit {
                   canRemove: !!executionLine.userCreated
                 }
               };
-              return this.executionEventService.getByExecutionLineId(row.id);
-            })
-          )
-          .subscribe((respEvent: RestResponse<Event<ExecutionEventData>[]>) => {
-            row.events = respEvent.result;
-            row.action.hasHistory = Boolean(row.events);
-            this.executionLineRows.push(row);
-          })
-          .add(() => {
-            this.busy = false;
+              row.action.hasHistory = Boolean(row.events);
+              this.executionLineRows.push(row);
+            });
+
             this.executionLineGridApi.refreshHeader();
             this.executionLineGridApi.setRowData(this.executionLineRows);
           });
+      });
+    }
+  }
+
+  private setUpEvents(events: Event<ExecutionEventData>[], exeLine: IExecutionLine[]): void {
+    if (events) {
+      exeLine.forEach(el => {
+        events = events.filter(evt => {
+          if (el.id === evt.value.fromId || evt.value.toIdAmtLkp.hasOwnProperty(el.id)) {
+            el.events = el.events ?? [];
+            el.events.push(evt);
+            return false;
+          }
+          return true;
+        });
       });
     }
   }
