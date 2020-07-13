@@ -1,0 +1,64 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+}
+
+.main {
+  display: flex;
+  border: 2px solid #ccc;
+}
+
+.section-banner {
+  display: flex;
+  width: 100%;
+  height: 15%;
+}
+
+.subtitle {
+  background: #ccc;
+}
+
+select {
+  width: 600px;
+}
+
+form {
+  width: 100%;
+}
+
+input {
+  width: 600px;
+}
+
+textarea {
+  width: 100%;
+}
+
+option {
+  background-color: #bbced7;
+}
+
+.swap-icon {
+  cursor: pointer;
+  font-size: x-large;
+}
+
+.row {
+  padding-bottom: 2px;
+}
+
+.attachment-container > select {
+  margin-top: -8px;
+}
+
+.attachment-container span > i::before {
+  cursor: pointer;
+  font-size: x-large;
+}
+
+.separator {
+  border: 1px solid #ccc;
+  background: #ccc;
+}

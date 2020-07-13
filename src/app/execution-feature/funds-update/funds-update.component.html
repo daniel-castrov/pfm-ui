@@ -1,0 +1,95 @@
+<div class="main">
+  <h3 class="w-50">Funds Update</h3>
+  <div class="w-50 text-right"></div>
+</div>
+<br />
+<div style="padding-left: 15px;">
+  <pfm-dropdown
+    *ngIf="years"
+    (selectionChanged)="onYearChange($event)"
+    [type]="'labelDropdown'"
+    [label]="'For:'"
+    [required]="true"
+    [fieldName]="'value'"
+    [fieldLabel]="'name'"
+    [options]="years"
+  ></pfm-dropdown>
+  <br />
+
+  <div *ngIf="selectedYear">
+    <div class="bulk-action">
+      <p>Apply action to selected rows</p>
+      <div>
+        <pfm-dropdown
+          [type]="'labelDropdown'"
+          [required]="true"
+          [fieldName]="'value'"
+          [fieldLabel]="'name'"
+          class="action-dropdown"
+        ></pfm-dropdown>
+      </div>
+    </div>
+
+    <div class="grid-container">
+      <pfm-datagrid
+        [extras]="expandCollapse"
+        (gridIsReady)="onExecutionLineGridIsReady($event)"
+        (cellAction)="onExecutionLineCellAction($event)"
+        [columns]="columnDefs"
+        [rows]="executionLineRows"
+        [showAddSingleRow]="true"
+        [showPagination]="true"
+        [isMasterDetail]="true"
+        [detailCellRendererParams]="detailCellRendererParams"
+        (addCtaEvent)="onExecutionLineRowAdd($event)"
+        (mousedown)="onExecutionLineGridMouseDown($event)"
+        [overlayNoRowsTemplate]="' '"
+        [addRowTooltip]="'Add Execution Line'"
+      >
+      </pfm-datagrid>
+    </div>
+  </div>
+</div>
+<pfm-busy [busy]="busy"></pfm-busy>
+
+<ng-template #expandCollapse>
+  <div id="extras">
+    <fa-icon
+      [icon]="'angle-double-down'"
+      [classes]="['large-with-padding']"
+      title="Expand all rows"
+      *ngIf="!expanded"
+      (click)="expand()"
+    ></fa-icon>
+    <fa-icon
+      [icon]="'angle-double-up'"
+      [classes]="['large-with-padding']"
+      title="Collapse all rows"
+      *ngIf="expanded"
+      (click)="collapse()"
+    ></fa-icon>
+  </div>
+</ng-template>
+
+<ng-container *ngIf="deleteDialog.display">
+  <pfm-custom-dialog
+    [title]="deleteDialog.title"
+    [body]="deleteBody"
+    [actions]="deleteActions"
+    (onCancelDialog)="onCancelDeleteDialog()"
+  ></pfm-custom-dialog>
+
+  <ng-template #deleteBody>
+    <span>{{ deleteDialog.bodyText }}</span>
+  </ng-template>
+
+  <ng-template #deleteActions>
+    <div class="pull-left">
+      <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onDeleteData()">Delete</button>
+    </div>
+
+    <div class="pull-right">
+      <pfm-cancel-cta (onCancelClicked)="onCancelDeleteDialog()"></pfm-cancel-cta>
+    </div>
+  </ng-template>
+</ng-container>

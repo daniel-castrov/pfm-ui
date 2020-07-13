@@ -9,6 +9,8 @@ export class Workspace {
   modified?: any;
   modifiedBy?: any;
   createdBy?: any;
+
+  action?: any;
   selectedFinal?: boolean;
   constructor() {}
 }

@@ -10,14 +10,29 @@
       <span>Specify location of document:</span>
       <div class="mybox">
         <ng-container *ngIf="isFileSelected()">
-          <input type="text" value="{{ uploader.queue[0].file.name }}" disabled />
+          <input type="text" *ngIf="uploadToServer" value="{{ uploader.queue[0].file.name }}" disabled />
           <label for="file">Browse</label>
-          <input id="file" class="fileupload-input-hidden" type="file" ng2FileSelect [uploader]="uploader" /><br />
+          <input
+            id="file"
+            class="fileupload-input-hidden"
+            type="file"
+            [accept]="accept"
+            ng2FileSelect
+            [uploader]="uploader"
+          /><br />
         </ng-container>
         <ng-container *ngIf="!isFileSelected()">
-          <input type="text" disabled />
+          <input type="text" disabled *ngIf="uploadToServer" />
+          <input type="text" *ngIf="!uploadToServer" [value]="fileMetaData?.name" disabled />
           <label for="file">Browse</label>
-          <input id="file" class="fileupload-input-hidden" type="file" ng2FileSelect [uploader]="uploader" /><br />
+          <input
+            id="file"
+            class="fileupload-input-hidden"
+            type="file"
+            [accept]="accept"
+            ng2FileSelect
+            [uploader]="uploader"
+          /><br />
         </ng-container>
       </div>
     </div>
@@ -27,11 +42,22 @@
 <ng-template #actionsPart>
   <div class="action-buttons">
     <button
+      *ngIf="uploadToServer"
       type="button"
       class="btn btn-secondary"
       data-dismiss="modal"
       (click)="uploadFile()"
       [disabled]="!uploader.getNotUploadedItems().length"
+    >
+      Upload
+    </button>
+    <button
+      *ngIf="!uploadToServer"
+      type="button"
+      class="btn btn-secondary"
+      data-dismiss="modal"
+      (click)="onFinishUpload()"
+      [disabled]="!fileMetaData?.file?.size"
     >
       Upload
     </button>

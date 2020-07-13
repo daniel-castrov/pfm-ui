@@ -52,6 +52,8 @@ import { PrsActionCellRendererComponent } from './datagrid/renderers/prs-action-
 import { FundingLineActionCellRendererComponent } from './datagrid/renderers/funding-line-action-cell-renderer/funding-line-action-cell-renderer.component';
 import { UfrActionCellRendererComponent } from './datagrid/renderers/ufr-action-cell-renderer/ufr-action-cell-renderer.component';
 import { WkspSelectionRendererComponent } from './datagrid/renderers/wksp-selection-renderer/wksp-selection-renderer.component';
+import { HasVisibilityDirective } from './directives/has-visibility.directive';
+import { FundsUpdateActionCellRendererComponent } from './datagrid/renderers/funds-update-action-cell-renderer/funds-update-action-cell-renderer.component';
 
 @NgModule({
   declarations: [
@@ -85,6 +87,7 @@ import { WkspSelectionRendererComponent } from './datagrid/renderers/wksp-select
     DatePickerCellRendererComponent,
     DropdownCellRendererComponent,
     IsVisibleDirective,
+    HasVisibilityDirective,
     ToggleInputComponent,
     MpActionCellRendererComponent,
     AgGridPaginationComponent,
@@ -97,7 +100,8 @@ import { WkspSelectionRendererComponent } from './datagrid/renderers/wksp-select
     PrsActionCellRendererComponent,
     FundingLineActionCellRendererComponent,
     UfrActionCellRendererComponent,
-    WkspSelectionRendererComponent
+    WkspSelectionRendererComponent,
+    FundsUpdateActionCellRendererComponent
   ],
   imports: [
     ToastModule,
@@ -155,6 +159,7 @@ import { WkspSelectionRendererComponent } from './datagrid/renderers/wksp-select
     DatePickerCellRendererComponent,
     DropdownCellRendererComponent,
     IsVisibleDirective,
+    HasVisibilityDirective,
     ToggleInputComponent,
     MpActionCellRendererComponent,
     MprActionCellRendererComponent,

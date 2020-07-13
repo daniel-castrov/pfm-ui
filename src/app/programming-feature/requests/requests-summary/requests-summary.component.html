@@ -4,7 +4,11 @@
       <h3 class="w-100">POM{{ pomDisplayYear }} {{ workspaces ? 'Workspace ' : '' }}Program Request Summary</h3>
     </div>
     <div
-      *ngIf="appModel.visibilityDef && appModel.visibilityDef['requests-summary-component']"
+      *ngIf="
+        appModel.visibilityDef &&
+        appModel.visibilityDef['requests-summary-component'] &&
+        programmingModel.pom.status !== 'LOCKED'
+      "
       class="button-container"
     >
       <div *pfmIsVisible="'requests-summary-component.returnOrganization'" class="div-button-return">
@@ -43,7 +47,10 @@
       [options]="workspaces"
       class="d-inline-block"
     ></pfm-dropdown>
-    <span *ngIf="selectedWorkspace" class="ml-3">
+    <span *ngIf="selectedWorkspace && selectedWorkspace.selectedFinal" class="ml-3 text-danger">
+      Final workspace
+    </span>
+    <span *ngIf="selectedWorkspace && !selectedWorkspace.selectedFinal" class="ml-3">
       Last updated on {{ selectedWorkspace.modified | date: 'M/d/yyyy HH:mm':undefined:'en-US' }}
     </span>
   </div>
@@ -63,7 +70,7 @@
     </pfm-dropdown>
   </div>
 </div>
-<div class="state" *ngIf="programmingModelReady">POM is {{programmingModel.pom.status}}</div>
+<div class="state" *ngIf="programmingModelReady">POM is {{ programmingModel.pom.status }}</div>
 <div *ngIf="programmingModelReady" class="section-pods">
   <gridster [options]="options">
     <gridster-item #orgWidetItem [item]="dashboard[0]">
@@ -102,6 +109,7 @@
       (gridDataChange)="onGridDataChange($event)"
       [dropdownOptions]="addOptions"
       [pomYear]="pomYear"
+      [workspaces]="workspaces"
     ></pfm-requests-summary-grid>
   </div>
 </div>

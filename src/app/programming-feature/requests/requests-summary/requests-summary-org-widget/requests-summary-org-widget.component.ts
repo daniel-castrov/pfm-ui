@@ -173,7 +173,7 @@ export class RequestsSummaryOrgWidgetComponent implements OnInit {
     options.generateTooltip = (row, value, size) => {
       return (
         '<div style="background:#fd9; padding:10px; border-style:solid">' +
-        `${FormatterUtil.formatCurrency(value)}</div>`
+        `${FormatterUtil.formatCurrency(value / 1000)}</div>`
       );
     };
     this.treeMapChart.options = options;

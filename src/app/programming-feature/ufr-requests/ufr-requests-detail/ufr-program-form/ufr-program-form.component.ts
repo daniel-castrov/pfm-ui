@@ -16,6 +16,8 @@ import { of, iif } from 'rxjs';
 import { ProgrammingService } from 'src/app/programming-feature/services/programming-service';
 import { Program } from 'src/app/programming-feature/models/Program';
 import { MrdbService } from 'src/app/programming-feature/services/mrdb-service';
+import { RestResponse } from 'src/app/util/rest-response';
+import { UFRStatus } from '../../../models/enumerations/ufr-status.model';
 
 @Component({
   selector: 'pfm-ufr-program-form',
@@ -196,10 +198,10 @@ export class UfrProgramFormComponent implements OnInit {
           }
           return of(undefined);
         }),
-        switchMap(missionPriorities => {
-          if (missionPriorities?.length) {
+        switchMap((resp: RestResponse<MissionPriority[]>) => {
+          if (resp) {
             this.showMissionPriority = true;
-            this.missionPriorities = missionPriorities.result;
+            this.missionPriorities = resp.result;
           }
           return this.tagService.getByType(this.DIVISIONS);
         }),
@@ -330,9 +332,9 @@ export class UfrProgramFormComponent implements OnInit {
   }
 
   changeEditMode(editMode: boolean) {
-    this.editMode = editMode;
+    this.editMode = editMode && this.ufr.ufrStatus === UFRStatus.SAVED;
 
-    if (this.addMode && editMode) {
+    if (this.addMode && editMode && this.ufr.ufrStatus === UFRStatus.SAVED) {
       this.form.get('longName').enable();
       if (this.ufr.shortyType === ShortyType.NEW_PROGRAM) {
         this.form.get('organizationId').disable();

@@ -1,0 +1,38 @@
+<pfm-action-cell-renderer
+  [data]="data"
+  [params]="params"
+  [columnApi]="columnApi"
+  [options]="options"
+  [disabled]="disabled"
+  [extraActions]="extraActions"
+>
+</pfm-action-cell-renderer>
+<ng-template #extraActions>
+  <ng-container *ngIf="data.canFund">
+    <pfm-dropdown
+      class="action"
+      (selectionChanged)="handleFunds($event)"
+      [type]="'iconDropdown'"
+      [iconName]="'dollar-sign'"
+      [label]="'Funds'"
+      [title]="'Realign Funds'"
+      [required]="true"
+      [fieldName]="'name'"
+      [fieldLabel]="'name'"
+      [options]="dollarOptions"
+      [showPrompt]="false"
+      [disabled]="params.data.isDisabled"
+    >
+    </pfm-dropdown>
+  </ng-container>
+  <div class="action" (click)="onSelected('history-grid')">
+    <span title="View History Grid">
+      <ng-container *ngIf="data.hasHistory">
+        <fa-icon icon="history" [class.disabled]="params.data.isDisabled"></fa-icon>
+      </ng-container>
+    </span>
+  </div>
+  <div class="action" (click)="onSelected('delete-row')" *ngIf="data.canRemove">
+    <fa-icon [icon]="'trash-alt'" title="Delete" [class.disabled]="params.data.isDisabled"></fa-icon>
+  </div>
+</ng-template>

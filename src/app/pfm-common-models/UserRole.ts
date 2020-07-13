@@ -5,6 +5,7 @@ export class UserRole {
   isBudgetManager: boolean;
   isPOMManager: boolean;
   isFundsRequestor: boolean;
+  isFundsManager: boolean;
   isProgramManager: boolean;
   isExecutionManager: boolean;
   isExecutionReporter: boolean;
@@ -24,6 +25,9 @@ export class UserRole {
     }
     if (roles.includes(RoleConstants.FUNDS_REQUESTOR)) {
       this.isFundsRequestor = true;
+    }
+    if (roles.includes(RoleConstants.FUNDS_MANAGER)) {
+      this.isFundsManager = true;
     }
     if (roles.includes(RoleConstants.PROGRAM_MANAGER)) {
       this.isProgramManager = true;

@@ -25,6 +25,7 @@ import { Workspace } from 'src/app/programming-feature/models/workspace';
 import { Program } from 'src/app/programming-feature/models/Program';
 import { ShortyType } from 'src/app/programming-feature/models/enumerations/shorty-type.model';
 import { FundingLineType } from 'src/app/programming-feature/models/enumerations/funding-line-type.model';
+import { UFRStatus } from '../../../models/enumerations/ufr-status.model';
 
 @Component({
   selector: 'pfm-ufr-funds',
@@ -435,12 +436,12 @@ export class UfrFundsComponent implements OnInit {
         }
         break;
       case 'cancel':
-        this.performNonSummaryCancel(cellAction.rowIndex);
+        this.performCancel(cellAction.rowIndex);
         break;
     }
   }
 
-  private performNonSummaryCancel(rowIndex: number) {
+  private performCancel(rowIndex: number) {
     if (this.proposedFundingLineRowDataState.isEditMode && !this.proposedFundingLineRowDataState.isAddMode) {
       this.cancelRow(rowIndex);
     } else {
@@ -1576,14 +1577,14 @@ export class UfrFundsComponent implements OnInit {
   }
 
   changeEditMode(editMode: boolean) {
-    this.editMode = editMode;
+    this.editMode = editMode && this.ufr.ufrStatus === UFRStatus.SAVED;
     this.actionState.EDIT.editMode = editMode;
     this.actionState.VIEW.editMode = editMode;
     this.actionState.VIEW_NO_DELETE.editMode = editMode;
 
     if (this.proposedFundingLineGridApi) {
       this.proposedFundingLineRows.forEach((row, index) => {
-        row.action.editMode = editMode;
+        row.action.editMode = editMode && this.ufr.ufrStatus === UFRStatus.SAVED;
       });
       this.proposedFundingLineGridApi.setRowData(this.proposedFundingLineRows);
     }

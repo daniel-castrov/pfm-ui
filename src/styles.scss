@@ -651,6 +651,31 @@ gridster .gridster-row {
   }
 }
 
+// ag-Grid header checkbox design
+.ag-header-select-all {
+  display: inline-block;
+  padding-right: 2px;
+}
+
+// ag-Grid field checkbox design
+.ag-checkbox-input-wrapper {
+  font-size: 16px;
+  line-height: 16px;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  width: 16px;
+  height: 16px;
+  background-color: var(--ag-checkbox-background-color, var(--ag-background-color, #fff));
+  border-radius: 3px;
+  display: inline-block;
+  vertical-align: middle;
+  flex: none;
+}
+
 .ag-theme-balham {
   width: 100%;
 }
@@ -1139,4 +1164,9 @@ body .ui-spinner-input.ui-widget {
 
 .d-contents {
   display: contents;
+}
+
+.cell-style {
+  display: flex;
+  align-items: center;
 }

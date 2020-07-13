@@ -17,8 +17,8 @@ import { MrdbService } from '../../services/mrdb-service';
 import { PomStatus } from '../../models/enumerations/pom-status.model';
 import { UfrService } from '../../services/ufr-service';
 import { AppModel } from 'src/app/pfm-common-models/AppModel';
-import { catchError, switchMap } from 'rxjs/operators';
-import { of, throwError } from 'rxjs';
+import { catchError, switchMap, finalize } from 'rxjs/operators';
+import { of, throwError, forkJoin } from 'rxjs';
 import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
 import { Router } from '@angular/router';
 import { formatDate } from '@angular/common';
@@ -33,6 +33,7 @@ import { FundingLine } from '../../models/funding-line.model';
 import { FormatterUtil } from 'src/app/util/formatterUtil';
 import { Workspace } from '../../models/workspace';
 import { RestResponse } from 'src/app/util/rest-response';
+import { LocalVisibilityService } from 'src/app/core/local-visibility.service';
 
 @Component({
   selector: 'pfm-ufr-requests-summary',
@@ -63,6 +64,8 @@ export class UfrRequestsSummaryComponent implements OnInit {
   selectedShortyType: ShortyType;
   deleteDialog: DeleteDialogInterface = { title: 'Delete' };
   canEdit: boolean;
+  canReview: boolean;
+  canAddToGrid: boolean;
 
   constructor(
     private pomService: PomService,
@@ -76,7 +79,8 @@ export class UfrRequestsSummaryComponent implements OnInit {
     private toastService: ToastService,
     private router: Router,
     private requestSummaryNavigationHistoryService: RequestSummaryNavigationHistoryService,
-    private visibilityService: VisibilityService
+    private visibilityService: VisibilityService,
+    private localVisibilityService: LocalVisibilityService
   ) {}
 
   ngOnInit() {
@@ -91,31 +95,29 @@ export class UfrRequestsSummaryComponent implements OnInit {
     this.setupOrgDropDown();
     this.setupForms();
 
-    this.setupVisibility()
-      .pipe(
-        switchMap(resp => {
-          this.appModel['visibilityDef']['ufr-requests-summary-component'] = (resp as any).result;
-          return this.pomService.getPomYearsByStatus(['CREATED', 'OPEN', 'LOCKED', 'CLOSED']);
-        }),
-        switchMap(resp => {
-          const poms = (resp as any).result as Pom[];
-          this.poms = ListItemHelper.generateListItemFromArray(poms.map(pom => ['POM ' + pom.fy, pom.id]));
-          return this.pomService.getLatestPom();
-        })
-      )
-      .subscribe(resp => {
-        this.pom = (resp as any).result as Pom;
-        this.showGridAddCta =
-          (this.pom.status === PomStatus.CREATED || this.pom.status === PomStatus.OPEN) &&
-          this.appModel['visibilityDef']['ufr-requests-summary-component']?.gridAdd;
-        this.loadPreviousContainerSelection();
-      });
+    forkJoin({
+      visibility: this.setupVisibility(),
+      poms: this.pomService.getPomYearsByStatus(['CREATED', 'OPEN', 'LOCKED', 'CLOSED'])
+    }).subscribe((resp: SetupInterface) => {
+      this.localVisibilityService.updateVisibilityDef({ 'ufr-requests-summary-component': resp.visibility.result });
+      this.canReview = resp.visibility.result?.canReview;
+      this.canAddToGrid = resp.visibility.result?.gridAdd;
+      const poms = resp.poms.result;
+      this.poms = ListItemHelper.generateListItemFromArray(poms.map(pom => ['POM ' + pom.fy, pom.id]));
+      this.loadPreviousContainerSelection();
+    });
+
     this.infoIconMessage =
       'Only those programs that are not assigned to the Funds Requestor appear in the dropdown list.';
   }
 
+  private hasShowGridAddCta() {
+    this.showGridAddCta =
+      (this.pom.status === PomStatus.CREATED || this.pom.status === PomStatus.OPEN) && this.canAddToGrid;
+  }
+
   setupVisibility() {
-    return this.visibilityService.isCurrentlyVisible('ufr-requests-summary-component');
+    return this.visibilityService.isVisible('ufr-requests-summary-component');
   }
 
   private setupGrid() {
@@ -206,7 +208,11 @@ export class UfrRequestsSummaryComponent implements OnInit {
         cellClass: 'numeric-class justify-content-center',
         cellStyle,
         maxWidth: 150,
-        minWidth: 150
+        minWidth: 150,
+        valueGetter: ({ node }) => {
+          const ufr: UFR = node.data;
+          return ufr.missionPriorityId ? ufr.agencyPriority : null;
+        }
       },
       {
         headerName: 'Status',
@@ -599,7 +605,14 @@ export class UfrRequestsSummaryComponent implements OnInit {
               organizationId: validateProgram.organizationId,
               containerId: this.selectedPom.value,
               shortyType: this.selectedShortyType,
-              type: ProgramType.PROGRAM
+              type: ProgramType.PROGRAM,
+              divisionId: validateProgram.divisionId,
+              missionPriorityId: validateProgram.missionPriorityId,
+              agencyPriority: validateProgram.agencyPriority,
+              directoratePriority: validateProgram.directoratePriority,
+              secDefLOEId: validateProgram.secDefLOEId,
+              strategicImperativeId: validateProgram.strategicImperativeId,
+              agencyObjectiveId: validateProgram.agencyObjectiveId
             } as UFR;
             if (this.selectedShortyType === ShortyType.PR) {
               ufr.proposedFundingLines = [];
@@ -621,7 +634,8 @@ export class UfrRequestsSummaryComponent implements OnInit {
               });
             }
             return this.ufrService.create(ufr);
-          })
+          }),
+          finalize(() => (this.busy = false))
         )
         .subscribe(
           resp => {
@@ -641,8 +655,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
           error => {
             this.toastService.displayError('An error has occurred while attempting to save UFR.');
           }
-        )
-        .add(() => (this.busy = false));
+        );
     } else {
       this.showValidationErrors = true;
     }
@@ -768,18 +781,29 @@ export class UfrRequestsSummaryComponent implements OnInit {
     this.requestSummaryNavigationHistoryService.updateRequestSummaryNavigationHistory({
       selectedContainer: this.selectedPom.value
     });
-    this.ufrService.getByContainerId(this.selectedPom.value).subscribe(resp => {
-      const ufrs = resp.result as UFR[];
-      ufrs?.forEach(ufr => {
-        ufr.shortyTypeDescription = getShortyTypeDescription(ufr.shortyType);
-        ufr.ufrStatusDescription = getUFRStatusDescription(ufr.ufrStatus);
-        if (ufr.disposition) {
-          ufr.dispositionDescription = getDispositionDescription(ufr.disposition);
-        }
-        ufr.action = this.getActionState(ufr);
+    this.busy = true;
+    this.pomService
+      .getPomById(this.selectedPom.value)
+      .pipe(
+        switchMap((resp: RestResponse<Pom>) => {
+          this.pom = resp.result;
+          this.hasShowGridAddCta();
+          return this.ufrService.getByContainerId(this.selectedPom.value);
+        }),
+        finalize(() => (this.busy = false))
+      )
+      .subscribe((resp: RestResponse<UFR[]>) => {
+        const ufrs = resp.result;
+        ufrs?.forEach(ufr => {
+          ufr.shortyTypeDescription = getShortyTypeDescription(ufr.shortyType);
+          ufr.ufrStatusDescription = getUFRStatusDescription(ufr.ufrStatus);
+          if (ufr.disposition) {
+            ufr.dispositionDescription = getDispositionDescription(ufr.disposition);
+          }
+          ufr.action = this.getActionState(ufr);
+        });
+        this.rows = ufrs;
       });
-      this.rows = ufrs;
-    });
   }
 
   onParentProgramChanged(event: any) {
@@ -843,7 +867,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
     if (ufr.shortyType === ShortyType.PR) {
       this.workspaceService.getByProgramShortName(ufr.shortName).subscribe((resp: RestResponse<Workspace[]>) => {
         const workspaces: Workspace[] = resp.result ?? [];
-        const isAnyWorkspaceActive = workspaces.findIndex(ws => ws.active) >= 0;
+        const isAnyWorkspaceActive = workspaces.some(ws => ws.active);
         if (isAnyWorkspaceActive) {
           this.goToDetails(ufr.id, true, true, params);
         } else {
@@ -902,10 +926,7 @@ export class UfrRequestsSummaryComponent implements OnInit {
 
   getActionState(ufr: UFR) {
     const canReview =
-      this.appModel['visibilityDef']['ufr-requests-summary-component']?.canReview &&
-      ufr.ufrStatus === UFRStatus.SUBMITTED &&
-      this.pom.status === PomStatus.OPEN &&
-      !ufr.disposition;
+      this.canReview && ufr.ufrStatus === UFRStatus.SUBMITTED && this.pom.status === PomStatus.OPEN && !ufr.disposition;
     const canDeleteSingle =
       ufr.createdBy === this.appModel.userDetails.cacId &&
       (ufr.ufrStatus === UFRStatus.SAVED || ufr.ufrStatus === UFRStatus.SUBMITTED) &&
@@ -920,4 +941,9 @@ export interface DeleteDialogInterface {
   display?: boolean;
   cellAction?: DataGridMessage;
   delete?: (rowIndex: number) => void;
+}
+
+export interface SetupInterface {
+  visibility: RestResponse<any>;
+  poms: RestResponse<Pom[]>;
 }

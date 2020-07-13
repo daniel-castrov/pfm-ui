@@ -25,6 +25,7 @@ import { PomStatus } from 'src/app/programming-feature/models/enumerations/pom-s
 })
 export class RequestsSummaryGridComponent implements OnInit {
   @Input() pomYear: number;
+  @Input() workspaces: ListItem[];
   @Input() dropdownOptions: ListItem[];
   @Output() addCtaEvent: EventEmitter<any> = new EventEmitter<any>();
   @Output() gridDataChange = new EventEmitter();
@@ -41,6 +42,7 @@ export class RequestsSummaryGridComponent implements OnInit {
   id = 'requests-summary-component';
   busy: boolean;
   deleteDialog: DeleteDialogInterface = { title: 'Delete' };
+  showAddCta: boolean;
 
   constructor(
     private programmingModel: ProgrammingModel,
@@ -234,7 +236,9 @@ export class RequestsSummaryGridComponent implements OnInit {
     this.columnApi = columnApi;
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.showAddCta = this.ctaDropdownVisibility();
+  }
 
   getRoleName(key: string): string {
     const role = this.programmingModel.roles.get(key);
@@ -296,7 +300,10 @@ export class RequestsSummaryGridComponent implements OnInit {
   }
 
   isExternalFilterPresent() {
-    return !this.appModel.userDetails.roles.includes(RoleConstants.POM_MANAGER);
+    return (
+      !this.appModel.userDetails.roles.includes(RoleConstants.POM_MANAGER) &&
+      !this.appModel.userDetails.roles.includes(RoleConstants.READ_ONLY)
+    );
   }
 
   doesExternalFilterPass(node) {
@@ -342,6 +349,17 @@ export class RequestsSummaryGridComponent implements OnInit {
     this.deleteDialog.cellAction = null;
     this.deleteDialog.delete = null;
     this.deleteDialog.display = false;
+  }
+
+  private ctaDropdownVisibility(): boolean {
+    if (this.programmingModel.pom.status === PomStatus.LOCKED) {
+      if (this.appModel.userDetails.roles.includes('POM_MANAGER') && !this.workspaces) {
+        return true;
+      }
+    } else if (this.programmingModel.pom.status !== PomStatus.CLOSED) {
+      return true;
+    }
+    return false;
   }
 }
 

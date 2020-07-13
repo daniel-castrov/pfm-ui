@@ -1,0 +1,34 @@
+<!--Header row-->
+<div class="row">
+  <div class="col-6">
+    <h3>Create Budget Phase</h3>
+  </div>
+  <div class="col-6">
+    <button
+      id="btn-create"
+      class="btn btn-primary float-right"
+      (click)="onClickCreateBudget()"
+      *pfmHasVisibility="'budget-phase-component.createBudget'"
+      [disabled]="isCreating"
+    >
+      Create Budget Phase
+    </button>
+  </div>
+</div>
+
+<!--Content-->
+<div class="row">
+  <div class="col-12">
+    <div class="form-inline">
+      <div class="form-group">
+        <label class="form-control-label" for="field_year">For:</label>
+        <select class="form-control ml-2" id="field_year" [(ngModel)]="selectedYear">
+          <option [ngValue]="null">Select</option>
+          <option *ngFor="let year of years" [value]="year">{{ year }}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+<pfm-busy [busy]="isCreating"></pfm-busy>

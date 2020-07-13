@@ -20,7 +20,6 @@ import { VisibilityService } from '../../../services/visibility-service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppModel } from '../../../pfm-common-models/AppModel';
 import { ToastService } from 'src/app/pfm-coreui/services/toast.service';
-import { PlanningStatus } from 'src/app/planning-feature/models/enumerators/planning-status.model';
 import { IntIntMap } from '../../models/IntIntMap';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ProgramStatus } from '../../models/enumerations/program-status.model';
@@ -98,7 +97,7 @@ export class RequestsSummaryComponent implements OnInit {
   selectedWorkspace: any;
 
   constructor(
-    private programmingModel: ProgrammingModel,
+    public programmingModel: ProgrammingModel,
     private pomService: PomService,
     private programmingService: ProgrammingService,
     private roleService: RoleService,
@@ -130,7 +129,13 @@ export class RequestsSummaryComponent implements OnInit {
         }
 
         if (this.programmingModel.pom.status === PomStatus.OPEN) {
+          this.setupWorkspacesDropDown(true);
+        } else if (this.programmingModel.pom.status === PomStatus.LOCKED && this.route.snapshot.paramMap.get('id')) {
+          this.setupWorkspacesDropDown(true);
+          this.setupResquestSummary();
+        } else if (this.programmingModel.pom.status === PomStatus.CLOSED && this.route.snapshot.paramMap.get('id')) {
           this.setupWorkspacesDropDown();
+          this.setupResquestSummary();
         } else {
           this.setupResquestSummary();
           this.setupDropDown();
@@ -142,8 +147,12 @@ export class RequestsSummaryComponent implements OnInit {
     );
   }
 
-  private setupWorkspacesDropDown() {
-    this.workspaceService.getByContainerIdAndActive(this.programmingModel.pom.id, true).subscribe(
+  private setupWorkspacesDropDown(active?: boolean) {
+    const workspaceSub = active
+      ? this.workspaceService.getByContainerIdAndActive(this.programmingModel.pom.id, active)
+      : this.workspaceService.getByContainerId(this.programmingModel.pom.id);
+
+    workspaceSub.subscribe(
       resp => {
         const workspaces = (resp as any).result;
         const items = new Array<ListItem>();
@@ -255,7 +264,8 @@ export class RequestsSummaryComponent implements OnInit {
         this.orgs = orgs;
         const dropdownOptions: Organization[] = [];
         if (
-          self.appModel.visibilityDef['requests-summary-component']['availableOrgsDropDown,option,Show All'] !== false
+          self.appModel.visibilityDef['requests-summary-component'] &&
+          self.appModel.visibilityDef['requests-summary-component']['availableOrgsDropDown,option,Show All'] === true
         ) {
           const showAllOrg = new Organization();
           showAllOrg.id = null;
@@ -265,8 +275,10 @@ export class RequestsSummaryComponent implements OnInit {
         this.availableOrgs = this.toListItemOrgs(dropdownOptions.concat(orgs));
         this.loadPreviousSelection();
         if (
-          !this.selectedOrg &&
-          (this.availableOrgs.length === 1 || this.appModel.userDetails.roles.includes(RoleConstants.POM_MANAGER))
+          (!this.selectedOrg || this.selectedOrg.value.toLowerCase() === 'select') &&
+          (this.availableOrgs.length === 1 ||
+            this.appModel.userDetails.roles.includes(RoleConstants.POM_MANAGER) ||
+            this.appModel.userDetails.roles.includes(RoleConstants.READ_ONLY))
         ) {
           this.organizationSelected(this.availableOrgs[0]);
         }
@@ -341,22 +353,33 @@ export class RequestsSummaryComponent implements OnInit {
   organizationSelected(organization: ListItem) {
     this.selectedOrg = organization;
     if (this.selectedOrg.name !== 'Select') {
-      if (this.programmingModel.pom.status !== PlanningStatus.CLOSED) {
-        this.containerId =
-          this.programmingModel.pom.status === PomStatus.CREATED
-            ? this.programmingModel.pom.id
-            : this.programmingModel.pom.workspaceId;
-        this.getPRs(this.containerId, this.selectedOrg.value);
-        // Depending on organization selection change options visible and default chart shown
-        if (organization.id === 'Show All') {
-          const chartOptions: string[] = ['Community Status', 'Community TOA Difference', 'Funding Line Status'];
-          this.availableToaCharts = this.toListItem(chartOptions);
+      if (this.programmingModel.pom.status === PomStatus.CREATED) {
+        this.containerId = this.programmingModel.pom.id;
+      } else if (this.programmingModel.pom.status === PomStatus.OPEN) {
+        this.containerId = this.programmingModel.pom.workspaceId;
+      } else if (
+        this.programmingModel.pom.status === PomStatus.LOCKED ||
+        this.programmingModel.pom.status === PomStatus.CLOSED
+      ) {
+        if (this.selectedWorkspace) {
+          if (this.selectedWorkspace.selectedFinal) {
+            this.containerId = this.programmingModel.pom.id;
+          } else {
+            this.containerId = this.programmingModel.pom.workspaceId;
+          }
         } else {
-          const chartOptions: string[] = ['Organization Status', 'Organization TOA Difference', 'Funding Line Status'];
-          this.availableToaCharts = this.toListItem(chartOptions);
+          this.containerId = this.programmingModel.pom.id;
         }
+      }
+
+      this.getPRs(this.containerId, this.selectedOrg.value);
+      // Depending on organization selection change options visible and default chart shown
+      if (organization.id === 'Show All') {
+        const chartOptions: string[] = ['Community Status', 'Community TOA Difference', 'Funding Line Status'];
+        this.availableToaCharts = this.toListItem(chartOptions);
       } else {
-        this.programmingModelReady = false;
+        const chartOptions: string[] = ['Organization Status', 'Organization TOA Difference', 'Funding Line Status'];
+        this.availableToaCharts = this.toListItem(chartOptions);
       }
     }
     this.requestSummaryNavigationHistoryService.updateRequestSummaryNavigationHistory({
@@ -371,6 +394,7 @@ export class RequestsSummaryComponent implements OnInit {
       selectedContainer: this.selectedWorkspace.id
     });
     this.setupResquestSummary();
+    this.selectedOrg.value = 'select';
     this.setupDropDown();
   }
 
@@ -505,7 +529,11 @@ export class RequestsSummaryComponent implements OnInit {
       .subscribe(
         resp => {
           this.organizationSelected(this.selectedOrg);
-          this.toastService.displaySuccess('Return organization successful.');
+          if (this.programmingModel.programs.some(item => item.programStatus !== ProgramStatus.APPROVED)) {
+            this.toastService.displaySuccess('Return organization successful.');
+          } else {
+            this.toastService.displayError('Return was unsuccessful as all program requests were already approved.');
+          }
         },
         error => {
           const err = (error as any).error;

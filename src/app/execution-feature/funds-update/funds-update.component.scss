@@ -1,0 +1,19 @@
+#extras > fa-icon {
+  font-size: x-large;
+  padding-left: 8px;
+}
+
+.bulk-action {
+  background: #dddddd;
+  height: 50px;
+  margin: auto;
+  padding: 10px;
+  display: flex;
+}
+
+.action-dropdown > :first-child {
+  :nth-child(2) > select {
+    height: calc(1em + 0.75rem + 1px) !important;
+    margin-left: 15px;
+  }
+}
