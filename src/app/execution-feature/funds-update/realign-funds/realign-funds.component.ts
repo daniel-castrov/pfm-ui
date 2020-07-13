@@ -549,7 +549,7 @@ export class RealignFundsComponent implements OnInit {
       return false;
     }
 
-    if (Number(el.amount) > Number(el.released ?? 0)) {
+    if (Number(el.amount) > Number(this.fromRows[0].released ?? 0)) {
       this.dialogService.displayError('Amount cannot exceed the released amount.');
       return false;
     }
