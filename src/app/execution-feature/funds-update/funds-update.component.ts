@@ -12,7 +12,7 @@ import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
 import { DropdownCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/dropdown-cell-renderer/dropdown-cell-renderer.component';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { from, Observable } from 'rxjs';
-import { concatMap, map } from 'rxjs/operators';
+import { concatMap, map, switchMap, finalize } from 'rxjs/operators';
 import { IExecutionLineGrid } from '../models/execution-line-grid.model';
 import { PropertyService } from 'src/app/programming-feature/services/property.service';
 import { PropertyType } from 'src/app/programming-feature/models/enumerations/property-type.model';
@@ -23,6 +23,7 @@ import { RoleConstants } from 'src/app/pfm-common-models/role-contants.model';
 import { ExecutionEventService } from '../services/execution-event.service';
 import { Event } from 'src/app/pfm-coreui/models/event.model';
 import { ExecutionEventData } from '../models/execution-event-data.model';
+import { EventEnum } from 'src/app/pfm-coreui/models/event-enum.model';
 
 @Component({
   selector: 'app-funds-update',
@@ -351,9 +352,19 @@ export class FundsUpdateComponent implements OnInit {
         this.programOptions = [...new Set(executionLines.map(executionLine => executionLine.programName))];
         this.executionLineRows = [];
         let row: IExecutionLineGrid;
-        from(executionLines)
+
+        const eventsMap = new Map();
+        this.executionEventService
+          .getByContainer(this.selectedExecution.id, ...Object.keys(EventEnum).filter(e => e.startsWith('EXE_')))
           .pipe(
-            concatMap((executionLine: ExecutionLine) => {
+            map((evtResp: RestResponse<Event<ExecutionEventData>[]>) => {
+              this.setUpEvents(evtResp.result, executionLines);
+              return executionLines;
+            }),
+            finalize(() => (this.busy = false))
+          )
+          .subscribe((exeLines: IExecutionLine[]) => {
+            executionLines.forEach(executionLine => {
               row = {
                 id: executionLine.id,
                 containerId: this.selectedExecution.id,
@@ -366,10 +377,10 @@ export class FundsUpdateComponent implements OnInit {
                 opAgency: executionLine.opAgency,
                 programElement: executionLine.programElement,
                 pb: executionLine.initial,
-                toa: executionLine.toa,
-                released: executionLine.released,
-                withhold: executionLine.withheld,
-                events: null,
+                toa: null,
+                released: null,
+                withhold: null,
+                events: executionLine.events,
                 action: {
                   ...this.actionState.VIEW,
                   canFund: this.appModel.userDetails.roles.includes(RoleConstants.FUNDS_MANAGER),
@@ -377,21 +388,42 @@ export class FundsUpdateComponent implements OnInit {
                   canRemove: !!executionLine.userCreated
                 }
               };
-              return this.executionEventService.getByExecutionLineId(row.id);
-            })
-          )
-          .subscribe((respEvent: RestResponse<Event<ExecutionEventData>[]>) => {
-            row.events = respEvent.result;
-            row.action.hasHistory = Boolean(row.events);
-            this.executionLineRows.push(row);
-          })
-          .add(() => {
-            this.busy = false;
+              row.action.hasHistory = Boolean(row.events);
+              this.executionLineRows.push(row);
+            });
+
             this.executionLineGridApi.refreshHeader();
             this.executionLineGridApi.setRowData(this.executionLineRows);
           });
       });
     }
+  }
+
+  private setUpEvents(events: Event<ExecutionEventData>[], exeLines: IExecutionLine[]): void {
+    const eventsMap = new Map();
+    if (events) {
+      events.forEach(evt => {
+        if (eventsMap.has(evt.value.fromId)) {
+          const savedEvents = eventsMap.get(evt.value.fromId);
+          savedEvents.push(evt);
+          eventsMap.set(evt.value.fromId, savedEvents);
+        } else {
+          eventsMap.set(evt.value.fromId, [evt]);
+        }
+        if (evt.value.toIdAmtLkp) {
+          Object.keys(evt.value.toIdAmtLkp).forEach(exeLineId => {
+            if (eventsMap.has(exeLineId)) {
+              const savedEvents = eventsMap.get(exeLineId);
+              savedEvents.push(evt);
+              eventsMap.set(exeLineId, savedEvents);
+            } else {
+              eventsMap.set(exeLineId, [evt]);
+            }
+          });
+        }
+      });
+    }
+    exeLines.forEach(el => (el.events = eventsMap.get(el.id)));
   }
 
   onExecutionLineGridIsReady(event: GridApi) {
@@ -564,9 +596,9 @@ export class FundsUpdateComponent implements OnInit {
         defaultColDef: { flex: 1 }
       },
       getDetailRowData: params => {
-        const el: ExecutionLine = params.data;
+        const events: Event<ExecutionEventData>[] = params.data.events;
         const details = [];
-        el.events.forEach((evt: Event<ExecutionEventData>, index) => {
+        events.forEach((evt: Event<ExecutionEventData>, index) => {
           ExecutionEventData.setuptypeInstance(evt.value);
           const detail = {
             update: index + 1,
@@ -709,7 +741,8 @@ export class FundsUpdateComponent implements OnInit {
     this.executionLineRows[rowIndex].action = {
       ...this.actionState.VIEW,
       canFund: this.appModel.userDetails.roles.includes(RoleConstants.FUNDS_MANAGER),
-      canRemove: this.executionLineRows[rowIndex].userCreated
+      canRemove: this.executionLineRows[rowIndex].userCreated,
+      hasHistory: false
     };
     this.executionLineRows.forEach(row => {
       row.isDisabled = false;
@@ -904,11 +937,7 @@ export class FundsUpdateComponent implements OnInit {
       released: 0,
       withhold: 0,
       userCreated,
-      action: {
-        ...this.actionState.VIEW,
-        canFund: this.appModel.userDetails.roles.includes(RoleConstants.FUNDS_MANAGER),
-        canRemove: userCreated
-      }
+      action: null // It will be set when viewExecutionLineMode is called.
     };
     return converted;
   }

@@ -5,4 +5,6 @@ import { Observable } from 'rxjs';
 @Injectable()
 export abstract class ExecutionEventService extends BaseRestService {
   abstract getByExecutionLineId(executionLineId: string): Observable<any>;
+
+  abstract getByContainer(containerId: string, ...types: string[]): Observable<any>;
 }

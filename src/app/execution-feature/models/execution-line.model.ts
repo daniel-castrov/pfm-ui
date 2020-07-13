@@ -17,6 +17,8 @@ export interface IExecutionLine {
   programElement?: string;
   programName?: string;
   userCreated?: boolean;
+
+  events?: Event<ExecutionEventData>[];
 }
 
 export class ExecutionLine implements IExecutionLine {
@@ -45,7 +47,6 @@ export class ExecutionLine implements IExecutionLine {
   fullNameModifiedBy?: string;
 
   executionLine?: string;
-  events?: Event<ExecutionEventData>[];
 
   actions?: any;
   isDisabled?: boolean;
@@ -66,6 +67,7 @@ export class ExecutionLine implements IExecutionLine {
     public item?: string,
     public programElement?: string,
     public programName?: string,
-    public userCreated?: boolean
+    public userCreated?: boolean,
+    public events?: Event<ExecutionEventData>[]
   ) {}
 }
