@@ -529,7 +529,11 @@ export class RequestsSummaryComponent implements OnInit {
       .subscribe(
         resp => {
           this.organizationSelected(this.selectedOrg);
-          this.toastService.displaySuccess('Return organization successful.');
+          if (this.programmingModel.programs.filter(item => item.programStatus !== ProgramStatus.APPROVED).length > 0) {
+            this.toastService.displaySuccess('Return organization successful.');
+          } else {
+            this.toastService.displayError('Return was unsuccessful as all program requests were already approved.');
+          }
         },
         error => {
           const err = (error as any).error;
