@@ -55,6 +55,7 @@ export class CreateBudgetComponent implements OnInit {
       () => {
         // if there is a budget, show the warning
         this.toastService.displayWarning('The budget phase already exists for the selected year.');
+        this.isCreating = false;
       },
       (httpError: HttpErrorResponse) => {
         // if no budget was found for the selected fiscal year, then we can create a new one
