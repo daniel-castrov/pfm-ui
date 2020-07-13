@@ -42,6 +42,7 @@ export class RequestsSummaryGridComponent implements OnInit {
   id = 'requests-summary-component';
   busy: boolean;
   deleteDialog: DeleteDialogInterface = { title: 'Delete' };
+  showAddCta: boolean;
 
   constructor(
     private programmingModel: ProgrammingModel,
@@ -235,7 +236,9 @@ export class RequestsSummaryGridComponent implements OnInit {
     this.columnApi = columnApi;
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.showAddCta = this.ctaDropdownVisibility();
+  }
 
   getRoleName(key: string): string {
     const role = this.programmingModel.roles.get(key);
@@ -348,16 +351,12 @@ export class RequestsSummaryGridComponent implements OnInit {
     this.deleteDialog.display = false;
   }
 
-  ctaDropdownVisibility(): boolean {
-    if (this.programmingModel.pom.status !== PomStatus.CLOSED) {
-      if (this.programmingModel.pom.status === PomStatus.LOCKED) {
-        if (this.appModel.userDetails.roles.includes('POM_MANAGER') && !this.workspaces) {
-          return true;
-        }
-      } else {
+  private ctaDropdownVisibility(): boolean {
+    if (this.programmingModel.pom.status === PomStatus.LOCKED) {
+      if (this.appModel.userDetails.roles.includes('POM_MANAGER') && !this.workspaces) {
         return true;
       }
-    } else {
+    } else if (this.programmingModel.pom.status !== PomStatus.CLOSED) {
       return true;
     }
     return false;
